@@ -15,10 +15,22 @@ namespace rethus_backend.Data
     }
 
     public DbSet<User> Users { get; set; }
+    public DbSet<Configurations> Configurations { get; set; }
+    public DbSet<UserForm> UserForm { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+      modelBuilder.Entity<User>().ToTable("User");
+      modelBuilder.Entity<Configurations>().ToTable("Configurations");
+      modelBuilder.Entity<UserForm>().ToTable("UserForm");
+
+      modelBuilder.Entity<Configurations>()
+        .HasNoKey();
+
+      modelBuilder.Entity<UserForm>()
+        .HasNoKey();
+
       base.OnModelCreating(modelBuilder);
     }
 
