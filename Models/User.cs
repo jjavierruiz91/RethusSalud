@@ -1,16 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace rethus_backend.Models
 {
   public class User
   {
-    public int Id { get; set; }
-    public string UserName { get; set; }
-    public string Name { get; set; }
-    public string Password { get; set; }
-    public string Role { get; set; }
+
+    public string? email { get; set; }
+
+    [Key]
+    public string? identification { get; set; }
+    public string? status { get; set; }
+    public string? Roles { get; set; }
+    public string? Token { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
   }
 }
