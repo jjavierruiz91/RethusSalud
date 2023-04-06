@@ -8,6 +8,7 @@ namespace rethus_backend.Models
 
     public string? UserId { get; set; }
     public string? email { get; set; }
+    public string? Identification { get; set; }
     public string? status { get; set; }
     public string? Roles { get; set; }
     public string? Token { get; set; }
