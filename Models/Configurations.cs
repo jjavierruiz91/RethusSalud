@@ -7,9 +7,7 @@ namespace rethus_backend.Models
 {
   public class Configurations
   {
-    public int UserId { get; set; }
-
-    public User? User { get; set; }
+    public string? ConfigurationsId { get; set; }
 
     public string? state { get; set; }
 
@@ -17,5 +15,8 @@ namespace rethus_backend.Models
 
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+
+    public string? UserId { get; set; }
+    public User? User { get; set; }
   }
 }
