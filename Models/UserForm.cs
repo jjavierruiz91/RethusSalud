@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace rethus_backend.Models
 {
   public class UserForm
   {
-    public User? User { get; set; }
+    public int UserFormId { get; set; }
 
     public string? PersonalType_identification { get; set; }
     public string? PersonalGender { get; set; }
@@ -49,6 +46,10 @@ namespace rethus_backend.Models
     public string? AcademicsNumberAdministrative { get; set; }
     public string? AcademicsDateAdministrative { get; set; }
 
+    public string? UserId { get; set; }
 
+    public User? User { get; set; }
+
+    public ICollection<UserFormFiles>? UserFormFiles { get; set; }
   }
 }
