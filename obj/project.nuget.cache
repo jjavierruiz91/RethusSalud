@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "+Tg9+YdvXVJDg+8Az1+j+72qviHhRlAax7E50pvhA1zQXsRD4bfDHsKhvyso9nz5PaJupDKEB8Dj//5fN/Pypw==",
+  "dgSpecHash": "utV9ghgOmoPXJLlb/L8B4vjoTiJL4j5CxsmGT4u4dc5kgtZDr3mJc6Bg2EWOJUXI+VaIzYFQ6wvhPMbEzHESEw==",
   "success": true,
   "projectFilePath": "/Users/alvis/Documents/Practicas Gobernacion del cesar/Proyecto Backend/rethus-backend/rethus-backend.csproj",
   "expectedPackageFiles": [
     "/Users/alvis/.nuget/packages/azure.core/1.24.0/azure.core.1.24.0.nupkg.sha512",
     "/Users/alvis/.nuget/packages/azure.identity/1.6.0/azure.identity.1.6.0.nupkg.sha512",
     "/Users/alvis/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
+    "/Users/alvis/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/7.0.4/microsoft.aspnetcore.authentication.jwtbearer.7.0.4.nupkg.sha512",
     "/Users/alvis/.nuget/packages/microsoft.aspnetcore.openapi/7.0.4/microsoft.aspnetcore.openapi.7.0.4.nupkg.sha512",
     "/Users/alvis/.nuget/packages/microsoft.bcl.asyncinterfaces/1.1.1/microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "/Users/alvis/.nuget/packages/microsoft.csharp/4.5.0/microsoft.csharp.4.5.0.nupkg.sha512",
