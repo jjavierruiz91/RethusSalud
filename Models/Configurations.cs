@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+using System.ComponentModel.DataAnnotations.Schema;
 namespace rethus_backend.Models
 {
   public class Configurations
   {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public string? ConfigurationsId { get; set; }
 
     public string? state { get; set; }
