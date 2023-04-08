@@ -7,13 +7,18 @@ namespace rethus_backend.Repository
 {
   public class UserRepository : Repository<User>, IUserRepository
   {
+
+    private readonly ApplicationDbContext _context;
+
     public UserRepository(ApplicationDbContext db) : base(db)
     {
+      _context = db;
     }
 
-    public bool IsUniqueUser(string username)
+    public bool IsUniqueUser(string email)
     {
-      throw new NotImplementedException();
+      User user = _context.Users.FirstOrDefault(x => x.email == email);
+      return user == null;
     }
 
     public Task<UserResponseDto> Login(UserRequestDto loginRequestDTO)
@@ -21,9 +26,24 @@ namespace rethus_backend.Repository
       throw new NotImplementedException();
     }
 
-    public Task<User> Register(CreateRequestDto createRequestDto)
+    public async Task<User> Register(CreateRequestDto createRequestDto)
     {
-      throw new NotImplementedException();
+      User newUser = new()
+      {
+        name = createRequestDto.name,
+        email = createRequestDto.email,
+        password = createRequestDto.password,
+        Roles = "user",
+        status = "active",
+        Token = "",
+        CreatedAt = DateTime.Now,
+        UpdatedAt = DateTime.Now
+      };
+
+      _context.Users.Add(newUser);
+      _context.SaveChanges();
+
+      return newUser;
     }
   }
 }
