@@ -25,6 +25,14 @@ namespace rethus_backend.Repository
       return _context.Users.Find(id);
     }
 
+    public bool IsExistUser(string email)
+    {
+      User user = _context.Users.FirstOrDefault(x => x.email == email);
+      if (user == null) return false;
+
+      return true;
+    }
+
     public bool IsUniqueUser(string email)
     {
       User user = _context.Users.FirstOrDefault(x => x.email == email);
