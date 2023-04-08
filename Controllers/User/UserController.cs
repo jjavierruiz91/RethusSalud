@@ -43,10 +43,20 @@ public class UserController : ApiBaseController
     return Ok(_response);
   }
 
-  [Authorize]
+  // [Authorize]
   [HttpGet]
-  public ActionResult<List<UserResponseDto>> Get()
+  public ActionResult<List<UserResponseDto>> GetAll()
   {
-    throw new NotImplementedException();
+    var users = _unitOfWork.User.GetAll();
+    return Ok(users);
+  }
+
+  [HttpGet("{id}")]
+  public IActionResult GetById(string id)
+  {
+    var user = _unitOfWork.User.GetById(id);
+    if (user == null) return NotFound();
+
+    return Ok(user);
   }
 }
