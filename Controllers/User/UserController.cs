@@ -43,7 +43,7 @@ public class UserController : ApiBaseController
     return Ok(_response);
   }
 
-  // [Authorize]
+  [Authorize]
   [HttpGet]
   public ActionResult<List<UserResponseDto>> GetAll()
   {
@@ -51,6 +51,7 @@ public class UserController : ApiBaseController
     return Ok(users);
   }
 
+  [Authorize]
   [HttpGet("{id}")]
   public IActionResult GetById(string id)
   {
