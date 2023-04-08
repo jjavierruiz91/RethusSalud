@@ -5,7 +5,7 @@ namespace rethus_backend.Repository.IRepository
 {
   public interface IUserRepository : IRepository<User>
   {
-    bool IsUniqueUser(string username);
+    bool IsUniqueUser(string email);
     Task<UserResponseDto> Login(UserRequestDto loginRequestDTO);
     Task<User> Register(CreateRequestDto createRequestDto);
   }
