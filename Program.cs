@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using rethus_backend;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
   option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
 });
 
+builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 
 string JWT_SECRET = builder.Configuration.GetValue<string>("ApiSettings:Secret");
 builder.Services.AddAuthentication(options =>
