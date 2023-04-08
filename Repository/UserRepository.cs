@@ -15,15 +15,20 @@ namespace rethus_backend.Repository
       _context = db;
     }
 
+    public IEnumerable<User> GetAll()
+    {
+      return _context.Users;
+    }
+
+    public User GetById(string id)
+    {
+      return _context.Users.Find(id);
+    }
+
     public bool IsUniqueUser(string email)
     {
       User user = _context.Users.FirstOrDefault(x => x.email == email);
       return user == null;
-    }
-
-    public Task<UserResponseDto> Login(UserRequestDto loginRequestDTO)
-    {
-      throw new NotImplementedException();
     }
 
     public async Task<User> Register(CreateRequestDto createRequestDto)
