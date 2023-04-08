@@ -5,6 +5,7 @@ namespace rethus_backend.Models
 {
   public class UserFormFiles
   {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public string? UserFormFilesId { get; set; }
     public int? size { get; set; }
     public string? filename { get; set; }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace rethus_backend.Models
 {
-  public class UserDto
+  public class UserResponseDto
   {
     public int Id { get; set; }
     public string UserName { get; set; }

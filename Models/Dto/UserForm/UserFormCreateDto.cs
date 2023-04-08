@@ -1,25 +1,12 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-namespace rethus_backend.Models
+namespace rethus_backend.Models.Dto.UserForm
 {
-  public class UserForm
+  public class UserFormCreateDto
   {
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int UserFormId { get; set; }
-
     public string? PersonalType_identification { get; set; }
     public string? PersonalGender { get; set; }
     public int? PersonalIdentification { get; set; }
     public string? PersonalFirstName { get; set; }
     public string? PersonalLastName { get; set; }
-
-    public string PersonalFullName
-    {
-      get
-      {
-        return PersonalFirstName + " " + PersonalLastName;
-      }
-    }
     public string? PersonalCountryBirth { get; set; }
     public string? PersonalDepartmentBirth { get; set; }
     public string? PersonalMunicipalityBirth { get; set; }
@@ -46,11 +33,5 @@ namespace rethus_backend.Models
     public string? AcademicsTitle { get; set; }
     public string? AcademicsNumberAdministrative { get; set; }
     public string? AcademicsDateAdministrative { get; set; }
-
-    public string? UserId { get; set; }
-
-    public User? User { get; set; }
-
-    public ICollection<UserFormFiles>? UserFormFiles { get; set; }
   }
 }
