@@ -29,7 +29,6 @@ namespace rethus_backend.Repository
     {
       User user = _context.Users.FirstOrDefault(x => x.email == email);
       if (user == null) return false;
-
       return true;
     }
 
