@@ -27,7 +27,7 @@ public class LoginController : ApiBaseController
     }
 
     AuthResponseDto userAuthenticate = await _unitOfWork.Auth.Authenticate(_user);
-    if (userAuthenticate.email == null || string.IsNullOrEmpty(userAuthenticate.token))
+    if (string.IsNullOrEmpty(userAuthenticate.token))
     {
       _response.IsSuccess = false;
       _response.StatusCode = HttpStatusCode.BadRequest;
