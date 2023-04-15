@@ -3,9 +3,9 @@ using rethus_backend.Models.Dto.Auth;
 
 namespace rethus_backend.Repository.IRepository.Auth
 {
-  public interface IAuthRepository
+  public interface IAuthRepository : IRepository<User>
   {
-    AuthResponseDto Authenticate(AuthRequestDto model);
+    Task<AuthResponseDto> Authenticate(AuthRequestDto model);
     AuthResponseDto RefreshToken(string token);
     bool RevokeToken(string token, string ipAddress);
     IEnumerable<User> GetAll();

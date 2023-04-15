@@ -1,4 +1,4 @@
-
+using rethus_backend.Repository.IRepository.Auth;
 namespace rethus_backend.Repository.IRepository
 {
   public interface IUnitOfWork : IDisposable
@@ -7,6 +7,7 @@ namespace rethus_backend.Repository.IRepository
     IUserConfigurationRepository UserConfiguration { get; }
     IUserFormRepository UserForm { get; }
     IUserFormFilesRepository UserFormFiles { get; }
+    IAuthRepository Auth { get; }
 
     void Save();
   }

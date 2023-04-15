@@ -1,5 +1,6 @@
 using rethus_backend.Data;
 using rethus_backend.Repository.IRepository;
+using rethus_backend.Repository.IRepository.Auth;
 
 namespace rethus_backend.Repository
 {
@@ -11,6 +12,7 @@ namespace rethus_backend.Repository
     {
       _db = db;
       User = new UserRepository(_db);
+      Auth = new AuthRepository(_db, _configuration);
       UserConfiguration = new UserConfigurationRepository(_db);
       UserForm = new UserFormRepository(_db);
       UserFormFiles = new UserFormFilesRepository(_db);
@@ -22,6 +24,8 @@ namespace rethus_backend.Repository
     public IUserFormRepository UserForm { get; private set; }
 
     public IUserFormFilesRepository UserFormFiles { get; private set; }
+
+    public IAuthRepository Auth { get; private set; }
 
     public void Dispose() => _db.Dispose();
 

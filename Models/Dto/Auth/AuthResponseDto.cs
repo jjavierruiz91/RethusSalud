@@ -8,6 +8,7 @@ namespace rethus_backend.Models.Dto.Auth
     public string name { get; set; }
     public string token { get; set; }
     public string Roles { get; set; }
+    public string UserId { get; set; }
 
     public AuthResponseDto(Models.User user, string jwtToken)
     {
@@ -15,6 +16,7 @@ namespace rethus_backend.Models.Dto.Auth
       this.name = user.name;
       this.Roles = user.Roles;
       this.token = jwtToken;
+      this.UserId = user.UserId;
     }
 
   }

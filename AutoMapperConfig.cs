@@ -2,6 +2,7 @@ using AutoMapper;
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.User;
 using rethus_backend.Models.Dto.UserForm;
+using rethus_backend.Models.Dto.Auth;
 using rethus_backend.Models.Dto.UserFormFiles;
 
 namespace rethus_backend
@@ -18,6 +19,8 @@ namespace rethus_backend
       CreateMap<User, CreateRequestDto>();
       CreateMap<User, UserRequestDto>().ReverseMap();
       CreateMap<User, UserRequestDto>().ReverseMap();
+      CreateMap<User, AuthRequestDto>().ReverseMap();
+      CreateMap<User, AuthResponseDto>().ReverseMap();
 
       CreateMap<UserForm, UserFormCreateDto>();
 

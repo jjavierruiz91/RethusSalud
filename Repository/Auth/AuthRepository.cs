@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using rethus_backend.Models.Dto.Auth;
+using rethus_backend.Utilities.Security.Hashing;
 
 namespace rethus_backend.Repository
 {
@@ -21,17 +22,17 @@ namespace rethus_backend.Repository
       secretKey = configuration.GetValue<string>("ApiSettings:Secret");
     }
 
-    public AuthResponseDto Authenticate(AuthRequestDto _user)
+    public async Task<AuthResponseDto> Authenticate(AuthRequestDto _user)
     {
-      var user = _context.Users.SingleOrDefault(x => x.email == _user.email && x.password == _user.password);
+      var user = _context.Users.SingleOrDefault(x => x.email == _user.email);
 
       if (user == null)
       {
-        //  return new LoginResponseDTO()
-        //       {
-        //           Token = string.Empty,
-        //           User = null
-        //       };
+        return null;
+      }
+
+      if (!HashingHelper.VerifyPasswordHash(_user.password, user.PasswordHash, user.PasswordSalt))
+      {
         return null;
       }
 
@@ -50,7 +51,8 @@ namespace rethus_backend.Repository
       {
         Subject = new ClaimsIdentity(new Claim[]
           {
-                    new Claim(ClaimTypes.Name, _user.email.ToString())
+                    new Claim("email", _user.email.ToString()),
+                    new Claim("userid", _user.UserId.ToString())
           }),
         Expires = DateTime.UtcNow.AddMinutes(15),
         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

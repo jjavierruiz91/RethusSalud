@@ -7,8 +7,11 @@ namespace rethus_backend.Repository
 {
   public class UserConfigurationRepository : Repository<Configurations>, IUserConfigurationRepository
   {
+    private readonly ApplicationDbContext _context;
+
     public UserConfigurationRepository(ApplicationDbContext db) : base(db)
     {
+      _context = db;
     }
 
     public bool IsUniqueUser(string userId)
@@ -16,9 +19,21 @@ namespace rethus_backend.Repository
       throw new NotImplementedException();
     }
 
-    public Task<Configurations> Register(ConfigurationCreateDto createRequestDto)
+    public void Register(string email)
     {
-      throw new NotImplementedException();
+      var user = this._context.Users.FirstOrDefault(user => user.email == email);
+
+      Configurations newConfiguration = new()
+      {
+        state = "en proceso",
+        step = "etapa 1",
+        UserId = user.UserId,
+        CreatedAt = DateTime.Now,
+        UpdatedAt = DateTime.Now
+      };
+
+      _context.Configurations.Add(newConfiguration);
+      _context.SaveChanges();
     }
   }
 }
