@@ -7,6 +7,7 @@ namespace rethus_backend.Repository.IRepository
   {
     bool IsUniqueUser(string userId);
     // Task<UserResponseDto> Login(UserRequestDto loginRequestDTO);
-    Task<Configurations> Register(ConfigurationCreateDto createRequestDto);
+    // Task<Configurations> Register(ConfigurationCreateDto createRequestDto);
+    void Register(string email);
   }
 }

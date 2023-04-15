@@ -9,10 +9,12 @@ namespace rethus_backend.Repository
   {
 
     private readonly ApplicationDbContext _context;
+    private readonly IUserConfigurationRepository _configuration;
 
-    public UserRepository(ApplicationDbContext db) : base(db)
+    public UserRepository(ApplicationDbContext db, IUserConfigurationRepository configuration) : base(db)
     {
       _context = db;
+      _configuration = configuration;
     }
 
     public IEnumerable<User> GetAll()
@@ -20,7 +22,12 @@ namespace rethus_backend.Repository
       return _context.Users;
     }
 
-    public User GetById(string id)
+    public User GetById(string email)
+    {
+      return _context.Users.FirstOrDefault(user => user.email == email);
+    }
+
+    public User GetUserByEmail(string id)
     {
       return _context.Users.Find(id);
     }
@@ -56,8 +63,10 @@ namespace rethus_backend.Repository
         UpdatedAt = DateTime.Now
       };
 
-      _context.Users.Add(newUser);
+      var createRegister = _context.Users.Add(newUser);
       _context.SaveChanges();
+
+      this._configuration.Register(createRequestDto.email);
 
       return newUser;
     }
