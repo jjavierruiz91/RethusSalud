@@ -10,8 +10,8 @@ namespace rethus_backend.Models
     public string? email { get; set; }
     public string? name { get; set; }
     public string? password { get; set; }
-    public byte[] PasswordHash { get; set; }
-    public byte[] PasswordSalt { get; set; }
+    public byte[]? PasswordHash { get; set; }
+    public byte[]? PasswordSalt { get; set; }
     // public string? Identification { get; set; }
     public string? status { get; set; }
     public string? Roles { get; set; }

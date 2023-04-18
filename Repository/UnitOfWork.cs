@@ -11,7 +11,7 @@ namespace rethus_backend.Repository
     public UnitOfWork(ApplicationDbContext db, IConfiguration _configuration)
     {
       _db = db;
-      User = new UserRepository(_db);
+      User = new UserRepository(_db, UserConfiguration);
       Auth = new AuthRepository(_db, _configuration);
       UserConfiguration = new UserConfigurationRepository(_db);
       UserForm = new UserFormRepository(_db);
