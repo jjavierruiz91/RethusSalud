@@ -6,7 +6,6 @@ namespace rethus_backend.Repository.IRepository
   public interface IUserFormRepository : IRepository<UserForm>
   {
     bool IsUniqueUser(string userId);
-    // Task<UserResponseDto> Login(UserRequestDto loginRequestDTO);
-    Task<UserForm> Register(UserFormCreateDto createRequestDto);
+    Task<ApiResponse> post(UserFormCreateDto createRequestDto);
   }
 }
