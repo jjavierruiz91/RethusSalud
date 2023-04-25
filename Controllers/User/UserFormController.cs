@@ -21,7 +21,7 @@ public class UserFormController : ApiBaseController
   {
     bool user = _unitOfWork.UserForm.IsUniqueUser(_user.PersonalEmail);
 
-    if (!user)
+    if (user)
     {
       _response.IsSuccess = false;
       _response.StatusCode = HttpStatusCode.BadRequest;
