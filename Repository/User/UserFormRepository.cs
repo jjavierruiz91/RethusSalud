@@ -2,6 +2,7 @@ using rethus_backend.Data;
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.UserForm;
 using rethus_backend.Repository.IRepository;
+using System.Collections.Generic;
 
 namespace rethus_backend.Repository
 {
@@ -38,7 +39,53 @@ namespace rethus_backend.Repository
 
     public Task<ApiResponse> post(UserFormCreateDto createRequestDto)
     {
-      throw new NotImplementedException();
+
+      if (createRequestDto == null) return null;
+
+      var form = new UserForm
+      {
+        PersonalType_identification = createRequestDto.PersonalType_identification,
+        PersonalGender = createRequestDto.PersonalGender,
+        PersonalIdentification = createRequestDto.PersonalIdentification,
+        PersonalFirstName = createRequestDto.PersonalFirstName,
+        PersonalLastName = createRequestDto.PersonalLastName,
+        PersonalCountryBirth = createRequestDto.PersonalCountryBirth,
+        PersonalDepartmentBirth = createRequestDto.PersonalDepartmentBirth,
+        PersonalMunicipalityBirth = createRequestDto.PersonalMunicipalityBirth,
+        DateBirth = createRequestDto.DateBirth,
+        PersonalPlaceResidence = createRequestDto.PersonalPlaceResidence,
+        PersonalDepartmentResidence = createRequestDto.PersonalDepartmentResidence,
+        PersonalMunicipalityResidence = createRequestDto.PersonalMunicipalityResidence,
+        PersonalAddress = createRequestDto.PersonalAddress,
+        PersonalTelephone = createRequestDto.PersonalTelephone,
+        PersonalPhone = createRequestDto.PersonalPhone,
+        PersonalEmail = createRequestDto.PersonalEmail,
+        PersonalEthnicGroup = createRequestDto.PersonalEthnicGroup,
+        AcademicsOriginTitle = createRequestDto.AcademicsOriginTitle,
+        AcademicsTypeInstitution = createRequestDto.AcademicsTypeInstitution,
+        AcademicsProgramType = createRequestDto.AcademicsProgramType,
+        AcademicsDepartmentInstitution = createRequestDto.AcademicsDepartmentInstitution,
+        AcademicsMunicipalityInstitution = createRequestDto.AcademicsMunicipalityInstitution,
+        AcademicsNameInstitution = createRequestDto.AcademicsNameInstitution,
+        AcademicsProgramName = createRequestDto.AcademicsProgramName,
+        AcademicsDateInstitution = createRequestDto.AcademicsDateInstitution,
+        AcademicsGradeDate = createRequestDto.AcademicsGradeDate,
+        AcademicsNumberConvalidation = createRequestDto.AcademicsNumberConvalidation,
+        AcademicsDateConvalidation = createRequestDto.AcademicsDateConvalidation,
+        AcademicsTitle = createRequestDto.AcademicsTitle,
+        AcademicsNumberAdministrative = createRequestDto.AcademicsNumberAdministrative,
+        AcademicsDateAdministrative = createRequestDto.AcademicsDateAdministrative
+      };
+
+      form.UserId = createRequestDto.userId;
+      form.CreatedAt = DateTime.Now;
+      form.UpdatedAt = DateTime.Now;
+
+      var createUserForm = _context.UserForm.Add(form);
+      _context.SaveChanges();
+
+      var response = new ApiResponse();
+      return Task.FromResult(response);
     }
   }
 }
