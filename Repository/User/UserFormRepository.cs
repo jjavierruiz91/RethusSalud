@@ -17,12 +17,12 @@ namespace rethus_backend.Repository
 
     public IEnumerable<UserForm> GetAll()
     {
-      throw new NotImplementedException();
+      return _context.UserForm;
     }
 
     public UserForm GetById(string id)
     {
-      throw new NotImplementedException();
+      return _context.UserForm.Find(id);
     }
 
     public bool IsExistUser(string userFormId)

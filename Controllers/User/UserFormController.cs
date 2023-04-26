@@ -51,7 +51,7 @@ public class UserFormController : ApiBaseController
     return Ok(users);
   }
 
-  [Authorize]
+  // [Authorize]
   [HttpGet("{id}")]
   public IActionResult GetById(string id)
   {

@@ -4,7 +4,7 @@ namespace rethus_backend.Models
   public class UserForm
   {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int UserFormId { get; set; }
+    public string? UserFormId { get; set; }
 
     public string PersonalType_identification { get; set; }
     public string? PersonalGender { get; set; }
