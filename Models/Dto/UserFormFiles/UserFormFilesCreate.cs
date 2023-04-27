@@ -1,8 +1,9 @@
-
+using System.ComponentModel.DataAnnotations;
 namespace rethus_backend.Models.Dto.UserFormFiles
 {
-  public interface UserFormFilesCreate
+  public class UserFormFilesCreateDto
   {
-    public string? UserFormFilesId { get; set; }
+    [Required(ErrorMessage = "files is required")]
+    public List<IFormFile> files { get; set; }
   }
 }

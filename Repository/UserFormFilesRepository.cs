@@ -16,7 +16,7 @@ namespace rethus_backend.Repository
       throw new NotImplementedException();
     }
 
-    public Task<UserForm> Register(UserFormFilesCreate createRequestDto)
+    public Task<UserForm> Register(UserFormFilesCreateDto createRequestDto)
     {
       throw new NotImplementedException();
     }

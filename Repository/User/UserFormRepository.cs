@@ -1,9 +1,10 @@
 using rethus_backend.Data;
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.UserForm;
+using rethus_backend.Models.Dto.UserFormFiles;
 using rethus_backend.Repository.IRepository;
 using System.Collections.Generic;
-
+using System.Net;
 namespace rethus_backend.Repository
 {
   public class UserFormRepository : Repository<UserForm>, IUserFormRepository
@@ -86,6 +87,20 @@ namespace rethus_backend.Repository
 
       var response = new ApiResponse();
       return Task.FromResult(response);
+    }
+
+    public ApiResponse RegisterUserFormFile(string userFormId, UserFormFilesCreateDto payload)
+    {
+      var response = new ApiResponse();
+      var userForm = this.GetById(userFormId);
+
+      if (userForm == null)
+      {
+        response.AddError("EL usuario no tiene formulario activo", HttpStatusCode.BadRequest, false);
+        return response;
+      };
+
+      return response;
     }
   }
 }

@@ -20,5 +20,19 @@ namespace rethus_backend.Models
     public ApiResponse()
     {
     }
+
+    public ApiResponse(string message, HttpStatusCode statusCode, bool isSuccess = true)
+    {
+      Messages.Add(message);
+      StatusCode = statusCode;
+      IsSuccess = isSuccess;
+    }
+
+    public void AddError(string message, HttpStatusCode statusCode, bool isSuccess = true)
+    {
+      Messages.Add(message);
+      StatusCode = statusCode;
+      IsSuccess = isSuccess;
+    }
   }
 }

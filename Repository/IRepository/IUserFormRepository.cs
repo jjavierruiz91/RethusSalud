@@ -1,5 +1,6 @@
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.UserForm;
+using rethus_backend.Models.Dto.UserFormFiles;
 
 namespace rethus_backend.Repository.IRepository
 {
@@ -8,10 +9,12 @@ namespace rethus_backend.Repository.IRepository
     bool IsUniqueUser(string userFormId);
 
     bool IsExistUser(string userFormId);
-    Task<ApiResponse> post(UserFormCreateDto createRequestDto);
 
     UserForm GetById(string id);
 
     IEnumerable<UserForm> GetAll();
+    Task<ApiResponse> post(UserFormCreateDto createRequestDto);
+
+    ApiResponse RegisterUserFormFile(string userFormId, UserFormFilesCreateDto payload);
   }
 }

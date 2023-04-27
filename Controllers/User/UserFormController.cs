@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.UserForm;
+using rethus_backend.Models.Dto.UserFormFiles;
 using System.Net;
 
 namespace rethus_backend.Controllers;
@@ -41,6 +42,14 @@ public class UserFormController : ApiBaseController
     _response.IsSuccess = true;
     _response.StatusCode = HttpStatusCode.OK;
     return Ok(_response);
+  }
+
+  [HttpPost("load-files/{userFormId}")]
+  public async Task<ActionResult<ApiResponse>> PostAsyncUserFormFiles(string userFormId, [FromBody] UserFormFilesCreateDto _files)
+  {
+    var response = _unitOfWork.UserForm.RegisterUserFormFile(userFormId, _files);
+
+    return Ok(response);
   }
 
   [Authorize]
