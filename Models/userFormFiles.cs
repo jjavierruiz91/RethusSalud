@@ -7,10 +7,11 @@ namespace rethus_backend.Models
   {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public string? UserFormFilesId { get; set; }
-    public int? size { get; set; }
+    public long? size { get; set; }
     public string? filename { get; set; }
     public string? type { get; set; }
     public string? url { get; set; }
+    public string? UserFormId { get; set; }
     public UserForm? UserForm { get; set; }
   }
 }

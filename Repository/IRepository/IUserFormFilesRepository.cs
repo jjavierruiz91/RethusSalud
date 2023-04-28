@@ -5,8 +5,13 @@ namespace rethus_backend.Repository.IRepository
 {
   public interface IUserFormFilesRepository : IRepository<UserFormFiles>
   {
-    bool IsUniqueUser(string userId);
-    // Task<UserResponseDto> Login(UserRequestDto loginRequestDTO);
-    Task<UserForm> Register(UserFormFilesCreateDto createRequestDto);
+    bool IsUnique(string userFormId);
+
+    bool IsExist(string userFormId);
+
+    UserFormFiles GetById(string id);
+
+    IEnumerable<UserFormFiles> GetAll();
+    ApiResponse RegisterUserFormFile(string userFormId, UserFormFilesCreateDto payload);
   }
 }

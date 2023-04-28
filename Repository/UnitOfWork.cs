@@ -12,10 +12,11 @@ namespace rethus_backend.Repository
     {
       _db = db;
       UserConfiguration = new UserConfigurationRepository(_db);
+      UserConfiguration = new UserConfigurationRepository(_db);
       User = new UserRepository(_db, UserConfiguration);
       Auth = new AuthRepository(_db, _configuration);
-      UserForm = new UserFormRepository(_db);
-      UserFormFiles = new UserFormFilesRepository(_db);
+      UserForm = new UserFormRepository(_db, _configuration);
+      UserFormFiles = new UserFormFilesRepository(_db, _configuration, UserForm);
     }
     public IUserRepository User { get; private set; }
 

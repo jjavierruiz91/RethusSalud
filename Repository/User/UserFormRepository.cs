@@ -2,27 +2,35 @@ using rethus_backend.Data;
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.UserForm;
 using rethus_backend.Models.Dto.UserFormFiles;
+using rethus_backend.Models.Dto.UserFormFiles;
 using rethus_backend.Repository.IRepository;
+using rethus_backend.Utilities.Constants.UserConstants;
+using rethus_backend.Utilities.FileHelper;
 using System.Collections.Generic;
+using System.Net;
 using System.Net;
 namespace rethus_backend.Repository
 {
   public class UserFormRepository : Repository<UserForm>, IUserFormRepository
   {
     private readonly ApplicationDbContext _context;
+    private readonly IConfiguration _config;
 
-    public UserFormRepository(ApplicationDbContext db) : base(db)
+    public UserFormRepository(ApplicationDbContext db, IConfiguration config) : base(db)
     {
       _context = db;
+      _config = config;
     }
 
     public IEnumerable<UserForm> GetAll()
     {
       return _context.UserForm;
+      return _context.UserForm;
     }
 
     public UserForm GetById(string id)
     {
+      return _context.UserForm.Find(id);
       return _context.UserForm.Find(id);
     }
 

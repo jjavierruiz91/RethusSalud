@@ -28,7 +28,7 @@ namespace rethus_backend.Models
       IsSuccess = isSuccess;
     }
 
-    public void AddError(string message, HttpStatusCode statusCode, bool isSuccess = true)
+    public void AddError(string message, HttpStatusCode statusCode = HttpStatusCode.BadRequest, bool isSuccess = true)
     {
       Messages.Add(message);
       StatusCode = statusCode;

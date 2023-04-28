@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "t0jw7M3PkapfU8S32lzfEhS+EsXFRy4Wm6Oa0qkYoAgifcyhw92px98qC08UIB9cisWqTn1scqwbggFcY6odJw==",
+  "dgSpecHash": "JhGjguf51Z+6XpW/SU6VhU8/TxiSpVVOLo7P26c22uQDAe74AXZfLSwn6D4nv+ESlP97+gYcnKdBljbS3xtJww==",
   "success": true,
-  "projectFilePath": "/Users/alvis/Documents/Practicas Gobernacion del cesar/Proyecto Backend/rethus-backend/rethus-backend.csproj",
+  "projectFilePath": "/Users/alvis/Documents/PracticasGobernacion/Proyecto Backend/rethus-backend/rethus-backend.csproj",
   "expectedPackageFiles": [
     "/Users/alvis/.nuget/packages/automapper/12.0.1/automapper.12.0.1.nupkg.sha512",
     "/Users/alvis/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.0/automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",

@@ -99,5 +99,9 @@ namespace rethus_backend.Models.Dto.UserForm
 
     [Required(ErrorMessage = "AcademicsDateAdministrative is required")]
     public DateTime AcademicsDateAdministrative { get; set; }
+
+    [Required(ErrorMessage = "TypeProcedure is required")]
+    public int? TypeProcedure { get; set; }
+
   }
 }

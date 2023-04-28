@@ -4041,11 +4041,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/alvis/Documents/Practicas Gobernacion del cesar/Proyecto Backend/rethus-backend/rethus-backend.csproj",
+      "projectUniqueName": "/Users/alvis/Documents/PracticasGobernacion/Proyecto Backend/rethus-backend/rethus-backend.csproj",
       "projectName": "rethus-backend",
-      "projectPath": "/Users/alvis/Documents/Practicas Gobernacion del cesar/Proyecto Backend/rethus-backend/rethus-backend.csproj",
+      "projectPath": "/Users/alvis/Documents/PracticasGobernacion/Proyecto Backend/rethus-backend/rethus-backend.csproj",
       "packagesPath": "/Users/alvis/.nuget/packages/",
-      "outputPath": "/Users/alvis/Documents/Practicas Gobernacion del cesar/Proyecto Backend/rethus-backend/obj/",
+      "outputPath": "/Users/alvis/Documents/PracticasGobernacion/Proyecto Backend/rethus-backend/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/alvis/.nuget/NuGet/NuGet.Config"
