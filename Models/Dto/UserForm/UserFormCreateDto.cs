@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using rethus_backend.Models;
 namespace rethus_backend.Models.Dto.UserForm
 {
   public class UserFormCreateDto
@@ -103,5 +104,22 @@ namespace rethus_backend.Models.Dto.UserForm
     [Required(ErrorMessage = "TypeProcedure is required")]
     public int? TypeProcedure { get; set; }
 
+  }
+
+  // public class ResponseUserFormPaginate
+  // {
+  //   public int pages { get; set; }
+  //   public IQueryable<UserForm> records { get; set; }
+  //   public int total_records { get; set; }
+  //   public int current_page { get; set; }
+  // }
+
+
+  public class PaginationResult<T>
+  {
+    public int TotalPages { get; set; }
+    public int TotalRecords { get; set; }
+    public int CurrentPage { get; set; }
+    public List<T> Records { get; set; }
   }
 }

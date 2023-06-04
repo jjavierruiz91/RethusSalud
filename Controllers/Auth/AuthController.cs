@@ -23,7 +23,10 @@ public class LoginController : ApiBaseController
 
     if (!user)
     {
-      return BadRequest(new { message = "Username or password is incorrect" });
+      _response.IsSuccess = false;
+      _response.StatusCode = HttpStatusCode.BadRequest;
+      _response.Messages.Add("Username not exist");
+      return BadRequest(_response);
     }
 
     AuthResponseDto userAuthenticate = await _unitOfWork.Auth.Authenticate(_user);

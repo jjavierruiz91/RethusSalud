@@ -18,30 +18,19 @@ public class UserFormController : ApiBaseController
 
 
   [HttpPost]
-  public async Task<ActionResult<ApiResponse>> PostAsync([FromBody] UserFormCreateDto _user)
+  public async Task<ActionResult<ApiResponse>> PostAsync([FromBody] UserFormCreateDto userForm)
   {
-    bool user = _unitOfWork.UserForm.IsUniqueUser(_user.PersonalEmail);
+    ApiResponse createUser = await _unitOfWork.UserForm.post(userForm);
 
-    if (user)
+    if (createUser.IsSuccess == false)
     {
-      _response.IsSuccess = false;
-      _response.StatusCode = HttpStatusCode.BadRequest;
-      _response.Messages.Add("Email already exists");
-      return BadRequest(_response);
+      return BadRequest(createUser);
     }
 
-    ApiResponse newUser = await _unitOfWork.UserForm.post(_user);
-    if (newUser == null)
-    {
-      _response.IsSuccess = false;
-      _response.StatusCode = HttpStatusCode.BadRequest;
-      _response.Messages.Add("Register Error");
-      return BadRequest(_response);
-    }
+    var user_configuration = _unitOfWork.UserConfiguration.GetByUserId(userForm.userId);
+    _unitOfWork.UserConfiguration.updateAutomaticStepConfiguration(user_configuration.ConfigurationsId);
 
-    _response.IsSuccess = true;
-    _response.StatusCode = HttpStatusCode.OK;
-    return Ok(_response);
+    return Ok(createUser);
   }
 
   [HttpPost("load-files/{userFormId}")]
@@ -54,9 +43,10 @@ public class UserFormController : ApiBaseController
 
   [Authorize]
   [HttpGet]
-  public ActionResult<List<UserForm>> GetAll()
+  public ActionResult<List<UserForm>> GetAll([FromQuery] int? page)
   {
-    var users = _unitOfWork.UserForm.GetAll();
+
+    var users = _unitOfWork.UserForm.GetAll(page);
     return Ok(users);
   }
 

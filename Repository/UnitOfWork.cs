@@ -12,7 +12,6 @@ namespace rethus_backend.Repository
     {
       _db = db;
       UserConfiguration = new UserConfigurationRepository(_db);
-      UserConfiguration = new UserConfigurationRepository(_db);
       User = new UserRepository(_db, UserConfiguration);
       Auth = new AuthRepository(_db, _configuration);
       UserForm = new UserFormRepository(_db, _configuration);

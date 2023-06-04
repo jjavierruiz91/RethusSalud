@@ -9,6 +9,8 @@ namespace rethus_backend.Models
     public string? state { get; set; }
 
     public string? step { get; set; }
+    public string? type_procedure { get; set; }
+    public Boolean? termCondition { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

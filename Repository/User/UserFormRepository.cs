@@ -2,12 +2,10 @@ using rethus_backend.Data;
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.UserForm;
 using rethus_backend.Models.Dto.UserFormFiles;
-using rethus_backend.Models.Dto.UserFormFiles;
 using rethus_backend.Repository.IRepository;
 using rethus_backend.Utilities.Constants.UserConstants;
 using rethus_backend.Utilities.FileHelper;
 using System.Collections.Generic;
-using System.Net;
 using System.Net;
 namespace rethus_backend.Repository
 {
@@ -22,15 +20,32 @@ namespace rethus_backend.Repository
       _config = config;
     }
 
-    public IEnumerable<UserForm> GetAll()
+    public PaginationResult<UserForm> GetAll(int? page)
     {
-      return _context.UserForm;
-      return _context.UserForm;
+      int _page = page ?? 1;
+      int pageSize = 10;
+
+      int totalRecords = _context.UserForm.Count();
+      int total_pages = (int)Math.Ceiling((decimal)totalRecords / pageSize);
+
+      var pensiones = _context.UserForm
+          .Skip((_page - 1) * pageSize)
+          .Take(pageSize)
+          .ToList();
+
+      var paginationResult = new PaginationResult<UserForm>
+      {
+        TotalPages = total_pages,
+        TotalRecords = totalRecords,
+        CurrentPage = _page,
+        Records = pensiones
+      };
+
+      return paginationResult;
     }
 
     public UserForm GetById(string id)
     {
-      return _context.UserForm.Find(id);
       return _context.UserForm.Find(id);
     }
 
@@ -48,8 +63,22 @@ namespace rethus_backend.Repository
 
     public Task<ApiResponse> post(UserFormCreateDto createRequestDto)
     {
-
+      var response = new ApiResponse();
       if (createRequestDto == null) return null;
+
+      var user = _context.Users.FirstOrDefault(x => x.UserId == createRequestDto.userId);
+      if (user == null)
+      {
+        response.AddError("El usuario no existe", HttpStatusCode.BadRequest, false);
+        return Task.FromResult(response);
+      }
+
+      var userForm = _context.UserForm.FirstOrDefault(x => x.UserId == createRequestDto.userId);
+      if (userForm != null && userForm.status == "active")
+      {
+        response.AddError("El usuario tiene un tramite en proceso", HttpStatusCode.BadRequest, false);
+        return Task.FromResult(response);
+      }
 
       var form = new UserForm
       {
@@ -87,13 +116,16 @@ namespace rethus_backend.Repository
       };
 
       form.UserId = createRequestDto.userId;
+      form.status = "active";
+      form.stepForm = "etapa_1";
       form.CreatedAt = DateTime.Now;
       form.UpdatedAt = DateTime.Now;
 
       var createUserForm = _context.UserForm.Add(form);
       _context.SaveChanges();
 
-      var response = new ApiResponse();
+      response.IsSuccess = true;
+      response.StatusCode = HttpStatusCode.OK;
       return Task.FromResult(response);
     }
 
@@ -108,7 +140,51 @@ namespace rethus_backend.Repository
         return response;
       };
 
+      if (payload.files.Count == 0)
+      {
+        response.AddError("La lista de archivo no puede estar vacia");
+      }
+
+      var amount = GetAmountFilesByTypeProcedure(userForm.typeProcedure);
+
+      if (amount == 0 || payload.files.Count != (int)amount)
+      {
+        response.AddError("El tipo de tramite no coincide con la cantidad de archivo requerida");
+      }
+
+      var ruta = _config.GetSection("routeFileProcedures").Value + userForm.PersonalIdentification;
+
+      FileHelper.CreateFolder(ruta);
+
+      foreach (var item in payload.files)
+      {
+        var baseUrlFile = FileHelper.AddAsync(item, ruta);
+
+        var form = new UserFormFiles
+        {
+          size = item.Length,
+          filename = item.FileName,
+          type = item.ContentType,
+          url = baseUrlFile,
+          UserFormId = userForm.UserFormId
+        };
+
+        var createRegister = _context.UserFormFiles.Add(form);
+        _context.SaveChanges();
+
+      }
       return response;
+    }
+
+    public EnumMaximumAmountFiles GetAmountFilesByTypeProcedure(int typeProcedure)
+    {
+      var procedure = (EnumProcedure)typeProcedure;
+
+      if (procedure == EnumProcedure.RGNTHST) return EnumMaximumAmountFiles.RGNTHST;
+
+      if (procedure == EnumProcedure.TCSSO) return EnumMaximumAmountFiles.TCSSO;
+
+      return EnumMaximumAmountFiles.DF;
     }
   }
 }

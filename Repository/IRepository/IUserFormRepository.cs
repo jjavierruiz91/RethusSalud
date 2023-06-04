@@ -12,7 +12,7 @@ namespace rethus_backend.Repository.IRepository
 
     UserForm GetById(string id);
 
-    IEnumerable<UserForm> GetAll();
+    PaginationResult<UserForm> GetAll(int? page);
     Task<ApiResponse> post(UserFormCreateDto createRequestDto);
 
     ApiResponse RegisterUserFormFile(string userFormId, UserFormFilesCreateDto payload);

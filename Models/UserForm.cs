@@ -57,6 +57,9 @@ namespace rethus_backend.Models
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
+    public string status { get; set; }
+
+    public string stepForm { get; set; }
     //   public UserForm(string personalType_identification, string personalGender, int personalIdentification, string personalFirstName, string personalLastName, string personalCountryBirth, string personalDepartmentBirth, string personalMunicipalityBirth, DateTime dateBirth, string personalPlaceResidence, string personalDepartmentResidence, string personalMunicipalityResidence, string personalAddress, int personalTelephone, int personalPhone, string personalEmail, string personalEthnicGroup, string academicsOriginTitle, string academicsTypeInstitution, string academicsProgramType, string academicsDepartmentInstitution, string academicsMunicipalityInstitution, string academicsNameInstitution, string academicsProgramName, string academicsDateInstitution, string academicsGradeDate, string academicsNumberConvalidation, DateTime academicsDateConvalidation, string academicsTitle, string academicsNumberAdministrative, DateTime academicsDateAdministrative)
     //   {
     //     PersonalType_identification = personalType_identification;

@@ -16,10 +16,18 @@ public class UserFormFilesController : ApiBaseController
 
   public UserFormFilesController(IServiceProvider provider) : base(provider) { }
 
-  [HttpPost("{userFormId}")]
-  public async Task<ActionResult<ApiResponse>> PostAsyncUserFormFiles(string userFormId, [FromForm] UserFormFilesCreateDto _files)
+  [HttpPost("{userId}")]
+  public async Task<ActionResult<ApiResponse>> PostAsyncUserFormFiles(string userId, [FromForm] UserFormFilesCreateDto _files)
   {
-    var response = _unitOfWork.UserFormFiles.RegisterUserFormFile(userFormId, _files);
+    var response = _unitOfWork.UserFormFiles.RegisterUserFormFile(userId, _files);
+
+    if (response.IsSuccess = false)
+    {
+      return BadRequest(response);
+    }
+
+    var user_configuration = _unitOfWork.UserConfiguration.GetByUserId(userId);
+    _unitOfWork.UserConfiguration.updateAutomaticStepConfiguration(user_configuration.ConfigurationsId);
 
     return Ok(response);
   }

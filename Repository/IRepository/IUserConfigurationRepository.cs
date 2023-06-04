@@ -8,6 +8,15 @@ namespace rethus_backend.Repository.IRepository
     bool IsUniqueUser(string userId);
     // Task<UserResponseDto> Login(UserRequestDto loginRequestDTO);
     // Task<Configurations> Register(ConfigurationCreateDto createRequestDto);
+    Configurations GetById(string id);
+    Configurations GetByUserId(string userId);
+
+    ApiResponse updateStepConfiguration(string id, string step);
+    ApiResponse updateTypeProcessConfiguration(string id, string type_procedure);
+    ApiResponse updateTermConditionsConfiguration(string id, bool term);
+    ApiResponse updateAutomaticStepConfiguration(string id);
+
+
     void Register(string email);
   }
 }

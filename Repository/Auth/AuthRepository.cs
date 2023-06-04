@@ -35,12 +35,18 @@ namespace rethus_backend.Repository
       {
         return null;
       }
+      var user_configuration = _context.Configurations.SingleOrDefault(x => x.UserId == user.UserId);
+
+      if (user_configuration == null)
+      {
+        return null;
+      }
 
       var jwtToken = generateJwtToken(user);
       _context.Update(user);
       _context.SaveChanges();
 
-      return new AuthResponseDto(user, jwtToken);
+      return new AuthResponseDto(user, jwtToken, user_configuration);
     }
 
     public string generateJwtToken(User _user)

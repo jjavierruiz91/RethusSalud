@@ -43,19 +43,21 @@ namespace rethus_backend.Repository
       return user == null;
     }
 
-    public ApiResponse RegisterUserFormFile(string userFormId, UserFormFilesCreateDto payload)
+    public ApiResponse RegisterUserFormFile(string userId, UserFormFilesCreateDto payload)
     {
       var response = new ApiResponse();
-      var userForm = _useForm.GetById(userFormId);
+      var userForm = _context.UserForm.FirstOrDefault(x => x.UserId == userId && x.status == "active");
 
       if (userForm == null)
       {
+        response.IsSuccess = false;
         response.AddError("EL usuario no tiene formulario activo");
         return response;
       };
 
       if (payload.files.Count == 0)
       {
+        response.IsSuccess = false;
         response.AddError("La lista de archivo no puede estar vacia");
       }
 
@@ -63,6 +65,7 @@ namespace rethus_backend.Repository
 
       if (amount == 0 || payload.files.Count != (int)amount)
       {
+        response.IsSuccess = false;
         response.AddError("El tipo de tramite no coincide con la cantidad de archivo requerida");
       }
 
