@@ -49,6 +49,22 @@ namespace rethus_backend.Repository
       return _context.UserForm.Find(id);
     }
 
+    public DetailsProcessUserDto GetDetailProcessByUserId(string userId)
+    {
+      var userForm = _context.UserForm
+            .Where(user => user.UserId == userId)
+            .Select(columns => new DetailsProcessUserDto
+            {
+              PersonalType_identification = columns.PersonalType_identification,
+              PersonalIdentification = columns.PersonalIdentification ?? 0,
+              PersonalFirstName = columns.PersonalFirstName,
+              PersonalLastName = columns.PersonalLastName,
+              PersonalEmail = columns.PersonalEmail
+            }).FirstOrDefault();
+
+      return userForm;
+    }
+
     public bool IsExistUser(string userFormId)
     {
       throw new NotImplementedException();
@@ -66,7 +82,7 @@ namespace rethus_backend.Repository
       var response = new ApiResponse();
       if (createRequestDto == null) return null;
 
-      var user = _context.Users.FirstOrDefault(x => x.UserId == createRequestDto.userId);
+      var user = _context.Configurations.FirstOrDefault(x => x.UserId == createRequestDto.userId);
       if (user == null)
       {
         response.AddError("El usuario no existe", HttpStatusCode.BadRequest, false);
@@ -112,7 +128,8 @@ namespace rethus_backend.Repository
         AcademicsDateConvalidation = createRequestDto.AcademicsDateConvalidation,
         AcademicsTitle = createRequestDto.AcademicsTitle,
         AcademicsNumberAdministrative = createRequestDto.AcademicsNumberAdministrative,
-        AcademicsDateAdministrative = createRequestDto.AcademicsDateAdministrative
+        AcademicsDateAdministrative = createRequestDto.AcademicsDateAdministrative,
+        typeProcedure = user.type_procedure
       };
 
       form.UserId = createRequestDto.userId;
@@ -145,12 +162,12 @@ namespace rethus_backend.Repository
         response.AddError("La lista de archivo no puede estar vacia");
       }
 
-      var amount = GetAmountFilesByTypeProcedure(userForm.typeProcedure);
+      // var amount = GetAmountFilesByTypeProcedure(userForm.typeProcedure);
 
-      if (amount == 0 || payload.files.Count != (int)amount)
-      {
-        response.AddError("El tipo de tramite no coincide con la cantidad de archivo requerida");
-      }
+      // if (amount == 0 || payload.files.Count != (int)amount)
+      // {
+      //   response.AddError("El tipo de tramite no coincide con la cantidad de archivo requerida");
+      // }
 
       var ruta = _config.GetSection("routeFileProcedures").Value + userForm.PersonalIdentification;
 

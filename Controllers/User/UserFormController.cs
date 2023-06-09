@@ -59,4 +59,17 @@ public class UserFormController : ApiBaseController
 
     return Ok(user);
   }
+
+  [HttpGet("detail-process/{userId}")]
+  public IActionResult GetStateProcessById(string userId)
+  {
+    var user = _unitOfWork.UserForm.GetDetailProcessByUserId(userId);
+    if (user == null) return NotFound();
+
+
+    _response.IsSuccess = true;
+    _response.StatusCode = HttpStatusCode.OK;
+    _response.Result = user;
+    return Ok(_response);
+  }
 }

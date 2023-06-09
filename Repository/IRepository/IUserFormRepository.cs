@@ -12,6 +12,8 @@ namespace rethus_backend.Repository.IRepository
 
     UserForm GetById(string id);
 
+    DetailsProcessUserDto GetDetailProcessByUserId(string userId);
+
     PaginationResult<UserForm> GetAll(int? page);
     Task<ApiResponse> post(UserFormCreateDto createRequestDto);
 

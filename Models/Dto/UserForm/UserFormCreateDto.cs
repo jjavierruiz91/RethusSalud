@@ -101,8 +101,38 @@ namespace rethus_backend.Models.Dto.UserForm
     [Required(ErrorMessage = "AcademicsDateAdministrative is required")]
     public DateTime AcademicsDateAdministrative { get; set; }
 
-    [Required(ErrorMessage = "TypeProcedure is required")]
-    public int? TypeProcedure { get; set; }
+    // [Required(ErrorMessage = "TypeProcedure is required")]
+    // public string? TypeProcedure { get; set; }
+
+  }
+
+  // public class ResponseUserFormPaginate
+  // {
+  //   public int pages { get; set; }
+  //   public IQueryable<UserForm> records { get; set; }
+  //   public int total_records { get; set; }
+  //   public int current_page { get; set; }
+  // }
+
+
+  public class PaginationResult<T>
+  {
+    public int TotalPages { get; set; }
+    public int TotalRecords { get; set; }
+    public int CurrentPage { get; set; }
+    public List<T> Records { get; set; }
+  }
+
+  public class DetailsProcessUserDto
+  {
+    public string PersonalType_identification { get; set; }
+
+    public int PersonalIdentification { get; set; }
+
+    public string? PersonalFirstName { get; set; }
+    public string? PersonalLastName { get; set; }
+
+    public string? PersonalEmail { get; set; }
 
   }
 

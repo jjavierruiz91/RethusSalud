@@ -61,13 +61,13 @@ namespace rethus_backend.Repository
         response.AddError("La lista de archivo no puede estar vacia");
       }
 
-      var amount = GetAmountFilesByTypeProcedure(userForm.typeProcedure);
+      // var amount = GetAmountFilesByTypeProcedure(userForm.typeProcedure);
 
-      if (amount == 0 || payload.files.Count != (int)amount)
-      {
-        response.IsSuccess = false;
-        response.AddError("El tipo de tramite no coincide con la cantidad de archivo requerida");
-      }
+      // if (amount == 0 || payload.files.Count != (int)amount)
+      // {
+      //   response.IsSuccess = false;
+      //   response.AddError("El tipo de tramite no coincide con la cantidad de archivo requerida");
+      // }
 
       var ruta = _config.GetSection("routeFileProcedures").Value + userForm.PersonalIdentification;
 
