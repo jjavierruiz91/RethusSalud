@@ -1,17 +1,19 @@
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.UserFormFiles;
+using rethus_backend.Utilities.Templates.dto;
 
 namespace rethus_backend.Repository.IRepository
 {
-  public interface IUserFormFilesRepository : IRepository<UserFormFiles>
-  {
-    bool IsUnique(string userFormId);
+    public interface IUserFormFilesRepository : IRepository<UserFormFiles>
+    {
+        bool IsUnique(string userFormId);
 
-    bool IsExist(string userFormId);
+        bool IsExist(string userFormId);
+        Task<List<byte[]>> GetFilesByUserFormId(string userFormId);
+        List<GetUserFormIdDto> GetUserFormId(string userFormId);
+        Task<UserFormFileDetails> GetFileByUserFormId(string userFormFileId);
 
-    UserFormFiles GetById(string id);
-
-    IEnumerable<UserFormFiles> GetAll();
-    ApiResponse RegisterUserFormFile(string userFormId, UserFormFilesCreateDto payload);
-  }
+        IEnumerable<UserFormFiles> GetAll();
+        ApiResponse RegisterUserFormFile(string userFormId, UserFormFilesCreateDto payload);
+    }
 }
