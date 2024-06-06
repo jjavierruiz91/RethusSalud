@@ -17,7 +17,7 @@ namespace rethus_backend.Models.Dto.Comments
     {
         public string? UserFormId { get; set; }
         public string? Status { get; set; }
-        public int? PersonalIdentification { get; set; }
+        public string? PersonalIdentification { get; set; }
         public string? TypeProcedure { get; set; }
         public DateTime? CreatedAt { get; set; }
 

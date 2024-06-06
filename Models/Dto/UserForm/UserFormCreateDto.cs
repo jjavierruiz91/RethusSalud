@@ -15,7 +15,7 @@ namespace rethus_backend.Models.Dto.UserForm
         public string PersonalGender { get; set; }
 
         [Required(ErrorMessage = "PersonalIdentification is required")]
-        public int PersonalIdentification { get; set; }
+        public string PersonalIdentification { get; set; }
 
         [Required(ErrorMessage = "PersonalFirstName is required")]
         public string PersonalFirstName { get; set; }
@@ -127,7 +127,7 @@ namespace rethus_backend.Models.Dto.UserForm
     {
         public string PersonalTypeIdentification { get; set; }
 
-        public int PersonalIdentification { get; set; }
+        public string PersonalIdentification { get; set; }
 
         public string? PersonalFirstName { get; set; }
         public string? PersonalLastName { get; set; }
@@ -139,7 +139,7 @@ namespace rethus_backend.Models.Dto.UserForm
     {
         public string PersonalTypeIdentification { get; set; }
         public string? PersonalGender { get; set; }
-        public int? PersonalIdentification { get; set; }
+        public string? PersonalIdentification { get; set; }
         public string? PersonalFirstName { get; set; }
         public string? PersonalLastName { get; set; }
         public string? PersonalCountryBirth { get; set; }
@@ -181,7 +181,7 @@ namespace rethus_backend.Models.Dto.UserForm
         public UserFormStatus Status { get; set; }
         public string TypeProcedure { get; set; }
         public string StepForm { get; set; }
-        public int PersonalIdentification { get; set; }
+        public string PersonalIdentification { get; set; }
     }
 
     // public class ResponseUserFormPaginate

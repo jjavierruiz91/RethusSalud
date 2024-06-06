@@ -78,19 +78,20 @@ namespace rethus_backend.Repository
             return _context.UserForm.Find(id);
         }
 
-        public DetailsProcessUserDto GetDetailProcessByUserId(string userId)
+        public DetailsProcessUserDto GetDetailProcess(UserFormProcessDto payload)
         {
             var userForm = _context.UserForm
-                .Where(user => user.UserId == userId)
+                .Where(
+                    user =>
+                        user.PersonalTypeIdentification == payload.identificationType
+                        && user.PersonalIdentification == payload.identification
+                )
                 .Select(
                     columns =>
                         new DetailsProcessUserDto
                         {
                             PersonalTypeIdentification = columns.PersonalTypeIdentification,
-                            PersonalIdentification =
-                                columns.PersonalIdentification >= 0
-                                    ? columns.PersonalIdentification
-                                    : 0,
+                            PersonalIdentification = columns.PersonalIdentification,
                             PersonalFirstName = columns.PersonalFirstName,
                             PersonalLastName = columns.PersonalLastName,
                             PersonalEmail = columns.PersonalEmail
