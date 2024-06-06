@@ -176,7 +176,6 @@ namespace rethus_backend.Repository
 
         public async void CreateCertificate(string userFormId)
         {
-            Console.WriteLine("entro a convertir el pdf");
             UserForm form = _useForm.GetById(userFormId);
 
             if (form.StepForm != "inventory")
@@ -193,14 +192,11 @@ namespace rethus_backend.Repository
 
             if (form.TypeProcedure == "RETHUS")
             {
-                Console.WriteLine(form.TypeProcedure);
                 var rethusDto = new TemplateRethusDto
                 {
                     Title = form.PersonalFirstName,
                     Content = form.PersonalEmail
                 };
-
-                Console.WriteLine(outputPath);
 
                 certificateRethus = await _useForm.DownloadCertificateRethus(rethusDto);
                 await ConverPdfService.ConvertHtmlToPdf(certificateRethus, outputPath);
@@ -211,32 +207,8 @@ namespace rethus_backend.Repository
                     throw new FileNotFoundException("El archivo no existe.");
                 }
 
-                // await CreateFileCertificate(fileInfov1, form.UserFormId, outputPath);
                 return;
             }
-
-            // var ssoDto = new TemplateSSODto
-            // {
-            //     Title = form.PersonalFirstName,
-            //     Content = form.PersonalEmail
-            // };
-
-            // certificateRethus = await DownloadCertificateSso(ssoDto);
-            // await ConverPdfService.ConvertHtmlToPdf(certificateRethus, outputPath);
-
-            // var fileInfo = new FileInfo(outputPath);
-
-            // var formDonwload = new UserFormFiles
-            // {
-            //     size = fileInfo.Length,
-            //     filename = "certificate",
-            //     type = fileInfo.Extension,
-            //     url = outputPath,
-            //     UserFormId = form.UserFormId
-            // };
-
-            // _context.UserFormFiles.Add(formDonwload);
-            // _context.SaveChanges();
         }
     }
 }
