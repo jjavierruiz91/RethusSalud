@@ -16,7 +16,7 @@ namespace rethus_backend.Repository.IRepository
 
         UserForm GetById(string id);
 
-        DetailsProcessUserDto GetDetailProcessByUserId(string userId);
+        DetailsProcessUserDto GetDetailProcess(UserFormProcessDto payload);
 
         UserForm GetFormUserId(string userId);
         UserForm IsDownloadCertificate(string userId);

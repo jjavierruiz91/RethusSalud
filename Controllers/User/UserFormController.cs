@@ -69,19 +69,6 @@ public class UserFormController : ApiBaseController
         return Ok(user);
     }
 
-    [HttpGet("detail-process/{userId}")]
-    public IActionResult GetStateProcessById(string userId)
-    {
-        var user = _unitOfWork.UserForm.GetDetailProcessByUserId(userId);
-        if (user == null)
-            return NotFound();
-
-        _response.IsSuccess = true;
-        _response.StatusCode = HttpStatusCode.OK;
-        _response.Result = user;
-        return Ok(_response);
-    }
-
     [HttpGet("pagination")]
     [Authorize(
         Roles = Policies.FuncionarioEtapa1
@@ -95,7 +82,7 @@ public class UserFormController : ApiBaseController
     public PaginationResultDto<UserFormResponseDto> GetAllPaginado(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
-        [FromQuery] int PersonalIdentification = 0,
+        [FromQuery] string PersonalIdentification = "",
         [FromQuery] string step = "funcionarioEtapa1",
         [FromQuery] string? TypeProcedure = null,
         [FromQuery] string? CreatedAt = null
@@ -108,7 +95,7 @@ public class UserFormController : ApiBaseController
             QueryParameters = new CommonQueryParametersDto { StepForm = step }
         };
 
-        if (PersonalIdentification > 0)
+        if (PersonalIdentification.Length > 0)
         {
             request.QueryParameters.PersonalIdentification = PersonalIdentification;
         }
@@ -221,6 +208,7 @@ public class UserFormController : ApiBaseController
     }
 
     [HttpGet("donwload/inventory/file/{formId}")]
+    [Authorize(Roles = Policies.Inventory)]
     public async Task<ActionResult<ApiResponse>> GetFileByUserFomrId(string formId)
     {
         var detailsFile = await _unitOfWork.UserForm.GetFileInventory(formId);

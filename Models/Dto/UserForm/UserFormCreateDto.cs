@@ -132,7 +132,7 @@ namespace rethus_backend.Models.Dto.UserForm
         public string? PersonalFirstName { get; set; }
         public string? PersonalLastName { get; set; }
 
-        public string? PersonalEmail { get; set; }
+        public string Status { get; set; }
     }
 
     public class DetailsProccessPersonalDto

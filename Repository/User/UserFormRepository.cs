@@ -94,7 +94,7 @@ namespace rethus_backend.Repository
                             PersonalIdentification = columns.PersonalIdentification,
                             PersonalFirstName = columns.PersonalFirstName,
                             PersonalLastName = columns.PersonalLastName,
-                            PersonalEmail = columns.PersonalEmail
+                            Status = columns.Status.ToString()
                         }
                 )
                 .FirstOrDefault();
