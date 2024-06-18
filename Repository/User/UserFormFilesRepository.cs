@@ -192,11 +192,7 @@ namespace rethus_backend.Repository
 
             if (form.TypeProcedure == "RETHUS")
             {
-                var rethusDto = new TemplateRethusDto
-                {
-                    Title = form.PersonalFirstName,
-                    Content = form.PersonalEmail
-                };
+                var rethusDto = new TemplateRethusDto { };
 
                 certificateRethus = await _useForm.DownloadCertificateRethus(rethusDto);
                 await ConverPdfService.ConvertHtmlToPdf(certificateRethus, outputPath);

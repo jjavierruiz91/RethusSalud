@@ -426,15 +426,15 @@ namespace rethus_backend.Repository
                 );
             }
 
-            if (userForm.Status == UserFormStatus.approved)
-            {
-                response.AddError(
-                    "Este formulario tiene asignado un consecutivo!",
-                    HttpStatusCode.BadRequest,
-                    false
-                );
-                return response;
-            }
+            // if (userForm.Status == UserFormStatus.approved)
+            // {
+            //     response.AddError(
+            //         "Este formulario tiene asignado un consecutivo!",
+            //         HttpStatusCode.BadRequest,
+            //         false
+            //     );
+            //     return response;
+            // }
 
             if (consecutive.Length == 0)
             {
@@ -522,8 +522,13 @@ namespace rethus_backend.Repository
 
             var rethusDto = new TemplateRethusDto
             {
-                Title = form.PersonalFirstName,
-                Content = form.PersonalEmail
+                CONSECUTIVO = form.Consecutive,
+                CONSECUTIVO_FECHA = form.CreatedAt.ToString(),
+                NOMBRE_PROFESIONAL = form.PersonalFirstName + form.PersonalLastName,
+                EXPEDIDA_PROFESIONAL = form.AcademicsGradeDate.ToString(),
+                PROFESION_PROFESIONAL = form.AcademicsProgramName,
+                UNIVERSIDAD_PROFESIONAL = form.AcademicsNameInstitution,
+                CEDULA_PROFESIONAL = form.PersonalIdentification,
             };
 
             certificateRethus = await DownloadCertificateRethus(rethusDto);
@@ -544,8 +549,10 @@ namespace rethus_backend.Repository
             Console.WriteLine(form.TypeProcedure);
             var rethusDto = new TemplateSSODto
             {
-                Title = form.PersonalFirstName,
-                Content = form.PersonalEmail
+                CODIGO_PLAZA = form.Consecutive,
+                MODALIDAD = "ESPERA",
+                NOMBRE_INSTITUCION = form.AcademicsNameInstitution,
+                UBICACION_PLAZA = form.AcademicsProgramName,
             };
 
             certificateRethus = await DownloadCertificateSso(rethusDto);
