@@ -62,7 +62,6 @@ namespace rethus_backend.Repository
                 return response;
             }
 
-            Console.WriteLine("llego");
             Comments newComments =
                 new()
                 {
