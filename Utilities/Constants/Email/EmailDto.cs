@@ -7,4 +7,9 @@ namespace rethus_backend.Utilities.Constants.Email.EmailDto
         public bool IsBodyHtml { get; set; }
         public string BodyPath { get; set; }
     }
+
+    public class PlaceHoldersTemplate
+    {
+        public required string LinkRestorePassword { get; set; }
+    }
 }

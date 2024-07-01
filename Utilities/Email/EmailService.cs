@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Mail;
 using System.Runtime.CompilerServices;
+using Microsoft.VisualBasic;
 using rethus_backend.Utilities.Constants.Email.EmailDto;
 using rethus_backend.Utilities.FileHelper;
 
@@ -25,8 +26,21 @@ namespace rethus_backend.Utilities.Email.EmailService
                 var configurationServerAddress = _config
                     .GetSection("ConfigurationEmail:EmailAddress")
                     .Value;
+                var domailUrl = _config.GetSection("DomainWebUrl").Value;
+                var urlViewRestorePassword = _config.GetSection("UrlViewNerPassword").Value;
+
+                var linkUrl = domailUrl + urlViewRestorePassword;
 
                 string body = await FileHelper.FileHelper.ReadFileContentAsync(payload.BodyPath);
+
+                var placeHoldersTemplateDto = new PlaceHoldersTemplate
+                {
+                    LinkRestorePassword = linkUrl
+                };
+                var newBodyWithPlaceHolders = await ReplacePlacesHoldersTemplateEmail(
+                    body,
+                    placeHoldersTemplateDto
+                );
 
                 SmtpClient client = new SmtpClient(configurationServerSmtp);
                 client.Port = 587;
@@ -40,7 +54,7 @@ namespace rethus_backend.Utilities.Email.EmailService
                     mailMessage.To.Add(recipient);
                 }
                 mailMessage.Subject = payload.Subject;
-                mailMessage.Body = body;
+                mailMessage.Body = newBodyWithPlaceHolders;
                 mailMessage.IsBodyHtml = payload.IsBodyHtml;
 
                 client.Send(mailMessage);
@@ -53,6 +67,19 @@ namespace rethus_backend.Utilities.Email.EmailService
                 Console.WriteLine("Error al enviar el correo: " + ex.Message);
                 return true;
             }
+        }
+
+        public async static Task<string> ReplacePlacesHoldersTemplateEmail(
+            string bodyTemplate,
+            PlaceHoldersTemplate placeHolders
+        )
+        {
+            bodyTemplate = bodyTemplate.Replace(
+                "${LINK_RESTORE_PASSWORD}",
+                placeHolders.LinkRestorePassword
+            );
+
+            return bodyTemplate;
         }
     }
 }
