@@ -14,8 +14,6 @@ public class ConverPdfService
         byte[] pdfBytes = await page.PdfDataAsync();
 
         // Guardar el PDF en el disco
-        Console.WriteLine("Antes de rompreser");
-        Console.WriteLine(outputPath);
         File.WriteAllBytes(outputPath, pdfBytes);
     }
 }

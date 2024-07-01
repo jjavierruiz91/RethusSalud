@@ -199,7 +199,7 @@ namespace rethus_backend.Repository
         public async Task<User> UpdateStatusUserAdministaration(User _user, UserStatus newStatus)
         {
             _user.Status = newStatus;
-            Console.WriteLine(newStatus);
+
             var updatedUser = _context.Users.Update(_user);
             _context.SaveChanges();
 

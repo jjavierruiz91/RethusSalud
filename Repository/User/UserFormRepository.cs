@@ -546,7 +546,6 @@ namespace rethus_backend.Repository
 
             string certificateRethus = "";
 
-            Console.WriteLine(form.TypeProcedure);
             var rethusDto = new TemplateSSODto
             {
                 CODIGO_PLAZA = form.Consecutive,

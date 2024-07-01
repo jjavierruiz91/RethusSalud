@@ -40,8 +40,6 @@ namespace rethus_backend.Repository
                 .ToList();
 
             List<string> pdfPaths = filesUrls.Select(file => file.url).ToList();
-            Console.WriteLine(pdfPaths);
-            // var ruta = _config.GetSection("routeFileProcedures").Value;
             var ruta = "";
             var urls = FileHelper.GetPdfFilesAsync(pdfPaths, ruta);
             return urls;
