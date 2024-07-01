@@ -4,6 +4,7 @@ using rethus_backend.Models;
 using rethus_backend.Models.Dto.User;
 using rethus_backend.Models.Dto.Configuration;
 using System.Net;
+using rethus_backend.Models.Dto.UserPublic;
 
 namespace rethus_backend.Controllers;
 
@@ -55,6 +56,23 @@ public class UserPublicController : ApiBaseController
         }
 
         _response.Result = user;
+        return Ok(_response);
+    }
+
+    [HttpPost("restore")]
+    public IActionResult restorePassword([FromBody] UserRestorePassword payload)
+    {
+        var user = _unitOfWork.User.isExistUserCount(payload.email);
+        if (!user)
+        {
+            _response.IsSuccess = false;
+            _response.StatusCode = HttpStatusCode.NotFound;
+            _response.Messages.Add("El usuario con ese correo no fue encontrado");
+            return NotFound(_response);
+        }
+
+        var restorePassword = _unitOfWork.User.restorePassword(payload);
+
         return Ok(_response);
     }
 }
