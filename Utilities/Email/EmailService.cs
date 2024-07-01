@@ -26,21 +26,6 @@ namespace rethus_backend.Utilities.Email.EmailService
                 var configurationServerAddress = _config
                     .GetSection("ConfigurationEmail:EmailAddress")
                     .Value;
-                var domailUrl = _config.GetSection("DomainWebUrl").Value;
-                var urlViewRestorePassword = _config.GetSection("UrlViewNerPassword").Value;
-
-                var linkUrl = domailUrl + urlViewRestorePassword;
-
-                string body = await FileHelper.FileHelper.ReadFileContentAsync(payload.BodyPath);
-
-                var placeHoldersTemplateDto = new PlaceHoldersTemplate
-                {
-                    LinkRestorePassword = linkUrl
-                };
-                var newBodyWithPlaceHolders = await ReplacePlacesHoldersTemplateEmail(
-                    body,
-                    placeHoldersTemplateDto
-                );
 
                 SmtpClient client = new SmtpClient(configurationServerSmtp);
                 client.Port = 587;
@@ -54,7 +39,7 @@ namespace rethus_backend.Utilities.Email.EmailService
                     mailMessage.To.Add(recipient);
                 }
                 mailMessage.Subject = payload.Subject;
-                mailMessage.Body = newBodyWithPlaceHolders;
+                mailMessage.Body = payload.TemplateEmail;
                 mailMessage.IsBodyHtml = payload.IsBodyHtml;
 
                 client.Send(mailMessage);
@@ -69,7 +54,28 @@ namespace rethus_backend.Utilities.Email.EmailService
             }
         }
 
-        public async static Task<string> ReplacePlacesHoldersTemplateEmail(
+        public async Task<string> ConfigurationTemplateRestorePassword(string TemplatePashEmail)
+        {
+            var domailUrl = _config.GetSection("DomainWebUrl").Value;
+            var urlViewRestorePassword = _config.GetSection("UrlViewNerPassword").Value;
+
+            var linkUrl = domailUrl + urlViewRestorePassword;
+
+            string body = await FileHelper.FileHelper.ReadFileContentAsync(TemplatePashEmail);
+
+            var placeHoldersTemplateDto = new PlaceHoldersTemplate
+            {
+                LinkRestorePassword = linkUrl
+            };
+            var newBodyWithPlaceHolders = await ReplacePlacesHoldersRestorePassword(
+                body,
+                placeHoldersTemplateDto
+            );
+
+            return newBodyWithPlaceHolders;
+        }
+
+        public async static Task<string> ReplacePlacesHoldersRestorePassword(
             string bodyTemplate,
             PlaceHoldersTemplate placeHolders
         )

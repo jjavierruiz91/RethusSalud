@@ -230,6 +230,7 @@ namespace rethus_backend.Repository
             try
             {
                 var filePath = _config.GetSection("routeTemplateRestorePassword").Value;
+
                 SendEmailDto payloadSendEmail = new SendEmailDto
                 {
                     BodyPath = filePath,
@@ -238,6 +239,10 @@ namespace rethus_backend.Repository
                     To = new List<string> { "andres12334@getnada.com" },
                 };
                 var EmailServer = new EmailService(_config);
+
+                var config = await EmailServer.ConfigurationTemplateRestorePassword(filePath);
+                payloadSendEmail.TemplateEmail = config;
+
                 await EmailServer.SendEmail(payloadSendEmail);
 
                 return true;

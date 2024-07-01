@@ -5,7 +5,7 @@ namespace rethus_backend.Utilities.Constants.Email.EmailDto
         public List<string> To { get; set; }
         public string Subject { get; set; }
         public bool IsBodyHtml { get; set; }
-        public string BodyPath { get; set; }
+        public string TemplateEmail { get; set; }
     }
 
     public class PlaceHoldersTemplate
