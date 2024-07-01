@@ -234,7 +234,7 @@ namespace rethus_backend.Repository
                 {
                     BodyPath = filePath,
                     IsBodyHtml = true,
-                    Subject = "HOLA V1",
+                    Subject = "Restablecer contrasena",
                     To = new List<string> { "andres12334@getnada.com" },
                 };
                 var EmailServer = new EmailService(_config);
