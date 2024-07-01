@@ -1,9 +1,14 @@
 using rethus_backend.Data;
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.User;
+using rethus_backend.Models.Dto.UserPublic;
 using rethus_backend.Repository.IRepository;
+using rethus_backend.Utilities.Constants.Email.EmailDto;
 using rethus_backend.Utilities.Constants.PaginatioConstants;
 using rethus_backend.Utilities.Constants.UserConstants;
+using rethus_backend.Utilities.Email;
+using rethus_backend.Utilities.Email.EmailService;
+using rethus_backend.Utilities.FileHelper;
 using rethus_backend.Utilities.Security.Hashing;
 
 namespace rethus_backend.Repository
@@ -11,6 +16,8 @@ namespace rethus_backend.Repository
     public class UserRepository : Repository<User>, IUserRepository
     {
         private readonly ApplicationDbContext _context;
+
+        private readonly IConfiguration _config;
         private readonly IUserConfigurationRepository _configuration;
         private readonly PaginationService<
             User,
@@ -21,12 +28,14 @@ namespace rethus_backend.Repository
 
         public UserRepository(
             ApplicationDbContext db,
+            IConfiguration config,
             IUserConfigurationRepository configuration,
             PaginationService<User, UserQueryParametersDto, UserDto> paginationService
         )
             : base(db)
         {
             _context = db;
+            _config = config;
             _configuration = configuration;
             _paginationService = paginationService;
         }
@@ -49,6 +58,12 @@ namespace rethus_backend.Repository
         public User GetUserByEmail(string id)
         {
             return _context.Users.Find(id);
+        }
+
+        public bool isExistUserCount(string email)
+        {
+            bool userExist = _context.Users.Any(x => x.email == email);
+            return userExist;
         }
 
         public bool IsExistUser(string email)
@@ -208,6 +223,29 @@ namespace rethus_backend.Repository
             );
 
             return userActive > 0;
+        }
+
+        public async Task<bool> restorePassword(UserRestorePassword payload)
+        {
+            try
+            {
+                var filePath = _config.GetSection("routeTemplateRestorePassword").Value;
+                SendEmailDto payloadSendEmail = new SendEmailDto
+                {
+                    BodyPath = filePath,
+                    IsBodyHtml = true,
+                    Subject = "HOLA V1",
+                    To = new List<string> { "andres12334@getnada.com" },
+                };
+                var EmailServer = new EmailService(_config);
+                await EmailServer.SendEmail(payloadSendEmail);
+
+                return true;
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
         }
     }
 }
