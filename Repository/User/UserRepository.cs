@@ -235,7 +235,7 @@ namespace rethus_backend.Repository
                 {
                     IsBodyHtml = true,
                     Subject = "Restablecer contrasena",
-                    To = new List<string> { "andres12334@getnada.com" },
+                    To = new List<string> { payload.Email },
                 };
                 var EmailServer = new EmailService(_config);
 

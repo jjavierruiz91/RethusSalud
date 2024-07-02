@@ -34,6 +34,7 @@ namespace rethus_backend.Models.Dto.UserPublic
 
     public class RestoreSendEmailUser
     {
+        public string Email { get; set; }
         public string Token { get; set; }
     }
 }

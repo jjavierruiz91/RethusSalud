@@ -75,7 +75,11 @@ public class UserPublicController : ApiBaseController
 
         _unitOfWork.User.UpdateTokenUser(user.UserId, userTokenTemp);
 
-        RestoreSendEmailUser configTemplateDto = new RestoreSendEmailUser { Token = userTokenTemp };
+        RestoreSendEmailUser configTemplateDto = new RestoreSendEmailUser
+        {
+            Token = userTokenTemp,
+            Email = payload.email
+        };
 
         var restorePassword = _unitOfWork.User.restorePassword(configTemplateDto);
 
