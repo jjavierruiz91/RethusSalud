@@ -1,9 +1,7 @@
 using System.Net;
 using System.Net.Mail;
-using System.Runtime.CompilerServices;
-using Microsoft.VisualBasic;
+using rethus_backend.Models.Dto.UserPublic;
 using rethus_backend.Utilities.Constants.Email.EmailDto;
-using rethus_backend.Utilities.FileHelper;
 
 namespace rethus_backend.Utilities.Email.EmailService
 {
@@ -54,18 +52,24 @@ namespace rethus_backend.Utilities.Email.EmailService
             }
         }
 
-        public async Task<string> ConfigurationTemplateRestorePassword(string TemplatePashEmail)
+        public async Task<string> ConfigurationTemplateRestorePassword(
+            TemplateConfigurationDto payload
+        )
         {
             var domailUrl = _config.GetSection("DomainWebUrl").Value;
             var urlViewRestorePassword = _config.GetSection("UrlViewNerPassword").Value;
 
             var linkUrl = domailUrl + urlViewRestorePassword;
 
-            string body = await FileHelper.FileHelper.ReadFileContentAsync(TemplatePashEmail);
+            var linkUrlAddToken = linkUrl + "?token=" + payload.Token;
+
+            string body = await FileHelper.FileHelper.ReadFileContentAsync(
+                payload.TemplatePashEmail
+            );
 
             var placeHoldersTemplateDto = new PlaceHoldersTemplate
             {
-                LinkRestorePassword = linkUrl
+                LinkRestorePassword = linkUrlAddToken
             };
             var newBodyWithPlaceHolders = await ReplacePlacesHoldersRestorePassword(
                 body,
