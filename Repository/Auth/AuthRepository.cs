@@ -125,5 +125,70 @@ namespace rethus_backend.Repository
 
             return ci;
         }
+
+        public string generateJwtTokenTemp(string userId)
+        {
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, userId),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            System.Diagnostics.Debug.WriteLine(securityKey);
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var key = Encoding.ASCII.GetBytes(secretKey);
+            var SigningCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(key),
+                SecurityAlgorithms.HmacSha256Signature
+            );
+
+            var tokenDescriptor = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(30),
+                signingCredentials: credentials
+            );
+
+            //  Expires = DateTime.UtcNow.AddHours(15),
+            // SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+            // Subject = this.GenerateClaims(_user),
+            // var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+        }
+
+        public bool validateJwtTokenTmep(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(secretKey);
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false, // Cambia a true y configura ValidIssuer si estás validando el emisor
+                ValidateAudience = false, // Cambia a true y configura ValidAudience si estás validando el destinatario
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ClockSkew = TimeSpan.Zero // Para evitar problemas de desfase de tiempo
+            };
+
+            try
+            {
+                var principal = tokenHandler.ValidateToken(
+                    token,
+                    validationParameters,
+                    out SecurityToken validatedToken
+                );
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // El token no es válido
+                Console.WriteLine($"Token inválido: {ex.Message}");
+                return false;
+            }
+        }
     }
 }
