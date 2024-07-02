@@ -60,10 +60,10 @@ public class UserPublicController : ApiBaseController
     }
 
     [HttpPost("restore")]
-    public IActionResult restorePassword([FromBody] UserRestorePassword payload)
+    public async Task<IActionResult> restorePassword([FromBody] UserRestorePassword payload)
     {
-        var user = _unitOfWork.User.isExistUserCount(payload.email);
-        if (!user)
+        var user = _unitOfWork.User.GetUserByEmail(payload.email);
+        if (user == null)
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.NotFound;
@@ -71,7 +71,58 @@ public class UserPublicController : ApiBaseController
             return NotFound(_response);
         }
 
-        var restorePassword = _unitOfWork.User.restorePassword(payload);
+        var userTokenTemp = _unitOfWork.Auth.generateJwtTokenTemp(user.UserId);
+
+        _unitOfWork.User.UpdateTokenUser(user.UserId, userTokenTemp);
+
+        RestoreSendEmailUser configTemplateDto = new RestoreSendEmailUser { Token = userTokenTemp };
+
+        var restorePassword = _unitOfWork.User.restorePassword(configTemplateDto);
+
+        return Ok(_response);
+    }
+
+    [HttpPut("update")]
+    public async Task<IActionResult> newPassword([FromBody] UserUpdatePassword payload)
+    {
+        var isValideToken = _unitOfWork.Auth.validateJwtTokenTmep(payload.token);
+        if (!isValideToken)
+        {
+            _response.IsSuccess = false;
+            _response.StatusCode = HttpStatusCode.NotFound;
+            _response.Messages.Add(
+                "Ocurrio un error al actualizar la contrasena contactese con soporte"
+            );
+            return NotFound(_response);
+        }
+
+        var user = _unitOfWork.User.GetUserByToken(payload.token);
+        if (user == null)
+        {
+            _response.IsSuccess = false;
+            _response.StatusCode = HttpStatusCode.NotFound;
+            _response.Messages.Add(
+                "Ocurrio un error al actualizar la contrasena contactese con soporte"
+            );
+            return NotFound(_response);
+        }
+
+        UserPayloadPassword newPayload = new UserPayloadPassword
+        {
+            newPassword = payload.password,
+            UserId = user.UserId
+        };
+
+        var restorePassword = await _unitOfWork.User.updatePassword(newPayload);
+        if (!restorePassword)
+        {
+            _response.IsSuccess = false;
+            _response.StatusCode = HttpStatusCode.NotFound;
+            _response.Messages.Add(
+                "Ocurrio un error al actualizar la contrasena contactese con soporte"
+            );
+            return BadRequest(_response);
+        }
 
         return Ok(_response);
     }
