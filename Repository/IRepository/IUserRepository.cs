@@ -15,6 +15,7 @@ namespace rethus_backend.Repository.IRepository
         bool isExistUserCount(string email);
         bool IsUserActive(string email);
         User GetUserByEmail(string email);
+        User GetUserByToken(string token);
         IEnumerable<User> GetAll();
         public PaginationResultDto<UserDto> GetPagination(
             PaginationRequestDto<UserQueryParametersDto> request,
@@ -31,6 +32,9 @@ namespace rethus_backend.Repository.IRepository
         Task<User> UpdateStatusUserAdministaration(User _user, UserStatus newStatus);
         bool ValidateUserRole(string userType);
 
-        Task<Boolean> restorePassword(UserRestorePassword payload);
+        Task<bool> restorePassword(RestoreSendEmailUser payload);
+        Task<Boolean> updatePassword(UserPayloadPassword payload);
+
+        bool UpdateTokenUser(string userId, string token);
     }
 }

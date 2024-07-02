@@ -50,14 +50,14 @@ namespace rethus_backend.Repository
             return result;
         }
 
-        public User GetById(string email)
+        public User GetById(string userId)
         {
-            return _context.Users.FirstOrDefault(user => user.email == email);
+            return _context.Users.FirstOrDefault(user => user.UserId == userId);
         }
 
-        public User GetUserByEmail(string id)
+        public User GetUserByEmail(string email)
         {
-            return _context.Users.Find(id);
+            return _context.Users.FirstOrDefault(x => x.email == email);
         }
 
         public bool isExistUserCount(string email)
@@ -225,7 +225,7 @@ namespace rethus_backend.Repository
             return userActive > 0;
         }
 
-        public async Task<bool> restorePassword(UserRestorePassword payload)
+        public async Task<bool> restorePassword(RestoreSendEmailUser payload)
         {
             try
             {
@@ -233,18 +233,70 @@ namespace rethus_backend.Repository
 
                 SendEmailDto payloadSendEmail = new SendEmailDto
                 {
-                    BodyPath = filePath,
                     IsBodyHtml = true,
                     Subject = "Restablecer contrasena",
                     To = new List<string> { "andres12334@getnada.com" },
                 };
                 var EmailServer = new EmailService(_config);
 
-                var config = await EmailServer.ConfigurationTemplateRestorePassword(filePath);
+                TemplateConfigurationDto ConfigTemplate = new TemplateConfigurationDto
+                {
+                    TemplatePashEmail = filePath,
+                    Token = payload.Token
+                };
+
+                var config = await EmailServer.ConfigurationTemplateRestorePassword(ConfigTemplate);
                 payloadSendEmail.TemplateEmail = config;
 
                 await EmailServer.SendEmail(payloadSendEmail);
 
+                return true;
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
+        }
+
+        public User GetUserByToken(string token)
+        {
+            return _context.Users.First(user => user.Token == token);
+        }
+
+        public async Task<bool> updatePassword(UserPayloadPassword payload)
+        {
+            var user = _context.Users.Single(x => x.UserId == payload.UserId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            byte[] passwordHash,
+                passwordSalt;
+            HashingHelper.CreatePasswordHash(
+                payload.newPassword,
+                out passwordHash,
+                out passwordSalt
+            );
+
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public bool UpdateTokenUser(string userId, string token)
+        {
+            var user = _context.Users.Single(x => x.UserId == userId);
+
+            user.Token = token;
+            var updatedUser = _context.Users.Update(user);
+
+            try
+            {
+                _context.SaveChanges();
                 return true;
             }
             catch (System.Exception)
