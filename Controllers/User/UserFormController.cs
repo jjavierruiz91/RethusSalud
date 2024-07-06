@@ -118,7 +118,7 @@ public class UserFormController : ApiBaseController
                 UserFormId = user.UserFormId,
                 PersonalFirstName = user.PersonalFirstName,
                 PersonalIdentification = user.PersonalIdentification,
-                TypeProcedure = user.TypeProcedure,
+                TypeProcedure = user.TypeProcedure.ToString(),
                 StepForm = user.StepForm,
                 CreatedAt = user.CreatedAt,
                 Status = user.Status.ToString()

@@ -6,6 +6,7 @@ using rethus_backend.Models.Dto.Configuration;
 using System.Net;
 using rethus_backend.Utilities.Constants.UserConstants;
 using rethus_backend.Utilities.Constants.PaginatioConstants;
+using rethus_backend.Utilities.Constants.User.UserConfiguration;
 
 namespace rethus_backend.Controllers;
 
@@ -268,12 +269,22 @@ public class UserController : ApiBaseController
         [FromBody] UpdateTypeProcessConfigurationDto payload
     )
     {
-        var user = _unitOfWork.UserConfiguration.updateTypeProcessConfiguration(id, payload.type);
+        var typeProcedure = UserConfiguration.GetConfigurationType(payload.type);
+        if (typeProcedure == ConfigurationTypeProcedure.DEFAULT)
+        {
+            _response.IsSuccess = false;
+            _response.StatusCode = HttpStatusCode.BadRequest;
+            _response.Messages.Add("El tipo de tramite no es permitido");
+            BadRequest(_response);
+        }
+
+        var user = _unitOfWork.UserConfiguration.updateTypeProcessConfiguration(id, typeProcedure);
         if (user == null)
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;
             _response.Messages.Add("Error al actualizar el tipo de tramite");
+            BadRequest(_response);
         }
 
         _response.IsSuccess = true;
