@@ -184,7 +184,7 @@ namespace rethus_backend.Repository
 
             form.UserId = createRequestDto.userId;
             form.Status = UserFormStatus.pending;
-            form.StepForm = "step1";
+            form.StepForm = ReviewStepForm.officer1;
             form.CreatedAt = DateTime.Now;
             form.UpdatedAt = DateTime.Now;
 
@@ -334,7 +334,7 @@ namespace rethus_backend.Repository
                 return response;
             }
 
-            form.StepForm = UserConstants.GetNextStep(form.StepForm);
+            form.StepForm = UserFormConstants.GetNextRebiewStepForm(form.StepForm);
 
             _context.SaveChanges();
             response.Messages.Add("El formulario ha sido aprobado");
@@ -355,7 +355,7 @@ namespace rethus_backend.Repository
                 return response;
             }
 
-            comment.StepForm = "FuncionarioEtapa1";
+            comment.StepForm = ReviewStepForm.officer1;
 
             _context.SaveChanges();
             response.Messages.Add("El formulario ha sido rechazado");
@@ -372,7 +372,7 @@ namespace rethus_backend.Repository
         public UserForm IsDownloadCertificate(string userId)
         {
             UserForm user = _context.UserForm.FirstOrDefault(
-                x => x.UserId == userId && x.StepForm == "success"
+                x => x.UserId == userId && x.StepForm == ReviewStepForm.success
             );
             return user;
         }
@@ -417,7 +417,7 @@ namespace rethus_backend.Repository
                 return response;
             }
 
-            if (userForm.StepForm != "inventory")
+            if (userForm.StepForm != ReviewStepForm.success)
             {
                 response.AddError(
                     "El formulario no tiene el estado correcto",

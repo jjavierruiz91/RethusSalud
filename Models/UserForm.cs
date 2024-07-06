@@ -54,8 +54,18 @@ namespace rethus_backend.Models
 
         public UserFormStatus Status { get; set; }
 
-        public string StepForm { get; set; }
+        public ReviewStepForm StepForm { get; set; }
 
         public string? Consecutive { get; set; }
+    }
+
+    public enum ReviewStepForm
+    {
+        officer1,
+        officer2,
+        officer3,
+        inventory,
+        success,
+        error
     }
 }

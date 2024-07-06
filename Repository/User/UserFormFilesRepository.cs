@@ -176,7 +176,7 @@ namespace rethus_backend.Repository
         {
             UserForm form = _useForm.GetById(userFormId);
 
-            if (form.StepForm != "inventory")
+            if (form.StepForm != ReviewStepForm.success)
                 return;
 
             var outputPath =

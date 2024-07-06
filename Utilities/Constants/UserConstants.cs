@@ -1,3 +1,5 @@
+using rethus_backend.Models;
+
 namespace rethus_backend.Utilities.Constants.UserConstants
 {
     public enum UserRoles
@@ -22,19 +24,6 @@ namespace rethus_backend.Utilities.Constants.UserConstants
     {
         TCSSO = 1,
         RGNTHST = 2
-    }
-
-    public enum EnumStepConfiguration
-    {
-        select_procedure = 1,
-        acept_terms_conditions = 2,
-        load_user_form = 3,
-        load_user_files = 4,
-        etapa_1 = 5,
-        etapa_2 = 6,
-        etapa_3 = 7,
-        etapa_4 = 8,
-        success = 9,
     }
 
     public enum UserStatus
@@ -74,37 +63,5 @@ namespace rethus_backend.Utilities.Constants.UserConstants
 
         //   return EnumStepConfiguration.success;
         // }
-
-        public static string GetNextStep(string step)
-        {
-            switch (step)
-            {
-                case "select_procedure":
-                    return "acept_terms_conditions";
-
-                case "acept_terms_conditions":
-                    return "load_user_form";
-
-                case "load_user_form":
-                    return "load_user_files";
-
-                case "load_user_files":
-                    return "step1";
-
-                case "step1":
-                    return "step2";
-
-                case "step2":
-                    return "step3";
-
-                case "step3":
-                    return "inventory";
-
-                case "inventory":
-                    return "success";
-                default:
-                    return "step1";
-            }
-        }
     }
 }
