@@ -64,7 +64,6 @@ namespace rethus_backend.Models
         officer1,
         officer2,
         officer3,
-        inventory,
         success,
         error
     }
