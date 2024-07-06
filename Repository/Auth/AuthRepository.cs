@@ -25,7 +25,7 @@ namespace rethus_backend.Repository
 
         public async Task<AuthResponseDto> Authenticate(AuthRequestDto _user)
         {
-            var user = _context.Users.SingleOrDefault(x => x.email == _user.email);
+            User user = _context.Users.SingleOrDefault(x => x.email == _user.email);
 
             if (user == null)
             {
@@ -42,8 +42,10 @@ namespace rethus_backend.Repository
             {
                 return null;
             }
-            var user_configuration = _context.Configurations.SingleOrDefault(
-                x => x.UserId == user.UserId
+
+            Console.WriteLine(user.UserId);
+            Configurations user_configuration = _context.Configurations.SingleOrDefault(
+                x => x.UserId == user.UserId.ToString()
             );
 
             if (user_configuration == null)

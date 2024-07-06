@@ -41,8 +41,8 @@ namespace rethus_backend.Repository
             Configurations newConfiguration =
                 new()
                 {
-                    State = ConfigurationsState.active,
-                    Step = ConfigurationStep.select_procedure,
+                    State = ConfigurationsState.Initial,
+                    Step = ConfigurationStep.acept_terms_conditions,
                     TypeProcedure = ConfigurationTypeProcedure.DEFAULT,
                     TermCondition = false,
                     UserId = user.UserId,
@@ -96,6 +96,11 @@ namespace rethus_backend.Repository
 
             var nextStep = UserConfiguration.GetNextStepOnboarding(user_configuration.Step);
             user_configuration.Step = nextStep;
+
+            if (nextStep == ConfigurationStep.success)
+            {
+                user_configuration.State = ConfigurationsState.PendingReview;
+            }
 
             _context.Configurations.Update(user_configuration);
             _context.SaveChanges();

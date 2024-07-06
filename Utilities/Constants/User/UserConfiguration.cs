@@ -8,10 +8,10 @@ namespace rethus_backend.Utilities.Constants.User.UserConfiguration
         {
             switch (step)
             {
-                case ConfigurationStep.select_procedure:
-                    return ConfigurationStep.acept_terms_conditions;
-
                 case ConfigurationStep.acept_terms_conditions:
+                    return ConfigurationStep.select_procedure;
+
+                case ConfigurationStep.select_procedure:
                     return ConfigurationStep.load_user_form;
 
                 case ConfigurationStep.load_user_form:

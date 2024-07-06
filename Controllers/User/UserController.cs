@@ -229,8 +229,8 @@ public class UserController : ApiBaseController
     [HttpGet("user-configuration/{id}")]
     public IActionResult GetUserConfigurationById(string id)
     {
-        var user = _unitOfWork.UserConfiguration.GetById(id);
-        if (user == null)
+        var userConfigurations = _unitOfWork.UserConfiguration.GetById(id);
+        if (userConfigurations == null)
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;
@@ -239,7 +239,7 @@ public class UserController : ApiBaseController
 
         _response.IsSuccess = true;
         _response.StatusCode = HttpStatusCode.OK;
-        _response.Result = user;
+        _response.Result = new ConfigurationResponseDto(userConfigurations);
         return Ok(_response);
     }
 
