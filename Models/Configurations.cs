@@ -10,7 +10,7 @@ namespace rethus_backend.Models
         public required ConfigurationsState State { get; set; }
 
         public required ConfigurationStep Step { get; set; }
-        public required string TypeProcedure { get; set; }
+        public required ConfigurationTypeProcedure TypeProcedure { get; set; }
         public required Boolean TermCondition { get; set; }
 
         public DateTime CreatedAt { get; set; }
@@ -24,9 +24,9 @@ namespace rethus_backend.Models
 
     public enum ConfigurationsState
     {
+        active,
         pending,
-        reject,
-        approved
+        delete
     }
 
     public enum ConfigurationStep
@@ -37,5 +37,12 @@ namespace rethus_backend.Models
         load_user_files,
         success,
         error
+    }
+
+    public enum ConfigurationTypeProcedure
+    {
+        SSO,
+        RETHUS,
+        DEFAULT
     }
 }

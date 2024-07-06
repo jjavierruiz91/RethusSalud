@@ -41,7 +41,7 @@ namespace rethus_backend.Models
         public required string AcademicsNumberAdministrative { get; set; }
         public required DateTime AcademicsDateAdministrative { get; set; }
 
-        public required string TypeProcedure { get; set; }
+        public required ConfigurationTypeProcedure TypeProcedure { get; set; }
 
         public string UserId { get; set; }
 
