@@ -179,7 +179,7 @@ namespace rethus_backend.Models.Dto.UserForm
     public class SelectInformationFileIventory
     {
         public UserFormStatus Status { get; set; }
-        public string TypeProcedure { get; set; }
+        public ConfigurationTypeProcedure TypeProcedure { get; set; }
         public string StepForm { get; set; }
         public string PersonalIdentification { get; set; }
     }

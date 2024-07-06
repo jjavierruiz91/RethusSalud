@@ -27,7 +27,7 @@ namespace rethus_backend.Models.Dto.Auth
             this.state = user_config.State.ToString();
             this.configurationId = user_config.ConfigurationsId;
             this.termCondition = user_config.TermCondition == true ? true : false;
-            this.typeProcedure = user_config.TypeProcedure;
+            this.typeProcedure = user_config.TypeProcedure.ToString();
         }
     }
 }
