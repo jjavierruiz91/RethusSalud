@@ -118,13 +118,13 @@ namespace rethus_backend.Repository
 
         public EnumMaximumAmountFiles GetAmountFilesByTypeProcedure(int typeProcedure)
         {
-            var procedure = (EnumProcedure)typeProcedure;
+            var procedure = (ConfigurationTypeProcedure)typeProcedure;
 
-            if (procedure == EnumProcedure.RGNTHST)
-                return EnumMaximumAmountFiles.RGNTHST;
+            if (procedure == ConfigurationTypeProcedure.RETHUS)
+                return EnumMaximumAmountFiles.RETHUS;
 
-            if (procedure == EnumProcedure.TCSSO)
-                return EnumMaximumAmountFiles.TCSSO;
+            if (procedure == ConfigurationTypeProcedure.RETHUS)
+                return EnumMaximumAmountFiles.SSO;
 
             return EnumMaximumAmountFiles.DF;
         }
@@ -188,7 +188,7 @@ namespace rethus_backend.Repository
 
             string certificateRethus = "";
 
-            if (form.TypeProcedure == "RETHUS")
+            if (form.TypeProcedure == ConfigurationTypeProcedure.RETHUS)
             {
                 var rethusDto = new TemplateRethusDto { };
 

@@ -13,7 +13,10 @@ namespace rethus_backend.Repository.IRepository
         Configurations GetByUserId(string userId);
 
         ApiResponse updateStepConfiguration(string id, ConfigurationStep step);
-        ApiResponse updateTypeProcessConfiguration(string id, string type_procedure);
+        ApiResponse updateTypeProcessConfiguration(
+            string id,
+            ConfigurationTypeProcedure type_procedure
+        );
         ApiResponse updateTermConditionsConfiguration(string id, bool term);
         ApiResponse updateAutomaticStepConfiguration(string id);
 

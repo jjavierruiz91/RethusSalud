@@ -41,9 +41,9 @@ namespace rethus_backend.Repository
             Configurations newConfiguration =
                 new()
                 {
-                    State = ConfigurationsState.pending,
+                    State = ConfigurationsState.active,
                     Step = ConfigurationStep.select_procedure,
-                    TypeProcedure = "",
+                    TypeProcedure = ConfigurationTypeProcedure.DEFAULT,
                     TermCondition = false,
                     UserId = user.UserId,
                     CreatedAt = DateTime.Now,
@@ -104,7 +104,10 @@ namespace rethus_backend.Repository
             return response;
         }
 
-        public ApiResponse updateTypeProcessConfiguration(string id, string type_procedure)
+        public ApiResponse updateTypeProcessConfiguration(
+            string id,
+            ConfigurationTypeProcedure type_procedure
+        )
         {
             var response = new ApiResponse();
             var user_configuration = GetById(id);
