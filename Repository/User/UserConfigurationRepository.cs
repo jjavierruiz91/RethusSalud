@@ -3,6 +3,7 @@ using rethus_backend.Models;
 using rethus_backend.Repository.IRepository;
 using System.Net;
 using rethus_backend.Utilities.Constants.UserConstants;
+using rethus_backend.Utilities.Constants.User.UserConfiguration;
 
 namespace rethus_backend.Repository
 {
@@ -40,8 +41,8 @@ namespace rethus_backend.Repository
             Configurations newConfiguration =
                 new()
                 {
-                    State = "en proceso",
-                    Step = "select_procedure",
+                    State = ConfigurationsState.pending,
+                    Step = ConfigurationStep.select_procedure,
                     TypeProcedure = "",
                     TermCondition = false,
                     UserId = user.UserId,
@@ -53,7 +54,7 @@ namespace rethus_backend.Repository
             _context.SaveChanges();
         }
 
-        public ApiResponse updateStepConfiguration(string id, string step)
+        public ApiResponse updateStepConfiguration(string id, ConfigurationStep step)
         {
             var response = new ApiResponse();
             var user_configuration = GetById(id);
@@ -68,7 +69,7 @@ namespace rethus_backend.Repository
                 return response;
             }
 
-            var nextStep = UserConstants.GetNextStep(step);
+            var nextStep = UserConfiguration.GetNextStepOnboarding(step);
             user_configuration.Step = nextStep;
 
             _context.Configurations.Update(user_configuration);
@@ -93,7 +94,7 @@ namespace rethus_backend.Repository
                 return response;
             }
 
-            var nextStep = UserConstants.GetNextStep(user_configuration.Step);
+            var nextStep = UserConfiguration.GetNextStepOnboarding(user_configuration.Step);
             user_configuration.Step = nextStep;
 
             _context.Configurations.Update(user_configuration);
@@ -118,7 +119,7 @@ namespace rethus_backend.Repository
                 return response;
             }
 
-            var nextStep = UserConstants.GetNextStep(user_configuration.Step);
+            var nextStep = UserConfiguration.GetNextStepOnboarding(user_configuration.Step);
 
             user_configuration.TypeProcedure = type_procedure;
             user_configuration.Step = nextStep;
@@ -145,7 +146,7 @@ namespace rethus_backend.Repository
                 return response;
             }
 
-            var nextStep = UserConstants.GetNextStep(user_configuration.Step);
+            var nextStep = UserConfiguration.GetNextStepOnboarding(user_configuration.Step);
             user_configuration.Step = nextStep;
 
             user_configuration.TermCondition = term;

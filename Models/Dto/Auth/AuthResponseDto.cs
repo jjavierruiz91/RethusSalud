@@ -12,7 +12,7 @@ namespace rethus_backend.Models.Dto.Auth
         public string state { get; set; }
 
         public bool termCondition { get; set; }
-        public string type_procedure { get; set; }
+        public string typeProcedure { get; set; }
 
         public string configurationId { get; set; }
 
@@ -23,11 +23,11 @@ namespace rethus_backend.Models.Dto.Auth
             this.roles = user.roles;
             this.token = jwtToken;
             this.UserId = user.UserId;
-            this.step = user_config.Step;
-            this.state = user_config.State;
+            this.step = user_config.Step.ToString();
+            this.state = user_config.State.ToString();
             this.configurationId = user_config.ConfigurationsId;
             this.termCondition = user_config.TermCondition == true ? true : false;
-            this.type_procedure = user_config.TypeProcedure;
+            this.typeProcedure = user_config.TypeProcedure;
         }
     }
 }
