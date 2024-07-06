@@ -23,5 +23,18 @@ namespace rethus_backend.Utilities.Constants.User.UserConfiguration
                     return ConfigurationStep.error;
             }
         }
+
+        public static ConfigurationTypeProcedure GetConfigurationType(string type)
+        {
+            switch (type.ToUpper())
+            {
+                case "SSO":
+                    return ConfigurationTypeProcedure.SSO;
+                case "RETHUS":
+                    return ConfigurationTypeProcedure.RETHUS;
+                default:
+                    return ConfigurationTypeProcedure.DEFAULT;
+            }
+        }
     }
 }

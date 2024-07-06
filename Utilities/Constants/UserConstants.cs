@@ -15,15 +15,9 @@ namespace rethus_backend.Utilities.Constants.UserConstants
 
     public enum EnumMaximumAmountFiles
     {
-        DF = 0,
-        TCSSO = 5,
-        RGNTHST = 4
-    }
-
-    public enum EnumProcedure
-    {
-        TCSSO = 1,
-        RGNTHST = 2
+        DF = 0, //Default
+        SSO = 5, //tramite sso
+        RETHUS = 4 // tremite rethus
     }
 
     public enum UserStatus
