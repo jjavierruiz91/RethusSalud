@@ -130,10 +130,4 @@ public class UserPublicController : ApiBaseController
 
         return Ok(_response);
     }
-
-    // [HttpGet("countries")]
-    // public IActionResult GetContries()
-    // {
-    //     return null;
-    // }
 }
