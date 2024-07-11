@@ -37,6 +37,8 @@ namespace rethus_backend.Repository
                 CommentsResponseDto
             >(_db);
             Comments = new CommentsRepository(_db, User, UserForm, paginationCommentsService);
+
+            Country = new CountryRepository(_db);
         }
 
         public IUserRepository User { get; private set; }
@@ -50,6 +52,8 @@ namespace rethus_backend.Repository
         public IAuthRepository Auth { get; private set; }
 
         public ICommentsRepository Comments { get; private set; }
+
+        public ICountryRepository Country { get; private set; }
 
         public void Dispose() => _db.Dispose();
 
