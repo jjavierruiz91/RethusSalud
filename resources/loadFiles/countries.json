@@ -1,0 +1,2502 @@
+[
+    {
+        "Name": "Wallis and Futuna",
+        "Code": "WF",
+        "Capital": "Mata-Utu",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/wf.svg",
+        "DiallingCode": "",
+        "IsoCode": "876",
+        "Population": 11750
+    },
+    {
+        "Name": "Iceland",
+        "Code": "IS",
+        "Capital": "Reykjavik",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/is.svg",
+        "DiallingCode": "",
+        "IsoCode": "352",
+        "Population": 366425
+    },
+    {
+        "Name": "Luxembourg",
+        "Code": "LU",
+        "Capital": "Luxembourg",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/lu.svg",
+        "DiallingCode": "",
+        "IsoCode": "442",
+        "Population": 632275
+    },
+    {
+        "Name": "Mali",
+        "Code": "ML",
+        "Capital": "Bamako",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/ml.svg",
+        "DiallingCode": "",
+        "IsoCode": "466",
+        "Population": 20250834
+    },
+    {
+        "Name": "Comoros",
+        "Code": "KM",
+        "Capital": "Moroni",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/km.svg",
+        "DiallingCode": "",
+        "IsoCode": "174",
+        "Population": 869595
+    },
+    {
+        "Name": "Australia",
+        "Code": "AU",
+        "Capital": "Canberra",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/au.svg",
+        "DiallingCode": "",
+        "IsoCode": "036",
+        "Population": 25687041
+    },
+    {
+        "Name": "Estonia",
+        "Code": "EE",
+        "Capital": "Tallinn",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/ee.svg",
+        "DiallingCode": "",
+        "IsoCode": "233",
+        "Population": 1331057
+    },
+    {
+        "Name": "Canada",
+        "Code": "CA",
+        "Capital": "Ottawa",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/ca.svg",
+        "DiallingCode": "",
+        "IsoCode": "124",
+        "Population": 38005238
+    },
+    {
+        "Name": "Belarus",
+        "Code": "BY",
+        "Capital": "Minsk",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/by.svg",
+        "DiallingCode": "",
+        "IsoCode": "112",
+        "Population": 9398861
+    },
+    {
+        "Name": "Guyana",
+        "Code": "GY",
+        "Capital": "Georgetown",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/gy.svg",
+        "DiallingCode": "",
+        "IsoCode": "328",
+        "Population": 786559
+    },
+    {
+        "Name": "Gambia",
+        "Code": "GM",
+        "Capital": "Banjul",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/gm.svg",
+        "DiallingCode": "",
+        "IsoCode": "270",
+        "Population": 2416664
+    },
+    {
+        "Name": "Tunisia",
+        "Code": "TN",
+        "Capital": "Tunis",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/tn.svg",
+        "DiallingCode": "",
+        "IsoCode": "788",
+        "Population": 11818618
+    },
+    {
+        "Name": "Cameroon",
+        "Code": "CM",
+        "Capital": "Yaoundé",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/cm.svg",
+        "DiallingCode": "",
+        "IsoCode": "120",
+        "Population": 26545864
+    },
+    {
+        "Name": "Rwanda",
+        "Code": "RW",
+        "Capital": "Kigali",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/rw.svg",
+        "DiallingCode": "",
+        "IsoCode": "646",
+        "Population": 12952209
+    },
+    {
+        "Name": "Cambodia",
+        "Code": "KH",
+        "Capital": "Phnom Penh",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/kh.svg",
+        "DiallingCode": "",
+        "IsoCode": "116",
+        "Population": 16718971
+    },
+    {
+        "Name": "Benin",
+        "Code": "BJ",
+        "Capital": "Porto-Novo",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/bj.svg",
+        "DiallingCode": "",
+        "IsoCode": "204",
+        "Population": 12123198
+    },
+    {
+        "Name": "Greece",
+        "Code": "GR",
+        "Capital": "Athens",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/gr.svg",
+        "DiallingCode": "",
+        "IsoCode": "300",
+        "Population": 10715549
+    },
+    {
+        "Name": "South Korea",
+        "Code": "KR",
+        "Capital": "Seoul",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/kr.svg",
+        "DiallingCode": "",
+        "IsoCode": "410",
+        "Population": 51780579
+    },
+    {
+        "Name": "Mauritius",
+        "Code": "MU",
+        "Capital": "Port Louis",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/mu.svg",
+        "DiallingCode": "",
+        "IsoCode": "480",
+        "Population": 1265740
+    },
+    {
+        "Name": "United States Virgin Islands",
+        "Code": "VI",
+        "Capital": "Charlotte Amalie",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/vi.svg",
+        "DiallingCode": "",
+        "IsoCode": "850",
+        "Population": 106290
+    },
+    {
+        "Name": "Åland Islands",
+        "Code": "AX",
+        "Capital": "Mariehamn",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/ax.svg",
+        "DiallingCode": "",
+        "IsoCode": "248",
+        "Population": 29458
+    },
+    {
+        "Name": "San Marino",
+        "Code": "SM",
+        "Capital": "City of San Marino",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/sm.svg",
+        "DiallingCode": "",
+        "IsoCode": "674",
+        "Population": 33938
+    },
+    {
+        "Name": "Maldives",
+        "Code": "MV",
+        "Capital": "Malé",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/mv.svg",
+        "DiallingCode": "",
+        "IsoCode": "462",
+        "Population": 540542
+    },
+    {
+        "Name": "Vanuatu",
+        "Code": "VU",
+        "Capital": "Port Vila",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/vu.svg",
+        "DiallingCode": "",
+        "IsoCode": "548",
+        "Population": 307150
+    },
+    {
+        "Name": "Malawi",
+        "Code": "MW",
+        "Capital": "Lilongwe",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/mw.svg",
+        "DiallingCode": "",
+        "IsoCode": "454",
+        "Population": 19129955
+    },
+    {
+        "Name": "Egypt",
+        "Code": "EG",
+        "Capital": "Cairo",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/eg.svg",
+        "DiallingCode": "",
+        "IsoCode": "818",
+        "Population": 102334403
+    },
+    {
+        "Name": "Senegal",
+        "Code": "SN",
+        "Capital": "Dakar",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/sn.svg",
+        "DiallingCode": "",
+        "IsoCode": "686",
+        "Population": 16743930
+    },
+    {
+        "Name": "Georgia",
+        "Code": "GE",
+        "Capital": "Tbilisi",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/ge.svg",
+        "DiallingCode": "",
+        "IsoCode": "268",
+        "Population": 3714000
+    },
+    {
+        "Name": "New Zealand",
+        "Code": "NZ",
+        "Capital": "Wellington",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/nz.svg",
+        "DiallingCode": "",
+        "IsoCode": "554",
+        "Population": 5084300
+    },
+    {
+        "Name": "Cape Verde",
+        "Code": "CV",
+        "Capital": "Praia",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/cv.svg",
+        "DiallingCode": "",
+        "IsoCode": "132",
+        "Population": 555988
+    },
+    {
+        "Name": "Italy",
+        "Code": "IT",
+        "Capital": "Rome",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/it.svg",
+        "DiallingCode": "",
+        "IsoCode": "380",
+        "Population": 59554023
+    },
+    {
+        "Name": "Monaco",
+        "Code": "MC",
+        "Capital": "Monaco",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/mc.svg",
+        "DiallingCode": "",
+        "IsoCode": "492",
+        "Population": 39244
+    },
+    {
+        "Name": "Slovakia",
+        "Code": "SK",
+        "Capital": "Bratislava",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/sk.svg",
+        "DiallingCode": "",
+        "IsoCode": "703",
+        "Population": 5458827
+    },
+    {
+        "Name": "Uruguay",
+        "Code": "UY",
+        "Capital": "Montevideo",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/uy.svg",
+        "DiallingCode": "",
+        "IsoCode": "858",
+        "Population": 3473727
+    },
+    {
+        "Name": "Laos",
+        "Code": "LA",
+        "Capital": "Vientiane",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/la.svg",
+        "DiallingCode": "",
+        "IsoCode": "418",
+        "Population": 7275556
+    },
+    {
+        "Name": "Faroe Islands",
+        "Code": "FO",
+        "Capital": "Tórshavn",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/fo.svg",
+        "DiallingCode": "",
+        "IsoCode": "234",
+        "Population": 48865
+    },
+    {
+        "Name": "Niue",
+        "Code": "NU",
+        "Capital": "Alofi",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/nu.svg",
+        "DiallingCode": "",
+        "IsoCode": "570",
+        "Population": 1470
+    },
+    {
+        "Name": "North Macedonia",
+        "Code": "MK",
+        "Capital": "Skopje",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/mk.svg",
+        "DiallingCode": "",
+        "IsoCode": "807",
+        "Population": 2077132
+    },
+    {
+        "Name": "Chile",
+        "Code": "CL",
+        "Capital": "Santiago",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/cl.svg",
+        "DiallingCode": "",
+        "IsoCode": "152",
+        "Population": 19116209
+    },
+    {
+        "Name": "Cyprus",
+        "Code": "CY",
+        "Capital": "Nicosia",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/cy.svg",
+        "DiallingCode": "",
+        "IsoCode": "196",
+        "Population": 1207361
+    },
+    {
+        "Name": "Macau",
+        "Code": "MO",
+        "Capital": "",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/mo.svg",
+        "DiallingCode": "",
+        "IsoCode": "446",
+        "Population": 649342
+    },
+    {
+        "Name": "El Salvador",
+        "Code": "SV",
+        "Capital": "San Salvador",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/sv.svg",
+        "DiallingCode": "",
+        "IsoCode": "222",
+        "Population": 6486201
+    },
+    {
+        "Name": "Jordan",
+        "Code": "JO",
+        "Capital": "Amman",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/jo.svg",
+        "DiallingCode": "",
+        "IsoCode": "400",
+        "Population": 10203140
+    },
+    {
+        "Name": "Jamaica",
+        "Code": "JM",
+        "Capital": "Kingston",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/jm.svg",
+        "DiallingCode": "",
+        "IsoCode": "388",
+        "Population": 2961161
+    },
+    {
+        "Name": "Barbados",
+        "Code": "BB",
+        "Capital": "Bridgetown",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/bb.svg",
+        "DiallingCode": "",
+        "IsoCode": "052",
+        "Population": 287371
+    },
+    {
+        "Name": "Western Sahara",
+        "Code": "EH",
+        "Capital": "El Aaiún",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/eh.svg",
+        "DiallingCode": "",
+        "IsoCode": "732",
+        "Population": 510713
+    },
+    {
+        "Name": "Qatar",
+        "Code": "QA",
+        "Capital": "Doha",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/qa.svg",
+        "DiallingCode": "",
+        "IsoCode": "634",
+        "Population": 2881060
+    },
+    {
+        "Name": "Guatemala",
+        "Code": "GT",
+        "Capital": "Guatemala City",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/gt.svg",
+        "DiallingCode": "",
+        "IsoCode": "320",
+        "Population": 16858333
+    },
+    {
+        "Name": "Micronesia",
+        "Code": "FM",
+        "Capital": "Palikir",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/fm.svg",
+        "DiallingCode": "",
+        "IsoCode": "583",
+        "Population": 115021
+    },
+    {
+        "Name": "Montserrat",
+        "Code": "MS",
+        "Capital": "Plymouth",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/ms.svg",
+        "DiallingCode": "",
+        "IsoCode": "500",
+        "Population": 4922
+    },
+    {
+        "Name": "Papua New Guinea",
+        "Code": "PG",
+        "Capital": "Port Moresby",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/pg.svg",
+        "DiallingCode": "",
+        "IsoCode": "598",
+        "Population": 8947027
+    },
+    {
+        "Name": "Brazil",
+        "Code": "BR",
+        "Capital": "Brasília",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/br.svg",
+        "DiallingCode": "",
+        "IsoCode": "076",
+        "Population": 212559409
+    },
+    {
+        "Name": "Lithuania",
+        "Code": "LT",
+        "Capital": "Vilnius",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/lt.svg",
+        "DiallingCode": "",
+        "IsoCode": "440",
+        "Population": 2794700
+    },
+    {
+        "Name": "French Guiana",
+        "Code": "GF",
+        "Capital": "Cayenne",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/gf.svg",
+        "DiallingCode": "",
+        "IsoCode": "254",
+        "Population": 254541
+    },
+    {
+        "Name": "Moldova",
+        "Code": "MD",
+        "Capital": "Chișinău",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/md.svg",
+        "DiallingCode": "",
+        "IsoCode": "498",
+        "Population": 2617820
+    },
+    {
+        "Name": "Kyrgyzstan",
+        "Code": "KG",
+        "Capital": "Bishkek",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/kg.svg",
+        "DiallingCode": "",
+        "IsoCode": "417",
+        "Population": 6591600
+    },
+    {
+        "Name": "Curaçao",
+        "Code": "CW",
+        "Capital": "Willemstad",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/cw.svg",
+        "DiallingCode": "",
+        "IsoCode": "531",
+        "Population": 155014
+    },
+    {
+        "Name": "Vietnam",
+        "Code": "VN",
+        "Capital": "Hanoi",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/vn.svg",
+        "DiallingCode": "",
+        "IsoCode": "704",
+        "Population": 97338583
+    },
+    {
+        "Name": "Angola",
+        "Code": "AO",
+        "Capital": "Luanda",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/ao.svg",
+        "DiallingCode": "",
+        "IsoCode": "024",
+        "Population": 32866268
+    },
+    {
+        "Name": "Malaysia",
+        "Code": "MY",
+        "Capital": "Kuala Lumpur",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/my.svg",
+        "DiallingCode": "",
+        "IsoCode": "458",
+        "Population": 32365998
+    },
+    {
+        "Name": "Switzerland",
+        "Code": "CH",
+        "Capital": "Bern",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/ch.svg",
+        "DiallingCode": "",
+        "IsoCode": "756",
+        "Population": 8654622
+    },
+    {
+        "Name": "Thailand",
+        "Code": "TH",
+        "Capital": "Bangkok",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/th.svg",
+        "DiallingCode": "",
+        "IsoCode": "764",
+        "Population": 69799978
+    },
+    {
+        "Name": "Dominican Republic",
+        "Code": "DO",
+        "Capital": "Santo Domingo",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/do.svg",
+        "DiallingCode": "",
+        "IsoCode": "214",
+        "Population": 10847904
+    },
+    {
+        "Name": "Uzbekistan",
+        "Code": "UZ",
+        "Capital": "Tashkent",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/uz.svg",
+        "DiallingCode": "",
+        "IsoCode": "860",
+        "Population": 34232050
+    },
+    {
+        "Name": "Chad",
+        "Code": "TD",
+        "Capital": "N'Djamena",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/td.svg",
+        "DiallingCode": "",
+        "IsoCode": "148",
+        "Population": 16425859
+    },
+    {
+        "Name": "Cocos (Keeling) Islands",
+        "Code": "CC",
+        "Capital": "West Island",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/cc.svg",
+        "DiallingCode": "",
+        "IsoCode": "166",
+        "Population": 544
+    },
+    {
+        "Name": "Guinea",
+        "Code": "GN",
+        "Capital": "Conakry",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/gn.svg",
+        "DiallingCode": "",
+        "IsoCode": "324",
+        "Population": 13132792
+    },
+    {
+        "Name": "Turks and Caicos Islands",
+        "Code": "TC",
+        "Capital": "Cockburn Town",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/tc.svg",
+        "DiallingCode": "",
+        "IsoCode": "796",
+        "Population": 38718
+    },
+    {
+        "Name": "Puerto Rico",
+        "Code": "PR",
+        "Capital": "San Juan",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/pr.svg",
+        "DiallingCode": "",
+        "IsoCode": "630",
+        "Population": 3194034
+    },
+    {
+        "Name": "Bhutan",
+        "Code": "BT",
+        "Capital": "Thimphu",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/bt.svg",
+        "DiallingCode": "",
+        "IsoCode": "064",
+        "Population": 771612
+    },
+    {
+        "Name": "Cayman Islands",
+        "Code": "KY",
+        "Capital": "George Town",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/ky.svg",
+        "DiallingCode": "",
+        "IsoCode": "136",
+        "Population": 65720
+    },
+    {
+        "Name": "Marshall Islands",
+        "Code": "MH",
+        "Capital": "Majuro",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/mh.svg",
+        "DiallingCode": "",
+        "IsoCode": "584",
+        "Population": 59194
+    },
+    {
+        "Name": "Anguilla",
+        "Code": "AI",
+        "Capital": "The Valley",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/ai.svg",
+        "DiallingCode": "",
+        "IsoCode": "660",
+        "Population": 13452
+    },
+    {
+        "Name": "Mauritania",
+        "Code": "MR",
+        "Capital": "Nouakchott",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/mr.svg",
+        "DiallingCode": "",
+        "IsoCode": "478",
+        "Population": 4649660
+    },
+    {
+        "Name": "Norway",
+        "Code": "NO",
+        "Capital": "Oslo",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/no.svg",
+        "DiallingCode": "",
+        "IsoCode": "578",
+        "Population": 5379475
+    },
+    {
+        "Name": "Martinique",
+        "Code": "MQ",
+        "Capital": "Fort-de-France",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/mq.svg",
+        "DiallingCode": "",
+        "IsoCode": "474",
+        "Population": 378243
+    },
+    {
+        "Name": "Israel",
+        "Code": "IL",
+        "Capital": "Jerusalem",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/il.svg",
+        "DiallingCode": "",
+        "IsoCode": "376",
+        "Population": 9216900
+    },
+    {
+        "Name": "Saint Barthélemy",
+        "Code": "BL",
+        "Capital": "Gustavia",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/bl.svg",
+        "DiallingCode": "",
+        "IsoCode": "652",
+        "Population": 4255
+    },
+    {
+        "Name": "Ecuador",
+        "Code": "EC",
+        "Capital": "Quito",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/ec.svg",
+        "DiallingCode": "",
+        "IsoCode": "218",
+        "Population": 17643060
+    },
+    {
+        "Name": "Grenada",
+        "Code": "GD",
+        "Capital": "St. George's",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/gd.svg",
+        "DiallingCode": "",
+        "IsoCode": "308",
+        "Population": 112519
+    },
+    {
+        "Name": "Croatia",
+        "Code": "HR",
+        "Capital": "Zagreb",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/hr.svg",
+        "DiallingCode": "",
+        "IsoCode": "191",
+        "Population": 4047200
+    },
+    {
+        "Name": "Brunei",
+        "Code": "BN",
+        "Capital": "Bandar Seri Begawan",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/bn.svg",
+        "DiallingCode": "",
+        "IsoCode": "096",
+        "Population": 437483
+    },
+    {
+        "Name": "Iraq",
+        "Code": "IQ",
+        "Capital": "Baghdad",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/iq.svg",
+        "DiallingCode": "",
+        "IsoCode": "368",
+        "Population": 40222503
+    },
+    {
+        "Name": "Japan",
+        "Code": "JP",
+        "Capital": "Tokyo",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/jp.svg",
+        "DiallingCode": "",
+        "IsoCode": "392",
+        "Population": 125836021
+    },
+    {
+        "Name": "Lesotho",
+        "Code": "LS",
+        "Capital": "Maseru",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/ls.svg",
+        "DiallingCode": "",
+        "IsoCode": "426",
+        "Population": 2142252
+    },
+    {
+        "Name": "Tuvalu",
+        "Code": "TV",
+        "Capital": "Funafuti",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/tv.svg",
+        "DiallingCode": "",
+        "IsoCode": "798",
+        "Population": 11792
+    },
+    {
+        "Name": "Heard Island and McDonald Islands",
+        "Code": "HM",
+        "Capital": "",
+        "Region": "Antarctic",
+        "Flag": "https://flagcdn.com/hm.svg",
+        "DiallingCode": "",
+        "IsoCode": "334",
+        "Population": 0
+    },
+    {
+        "Name": "Finland",
+        "Code": "FI",
+        "Capital": "Helsinki",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/fi.svg",
+        "DiallingCode": "",
+        "IsoCode": "246",
+        "Population": 5530719
+    },
+    {
+        "Name": "South Sudan",
+        "Code": "SS",
+        "Capital": "Juba",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/ss.svg",
+        "DiallingCode": "",
+        "IsoCode": "728",
+        "Population": 11193729
+    },
+    {
+        "Name": "United States Minor Outlying Islands",
+        "Code": "UM",
+        "Capital": "Washington DC",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/um.svg",
+        "DiallingCode": "",
+        "IsoCode": "581",
+        "Population": 300
+    },
+    {
+        "Name": "Saint Helena, Ascension and Tristan da Cunha",
+        "Code": "SH",
+        "Capital": "Jamestown",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/sh.svg",
+        "DiallingCode": "",
+        "IsoCode": "654",
+        "Population": 53192
+    },
+    {
+        "Name": "Afghanistan",
+        "Code": "AF",
+        "Capital": "Kabul",
+        "Region": "Asia",
+        "Flag": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_the_Taliban.svg",
+        "DiallingCode": "",
+        "IsoCode": "004",
+        "Population": 40218234
+    },
+    {
+        "Name": "Solomon Islands",
+        "Code": "SB",
+        "Capital": "Honiara",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/sb.svg",
+        "DiallingCode": "",
+        "IsoCode": "090",
+        "Population": 686878
+    },
+    {
+        "Name": "China",
+        "Code": "CN",
+        "Capital": "Beijing",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/cn.svg",
+        "DiallingCode": "",
+        "IsoCode": "156",
+        "Population": 1402112000
+    },
+    {
+        "Name": "Eritrea",
+        "Code": "ER",
+        "Capital": "Asmara",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/er.svg",
+        "DiallingCode": "",
+        "IsoCode": "232",
+        "Population": 5352000
+    },
+    {
+        "Name": "Russia",
+        "Code": "RU",
+        "Capital": "Moscow",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/ru.svg",
+        "DiallingCode": "",
+        "IsoCode": "643",
+        "Population": 144104080
+    },
+    {
+        "Name": "Andorra",
+        "Code": "AD",
+        "Capital": "Andorra la Vella",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/ad.svg",
+        "DiallingCode": "",
+        "IsoCode": "020",
+        "Population": 77265
+    },
+    {
+        "Name": "Armenia",
+        "Code": "AM",
+        "Capital": "Yerevan",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/am.svg",
+        "DiallingCode": "",
+        "IsoCode": "051",
+        "Population": 2963234
+    },
+    {
+        "Name": "Austria",
+        "Code": "AT",
+        "Capital": "Vienna",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/at.svg",
+        "DiallingCode": "",
+        "IsoCode": "040",
+        "Population": 8917205
+    },
+    {
+        "Name": "Suriname",
+        "Code": "SR",
+        "Capital": "Paramaribo",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/sr.svg",
+        "DiallingCode": "",
+        "IsoCode": "740",
+        "Population": 586634
+    },
+    {
+        "Name": "Spain",
+        "Code": "ES",
+        "Capital": "Madrid",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/es.svg",
+        "DiallingCode": "",
+        "IsoCode": "724",
+        "Population": 47351567
+    },
+    {
+        "Name": "Tokelau",
+        "Code": "TK",
+        "Capital": "Fakaofo",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/tk.svg",
+        "DiallingCode": "",
+        "IsoCode": "772",
+        "Population": 1411
+    },
+    {
+        "Name": "Bahamas",
+        "Code": "BS",
+        "Capital": "Nassau",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/bs.svg",
+        "DiallingCode": "",
+        "IsoCode": "044",
+        "Population": 393248
+    },
+    {
+        "Name": "Sint Maarten",
+        "Code": "SX",
+        "Capital": "Philipsburg",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/sx.svg",
+        "DiallingCode": "",
+        "IsoCode": "534",
+        "Population": 40812
+    },
+    {
+        "Name": "Belize",
+        "Code": "BZ",
+        "Capital": "Belmopan",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/bz.svg",
+        "DiallingCode": "",
+        "IsoCode": "084",
+        "Population": 397621
+    },
+    {
+        "Name": "Jersey",
+        "Code": "JE",
+        "Capital": "Saint Helier",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/je.svg",
+        "DiallingCode": "",
+        "IsoCode": "832",
+        "Population": 100800
+    },
+    {
+        "Name": "Sweden",
+        "Code": "SE",
+        "Capital": "Stockholm",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/se.svg",
+        "DiallingCode": "",
+        "IsoCode": "752",
+        "Population": 10353442
+    },
+    {
+        "Name": "Botswana",
+        "Code": "BW",
+        "Capital": "Gaborone",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/bw.svg",
+        "DiallingCode": "",
+        "IsoCode": "072",
+        "Population": 2351625
+    },
+    {
+        "Name": "Isle of Man",
+        "Code": "IM",
+        "Capital": "Douglas",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/im.svg",
+        "DiallingCode": "",
+        "IsoCode": "833",
+        "Population": 85032
+    },
+    {
+        "Name": "United Arab Emirates",
+        "Code": "AE",
+        "Capital": "Abu Dhabi",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/ae.svg",
+        "DiallingCode": "",
+        "IsoCode": "784",
+        "Population": 9890400
+    },
+    {
+        "Name": "Iran",
+        "Code": "IR",
+        "Capital": "Tehran",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/ir.svg",
+        "DiallingCode": "",
+        "IsoCode": "364",
+        "Population": 83992953
+    },
+    {
+        "Name": "Gabon",
+        "Code": "GA",
+        "Capital": "Libreville",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/ga.svg",
+        "DiallingCode": "",
+        "IsoCode": "266",
+        "Population": 2225728
+    },
+    {
+        "Name": "Saint Kitts and Nevis",
+        "Code": "KN",
+        "Capital": "Basseterre",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/kn.svg",
+        "DiallingCode": "",
+        "IsoCode": "659",
+        "Population": 53192
+    },
+    {
+        "Name": "Equatorial Guinea",
+        "Code": "GQ",
+        "Capital": "Malabo",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/gq.svg",
+        "DiallingCode": "",
+        "IsoCode": "226",
+        "Population": 1402985
+    },
+    {
+        "Name": "São Tomé and Príncipe",
+        "Code": "ST",
+        "Capital": "São Tomé",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/st.svg",
+        "DiallingCode": "",
+        "IsoCode": "678",
+        "Population": 219161
+    },
+    {
+        "Name": "Greenland",
+        "Code": "GL",
+        "Capital": "Nuuk",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/gl.svg",
+        "DiallingCode": "",
+        "IsoCode": "304",
+        "Population": 56367
+    },
+    {
+        "Name": "Bangladesh",
+        "Code": "BD",
+        "Capital": "Dhaka",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/bd.svg",
+        "DiallingCode": "",
+        "IsoCode": "050",
+        "Population": 164689383
+    },
+    {
+        "Name": "Romania",
+        "Code": "RO",
+        "Capital": "Bucharest",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/ro.svg",
+        "DiallingCode": "",
+        "IsoCode": "642",
+        "Population": 19286123
+    },
+    {
+        "Name": "British Indian Ocean Territory",
+        "Code": "IO",
+        "Capital": "Diego Garcia",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/io.svg",
+        "DiallingCode": "",
+        "IsoCode": "086",
+        "Population": 3000
+    },
+    {
+        "Name": "Sudan",
+        "Code": "SD",
+        "Capital": "Khartoum",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/sd.svg",
+        "DiallingCode": "",
+        "IsoCode": "729",
+        "Population": 43849269
+    },
+    {
+        "Name": "Bosnia and Herzegovina",
+        "Code": "BA",
+        "Capital": "Sarajevo",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/ba.svg",
+        "DiallingCode": "",
+        "IsoCode": "070",
+        "Population": 3280815
+    },
+    {
+        "Name": "Malta",
+        "Code": "MT",
+        "Capital": "Valletta",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/mt.svg",
+        "DiallingCode": "",
+        "IsoCode": "470",
+        "Population": 525285
+    },
+    {
+        "Name": "Seychelles",
+        "Code": "SC",
+        "Capital": "Victoria",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/sc.svg",
+        "DiallingCode": "",
+        "IsoCode": "690",
+        "Population": 98462
+    },
+    {
+        "Name": "Sri Lanka",
+        "Code": "LK",
+        "Capital": "Sri Jayawardenepura Kotte",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/lk.svg",
+        "DiallingCode": "",
+        "IsoCode": "144",
+        "Population": 21919000
+    },
+    {
+        "Name": "Mexico",
+        "Code": "MX",
+        "Capital": "Mexico City",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/mx.svg",
+        "DiallingCode": "",
+        "IsoCode": "484",
+        "Population": 128932753
+    },
+    {
+        "Name": "Yemen",
+        "Code": "YE",
+        "Capital": "Sana'a",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/ye.svg",
+        "DiallingCode": "",
+        "IsoCode": "887",
+        "Population": 29825968
+    },
+    {
+        "Name": "British Virgin Islands",
+        "Code": "VG",
+        "Capital": "Road Town",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/vg.svg",
+        "DiallingCode": "",
+        "IsoCode": "092",
+        "Population": 30237
+    },
+    {
+        "Name": "Netherlands",
+        "Code": "NL",
+        "Capital": "Amsterdam",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/nl.svg",
+        "DiallingCode": "",
+        "IsoCode": "528",
+        "Population": 16655799
+    },
+    {
+        "Name": "Paraguay",
+        "Code": "PY",
+        "Capital": "Asunción",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/py.svg",
+        "DiallingCode": "",
+        "IsoCode": "600",
+        "Population": 7132530
+    },
+    {
+        "Name": "United Kingdom",
+        "Code": "GB",
+        "Capital": "London",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/gb.svg",
+        "DiallingCode": "",
+        "IsoCode": "826",
+        "Population": 67215293
+    },
+    {
+        "Name": "Venezuela",
+        "Code": "VE",
+        "Capital": "Caracas",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/ve.svg",
+        "DiallingCode": "",
+        "IsoCode": "862",
+        "Population": 28435943
+    },
+    {
+        "Name": "Bouvet Island",
+        "Code": "BV",
+        "Capital": "",
+        "Region": "Antarctic",
+        "Flag": "https://flagcdn.com/bv.svg",
+        "DiallingCode": "",
+        "IsoCode": "074",
+        "Population": 0
+    },
+    {
+        "Name": "Ukraine",
+        "Code": "UA",
+        "Capital": "Kyiv",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/ua.svg",
+        "DiallingCode": "",
+        "IsoCode": "804",
+        "Population": 44134693
+    },
+    {
+        "Name": "Morocco",
+        "Code": "MA",
+        "Capital": "Rabat",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/ma.svg",
+        "DiallingCode": "",
+        "IsoCode": "504",
+        "Population": 36910558
+    },
+    {
+        "Name": "Portugal",
+        "Code": "PT",
+        "Capital": "Lisbon",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/pt.svg",
+        "DiallingCode": "",
+        "IsoCode": "620",
+        "Population": 10305564
+    },
+    {
+        "Name": "Pakistan",
+        "Code": "PK",
+        "Capital": "Islamabad",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/pk.svg",
+        "DiallingCode": "",
+        "IsoCode": "586",
+        "Population": 220892331
+    },
+    {
+        "Name": "Saint Vincent and the Grenadines",
+        "Code": "VC",
+        "Capital": "Kingstown",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/vc.svg",
+        "DiallingCode": "",
+        "IsoCode": "670",
+        "Population": 110947
+    },
+    {
+        "Name": "North Korea",
+        "Code": "KP",
+        "Capital": "Pyongyang",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/kp.svg",
+        "DiallingCode": "",
+        "IsoCode": "408",
+        "Population": 25778815
+    },
+    {
+        "Name": "Slovenia",
+        "Code": "SI",
+        "Capital": "Ljubljana",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/si.svg",
+        "DiallingCode": "",
+        "IsoCode": "705",
+        "Population": 2100126
+    },
+    {
+        "Name": "Ivory Coast",
+        "Code": "CI",
+        "Capital": "Yamoussoukro",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/ci.svg",
+        "DiallingCode": "",
+        "IsoCode": "384",
+        "Population": 26378275
+    },
+    {
+        "Name": "Palestine",
+        "Code": "PS",
+        "Capital": "Ramallah",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/ps.svg",
+        "DiallingCode": "",
+        "IsoCode": "275",
+        "Population": 4803269
+    },
+    {
+        "Name": "Caribbean Netherlands",
+        "Code": "BQ",
+        "Capital": "Kralendijk",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/bq.svg",
+        "DiallingCode": "",
+        "IsoCode": "535",
+        "Population": 25987
+    },
+    {
+        "Name": "Belgium",
+        "Code": "BE",
+        "Capital": "Brussels",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/be.svg",
+        "DiallingCode": "",
+        "IsoCode": "056",
+        "Population": 11555997
+    },
+    {
+        "Name": "Zimbabwe",
+        "Code": "ZW",
+        "Capital": "Harare",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/zw.svg",
+        "DiallingCode": "",
+        "IsoCode": "716",
+        "Population": 14862927
+    },
+    {
+        "Name": "Tanzania",
+        "Code": "TZ",
+        "Capital": "Dodoma",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/tz.svg",
+        "DiallingCode": "",
+        "IsoCode": "834",
+        "Population": 59734213
+    },
+    {
+        "Name": "Togo",
+        "Code": "TG",
+        "Capital": "Lomé",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/tg.svg",
+        "DiallingCode": "",
+        "IsoCode": "768",
+        "Population": 8278737
+    },
+    {
+        "Name": "Cook Islands",
+        "Code": "CK",
+        "Capital": "Avarua",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/ck.svg",
+        "DiallingCode": "",
+        "IsoCode": "184",
+        "Population": 18100
+    },
+    {
+        "Name": "Guadeloupe",
+        "Code": "GP",
+        "Capital": "Basse-Terre",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/gp.svg",
+        "DiallingCode": "",
+        "IsoCode": "312",
+        "Population": 400132
+    },
+    {
+        "Name": "New Caledonia",
+        "Code": "NC",
+        "Capital": "Nouméa",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/nc.svg",
+        "DiallingCode": "",
+        "IsoCode": "540",
+        "Population": 271960
+    },
+    {
+        "Name": "Saint Lucia",
+        "Code": "LC",
+        "Capital": "Castries",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/lc.svg",
+        "DiallingCode": "",
+        "IsoCode": "662",
+        "Population": 183629
+    },
+    {
+        "Name": "South Georgia",
+        "Code": "GS",
+        "Capital": "King Edward Point",
+        "Region": "Antarctic",
+        "Flag": "https://flagcdn.com/gs.svg",
+        "DiallingCode": "",
+        "IsoCode": "239",
+        "Population": 30
+    },
+    {
+        "Name": "Poland",
+        "Code": "PL",
+        "Capital": "Warsaw",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/pl.svg",
+        "DiallingCode": "",
+        "IsoCode": "616",
+        "Population": 37950802
+    },
+    {
+        "Name": "Samoa",
+        "Code": "WS",
+        "Capital": "Apia",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/ws.svg",
+        "DiallingCode": "",
+        "IsoCode": "882",
+        "Population": 198410
+    },
+    {
+        "Name": "Czechia",
+        "Code": "CZ",
+        "Capital": "Prague",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/cz.svg",
+        "DiallingCode": "",
+        "IsoCode": "203",
+        "Population": 10698896
+    },
+    {
+        "Name": "Indonesia",
+        "Code": "ID",
+        "Capital": "Jakarta",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/id.svg",
+        "DiallingCode": "",
+        "IsoCode": "360",
+        "Population": 273523621
+    },
+    {
+        "Name": "Bolivia",
+        "Code": "BO",
+        "Capital": "Sucre",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/bo.svg",
+        "DiallingCode": "",
+        "IsoCode": "068",
+        "Population": 11673029
+    },
+    {
+        "Name": "Colombia",
+        "Code": "CO",
+        "Capital": "Bogotá",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/co.svg",
+        "DiallingCode": "",
+        "IsoCode": "170",
+        "Population": 50882884
+    },
+    {
+        "Name": "Honduras",
+        "Code": "HN",
+        "Capital": "Tegucigalpa",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/hn.svg",
+        "DiallingCode": "",
+        "IsoCode": "340",
+        "Population": 9904608
+    },
+    {
+        "Name": "Denmark",
+        "Code": "DK",
+        "Capital": "Copenhagen",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/dk.svg",
+        "DiallingCode": "",
+        "IsoCode": "208",
+        "Population": 5831404
+    },
+    {
+        "Name": "Central African Republic",
+        "Code": "CF",
+        "Capital": "Bangui",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/cf.svg",
+        "DiallingCode": "",
+        "IsoCode": "140",
+        "Population": 4829764
+    },
+    {
+        "Name": "Libya",
+        "Code": "LY",
+        "Capital": "Tripoli",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/ly.svg",
+        "DiallingCode": "",
+        "IsoCode": "434",
+        "Population": 6871287
+    },
+    {
+        "Name": "Guinea-Bissau",
+        "Code": "GW",
+        "Capital": "Bissau",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/gw.svg",
+        "DiallingCode": "",
+        "IsoCode": "624",
+        "Population": 1967998
+    },
+    {
+        "Name": "Mongolia",
+        "Code": "MN",
+        "Capital": "Ulan Bator",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/mn.svg",
+        "DiallingCode": "",
+        "IsoCode": "496",
+        "Population": 3278292
+    },
+    {
+        "Name": "DR Congo",
+        "Code": "CD",
+        "Capital": "Kinshasa",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/cd.svg",
+        "DiallingCode": "",
+        "IsoCode": "180",
+        "Population": 108407721
+    },
+    {
+        "Name": "Falkland Islands",
+        "Code": "FK",
+        "Capital": "Stanley",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/fk.svg",
+        "DiallingCode": "",
+        "IsoCode": "238",
+        "Population": 2563
+    },
+    {
+        "Name": "Nauru",
+        "Code": "NR",
+        "Capital": "Yaren",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/nr.svg",
+        "DiallingCode": "",
+        "IsoCode": "520",
+        "Population": 10834
+    },
+    {
+        "Name": "Syria",
+        "Code": "SY",
+        "Capital": "Damascus",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/sy.svg",
+        "DiallingCode": "",
+        "IsoCode": "760",
+        "Population": 17500657
+    },
+    {
+        "Name": "Montenegro",
+        "Code": "ME",
+        "Capital": "Podgorica",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/me.svg",
+        "DiallingCode": "",
+        "IsoCode": "499",
+        "Population": 621718
+    },
+    {
+        "Name": "France",
+        "Code": "FR",
+        "Capital": "Paris",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/fr.svg",
+        "DiallingCode": "",
+        "IsoCode": "250",
+        "Population": 67391582
+    },
+    {
+        "Name": "Zambia",
+        "Code": "ZM",
+        "Capital": "Lusaka",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/zm.svg",
+        "DiallingCode": "",
+        "IsoCode": "894",
+        "Population": 18383956
+    },
+    {
+        "Name": "Myanmar",
+        "Code": "MM",
+        "Capital": "Naypyidaw",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/mm.svg",
+        "DiallingCode": "",
+        "IsoCode": "104",
+        "Population": 54409794
+    },
+    {
+        "Name": "Saint Pierre and Miquelon",
+        "Code": "PM",
+        "Capital": "Saint-Pierre",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/pm.svg",
+        "DiallingCode": "",
+        "IsoCode": "666",
+        "Population": 6069
+    },
+    {
+        "Name": "Costa Rica",
+        "Code": "CR",
+        "Capital": "San José",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/cr.svg",
+        "DiallingCode": "",
+        "IsoCode": "188",
+        "Population": 5094114
+    },
+    {
+        "Name": "Somalia",
+        "Code": "SO",
+        "Capital": "Mogadishu",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/so.svg",
+        "DiallingCode": "",
+        "IsoCode": "706",
+        "Population": 15893219
+    },
+    {
+        "Name": "Ireland",
+        "Code": "IE",
+        "Capital": "Dublin",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/ie.svg",
+        "DiallingCode": "",
+        "IsoCode": "372",
+        "Population": 4994724
+    },
+    {
+        "Name": "French Polynesia",
+        "Code": "PF",
+        "Capital": "Papeetē",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/pf.svg",
+        "DiallingCode": "",
+        "IsoCode": "258",
+        "Population": 280904
+    },
+    {
+        "Name": "Pitcairn Islands",
+        "Code": "PN",
+        "Capital": "Adamstown",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/pn.svg",
+        "DiallingCode": "",
+        "IsoCode": "612",
+        "Population": 56
+    },
+    {
+        "Name": "Hungary",
+        "Code": "HU",
+        "Capital": "Budapest",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/hu.svg",
+        "DiallingCode": "",
+        "IsoCode": "348",
+        "Population": 9749763
+    },
+    {
+        "Name": "Turkey",
+        "Code": "TR",
+        "Capital": "Ankara",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/tr.svg",
+        "DiallingCode": "",
+        "IsoCode": "792",
+        "Population": 84339067
+    },
+    {
+        "Name": "Oman",
+        "Code": "OM",
+        "Capital": "Muscat",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/om.svg",
+        "DiallingCode": "",
+        "IsoCode": "512",
+        "Population": 5106622
+    },
+    {
+        "Name": "Guam",
+        "Code": "GU",
+        "Capital": "Hagåtña",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/gu.svg",
+        "DiallingCode": "",
+        "IsoCode": "316",
+        "Population": 168783
+    },
+    {
+        "Name": "Nepal",
+        "Code": "NP",
+        "Capital": "Kathmandu",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/np.svg",
+        "DiallingCode": "",
+        "IsoCode": "524",
+        "Population": 29136808
+    },
+    {
+        "Name": "Liechtenstein",
+        "Code": "LI",
+        "Capital": "Vaduz",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/li.svg",
+        "DiallingCode": "",
+        "IsoCode": "438",
+        "Population": 38137
+    },
+    {
+        "Name": "Madagascar",
+        "Code": "MG",
+        "Capital": "Antananarivo",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/mg.svg",
+        "DiallingCode": "",
+        "IsoCode": "450",
+        "Population": 27691019
+    },
+    {
+        "Name": "Kazakhstan",
+        "Code": "KZ",
+        "Capital": "Nur-Sultan",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/kz.svg",
+        "DiallingCode": "",
+        "IsoCode": "398",
+        "Population": 18754440
+    },
+    {
+        "Name": "Djibouti",
+        "Code": "DJ",
+        "Capital": "Djibouti",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/dj.svg",
+        "DiallingCode": "",
+        "IsoCode": "262",
+        "Population": 988002
+    },
+    {
+        "Name": "Gibraltar",
+        "Code": "GI",
+        "Capital": "Gibraltar",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/gi.svg",
+        "DiallingCode": "",
+        "IsoCode": "292",
+        "Population": 33691
+    },
+    {
+        "Name": "Guernsey",
+        "Code": "GG",
+        "Capital": "St. Peter Port",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/gg.svg",
+        "DiallingCode": "",
+        "IsoCode": "831",
+        "Population": 62999
+    },
+    {
+        "Name": "Namibia",
+        "Code": "NA",
+        "Capital": "Windhoek",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/na.svg",
+        "DiallingCode": "",
+        "IsoCode": "516",
+        "Population": 2540916
+    },
+    {
+        "Name": "Republic of the Congo",
+        "Code": "CG",
+        "Capital": "Brazzaville",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/cg.svg",
+        "DiallingCode": "",
+        "IsoCode": "178",
+        "Population": 5657000
+    },
+    {
+        "Name": "Germany",
+        "Code": "DE",
+        "Capital": "Berlin",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/de.svg",
+        "DiallingCode": "",
+        "IsoCode": "276",
+        "Population": 83240525
+    },
+    {
+        "Name": "Vatican City",
+        "Code": "VA",
+        "Capital": "Vatican City",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/va.svg",
+        "DiallingCode": "",
+        "IsoCode": "336",
+        "Population": 451
+    },
+    {
+        "Name": "French Southern and Antarctic Lands",
+        "Code": "TF",
+        "Capital": "Port-aux-Français",
+        "Region": "Antarctic",
+        "Flag": "https://flagcdn.com/tf.svg",
+        "DiallingCode": "",
+        "IsoCode": "260",
+        "Population": 400
+    },
+    {
+        "Name": "Albania",
+        "Code": "AL",
+        "Capital": "Tirana",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/al.svg",
+        "DiallingCode": "",
+        "IsoCode": "008",
+        "Population": 2837743
+    },
+    {
+        "Name": "Algeria",
+        "Code": "DZ",
+        "Capital": "Algiers",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/dz.svg",
+        "DiallingCode": "",
+        "IsoCode": "012",
+        "Population": 44700000
+    },
+    {
+        "Name": "Mayotte",
+        "Code": "YT",
+        "Capital": "Mamoudzou",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/yt.svg",
+        "DiallingCode": "",
+        "IsoCode": "175",
+        "Population": 226915
+    },
+    {
+        "Name": "Haiti",
+        "Code": "HT",
+        "Capital": "Port-au-Prince",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/ht.svg",
+        "DiallingCode": "",
+        "IsoCode": "332",
+        "Population": 11402533
+    },
+    {
+        "Name": "Svalbard and Jan Mayen",
+        "Code": "SJ",
+        "Capital": "Longyearbyen",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/sj.svg",
+        "DiallingCode": "",
+        "IsoCode": "744",
+        "Population": 2562
+    },
+    {
+        "Name": "Tonga",
+        "Code": "TO",
+        "Capital": "Nuku'alofa",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/to.svg",
+        "DiallingCode": "",
+        "IsoCode": "776",
+        "Population": 105697
+    },
+    {
+        "Name": "Hong Kong",
+        "Code": "HK",
+        "Capital": "City of Victoria",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/hk.svg",
+        "DiallingCode": "",
+        "IsoCode": "344",
+        "Population": 7500700
+    },
+    {
+        "Name": "Singapore",
+        "Code": "SG",
+        "Capital": "Singapore",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/sg.svg",
+        "DiallingCode": "",
+        "IsoCode": "702",
+        "Population": 5685807
+    },
+    {
+        "Name": "Antigua and Barbuda",
+        "Code": "AG",
+        "Capital": "Saint John's",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/ag.svg",
+        "DiallingCode": "",
+        "IsoCode": "028",
+        "Population": 97928
+    },
+    {
+        "Name": "Saudi Arabia",
+        "Code": "SA",
+        "Capital": "Riyadh",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/sa.svg",
+        "DiallingCode": "",
+        "IsoCode": "682",
+        "Population": 34813867
+    },
+    {
+        "Name": "Cuba",
+        "Code": "CU",
+        "Capital": "Havana",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/cu.svg",
+        "DiallingCode": "",
+        "IsoCode": "192",
+        "Population": 11326616
+    },
+    {
+        "Name": "Panama",
+        "Code": "PA",
+        "Capital": "Panama City",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/pa.svg",
+        "DiallingCode": "",
+        "IsoCode": "591",
+        "Population": 4314768
+    },
+    {
+        "Name": "Liberia",
+        "Code": "LR",
+        "Capital": "Monrovia",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/lr.svg",
+        "DiallingCode": "",
+        "IsoCode": "430",
+        "Population": 5057677
+    },
+    {
+        "Name": "Azerbaijan",
+        "Code": "AZ",
+        "Capital": "Baku",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/az.svg",
+        "DiallingCode": "",
+        "IsoCode": "031",
+        "Population": 10110116
+    },
+    {
+        "Name": "Latvia",
+        "Code": "LV",
+        "Capital": "Riga",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/lv.svg",
+        "DiallingCode": "",
+        "IsoCode": "428",
+        "Population": 1901548
+    },
+    {
+        "Name": "Antarctica",
+        "Code": "AQ",
+        "Capital": "",
+        "Region": "Antarctic",
+        "Flag": "https://flagcdn.com/aq.svg",
+        "DiallingCode": "",
+        "IsoCode": "010",
+        "Population": 1000
+    },
+    {
+        "Name": "Kiribati",
+        "Code": "KI",
+        "Capital": "South Tarawa",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/ki.svg",
+        "DiallingCode": "",
+        "IsoCode": "296",
+        "Population": 119446
+    },
+    {
+        "Name": "Ethiopia",
+        "Code": "ET",
+        "Capital": "Addis Ababa",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/et.svg",
+        "DiallingCode": "",
+        "IsoCode": "231",
+        "Population": 114963583
+    },
+    {
+        "Name": "Niger",
+        "Code": "NE",
+        "Capital": "Niamey",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/ne.svg",
+        "DiallingCode": "",
+        "IsoCode": "562",
+        "Population": 24206636
+    },
+    {
+        "Name": "Trinidad and Tobago",
+        "Code": "TT",
+        "Capital": "Port of Spain",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/tt.svg",
+        "DiallingCode": "",
+        "IsoCode": "780",
+        "Population": 1399491
+    },
+    {
+        "Name": "Sierra Leone",
+        "Code": "SL",
+        "Capital": "Freetown",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/sl.svg",
+        "DiallingCode": "",
+        "IsoCode": "694",
+        "Population": 7976985
+    },
+    {
+        "Name": "Mozambique",
+        "Code": "MZ",
+        "Capital": "Maputo",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/mz.svg",
+        "DiallingCode": "",
+        "IsoCode": "508",
+        "Population": 31255435
+    },
+    {
+        "Name": "Palau",
+        "Code": "PW",
+        "Capital": "Ngerulmud",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/pw.svg",
+        "DiallingCode": "",
+        "IsoCode": "585",
+        "Population": 18092
+    },
+    {
+        "Name": "Fiji",
+        "Code": "FJ",
+        "Capital": "Suva",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/fj.svg",
+        "DiallingCode": "",
+        "IsoCode": "242",
+        "Population": 896444
+    },
+    {
+        "Name": "Réunion",
+        "Code": "RE",
+        "Capital": "Saint-Denis",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/re.svg",
+        "DiallingCode": "",
+        "IsoCode": "638",
+        "Population": 840974
+    },
+    {
+        "Name": "Norfolk Island",
+        "Code": "NF",
+        "Capital": "Kingston",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/nf.svg",
+        "DiallingCode": "",
+        "IsoCode": "574",
+        "Population": 2302
+    },
+    {
+        "Name": "Turkmenistan",
+        "Code": "TM",
+        "Capital": "Ashgabat",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/tm.svg",
+        "DiallingCode": "",
+        "IsoCode": "795",
+        "Population": 6031187
+    },
+    {
+        "Name": "Tajikistan",
+        "Code": "TJ",
+        "Capital": "Dushanbe",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/tj.svg",
+        "DiallingCode": "",
+        "IsoCode": "762",
+        "Population": 9537642
+    },
+    {
+        "Name": "Lebanon",
+        "Code": "LB",
+        "Capital": "Beirut",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/lb.svg",
+        "DiallingCode": "",
+        "IsoCode": "422",
+        "Population": 6825442
+    },
+    {
+        "Name": "Nigeria",
+        "Code": "NG",
+        "Capital": "Abuja",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/ng.svg",
+        "DiallingCode": "",
+        "IsoCode": "566",
+        "Population": 206139587
+    },
+    {
+        "Name": "United States",
+        "Code": "US",
+        "Capital": "Washington, D.C.",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/us.svg",
+        "DiallingCode": "",
+        "IsoCode": "840",
+        "Population": 329484123
+    },
+    {
+        "Name": "Argentina",
+        "Code": "AR",
+        "Capital": "Buenos Aires",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/ar.svg",
+        "DiallingCode": "",
+        "IsoCode": "032",
+        "Population": 45376763
+    },
+    {
+        "Name": "Burkina Faso",
+        "Code": "BF",
+        "Capital": "Ouagadougou",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/bf.svg",
+        "DiallingCode": "",
+        "IsoCode": "854",
+        "Population": 20903278
+    },
+    {
+        "Name": "Christmas Island",
+        "Code": "CX",
+        "Capital": "Flying Fish Cove",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/cx.svg",
+        "DiallingCode": "",
+        "IsoCode": "162",
+        "Population": 2072
+    },
+    {
+        "Name": "Bermuda",
+        "Code": "BM",
+        "Capital": "Hamilton",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/bm.svg",
+        "DiallingCode": "",
+        "IsoCode": "060",
+        "Population": 63903
+    },
+    {
+        "Name": "Nicaragua",
+        "Code": "NI",
+        "Capital": "Managua",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/ni.svg",
+        "DiallingCode": "",
+        "IsoCode": "558",
+        "Population": 6624554
+    },
+    {
+        "Name": "Eswatini",
+        "Code": "SZ",
+        "Capital": "Mbabane",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/sz.svg",
+        "DiallingCode": "",
+        "IsoCode": "748",
+        "Population": 1160164
+    },
+    {
+        "Name": "Bahrain",
+        "Code": "BH",
+        "Capital": "Manama",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/bh.svg",
+        "DiallingCode": "",
+        "IsoCode": "048",
+        "Population": 1701583
+    },
+    {
+        "Name": "Kenya",
+        "Code": "KE",
+        "Capital": "Nairobi",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/ke.svg",
+        "DiallingCode": "",
+        "IsoCode": "404",
+        "Population": 53771300
+    },
+    {
+        "Name": "Serbia",
+        "Code": "RS",
+        "Capital": "Belgrade",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/rs.svg",
+        "DiallingCode": "",
+        "IsoCode": "688",
+        "Population": 6908224
+    },
+    {
+        "Name": "Timor-Leste",
+        "Code": "TL",
+        "Capital": "Dili",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/tl.svg",
+        "DiallingCode": "",
+        "IsoCode": "626",
+        "Population": 1318442
+    },
+    {
+        "Name": "Dominica",
+        "Code": "DM",
+        "Capital": "Roseau",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/dm.svg",
+        "DiallingCode": "",
+        "IsoCode": "212",
+        "Population": 71991
+    },
+    {
+        "Name": "Northern Mariana Islands",
+        "Code": "MP",
+        "Capital": "Saipan",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/mp.svg",
+        "DiallingCode": "",
+        "IsoCode": "580",
+        "Population": 57557
+    },
+    {
+        "Name": "Philippines",
+        "Code": "PH",
+        "Capital": "Manila",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/ph.svg",
+        "DiallingCode": "",
+        "IsoCode": "608",
+        "Population": 109581085
+    },
+    {
+        "Name": "Kosovo",
+        "Code": "XK",
+        "Capital": "Pristina",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/xk.svg",
+        "DiallingCode": "",
+        "IsoCode": "",
+        "Population": 1775378
+    },
+    {
+        "Name": "Kuwait",
+        "Code": "KW",
+        "Capital": "Kuwait City",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/kw.svg",
+        "DiallingCode": "",
+        "IsoCode": "414",
+        "Population": 4270563
+    },
+    {
+        "Name": "Taiwan",
+        "Code": "TW",
+        "Capital": "Taipei",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/tw.svg",
+        "DiallingCode": "",
+        "IsoCode": "158",
+        "Population": 23503349
+    },
+    {
+        "Name": "Burundi",
+        "Code": "BI",
+        "Capital": "Gitega",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/bi.svg",
+        "DiallingCode": "",
+        "IsoCode": "108",
+        "Population": 11890781
+    },
+    {
+        "Name": "American Samoa",
+        "Code": "AS",
+        "Capital": "Pago Pago",
+        "Region": "Oceania",
+        "Flag": "https://flagcdn.com/as.svg",
+        "DiallingCode": "",
+        "IsoCode": "016",
+        "Population": 55197
+    },
+    {
+        "Name": "Bulgaria",
+        "Code": "BG",
+        "Capital": "Sofia",
+        "Region": "Europe",
+        "Flag": "https://flagcdn.com/bg.svg",
+        "DiallingCode": "",
+        "IsoCode": "100",
+        "Population": 6927288
+    },
+    {
+        "Name": "South Africa",
+        "Code": "ZA",
+        "Capital": "Pretoria",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/za.svg",
+        "DiallingCode": "",
+        "IsoCode": "710",
+        "Population": 59308690
+    },
+    {
+        "Name": "Peru",
+        "Code": "PE",
+        "Capital": "Lima",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/pe.svg",
+        "DiallingCode": "",
+        "IsoCode": "604",
+        "Population": 32971846
+    },
+    {
+        "Name": "Aruba",
+        "Code": "AW",
+        "Capital": "Oranjestad",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/aw.svg",
+        "DiallingCode": "",
+        "IsoCode": "533",
+        "Population": 106766
+    },
+    {
+        "Name": "Ghana",
+        "Code": "GH",
+        "Capital": "Accra",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/gh.svg",
+        "DiallingCode": "",
+        "IsoCode": "288",
+        "Population": 31072945
+    },
+    {
+        "Name": "Saint Martin",
+        "Code": "MF",
+        "Capital": "Marigot",
+        "Region": "Americas",
+        "Flag": "https://flagcdn.com/mf.svg",
+        "DiallingCode": "",
+        "IsoCode": "663",
+        "Population": 38659
+    },
+    {
+        "Name": "India",
+        "Code": "IN",
+        "Capital": "New Delhi",
+        "Region": "Asia",
+        "Flag": "https://flagcdn.com/in.svg",
+        "DiallingCode": "",
+        "IsoCode": "356",
+        "Population": 1380004385
+    },
+    {
+        "Name": "Uganda",
+        "Code": "UG",
+        "Capital": "Kampala",
+        "Region": "Africa",
+        "Flag": "https://flagcdn.com/ug.svg",
+        "DiallingCode": "",
+        "IsoCode": "800",
+        "Population": 45741000
+    }
+]
