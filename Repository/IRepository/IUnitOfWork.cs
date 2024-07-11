@@ -10,6 +10,7 @@ namespace rethus_backend.Repository.IRepository
         IUserFormFilesRepository UserFormFiles { get; }
         IAuthRepository Auth { get; }
         ICommentsRepository Comments { get; }
+        ICountryRepository Country { get; }
 
         void Save();
     }
