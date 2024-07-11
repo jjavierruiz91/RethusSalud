@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using rethus_backend.Models;
@@ -17,6 +18,7 @@ namespace rethus_backend.Data
         public DbSet<UserForm> UserForm { get; set; }
         public DbSet<UserFormFiles> UserFormFiles { get; set; }
         public DbSet<Comments> Comments { get; set; }
+        public DbSet<Country> Country { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
