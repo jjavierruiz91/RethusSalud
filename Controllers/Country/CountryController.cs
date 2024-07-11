@@ -13,7 +13,7 @@ public class CountryController : ApiBaseController
     [HttpGet]
     public ActionResult LoadCountries()
     {
-        _unitOfWork.Country.LoadCountries();
+        _unitOfWork.Country.LoadCountriesJsonToBd();
         return Ok();
     }
 }
