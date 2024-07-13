@@ -19,6 +19,7 @@ namespace rethus_backend.Data
         public DbSet<UserFormFiles> UserFormFiles { get; set; }
         public DbSet<Comments> Comments { get; set; }
         public DbSet<Country> Country { get; set; }
+        public DbSet<Department> Departments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
