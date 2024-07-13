@@ -56,6 +56,7 @@ namespace rethus_backend.Repository
         public ICountryRepository Country { get; private set; }
 
         public IDepartmentRepository Department { get; private set; }
+        public ICityRepository City { get; private set; }
 
         public void Dispose() => _db.Dispose();
 

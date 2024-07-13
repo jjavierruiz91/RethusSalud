@@ -20,6 +20,7 @@ namespace rethus_backend.Data
         public DbSet<Comments> Comments { get; set; }
         public DbSet<Country> Country { get; set; }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<City> City { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
