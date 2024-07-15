@@ -5,9 +5,8 @@ namespace rethus_backend.Models
 {
     public class City
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string CityId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int CityId { get; set; }
 
         [Required]
         public required string Name { get; set; }
