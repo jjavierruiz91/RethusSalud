@@ -12,6 +12,7 @@ namespace rethus_backend.Repository.IRepository
         ICommentsRepository Comments { get; }
         ICountryRepository Country { get; }
         IDepartmentRepository Department { get; }
+        ICityRepository City { get; }
         void Save();
     }
 }

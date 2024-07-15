@@ -39,6 +39,10 @@ namespace rethus_backend.Repository
             Comments = new CommentsRepository(_db, User, UserForm, paginationCommentsService);
 
             Country = new CountryRepository(_db);
+
+            Department = new DepartmentRepository(_db);
+
+            City = new CityRepository(_db);
         }
 
         public IUserRepository User { get; private set; }
