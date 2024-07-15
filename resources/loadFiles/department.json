@@ -1,0 +1,162 @@
+[
+    {
+        "DepartmentId": 1,
+        "CountryId": 157,
+        "Name": "Amazonas"
+    },
+    {
+        "DepartmentId": 2,
+        "CountryId": 157,
+        "Name": "Antioquia"
+    },
+    {
+        "DepartmentId": 3,
+        "CountryId": 157,
+        "Name": "Arauca"
+    },
+    {
+        "DepartmentId": 4,
+        "CountryId": 157,
+        "Name": "Atlántico"
+    },
+    {
+        "DepartmentId": 5,
+        "CountryId": 157,
+        "Name": "Bolívar"
+    },
+    {
+        "DepartmentId": 6,
+        "CountryId": 157,
+        "Name": "Boyacá"
+    },
+    {
+        "DepartmentId": 7,
+        "CountryId": 157,
+        "Name": "Caldas"
+    },
+    {
+        "DepartmentId": 8,
+        "CountryId": 157,
+        "Name": "Caquetá"
+    },
+    {
+        "DepartmentId": 9,
+        "CountryId": 157,
+        "Name": "Casanare"
+    },
+    {
+        "DepartmentId": 10,
+        "CountryId": 157,
+        "Name": "Cauca"
+    },
+    {
+        "DepartmentId": 11,
+        "CountryId": 157,
+        "Name": "Cesar"
+    },
+    {
+        "DepartmentId": 12,
+        "CountryId": 157,
+        "Name": "Chocó"
+    },
+    {
+        "DepartmentId": 13,
+        "CountryId": 157,
+        "Name": "Cundinamarca"
+    },
+    {
+        "DepartmentId": 14,
+        "CountryId": 157,
+        "Name": "Córdoba"
+    },
+    {
+        "DepartmentId": 15,
+        "CountryId": 157,
+        "Name": "Guainía"
+    },
+    {
+        "DepartmentId": 16,
+        "CountryId": 157,
+        "Name": "Guaviare"
+    },
+    {
+        "DepartmentId": 17,
+        "CountryId": 157,
+        "Name": "Huila"
+    },
+    {
+        "DepartmentId": 18,
+        "CountryId": 157,
+        "Name": "La Guajira"
+    },
+    {
+        "DepartmentId": 19,
+        "CountryId": 157,
+        "Name": "Magdalena"
+    },
+    {
+        "DepartmentId": 20,
+        "CountryId": 157,
+        "Name": "Meta"
+    },
+    {
+        "DepartmentId": 21,
+        "CountryId": 157,
+        "Name": "Nariño"
+    },
+    {
+        "DepartmentId": 22,
+        "CountryId": 157,
+        "Name": "Norte de Santander"
+    },
+    {
+        "DepartmentId": 23,
+        "CountryId": 157,
+        "Name": "Putumayo"
+    },
+    {
+        "DepartmentId": 24,
+        "CountryId": 157,
+        "Name": "Quindío"
+    },
+    {
+        "DepartmentId": 25,
+        "CountryId": 157,
+        "Name": "Risaralda"
+    },
+    {
+        "DepartmentId": 26,
+        "CountryId": 157,
+        "Name": "San Andrés y Providencia"
+    },
+    {
+        "DepartmentId": 27,
+        "CountryId": 157,
+        "Name": "Santander"
+    },
+    {
+        "DepartmentId": 28,
+        "CountryId": 157,
+        "Name": "Sucre"
+    },
+    {
+        "DepartmentId": 29,
+        "CountryId": 157,
+        "Name": "Tolima"
+    },
+    {
+        "DepartmentId": 30,
+        "CountryId": 157,
+        "Name": "Valle del Cauca"
+    },
+    {
+        "DepartmentId": 31,
+        "CountryId": 157,
+        "Name": "Vaupés"
+    },
+    {
+        "DepartmentId": 32,
+        "CountryId": 157,
+        "Name": "Vichada"
+    }
+]

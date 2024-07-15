@@ -5,8 +5,7 @@ namespace rethus_backend.Models
 {
     public class Department
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int DepartmentId { get; set; }
 
         [Required]
@@ -14,6 +13,6 @@ namespace rethus_backend.Models
 
         [Required]
         [ForeignKey("Country")]
-        public string CountryId { get; set; }
+        public int CountryId { get; set; }
     }
 }
