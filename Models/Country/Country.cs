@@ -5,9 +5,8 @@ namespace rethus_backend.Models
 {
     public class Country
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string CountryId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int CountryId { get; set; }
 
         [Required]
         public required string Name { get; set; }
