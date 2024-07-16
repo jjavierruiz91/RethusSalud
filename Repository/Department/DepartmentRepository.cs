@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using rethus_backend.Data;
 using rethus_backend.Models;
 using rethus_backend.Repository.IRepository;
@@ -15,6 +16,20 @@ namespace rethus_backend.Repository
             _context = db;
         }
 
+        public Task<List<DepartmentResponseDto>> GetDepartments(int CountryId)
+        {
+            var response = new ApiResponse();
+
+            var department = _context.Departments
+                .Where(c => c.CountryId == CountryId)
+                .Select(
+                    v => new DepartmentResponseDto { DepartmentId = v.DepartmentId, Name = v.Name }
+                )
+                .ToListAsync();
+
+            return department;
+        }
+
         public void LoadDeparmentJsonToBd()
         {
             var jsonFilePath = "./resources/loadFiles/department.json";
@@ -27,7 +42,6 @@ namespace rethus_backend.Repository
 
             var Department = JsonSerializer.Deserialize<List<Department>>(fileStream, options);
 
-            // Agregar los países al DbSet
             _context.Departments.AddRange(Department);
             _context.SaveChanges();
         }

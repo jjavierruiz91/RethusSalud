@@ -5,5 +5,7 @@ namespace rethus_backend.Repository.IRepository
     public interface IDepartmentRepository : IRepository<Department>
     {
         void LoadDeparmentJsonToBd();
+
+        public Task<List<DepartmentResponseDto>> GetDepartments(int CountryId);
     }
 }
