@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using rethus_backend.Models;
 
 namespace rethus_backend.Repository.IRepository
@@ -5,5 +6,7 @@ namespace rethus_backend.Repository.IRepository
     public interface ICountryRepository : IRepository<Country>
     {
         void LoadCountriesJsonToBd();
+
+        public Task<List<CountryResponseDto>> GetCountries();
     }
 }
