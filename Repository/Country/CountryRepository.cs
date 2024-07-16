@@ -1,4 +1,6 @@
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using rethus_backend.Data;
 using rethus_backend.Models;
 using rethus_backend.Repository.IRepository;
@@ -30,6 +32,17 @@ namespace rethus_backend.Repository
             // Agregar los países al DbSet
             _context.Country.AddRange(countries);
             _context.SaveChanges();
+        }
+
+        public Task<List<CountryResponseDto>> GetCountries()
+        {
+            var response = new ApiResponse();
+
+            var countries = _context.Country
+                .Select(c => new CountryResponseDto { Id = c.CountryId, Name = c.Name })
+                .ToListAsync();
+
+            return countries;
         }
     }
 }

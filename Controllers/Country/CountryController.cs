@@ -1,5 +1,7 @@
+using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using rethus_backend.Models;
 
 namespace rethus_backend.Controllers;
 
@@ -10,10 +12,34 @@ public class CountryController : ApiBaseController
     public CountryController(IServiceProvider provider)
         : base(provider) { }
 
+    // [HttpGet]
+    // public ActionResult LoadCountries()
+    // {
+    //     _unitOfWork.Country.LoadCountriesJsonToBd();
+    //     _unitOfWork.Department.LoadDeparmentJsonToBd();
+    //     _unitOfWork.City.LoadCityJsonToBd();
+
+    //     return Ok();
+    // }
+
     [HttpGet]
-    public ActionResult LoadCountries()
+    public async Task<ActionResult<ApiResponse>> GetCountries()
     {
-        _unitOfWork.Country.LoadCountriesJsonToBd();
-        return Ok();
+        var countries = await _unitOfWork.Country.GetCountries();
+
+        if (countries == null)
+        {
+            _response.IsSuccess = false;
+            _response.StatusCode = HttpStatusCode.BadRequest;
+            BadRequest(_response);
+        }
+
+        _response.IsSuccess = true;
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.Result = countries;
+
+        Response.Headers["Cache-Control"] = "public,max-age=86400"; // 86400 segundos = 24 horas
+
+        return Ok(_response);
     }
 }
