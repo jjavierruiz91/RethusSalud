@@ -24,21 +24,26 @@ namespace rethus_backend.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //   modelBuilder.Entity<User>().ToTable("User");
-            //   modelBuilder.Entity<Configurations>().ToTable("Configurations");
-            //   modelBuilder.Entity<UserForm>().ToTable("UserForm");
-            //   modelBuilder.Entity<UserFormFiles>().ToTable("UserFormFiles");
+            modelBuilder
+                .Entity<Country>()
+                .HasMany(c => c.Departments)
+                .WithOne(d => d.Country)
+                .HasForeignKey(d => d.CountryId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            //   modelBuilder.Entity<Configurations>()
-            //     .HasNoKey();
+            modelBuilder
+                .Entity<Department>()
+                .HasMany(d => d.City)
+                .WithOne(c => c.Department)
+                .HasForeignKey(c => c.DepartmentId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            //   modelBuilder.Entity<UserForm>()
-            //     .HasNoKey();
-
-            //   modelBuilder.Entity<UserFormFiles>()
-            // .HasNoKey();
-
-            //   modelBuilder.Entity<UserFormFiles>().HasOne(userForm => userForm.UserForm).WithOne(user => user.UserFormFiles);
+            modelBuilder
+                .Entity<City>()
+                .HasOne(c => c.Country)
+                .WithMany()
+                .HasForeignKey(c => c.CountryId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
         }
