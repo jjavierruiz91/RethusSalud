@@ -12,11 +12,15 @@ namespace rethus_backend.Models
         public required string Name { get; set; }
 
         [Required]
-        [ForeignKey("Country")]
+        [ForeignKey("CountryId")]
         public int CountryId { get; set; }
 
         [Required]
-        [ForeignKey("Department")]
+        [ForeignKey("DepartmentId")]
         public int DepartmentId { get; set; }
+
+        // Navigation properties
+        public Country? Country { get; set; }
+        public Department? Department { get; set; }
     }
 }

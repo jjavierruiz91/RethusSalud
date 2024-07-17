@@ -12,7 +12,10 @@ namespace rethus_backend.Models
         public required string Name { get; set; }
 
         [Required]
-        [ForeignKey("Country")]
+        [ForeignKey("CountryId")]
         public int CountryId { get; set; }
+
+        public Country? Country { get; set; }
+        public ICollection<City>? City { get; set; }
     }
 }

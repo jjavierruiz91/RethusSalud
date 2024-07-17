@@ -31,5 +31,7 @@ namespace rethus_backend.Models
 
         [Required]
         public required int Population { get; set; }
+
+        public ICollection<Department>? Departments { get; set; }
     }
 }
