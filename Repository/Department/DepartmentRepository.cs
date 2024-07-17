@@ -16,12 +16,12 @@ namespace rethus_backend.Repository
             _context = db;
         }
 
-        public Task<List<DepartmentResponseDto>> GetDepartments(int CountryId)
+        public Task<List<DepartmentResponseDto>> GetDepartments(int countryId)
         {
             var response = new ApiResponse();
 
             var department = _context.Departments
-                .Where(c => c.CountryId == CountryId)
+                .Where(c => c.CountryId == countryId)
                 .Select(
                     v => new DepartmentResponseDto { DepartmentId = v.DepartmentId, Name = v.Name }
                 )

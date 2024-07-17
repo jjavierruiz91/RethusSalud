@@ -6,6 +6,6 @@ namespace rethus_backend.Repository.IRepository
     {
         void LoadDeparmentJsonToBd();
 
-        public Task<List<DepartmentResponseDto>> GetDepartments(int CountryId);
+        public Task<List<DepartmentResponseDto>> GetDepartments(int countryId);
     }
 }

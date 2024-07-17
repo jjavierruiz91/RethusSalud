@@ -12,15 +12,15 @@ public class CountryController : ApiBaseController
     public CountryController(IServiceProvider provider)
         : base(provider) { }
 
-    // [HttpGet]
-    // public ActionResult LoadCountries()
-    // {
-    //     _unitOfWork.Country.LoadCountriesJsonToBd();
-    //     _unitOfWork.Department.LoadDeparmentJsonToBd();
-    //     _unitOfWork.City.LoadCityJsonToBd();
+    [HttpGet("load")]
+    public ActionResult LoadCountries()
+    {
+        _unitOfWork.Country.LoadCountriesJsonToBd();
+        _unitOfWork.Department.LoadDeparmentJsonToBd();
+        _unitOfWork.City.LoadCityJsonToBd();
 
-    //     return Ok();
-    // }
+        return Ok();
+    }
 
     [HttpGet]
     public async Task<ActionResult<ApiResponse>> GetCountries()
