@@ -26,6 +26,38 @@ namespace rethus_backend.Utilities.Constants.UserConstants
         inactive = 0
     }
 
+    public enum TypeIdentification
+    {
+        CDC,
+        TDI,
+        CDE,
+        RUT,
+        PPE,
+        TP,
+    }
+
+    public enum TypeGender
+    {
+        M,
+        F,
+    }
+
+    public enum TypeEthnicGroup
+    {
+        indigenous,
+        palenquero,
+        rom,
+        afro,
+        razal,
+        noneAbove,
+    }
+
+    public enum TypeInstitution
+    {
+        educacionSuperior,
+        educacionTdh,
+    }
+
     // DTO para los parámetros de consulta de usuario
     public class UserQueryParametersDto
     {
