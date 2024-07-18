@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using rethus_backend.Utilities.Constants.User.UserFormConstants;
+using rethus_backend.Utilities.Constants.UserConstants;
 
 namespace rethus_backend.Models.Dto.UserForm
 {
@@ -9,10 +10,12 @@ namespace rethus_backend.Models.Dto.UserForm
         public string? userId { get; set; }
 
         [Required(ErrorMessage = "PersonalTypeIdentification is required")]
-        public string PersonalTypeIdentification { get; set; }
+        [EnumDataType(typeof(TypeInstitution), ErrorMessage = "Invalid typeIdentification Value")]
+        public TypeIdentification PersonalTypeIdentification { get; set; }
 
         [Required(ErrorMessage = "PersonalGender is required")]
-        public string PersonalGender { get; set; }
+        [EnumDataType(typeof(TypeGender), ErrorMessage = "Invalid Gender Value")]
+        public TypeGender PersonalGender { get; set; }
 
         [Required(ErrorMessage = "PersonalIdentification is required")]
         public string PersonalIdentification { get; set; }
@@ -58,16 +61,21 @@ namespace rethus_backend.Models.Dto.UserForm
         public string PersonalEmail { get; set; }
 
         [Required(ErrorMessage = "PersonalEthnicGroup is required")]
-        public string PersonalEthnicGroup { get; set; }
+        [EnumDataType(typeof(TypeEthnicGroup), ErrorMessage = "Invalid PersonalEthnicGroup Value")]
+        public TypeEthnicGroup PersonalEthnicGroup { get; set; }
 
         [Required(ErrorMessage = "AcademicsOriginTitle is required")]
         public string AcademicsOriginTitle { get; set; }
 
         [Required(ErrorMessage = "AcademicsTypeInstitution is required")]
-        public string AcademicsTypeInstitution { get; set; }
+        [EnumDataType(typeof(TypeInstitution), ErrorMessage = "Invalid PersonalEthnicGroup Value")]
+        public TypeInstitution AcademicsTypeInstitution { get; set; }
 
         [Required(ErrorMessage = "AcademicsProgramType is required")]
         public string AcademicsProgramType { get; set; }
+
+        [Required(ErrorMessage = "AcademicsCountryInstitution is required")]
+        public string AcademicsCountryInstitution { get; set; }
 
         [Required(ErrorMessage = "AcademicsDepartmentInstitution is required")]
         public string AcademicsDepartmentInstitution { get; set; }
@@ -81,29 +89,17 @@ namespace rethus_backend.Models.Dto.UserForm
         [Required(ErrorMessage = "AcademicsProgramName is required")]
         public string AcademicsProgramName { get; set; }
 
-        [Required(ErrorMessage = "AcademicsDateInstitution is required")]
-        public DateTime AcademicsDateInstitution { get; set; }
+        [Required(ErrorMessage = "TypeProcedure is required")]
+        public string? TypeProcedure { get; set; }
 
-        [Required(ErrorMessage = "AcademicsGradeDate is required")]
+        [Required(ErrorMessage = "TypeProcedure is required")]
         public DateTime AcademicsGradeDate { get; set; }
 
-        [Required(ErrorMessage = "AcademicsNumberConvalidation is required")]
-        public string AcademicsNumberConvalidation { get; set; }
+        public string? AcademicsEquivalentTitle { get; set; }
 
-        [Required(ErrorMessage = "AcademicsDateConvalidation is required")]
-        public DateTime AcademicsDateConvalidation { get; set; }
+        public string? AcademicsNumberConvalidation { get; set; }
 
-        [Required(ErrorMessage = "AcademicsTitle is required")]
-        public string AcademicsTitle { get; set; }
-
-        [Required(ErrorMessage = "AcademicsNumberAdministrative is required")]
-        public string AcademicsNumberAdministrative { get; set; }
-
-        [Required(ErrorMessage = "AcademicsDateAdministrative is required")]
-        public DateTime AcademicsDateAdministrative { get; set; }
-
-        // [Required(ErrorMessage = "TypeProcedure is required")]
-        // public string? TypeProcedure { get; set; }
+        public DateTime? AcademicsDateConvalidation { get; set; }
     }
 
     // public class ResponseUserFormPaginate
@@ -125,7 +121,7 @@ namespace rethus_backend.Models.Dto.UserForm
 
     public class DetailsProcessUserDto
     {
-        public string PersonalTypeIdentification { get; set; }
+        public TypeIdentification PersonalTypeIdentification { get; set; }
 
         public string PersonalIdentification { get; set; }
 
@@ -158,20 +154,20 @@ namespace rethus_backend.Models.Dto.UserForm
 
     public class DetailsProccessAcademicDto
     {
-        public string? AcademicsOriginTitle { get; set; }
-        public string? AcademicsTypeInstitution { get; set; }
-        public string? AcademicsProgramType { get; set; }
-        public string? AcademicsDepartmentInstitution { get; set; }
-        public string? AcademicsMunicipalityInstitution { get; set; }
-        public string? AcademicsNameInstitution { get; set; }
-        public string? AcademicsProgramName { get; set; }
-        public DateTime? AcademicsDateInstitution { get; set; }
-        public DateTime AcademicsGradeDate { get; set; }
+        public string AcademicsOriginTitle { get; set; }
+        public string AcademicsTypeInstitution { get; set; }
+        public string AcademicsProgramType { get; set; }
+        public string AcademicsDepartmentInstitution { get; set; }
+        public string AcademicsMunicipalityInstitution { get; set; }
+        public string AcademicsNameInstitution { get; set; }
+        public string AcademicsProgramName { get; set; }
+        public DateTime AcademicsDateInstitution { get; set; }
+        public DateTime? AcademicsGradeDate { get; set; }
         public string? AcademicsNumberConvalidation { get; set; }
         public DateTime? AcademicsDateConvalidation { get; set; }
-        public string? AcademicsTitle { get; set; }
-        public string? AcademicsNumberAdministrative { get; set; }
-        public DateTime? AcademicsDateAdministrative { get; set; }
+        public string AcademicsEquivalentTitle { get; set; }
+        public string AcademicsNumberAdministrative { get; set; }
+        public DateTime AcademicsDateAdministrative { get; set; }
     }
 
     public class DetailsProccessRegisterFile { }

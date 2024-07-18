@@ -167,18 +167,16 @@ namespace rethus_backend.Repository
                 AcademicsOriginTitle = createRequestDto.AcademicsOriginTitle,
                 AcademicsTypeInstitution = createRequestDto.AcademicsTypeInstitution,
                 AcademicsProgramType = createRequestDto.AcademicsProgramType,
+                AcademicsCountryInstitution = createRequestDto.AcademicsCountryInstitution,
                 AcademicsDepartmentInstitution = createRequestDto.AcademicsDepartmentInstitution,
                 AcademicsMunicipalityInstitution =
                     createRequestDto.AcademicsMunicipalityInstitution,
                 AcademicsNameInstitution = createRequestDto.AcademicsNameInstitution,
                 AcademicsProgramName = createRequestDto.AcademicsProgramName,
-                AcademicsDateInstitution = createRequestDto.AcademicsDateInstitution,
                 AcademicsGradeDate = createRequestDto.AcademicsGradeDate,
+                AcademicsEquivalentTitle = createRequestDto.AcademicsEquivalentTitle,
                 AcademicsNumberConvalidation = createRequestDto.AcademicsNumberConvalidation,
                 AcademicsDateConvalidation = createRequestDto.AcademicsDateConvalidation,
-                AcademicsTitle = createRequestDto.AcademicsTitle,
-                AcademicsNumberAdministrative = createRequestDto.AcademicsNumberAdministrative,
-                AcademicsDateAdministrative = createRequestDto.AcademicsDateAdministrative,
                 TypeProcedure = user.TypeProcedure
             };
 
@@ -269,8 +267,9 @@ namespace rethus_backend.Repository
                     columns =>
                         new DetailsProccessPersonalDto
                         {
-                            PersonalTypeIdentification = columns.PersonalTypeIdentification,
-                            PersonalGender = columns.PersonalGender,
+                            PersonalTypeIdentification =
+                                columns.PersonalTypeIdentification.ToString(),
+                            PersonalGender = columns.PersonalGender.ToString(),
                             PersonalIdentification = columns.PersonalIdentification,
                             PersonalFirstName = columns.PersonalFirstName,
                             PersonalLastName = columns.PersonalLastName,
@@ -285,7 +284,7 @@ namespace rethus_backend.Repository
                             PersonalTelephone = columns.PersonalTelephone,
                             PersonalPhone = columns.PersonalPhone,
                             PersonalEmail = columns.PersonalEmail,
-                            PersonalEthnicGroup = columns.PersonalEthnicGroup,
+                            PersonalEthnicGroup = columns.PersonalEthnicGroup.ToString(),
                         }
                 )
                 .FirstOrDefault();
@@ -302,20 +301,17 @@ namespace rethus_backend.Repository
                         new DetailsProccessAcademicDto
                         {
                             AcademicsOriginTitle = columns.AcademicsOriginTitle,
-                            AcademicsTypeInstitution = columns.AcademicsTypeInstitution,
+                            AcademicsTypeInstitution = columns.AcademicsTypeInstitution.ToString(),
                             AcademicsProgramType = columns.AcademicsProgramType,
                             AcademicsDepartmentInstitution = columns.AcademicsDepartmentInstitution,
                             AcademicsMunicipalityInstitution =
                                 columns.AcademicsMunicipalityInstitution,
                             AcademicsNameInstitution = columns.AcademicsNameInstitution,
                             AcademicsProgramName = columns.AcademicsProgramName,
-                            AcademicsDateInstitution = columns.AcademicsDateInstitution,
                             AcademicsGradeDate = columns.AcademicsGradeDate,
                             AcademicsNumberConvalidation = columns.AcademicsNumberConvalidation,
                             AcademicsDateConvalidation = columns.AcademicsDateConvalidation,
-                            AcademicsTitle = columns.AcademicsTitle,
-                            AcademicsNumberAdministrative = columns.AcademicsNumberAdministrative,
-                            AcademicsDateAdministrative = columns.AcademicsDateAdministrative,
+                            AcademicsEquivalentTitle = columns.AcademicsEquivalentTitle,
                         }
                 )
                 .FirstOrDefault();

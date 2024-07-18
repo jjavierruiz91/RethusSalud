@@ -9,6 +9,15 @@ namespace rethus_backend.Utilities.Constants.User.UserFormConstants
         approved
     }
 
+    public enum ReviewStepForm
+    {
+        officer1,
+        officer2,
+        officer3,
+        success,
+        error
+    }
+
     public class UserFormConstants
     {
         public static ReviewStepForm GetNextRebiewStepForm(ReviewStepForm step)
