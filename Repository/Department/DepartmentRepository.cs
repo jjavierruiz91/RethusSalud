@@ -22,9 +22,7 @@ namespace rethus_backend.Repository
 
             var department = _context.Departments
                 .Where(c => c.CountryId == countryId)
-                .Select(
-                    v => new DepartmentResponseDto { DepartmentId = v.DepartmentId, Name = v.Name }
-                )
+                .Select(v => new DepartmentResponseDto { Id = v.DepartmentId, Name = v.Name })
                 .ToListAsync();
 
             return department;
