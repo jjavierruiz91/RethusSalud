@@ -27,7 +27,7 @@ public class CommentsController : ApiBaseController
         {
             Page = page,
             PageSize = pageSize,
-            QueryParameters = new CommonQueryParametersDto { UserFormId = formId, Status = status }
+            // QueryParameters = new CommonQueryParametersDto { UserFormId = formId, Status = status }
         };
 
         Func<Comments, CommentsResponseDto> mapper = user =>

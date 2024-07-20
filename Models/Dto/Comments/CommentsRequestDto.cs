@@ -1,3 +1,5 @@
+using rethus_backend.Utilities.Constants.User.UserFormConstants;
+
 namespace rethus_backend.Models.Dto.Comments
 {
     public class CommentsCreateDto
@@ -16,14 +18,14 @@ namespace rethus_backend.Models.Dto.Comments
     public class CommonQueryParametersDto
     {
         public string? UserFormId { get; set; }
-        public string? Status { get; set; }
+        public UserFormStatus? Status { get; set; }
         public string? PersonalIdentification { get; set; }
-        public string? TypeProcedure { get; set; }
+        public ConfigurationTypeProcedure? TypeProcedure { get; set; }
         public DateTime? CreatedAt { get; set; }
 
         public string LogicalOperator { get; set; } = "AND";
 
-        public string? StepForm { get; set; }
+        public ReviewStepForm? StepForm { get; set; }
 
         // Nueva propiedad para especificar el operador de comparación para cada propiedad
         public Dictionary<string, string> ComparisonOperators { get; set; } =

@@ -83,16 +83,17 @@ public class UserFormController : ApiBaseController
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
         [FromQuery] string PersonalIdentification = "",
-        [FromQuery] string step = "funcionarioEtapa1",
-        [FromQuery] string? TypeProcedure = null,
+        [FromQuery] string step = "officer1",
+        [FromQuery] ConfigurationTypeProcedure? TypeProcedure = null,
         [FromQuery] string? CreatedAt = null
     )
     {
+        Console.WriteLine(step);
         var request = new PaginationRequestDto<CommonQueryParametersDto>
         {
             Page = page,
             PageSize = pageSize,
-            QueryParameters = new CommonQueryParametersDto { StepForm = step }
+            QueryParameters = new CommonQueryParametersDto { }
         };
 
         if (PersonalIdentification.Length > 0)
