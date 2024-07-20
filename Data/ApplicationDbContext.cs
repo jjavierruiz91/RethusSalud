@@ -24,6 +24,8 @@ namespace rethus_backend.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder
                 .Entity<Country>()
                 .HasMany(c => c.Departments)
@@ -45,7 +47,68 @@ namespace rethus_backend.Data
                 .HasForeignKey(c => c.CountryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            base.OnModelCreating(modelBuilder);
+            modelBuilder
+                .Entity<UserForm>()
+                .HasOne(uf => uf.CountryOfBirth)
+                .WithMany()
+                .HasForeignKey(uf => uf.PersonalCountryBirthId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<UserForm>()
+                .HasOne(p => p.DepartmentBirth)
+                .WithMany()
+                .HasForeignKey(p => p.PersonalDepartmentBirthId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<UserForm>()
+                .HasOne(p => p.MunicipalityBirth)
+                .WithMany()
+                .HasForeignKey(p => p.PersonalMunicipalityBirthId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<UserForm>()
+                .HasOne(p => p.PlaceResidence)
+                .WithMany()
+                .HasForeignKey(p => p.PersonalPlaceResidenceId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<UserForm>()
+                .HasOne(p => p.DepartmentResidence)
+                .WithMany()
+                .HasForeignKey(p => p.PersonalDepartmentResidenceId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<UserForm>()
+                .HasOne(p => p.MunicipalityResidence)
+                .WithMany()
+                .HasForeignKey(p => p.PersonalMunicipalityResidenceId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<UserForm>()
+                .HasOne(p => p.CountryInstitution)
+                .WithMany()
+                .HasForeignKey(p => p.AcademicsCountryInstitution)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<UserForm>()
+                .HasOne(p => p.DepartmentInstitution)
+                .WithMany()
+                .HasForeignKey(p => p.AcademicsDepartmentInstitutionId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<UserForm>()
+                .HasOne(p => p.MunicipalityInstitution)
+                .WithMany()
+                .HasForeignKey(p => p.AcademicsMunicipalityInstitutionId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
