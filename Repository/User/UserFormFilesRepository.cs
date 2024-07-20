@@ -36,10 +36,10 @@ namespace rethus_backend.Repository
         {
             var filesUrls = _context.UserFormFiles
                 .Where(user => user.UserFormId == userFormId)
-                .Select(columns => new UserFormFiles { url = columns.url, type = columns.type })
+                .Select(columns => new UserFormFiles { Url = columns.Url, Type = columns.Type })
                 .ToList();
 
-            List<string> pdfPaths = filesUrls.Select(file => file.url).ToList();
+            List<string> pdfPaths = filesUrls.Select(file => file.Url).ToList();
             var ruta = "";
             var urls = FileHelper.GetPdfFilesAsync(pdfPaths, ruta);
             return urls;
@@ -66,6 +66,17 @@ namespace rethus_backend.Repository
         public ApiResponse RegisterUserFormFile(string userId, UserFormFilesCreateDto payload)
         {
             var response = new ApiResponse();
+
+            var userConfig = _context.Configurations.Any(
+                c => c.UserId == userId && c.Step == ConfigurationStep.load_user_files
+            );
+            if (userConfig == null)
+            {
+                response.IsSuccess = false;
+                response.AddError("EL usuario no se encuentra en el paso de cargar archivos");
+                return response;
+            }
+
             var userForm = _context.UserForm.FirstOrDefault(
                 x => x.UserId == userId && x.Status == UserFormStatus.pending
             );
@@ -78,7 +89,7 @@ namespace rethus_backend.Repository
             }
             ;
 
-            if (payload.files.Count == 0)
+            if (payload.Files.Count == 0)
             {
                 response.IsSuccess = false;
                 response.AddError("La lista de archivo no puede estar vacia");
@@ -97,17 +108,18 @@ namespace rethus_backend.Repository
 
             FileHelper.CreateFolder(ruta);
 
-            foreach (var item in payload.files)
+            foreach (var item in payload.Files)
             {
-                var baseUrlFile = FileHelper.AddAsync(item, ruta);
+                var baseUrlFile = FileHelper.AddAsync(item.File, ruta);
 
                 var form = new UserFormFiles
                 {
-                    size = item.Length,
-                    filename = item.FileName,
-                    type = item.ContentType,
-                    url = baseUrlFile,
-                    UserFormId = userForm.UserFormId
+                    Size = item.File.Length,
+                    Filename = item.File.FileName,
+                    Type = item.File.ContentType,
+                    Url = baseUrlFile,
+                    UserFormId = userForm.UserFormId,
+                    TypeUploadFile = item.Id
                 };
 
                 var createRegister = _context.UserFormFiles.Add(form);
@@ -138,7 +150,7 @@ namespace rethus_backend.Repository
                         new GetUserFormIdDto
                         {
                             UserFileId = columns.UserFormFilesId,
-                            FileName = columns.filename
+                            FileName = columns.Filename
                         }
                 )
                 .ToList();
@@ -154,20 +166,20 @@ namespace rethus_backend.Repository
                     columns =>
                         new UserFormFiles
                         {
-                            url = columns.url,
-                            filename = columns.filename,
-                            type = columns.type
+                            Url = columns.Url,
+                            Filename = columns.Filename,
+                            Type = columns.Type
                         }
                 )
                 .FirstOrDefault();
 
             var ruta = "";
-            var url = await FileHelper.GetFileAsBase64Async(formFile.url, ruta);
+            var url = await FileHelper.GetFileAsBase64Async(formFile.Url, ruta);
 
             return new UserFormFileDetails
             {
-                FileName = formFile.filename,
-                Type = formFile.type,
+                FileName = formFile.Filename,
+                Type = formFile.Type,
                 Base64Content = url
             };
         }

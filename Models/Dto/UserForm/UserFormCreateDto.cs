@@ -54,10 +54,10 @@ namespace rethus_backend.Models.Dto.UserForm
         public string PersonalAddress { get; set; }
 
         [Required(ErrorMessage = "PersonalTelephone is required")]
-        public int PersonalTelephone { get; set; }
+        public string PersonalTelephone { get; set; }
 
         [Required(ErrorMessage = "PersonalPhone is required")]
-        public int PersonalPhone { get; set; }
+        public string PersonalPhone { get; set; }
 
         [Required(ErrorMessage = "PersonalEmail is required")]
         [DataType(DataType.EmailAddress, ErrorMessage = "PersonalEmail is not valid.")]
@@ -146,8 +146,8 @@ namespace rethus_backend.Models.Dto.UserForm
         public int? PersonalDepartmentResidence { get; set; }
         public int? PersonalMunicipalityResidence { get; set; }
         public string? PersonalAddress { get; set; }
-        public int? PersonalTelephone { get; set; }
-        public int? PersonalPhone { get; set; }
+        public string? PersonalTelephone { get; set; }
+        public string? PersonalPhone { get; set; }
         public string? PersonalEmail { get; set; }
         public string? PersonalEthnicGroup { get; set; }
     }

@@ -37,4 +37,17 @@ namespace rethus_backend.Utilities.Constants.User.UserFormConstants
             }
         }
     }
+
+    public enum TypeUploadFile
+    {
+        sso_cedula,
+        sso_diploma_grado,
+        sso_acta_grado,
+        sso_nombramiento_cargo,
+        sso_certificado_prestacion,
+        rethus_cedula_ampliada,
+        rethus_diploma_grado,
+        rethus_acta_grado,
+        rethus_tarjeta_profesional,
+    }
 }

@@ -1,11 +1,21 @@
 using System.ComponentModel.DataAnnotations;
+using rethus_backend.Utilities.Constants.User.UserFormConstants;
 
 namespace rethus_backend.Models.Dto.UserFormFiles
 {
+    public class FileUpload
+    {
+        [Required(ErrorMessage = "id is required")]
+        public TypeUploadFile Id { get; set; }
+
+        [Required(ErrorMessage = "file is required")]
+        public IFormFile File { get; set; }
+    }
+
     public class UserFormFilesCreateDto
     {
         [Required(ErrorMessage = "files is required")]
-        public List<IFormFile> files { get; set; }
+        public List<FileUpload> Files { get; set; }
     }
 
     public class GetUserFormIdDto

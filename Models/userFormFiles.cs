@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using rethus_backend.Utilities.Constants.User.UserFormConstants;
 
 namespace rethus_backend.Models
 {
@@ -6,10 +7,11 @@ namespace rethus_backend.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string? UserFormFilesId { get; set; }
-        public long size { get; set; }
-        public string filename { get; set; }
-        public string type { get; set; }
-        public string url { get; set; }
+        public long Size { get; set; }
+        public string Filename { get; set; }
+        public string Type { get; set; }
+        public TypeUploadFile TypeUploadFile { get; set; }
+        public string Url { get; set; }
         public string UserFormId { get; set; }
         public UserForm UserForm { get; set; }
     }

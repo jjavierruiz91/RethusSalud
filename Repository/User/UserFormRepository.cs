@@ -210,7 +210,7 @@ namespace rethus_backend.Repository
             }
             ;
 
-            if (payload.files.Count == 0)
+            if (payload.Files.Count == 0)
             {
                 response.AddError("La lista de archivo no puede estar vacia");
             }
@@ -227,17 +227,18 @@ namespace rethus_backend.Repository
 
             FileHelper.CreateFolder(ruta);
 
-            foreach (var item in payload.files)
+            foreach (var item in payload.Files)
             {
-                var baseUrlFile = FileHelper.AddAsync(item, ruta);
+                var baseUrlFile = FileHelper.AddAsync(item.File, ruta);
 
                 var form = new UserFormFiles
                 {
-                    size = item.Length,
-                    filename = item.FileName,
-                    type = item.ContentType,
-                    url = baseUrlFile,
-                    UserFormId = userForm.UserFormId
+                    Size = item.File.Length,
+                    Filename = item.File.FileName,
+                    Type = item.File.ContentType,
+                    Url = baseUrlFile,
+                    UserFormId = userForm.UserFormId,
+                    TypeUploadFile = item.Id
                 };
 
                 var createRegister = _context.UserFormFiles.Add(form);
