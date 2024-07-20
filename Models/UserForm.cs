@@ -14,12 +14,18 @@ namespace rethus_backend.Models
         public required string PersonalIdentification { get; set; }
         public required string PersonalFirstName { get; set; }
         public required string PersonalLastName { get; set; }
-        public required string PersonalCountryBirth { get; set; }
-        public required string PersonalDepartmentBirth { get; set; }
-        public required string PersonalMunicipalityBirth { get; set; }
-        public required string PersonalPlaceResidence { get; set; }
-        public required string PersonalDepartmentResidence { get; set; }
-        public required string PersonalMunicipalityResidence { get; set; }
+        public required int PersonalCountryBirthId { get; set; }
+        public Country CountryOfBirth { get; set; }
+        public required int PersonalDepartmentBirthId { get; set; }
+        public Department DepartmentBirth { get; set; }
+        public required int PersonalMunicipalityBirthId { get; set; }
+        public City MunicipalityBirth { get; set; }
+        public required int PersonalPlaceResidenceId { get; set; }
+        public Country PlaceResidence { get; set; }
+        public required int PersonalDepartmentResidenceId { get; set; }
+        public Department DepartmentResidence { get; set; }
+        public required int PersonalMunicipalityResidenceId { get; set; }
+        public City MunicipalityResidence { get; set; }
         public required string PersonalAddress { get; set; }
         public required DateTime DateBirth { get; set; }
         public required int PersonalTelephone { get; set; }
@@ -29,9 +35,13 @@ namespace rethus_backend.Models
         public required string AcademicsOriginTitle { get; set; }
         public required TypeInstitution AcademicsTypeInstitution { get; set; }
         public required string AcademicsProgramType { get; set; }
-        public required string AcademicsCountryInstitution { get; set; }
-        public required string AcademicsDepartmentInstitution { get; set; }
-        public required string AcademicsMunicipalityInstitution { get; set; }
+        public required int AcademicsCountryInstitution { get; set; }
+        public Country CountryInstitution { get; set; }
+
+        public int AcademicsDepartmentInstitutionId { get; set; }
+        public Department DepartmentInstitution { get; set; }
+        public int AcademicsMunicipalityInstitutionId { get; set; }
+        public City MunicipalityInstitution { get; set; }
         public required string AcademicsNameInstitution { get; set; }
         public required string AcademicsProgramName { get; set; }
         public required DateTime AcademicsGradeDate { get; set; }
