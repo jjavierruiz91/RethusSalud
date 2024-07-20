@@ -10,7 +10,10 @@ namespace rethus_backend.Models.Dto.UserForm
         public string? userId { get; set; }
 
         [Required(ErrorMessage = "PersonalTypeIdentification is required")]
-        [EnumDataType(typeof(TypeInstitution), ErrorMessage = "Invalid typeIdentification Value")]
+        [EnumDataType(
+            typeof(TypeIdentification),
+            ErrorMessage = "Invalid typeIdentification Value"
+        )]
         public TypeIdentification PersonalTypeIdentification { get; set; }
 
         [Required(ErrorMessage = "PersonalGender is required")]
@@ -89,10 +92,7 @@ namespace rethus_backend.Models.Dto.UserForm
         [Required(ErrorMessage = "AcademicsProgramName is required")]
         public string AcademicsProgramName { get; set; }
 
-        [Required(ErrorMessage = "TypeProcedure is required")]
-        public string? TypeProcedure { get; set; }
-
-        [Required(ErrorMessage = "TypeProcedure is required")]
+        [Required(ErrorMessage = "AcademicsGradeDate is required")]
         public DateTime AcademicsGradeDate { get; set; }
 
         public string? AcademicsEquivalentTitle { get; set; }
