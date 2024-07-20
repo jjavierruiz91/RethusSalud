@@ -88,7 +88,6 @@ public class UserFormController : ApiBaseController
         [FromQuery] string? CreatedAt = null
     )
     {
-        Console.WriteLine(step);
         var request = new PaginationRequestDto<CommonQueryParametersDto>
         {
             Page = page,
