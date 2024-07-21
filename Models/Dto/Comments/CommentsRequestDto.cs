@@ -1,3 +1,4 @@
+using rethus_backend.Models.Dto.UserForm;
 using rethus_backend.Utilities.Constants.User.UserFormConstants;
 
 namespace rethus_backend.Models.Dto.Comments
@@ -18,7 +19,7 @@ namespace rethus_backend.Models.Dto.Comments
     public class CommonQueryParametersDto
     {
         public string? UserFormId { get; set; }
-        public UserFormStatus? Status { get; set; }
+        public UserFormStatus? status { get; set; }
         public string? PersonalIdentification { get; set; }
         public ConfigurationTypeProcedure? TypeProcedure { get; set; }
         public DateTime? CreatedAt { get; set; }
@@ -30,6 +31,7 @@ namespace rethus_backend.Models.Dto.Comments
         // Nueva propiedad para especificar el operador de comparación para cada propiedad
         public Dictionary<string, string> ComparisonOperators { get; set; } =
             new Dictionary<string, string>();
+        public int? Consecutive { get; set; }
     }
 
     public class CommentsResponseDto

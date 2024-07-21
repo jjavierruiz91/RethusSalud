@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using rethus_backend.Models;
 
 namespace rethus_backend.Utilities.Constants.User.UserFormConstants
@@ -34,6 +35,23 @@ namespace rethus_backend.Utilities.Constants.User.UserFormConstants
                     return ReviewStepForm.success;
                 default:
                     return ReviewStepForm.error;
+            }
+        }
+
+        public static UserFormStatus? GetStatus(string step)
+        {
+            switch (step)
+            {
+                case "approved":
+                    return UserFormStatus.approved;
+
+                case "pending":
+                    return UserFormStatus.pending;
+
+                case "reject":
+                    return UserFormStatus.reject;
+                default:
+                    return null;
             }
         }
     }

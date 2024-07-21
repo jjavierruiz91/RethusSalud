@@ -82,7 +82,8 @@ public class UserFormController : ApiBaseController
         [FromQuery] string PersonalIdentification = "",
         [FromQuery] ReviewStepForm step = ReviewStepForm.officer1,
         [FromQuery] ConfigurationTypeProcedure? TypeProcedure = null,
-        [FromQuery] string? CreatedAt = null
+        [FromQuery] string? CreatedAt = null,
+        [FromQuery] string? status = null
     )
     {
         var request = new PaginationRequestDto<CommonQueryParametersDto>
@@ -107,6 +108,16 @@ public class UserFormController : ApiBaseController
             {
                 ["CreatedAt"] = ">="
             };
+        }
+
+        if (status != null)
+        {
+            var formStatus = UserFormConstants.GetStatus(status);
+
+            if (formStatus != null)
+            {
+                request.QueryParameters.status = formStatus;
+            }
         }
 
         Func<UserForm, UserFormResponseDto> mapper = user =>
