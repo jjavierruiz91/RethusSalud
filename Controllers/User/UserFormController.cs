@@ -1,15 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.Comments;
 using rethus_backend.Models.Dto.UserForm;
 using rethus_backend.Models.Dto.UserFormFiles;
 using rethus_backend.Utilities.Constants.PaginatioConstants;
-using rethus_backend.Utilities.Templates.dto;
-using System.Globalization;
+using rethus_backend.Utilities.Constants.User.UserFormConstants;
 using System.Net;
-using System.Runtime.Serialization;
 
 namespace rethus_backend.Controllers;
 
@@ -83,7 +80,7 @@ public class UserFormController : ApiBaseController
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
         [FromQuery] string PersonalIdentification = "",
-        [FromQuery] string step = "officer1",
+        [FromQuery] ReviewStepForm step = ReviewStepForm.officer1,
         [FromQuery] ConfigurationTypeProcedure? TypeProcedure = null,
         [FromQuery] string? CreatedAt = null
     )
@@ -92,7 +89,7 @@ public class UserFormController : ApiBaseController
         {
             Page = page,
             PageSize = pageSize,
-            QueryParameters = new CommonQueryParametersDto { }
+            QueryParameters = new CommonQueryParametersDto { StepForm = step }
         };
 
         if (PersonalIdentification.Length > 0)
