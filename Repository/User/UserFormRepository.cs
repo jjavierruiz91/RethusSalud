@@ -12,6 +12,7 @@ using System.Net;
 using rethus_backend.Models.Dto.Comments;
 using rethus_backend.Utilities.Templates.dto;
 using rethus_backend.Utilities.Templates;
+using Microsoft.EntityFrameworkCore;
 
 namespace rethus_backend.Repository
 {
@@ -264,6 +265,15 @@ namespace rethus_backend.Repository
         {
             var userForm = _context.UserForm
                 .Where(user => user.UserFormId == userFormId)
+                .Include(uf => uf.CountryOfBirth)
+                .Include(uf => uf.DepartmentBirth)
+                .Include(uf => uf.MunicipalityBirth)
+                .Include(uf => uf.PlaceResidence)
+                .Include(uf => uf.DepartmentResidence)
+                .Include(uf => uf.MunicipalityResidence)
+                .Include(uf => uf.CountryInstitution)
+                .Include(uf => uf.DepartmentInstitution)
+                .Include(uf => uf.MunicipalityInstitution)
                 .Select(
                     columns =>
                         new DetailsProccessPersonalDto
@@ -274,13 +284,13 @@ namespace rethus_backend.Repository
                             PersonalIdentification = columns.PersonalIdentification,
                             PersonalFirstName = columns.PersonalFirstName,
                             PersonalLastName = columns.PersonalLastName,
-                            PersonalCountryBirth = columns.PersonalCountryBirthId,
-                            PersonalDepartmentBirth = columns.PersonalDepartmentBirthId,
-                            PersonalMunicipalityBirth = columns.PersonalMunicipalityBirthId,
+                            PersonalCountryBirth = columns.CountryOfBirth.Name, // Asumiendo que Country tiene una propiedad Name
+                            PersonalDepartmentBirth = columns.DepartmentBirth.Name, // Asumiendo que Department tiene una propiedad Name
+                            PersonalMunicipalityBirth = columns.MunicipalityBirth.Name, // Asumiendo que Municipality tiene una propiedad Name
                             DateBirth = columns.DateBirth,
-                            PersonalPlaceResidence = columns.PersonalPlaceResidenceId,
-                            PersonalDepartmentResidence = columns.PersonalDepartmentResidenceId,
-                            PersonalMunicipalityResidence = columns.PersonalMunicipalityResidenceId,
+                            PersonalPlaceResidence = columns.PlaceResidence.Name, // Asumiendo que PlaceResidence tiene una propiedad Name
+                            PersonalDepartmentResidence = columns.DepartmentResidence.Name, // Asumiendo que Department tiene una propiedad Name
+                            PersonalMunicipalityResidence = columns.MunicipalityResidence.Name, // Asumiendo que Municipality tiene una propiedad Name
                             PersonalAddress = columns.PersonalAddress,
                             PersonalTelephone = columns.PersonalTelephone,
                             PersonalPhone = columns.PersonalPhone,
@@ -297,6 +307,8 @@ namespace rethus_backend.Repository
         {
             var userForm = _context.UserForm
                 .Where(user => user.UserFormId == userFormId)
+                .Include(uf => uf.DepartmentInstitution)
+                .Include(uf => uf.MunicipalityInstitution)
                 .Select(
                     columns =>
                         new DetailsProccessAcademicDto
@@ -304,10 +316,9 @@ namespace rethus_backend.Repository
                             AcademicsOriginTitle = columns.AcademicsOriginTitle,
                             AcademicsTypeInstitution = columns.AcademicsTypeInstitution.ToString(),
                             AcademicsProgramType = columns.AcademicsProgramType,
-                            AcademicsDepartmentInstitution =
-                                columns.AcademicsDepartmentInstitutionId,
-                            AcademicsMunicipalityInstitution =
-                                columns.AcademicsMunicipalityInstitutionId,
+                            AcademicsDepartmentInstitution = columns.DepartmentInstitution.Name, // Asumiendo que Department tiene una propiedad Name
+                            AcademicsMunicipalityInstitution = columns.MunicipalityInstitution.Name, // Asumiendo que Municipality tiene una propiedad Name
+                            AcademicsCountryInstitution = columns.CountryInstitution.Name, // Asumiendo que Municipality tiene una propiedad Name
                             AcademicsNameInstitution = columns.AcademicsNameInstitution,
                             AcademicsProgramName = columns.AcademicsProgramName,
                             AcademicsGradeDate = columns.AcademicsGradeDate,
