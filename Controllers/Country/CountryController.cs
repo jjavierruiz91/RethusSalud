@@ -42,4 +42,25 @@ public class CountryController : ApiBaseController
 
         return Ok(_response);
     }
+
+    [HttpGet("{countryId}")]
+    public async Task<ActionResult<ApiResponse>> GetCities(int countryId)
+    {
+        var cities = await _unitOfWork.Country.GetCountryId(countryId);
+
+        if (cities == null)
+        {
+            _response.IsSuccess = false;
+            _response.StatusCode = HttpStatusCode.BadRequest;
+            BadRequest(_response);
+        }
+
+        _response.IsSuccess = true;
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.Result = cities;
+
+        Response.Headers["Cache-Control"] = "public,max-age=86400";
+
+        return Ok(_response);
+    }
 }

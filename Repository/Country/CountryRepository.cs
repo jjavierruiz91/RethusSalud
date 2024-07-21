@@ -44,5 +44,15 @@ namespace rethus_backend.Repository
 
             return countries;
         }
+
+        public async Task<CountryResponseDto> GetCountryId(int countryId)
+        {
+            var country = _context.Country
+                .Where(c => c.CountryId == countryId)
+                .Select(c => new CountryResponseDto { Id = c.CountryId, Name = c.Name })
+                .FirstOrDefault();
+
+            return country;
+        }
     }
 }

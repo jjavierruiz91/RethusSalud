@@ -8,5 +8,6 @@ namespace rethus_backend.Repository.IRepository
         void LoadCountriesJsonToBd();
 
         public Task<List<CountryResponseDto>> GetCountries();
+        public Task<CountryResponseDto> GetCountryId(int countryId);
     }
 }
