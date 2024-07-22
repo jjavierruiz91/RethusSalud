@@ -44,5 +44,7 @@ namespace rethus_backend.Repository.IRepository
         Task<string> GetFileInventory(string userFormFileId);
 
         void ValidateCertificateUserForm(string userFormId);
+
+        Task<string> GetConsecutive(string userFormId);
     }
 }

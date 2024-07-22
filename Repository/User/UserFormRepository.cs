@@ -566,5 +566,15 @@ namespace rethus_backend.Repository
             certificateRethus = await DownloadCertificateSso(rethusDto);
             await ConverPdfService.ConvertHtmlToPdf(certificateRethus, outputPath);
         }
+
+        public Task<string?> GetConsecutive(string userFormId)
+        {
+            var consecutive = _context.UserForm
+                .Where(c => c.UserFormId == userFormId)
+                .Select(c => c.Consecutive)
+                .FirstOrDefaultAsync();
+
+            return consecutive;
+        }
     }
 }

@@ -223,4 +223,23 @@ public class UserFormController : ApiBaseController
         _response.Result = detailsFile;
         return _response;
     }
+
+    [HttpGet("inventory/consecutive/{formId}")]
+    [Authorize(Roles = Policies.Inventory)]
+    public async Task<ActionResult<ApiResponse>> GetConsecutive(string formId)
+    {
+        var consecutive = await _unitOfWork.UserForm.GetConsecutive(formId);
+
+        if (consecutive == null)
+        {
+            _response.IsSuccess = true;
+            _response.Result = false;
+            return Ok(_response);
+        }
+
+        _response.IsSuccess = true;
+        _response.Messages.Add("El formulario tiene consecutivo");
+        _response.Result = consecutive;
+        return Ok(_response);
+    }
 }
