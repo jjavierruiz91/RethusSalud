@@ -36,5 +36,20 @@ namespace rethus_backend.Utilities.Constants.User.UserConfiguration
                     return ConfigurationTypeProcedure.DEFAULT;
             }
         }
+
+        public static ConfigurationsState getStateConfiguration(ConfigurationsState state)
+        {
+            switch (state)
+            {
+                case ConfigurationsState.Initial:
+                    return ConfigurationsState.InProgress;
+
+                case ConfigurationsState.InProgress:
+                    return ConfigurationsState.Completed;
+
+                default:
+                    return ConfigurationsState.Rejected;
+            }
+        }
     }
 }

@@ -102,6 +102,11 @@ namespace rethus_backend.Repository
                 user_configuration.State = ConfigurationsState.PendingReview;
             }
 
+            if (nextStep == ConfigurationStep.error)
+            {
+                user_configuration.State = ConfigurationsState.Rejected;
+            }
+
             _context.Configurations.Update(user_configuration);
             _context.SaveChanges();
 
@@ -163,6 +168,33 @@ namespace rethus_backend.Repository
             _context.SaveChanges();
 
             response.Result = user_configuration.TermCondition;
+            return response;
+        }
+
+        public ApiResponse updateAutomaticStateConfiguration(string userId)
+        {
+            var response = new ApiResponse();
+            var user_configuration = GetByUserId(userId);
+
+            if (user_configuration == null)
+            {
+                response.AddError(
+                    "El usuario no tiene configuracion asignada",
+                    HttpStatusCode.BadRequest,
+                    false
+                );
+                return response;
+            }
+
+            ConfigurationsState nextStep = UserConfiguration.getStateConfiguration(
+                user_configuration.State
+            );
+            user_configuration.State = nextStep;
+
+            _context.Configurations.Update(user_configuration);
+            _context.SaveChanges();
+
+            response.Result = user_configuration.Step;
             return response;
         }
     }

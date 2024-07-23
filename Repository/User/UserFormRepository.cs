@@ -335,17 +335,17 @@ namespace rethus_backend.Repository
         {
             var response = new ApiResponse();
 
-            UserForm form = GetById(userFormId);
+            UserForm form = GetFormUserId(userFormId);
 
             if (form == null)
             {
-                response.AddError("El commentario no existe", HttpStatusCode.NotFound, false);
+                response.AddError("El formulario no existe", HttpStatusCode.NotFound, false);
                 return response;
             }
 
             form.StepForm = UserFormConstants.GetNextRebiewStepForm(form.StepForm);
-
             _context.SaveChanges();
+
             response.Messages.Add("El formulario ha sido aprobado");
             response.Result = form;
             response.StatusCode = HttpStatusCode.OK;
@@ -372,9 +372,9 @@ namespace rethus_backend.Repository
             return response;
         }
 
-        public UserForm GetFormUserId(string userId)
+        public UserForm GetFormUserId(string userFormId)
         {
-            UserForm user = _context.UserForm.FirstOrDefault(x => x.UserId == userId);
+            UserForm user = _context.UserForm.FirstOrDefault(x => x.UserFormId == userFormId);
             return user;
         }
 
@@ -418,33 +418,6 @@ namespace rethus_backend.Repository
         {
             var response = new ApiResponse();
 
-            UserForm userForm = GetById(userFormId);
-
-            if (userForm == null)
-            {
-                response.AddError("El formulario no existe", HttpStatusCode.NotFound, false);
-                return response;
-            }
-
-            if (userForm.StepForm != ReviewStepForm.success)
-            {
-                response.AddError(
-                    "El formulario no tiene el estado correcto",
-                    HttpStatusCode.BadRequest,
-                    false
-                );
-            }
-
-            // if (userForm.Status == UserFormStatus.approved)
-            // {
-            //     response.AddError(
-            //         "Este formulario tiene asignado un consecutivo!",
-            //         HttpStatusCode.BadRequest,
-            //         false
-            //     );
-            //     return response;
-            // }
-
             if (consecutive.Length == 0)
             {
                 response.AddError(
@@ -452,15 +425,36 @@ namespace rethus_backend.Repository
                     HttpStatusCode.BadRequest,
                     false
                 );
+                response.IsSuccess = false;
                 return response;
+            }
+
+            UserForm userForm = GetById(userFormId);
+
+            if (userForm == null)
+            {
+                response.AddError("El formulario no existe", HttpStatusCode.NotFound, false);
+                response.IsSuccess = false;
+                return response;
+            }
+
+            if (userForm.StepForm != ReviewStepForm.success)
+            {
+                response.AddError(
+                    "El formulario no esta listo para agregar el consecutivo",
+                    HttpStatusCode.BadRequest,
+                    false
+                );
             }
 
             userForm.Consecutive = consecutive;
             userForm.Status = UserFormStatus.approved;
 
             _context.SaveChanges();
+
             response.Messages.Add("El consecutivo a sido agregado");
             response.StatusCode = HttpStatusCode.OK;
+            response.IsSuccess = true;
             return response;
         }
 
