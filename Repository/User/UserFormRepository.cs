@@ -570,5 +570,15 @@ namespace rethus_backend.Repository
 
             return consecutive;
         }
+
+        public string GetUserByUserFormId(string userFormId)
+        {
+            var userId = _context.UserForm
+                .Where(x => x.UserFormId == userFormId)
+                .Select(x => x.UserId)
+                .FirstOrDefault();
+
+            return userId;
+        }
     }
 }

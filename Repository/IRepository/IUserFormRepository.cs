@@ -15,6 +15,7 @@ namespace rethus_backend.Repository.IRepository
         bool IsExistUser(string userFormId);
 
         UserForm GetById(string id);
+        string GetUserByUserFormId(string userFormId);
 
         DetailsProcessUserDto GetDetailProcess(UserFormProcessDto payload);
 

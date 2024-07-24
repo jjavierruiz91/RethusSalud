@@ -210,7 +210,15 @@ public class UserFormController : ApiBaseController
             return BadRequest(response);
         }
 
-        await Task.Run(async () => _unitOfWork.UserForm.ValidateCertificateUserForm(formId));
+        await Task.Run(() => _unitOfWork.UserForm.ValidateCertificateUserForm(formId));
+        await Task.Run(() =>
+        {
+            string userId = _unitOfWork.UserForm.GetUserByUserFormId(formId);
+            var user_configuration = _unitOfWork.UserConfiguration.GetByUserId(userId);
+            _unitOfWork.UserConfiguration.updateAutomaticStateConfiguration(
+                user_configuration.ConfigurationsId
+            );
+        });
 
         return response;
     }
