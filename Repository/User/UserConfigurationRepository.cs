@@ -41,7 +41,7 @@ namespace rethus_backend.Repository
             Configurations newConfiguration =
                 new()
                 {
-                    State = ConfigurationsState.Initial,
+                    State = ConfigurationsState.initial,
                     Step = ConfigurationStep.acept_terms_conditions,
                     TypeProcedure = ConfigurationTypeProcedure.DEFAULT,
                     TermCondition = false,
@@ -97,14 +97,9 @@ namespace rethus_backend.Repository
             var nextStep = UserConfiguration.GetNextStepOnboarding(user_configuration.Step);
             user_configuration.Step = nextStep;
 
-            if (nextStep == ConfigurationStep.success)
-            {
-                user_configuration.State = ConfigurationsState.PendingReview;
-            }
-
             if (nextStep == ConfigurationStep.error)
             {
-                user_configuration.State = ConfigurationsState.Rejected;
+                user_configuration.State = ConfigurationsState.rejected;
             }
 
             _context.Configurations.Update(user_configuration);
@@ -174,7 +169,7 @@ namespace rethus_backend.Repository
         public ApiResponse updateAutomaticStateConfiguration(string userId)
         {
             var response = new ApiResponse();
-            var user_configuration = GetByUserId(userId);
+            var user_configuration = GetById(userId);
 
             if (user_configuration == null)
             {
@@ -185,7 +180,6 @@ namespace rethus_backend.Repository
                 );
                 return response;
             }
-
             ConfigurationsState nextStep = UserConfiguration.getStateConfiguration(
                 user_configuration.State
             );

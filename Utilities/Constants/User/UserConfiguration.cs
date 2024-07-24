@@ -41,14 +41,14 @@ namespace rethus_backend.Utilities.Constants.User.UserConfiguration
         {
             switch (state)
             {
-                case ConfigurationsState.Initial:
-                    return ConfigurationsState.InProgress;
+                case ConfigurationsState.initial:
+                    return ConfigurationsState.inprogress;
 
-                case ConfigurationsState.InProgress:
-                    return ConfigurationsState.Completed;
+                case ConfigurationsState.inprogress:
+                    return ConfigurationsState.completed;
 
                 default:
-                    return ConfigurationsState.Rejected;
+                    return ConfigurationsState.rejected;
             }
         }
     }

@@ -19,7 +19,7 @@ namespace rethus_backend.Repository.IRepository
         );
         ApiResponse updateTermConditionsConfiguration(string id, bool term);
         ApiResponse updateAutomaticStepConfiguration(string id);
-
+        ApiResponse updateAutomaticStateConfiguration(string id);
         void Register(string email);
     }
 }

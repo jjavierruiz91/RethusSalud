@@ -24,11 +24,10 @@ namespace rethus_backend.Models
 
     public enum ConfigurationsState
     {
-        Initial,
-        PendingReview,
-        InProgress,
-        Completed,
-        Rejected
+        initial,
+        inprogress,
+        completed,
+        rejected
     }
 
     public enum ConfigurationStep
