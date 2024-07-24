@@ -11,6 +11,15 @@ using rethus_backend;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile(
+        $"appsettings.{builder.Environment.EnvironmentName}.json",
+        optional: false,
+        reloadOnChange: true
+    )
+    .AddEnvironmentVariables();
+
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(option =>
 {
