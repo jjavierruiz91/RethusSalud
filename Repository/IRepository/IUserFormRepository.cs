@@ -51,5 +51,7 @@ namespace rethus_backend.Repository.IRepository
         bool ValidateExistFileForDownload(string userId);
 
         ValidateFileUserForm IsValidUserForm(string userFormId);
+
+        Task<string?> DonwloadCertificateFileByUserId(string userId);
     }
 }

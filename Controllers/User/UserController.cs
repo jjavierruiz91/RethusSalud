@@ -316,4 +316,25 @@ public class UserController : ApiBaseController
         _response.Result = user.Result;
         return Ok(_response);
     }
+
+    [HttpGet("donwload/certificate/{userId}")]
+    [Authorize(Roles = Policies.User)]
+    public async Task<ActionResult<ApiResponse>> DownloadCertificate(string userId)
+    {
+        string? existFile = await _unitOfWork.UserForm.DonwloadCertificateFileByUserId(userId);
+
+        if (existFile == null)
+        {
+            _response.AddError(
+                "El sistema se encuentra procesando el archivo, consulte mas tarde",
+                HttpStatusCode.NotFound,
+                true
+            );
+            return _response;
+        }
+
+        _response.Result = existFile;
+        _response.IsSuccess = true;
+        return Ok(_response);
+    }
 }

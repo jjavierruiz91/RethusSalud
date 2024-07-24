@@ -627,8 +627,6 @@ namespace rethus_backend.Repository
                     ? "//certifcate-rethus-"
                     : "//certifcate-sso-";
 
-            Console.WriteLine(typeProcedure);
-
             var outputPath =
                 _config.GetSection("routeFileProcedures").Value
                 + userForm.PersonalIdentification
@@ -638,6 +636,49 @@ namespace rethus_backend.Repository
 
             bool existFile = FileHelper.ValidatePath(outputPath);
             return existFile;
+        }
+
+        public async Task<string?> DonwloadCertificateFileByUserId(string userId)
+        {
+            var userForm = _context.UserForm
+                .Where(form => form.UserId == userId)
+                .Select(
+                    columns =>
+                        new ValidateFileUserForm
+                        {
+                            PersonalIdentification = columns.PersonalIdentification,
+                            TypeProcedure = columns.TypeProcedure
+                        }
+                )
+                .FirstOrDefault();
+
+            if (userForm == null)
+            {
+                return null;
+            }
+
+            var typeProcedure =
+                userForm.TypeProcedure == ConfigurationTypeProcedure.RETHUS
+                    ? "//certifcate-rethus-"
+                    : "//certifcate-sso-";
+
+            var outputPath =
+                _config.GetSection("routeFileProcedures").Value
+                + userForm.PersonalIdentification
+                + typeProcedure
+                + userForm.PersonalIdentification
+                + ".pdf";
+
+            var url = await FileHelper.GetPdfFileAsync(outputPath);
+
+            if (url == null)
+            {
+                return null;
+            }
+
+            var fileBase64 = await FileHelper.FileAsBase64Async(url);
+
+            return fileBase64;
         }
     }
 }
