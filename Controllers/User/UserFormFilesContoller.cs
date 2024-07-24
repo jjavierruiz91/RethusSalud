@@ -28,10 +28,18 @@ public class UserFormFilesController : ApiBaseController
             return BadRequest(response);
         }
 
-        var user_configuration = _unitOfWork.UserConfiguration.GetByUserId(userId);
-        _unitOfWork.UserConfiguration.updateAutomaticStepConfiguration(
-            user_configuration.ConfigurationsId
-        );
+        await Task.Run(() =>
+        {
+            var user_configuration = _unitOfWork.UserConfiguration.GetByUserId(userId);
+
+            _unitOfWork.UserConfiguration.updateAutomaticStepConfiguration(
+                user_configuration.ConfigurationsId
+            );
+
+            _unitOfWork.UserConfiguration.updateAutomaticStateConfiguration(
+                user_configuration.ConfigurationsId
+            );
+        });
 
         return Ok(response);
     }
