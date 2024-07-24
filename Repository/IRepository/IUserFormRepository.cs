@@ -47,5 +47,9 @@ namespace rethus_backend.Repository.IRepository
         void ValidateCertificateUserForm(string userFormId);
 
         Task<string> GetConsecutive(string userFormId);
+
+        bool ValidateExistFileForDownload(string userId);
+
+        ValidateFileUserForm IsValidUserForm(string userFormId);
     }
 }

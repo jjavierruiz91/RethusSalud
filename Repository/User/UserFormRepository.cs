@@ -79,6 +79,28 @@ namespace rethus_backend.Repository
             return _context.UserForm.Find(id);
         }
 
+        public ValidateFileUserForm IsValidUserForm(string userId)
+        {
+            var userForm = _context.UserForm
+                .Where(x => x.UserId == userId && x.Status == UserFormStatus.approved)
+                .Select(
+                    x =>
+                        new ValidateFileUserForm
+                        {
+                            PersonalIdentification = x.PersonalIdentification,
+                            TypeProcedure = x.TypeProcedure
+                        }
+                )
+                .FirstOrDefault();
+
+            if (userForm == null)
+            {
+                return null;
+            }
+
+            return userForm;
+        }
+
         public DetailsProcessUserDto GetDetailProcess(UserFormProcessDto payload)
         {
             var userForm = _context.UserForm
@@ -579,6 +601,43 @@ namespace rethus_backend.Repository
                 .FirstOrDefault();
 
             return userId;
+        }
+
+        public bool ValidateExistFileForDownload(string userId)
+        {
+            var userForm = _context.UserForm
+                .Where(x => x.UserId == userId && x.Status == UserFormStatus.approved)
+                .Select(
+                    x =>
+                        new ValidateFileUserForm
+                        {
+                            PersonalIdentification = x.PersonalIdentification,
+                            TypeProcedure = x.TypeProcedure
+                        }
+                )
+                .FirstOrDefault();
+
+            if (userForm == null)
+            {
+                return false;
+            }
+
+            var typeProcedure =
+                userForm.TypeProcedure == ConfigurationTypeProcedure.RETHUS
+                    ? "//certifcate-rethus-"
+                    : "//certifcate-sso-";
+
+            Console.WriteLine(typeProcedure);
+
+            var outputPath =
+                _config.GetSection("routeFileProcedures").Value
+                + userForm.PersonalIdentification
+                + typeProcedure
+                + userForm.PersonalIdentification
+                + ".pdf";
+
+            bool existFile = FileHelper.ValidatePath(outputPath);
+            return existFile;
         }
     }
 }

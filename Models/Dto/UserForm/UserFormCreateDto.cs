@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Identity.Client;
 using rethus_backend.Utilities.Constants.User.UserFormConstants;
 using rethus_backend.Utilities.Constants.UserConstants;
 
@@ -181,11 +182,9 @@ namespace rethus_backend.Models.Dto.UserForm
         public string PersonalIdentification { get; set; }
     }
 
-    // public class ResponseUserFormPaginate
-    // {
-    //   public int pages { get; set; }
-    //   public IQueryable<UserForm> records { get; set; }
-    //   public int total_records { get; set; }
-    //   public int current_page { get; set; }
-    // }
+    public class ValidateFileUserForm
+    {
+        public string PersonalIdentification { get; set; }
+        public ConfigurationTypeProcedure TypeProcedure { get; set; }
+    }
 }

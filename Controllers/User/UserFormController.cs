@@ -250,4 +250,14 @@ public class UserFormController : ApiBaseController
         _response.Result = consecutive;
         return Ok(_response);
     }
+
+    [HttpGet("validate/file/{userId}")]
+    [Authorize(Roles = Policies.User)]
+    public async Task<ActionResult<ApiResponse>> ValidateFile(string userId)
+    {
+        bool existFile = _unitOfWork.UserForm.ValidateExistFileForDownload(userId);
+
+        _response.Result = existFile;
+        return _response;
+    }
 }
