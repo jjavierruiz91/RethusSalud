@@ -550,7 +550,7 @@ namespace rethus_backend.Repository
             var rethusDto = new TemplateRethusDto
             {
                 CONSECUTIVO = form.Consecutive,
-                CONSECUTIVO_FECHA = form.CreatedAt.ToString("MM/dd/yyyy");
+                CONSECUTIVO_FECHA = form.CreatedAt.ToString("MM/dd/yyyy"),
                 NOMBRE_PROFESIONAL = form.PersonalFirstName + form.PersonalLastName,
                 EXPEDIDA_PROFESIONAL = form.AcademicsGradeDate.ToString("MM/dd/yyyy"),
                 PROFESION_PROFESIONAL = form.AcademicsProgramName,
