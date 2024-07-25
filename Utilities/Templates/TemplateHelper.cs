@@ -20,7 +20,7 @@ namespace rethus_backend.Utilities.Templates
                 dto.CEDULA_PROFESIONAL
             );
             templateContent = templateContent.Replace(
-                "${EXPEDICION_PROFESIONAL}",
+                "${EXPEDIDA_PROFESIONAL}",
                 dto.EXPEDIDA_PROFESIONAL
             );
             templateContent = templateContent.Replace(
