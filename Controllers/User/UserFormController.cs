@@ -223,6 +223,24 @@ public class UserFormController : ApiBaseController
         return response;
     }
 
+    [HttpPatch("update/consecutive/{formId}")]
+    [Authorize(Roles = Policies.Inventory)]
+    public async Task<ActionResult<ApiResponse>> UpdateConsecutive(
+        string formId,
+        UserFormConsecutiveDto payload
+    )
+    {
+        ApiResponse response = _unitOfWork.UserForm.AddConsecutive(formId, payload.consecutive);
+        if (!response.IsSuccess)
+        {
+            return BadRequest(response);
+        }
+
+        await Task.Run(() => _unitOfWork.UserForm.ValidateCertificateUserForm(formId));
+
+        return response;
+    }
+
     [HttpGet("donwload/inventory/file/{formId}")]
     [Authorize(Roles = Policies.Inventory)]
     public async Task<ActionResult<ApiResponse>> GetFileByUserFomrId(string formId)
