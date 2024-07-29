@@ -23,4 +23,4 @@ dotnet publish -c Development -o ./publish/development
 
 ## Production 
 set ASPNETCORE_ENVIRONMENT=Production
-dotnet publish -c Release -o ./publish/production
+dotnet publish -c Release -r win-x64 --self-contained -o ./publish/production
