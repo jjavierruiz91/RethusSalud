@@ -122,6 +122,22 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+builder.Services.AddCors();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "Open",
+        policy =>
+        {
+            policy
+                .WithOrigins("http://190.131.201.146:8050")
+                .AllowCredentials()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        }
+    );
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -129,16 +145,13 @@ if (app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
 
 // app.UseCors("Open");
-app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-
-// app.UseHttpsRedirection();
-
-
-// app.UseHttpsRedirection();
-
+// app.UseCors(x => x.WithOrigins("http://190.131.201.146:8050").AllowAnyMethod().AllowAnyHeader());
+app.UseCors("Open");
 
 app.UseHttpsRedirection();
 
