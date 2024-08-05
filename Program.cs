@@ -129,9 +129,17 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy
-                .WithOrigins("http://190.131.201.146:8056", "http://190.131.201.146:8056/")
+                .WithOrigins(
+                    "http://190.131.201.146:8050",
+                    "http://190.131.201.146:8050/",
+                    "http://192.168.0.156:8050/",
+                    "http://192.168.0.156:8050/",
+                    "http://192.168.0.156:8057/",
+                    "http://192.168.0.156:805"
+                )
                 .AllowAnyMethod()
-                .AllowAnyHeader();
+                .AllowAnyHeader()
+                .AllowCredentials();
         }
     );
 });
@@ -140,6 +148,12 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsProduction())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    app.UseHsts();
+}
+else
 {
     app.UseSwagger();
     app.UseSwaggerUI();
