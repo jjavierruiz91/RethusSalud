@@ -122,7 +122,6 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-builder.Services.AddCors();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
@@ -130,8 +129,7 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy
-                .WithOrigins("http://190.131.201.146:8050")
-                .AllowCredentials()
+                .WithOrigins("http://190.131.201.146:8056", "http://190.131.201.146:8056/")
                 .AllowAnyMethod()
                 .AllowAnyHeader();
         }
@@ -145,13 +143,14 @@ if (app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
 // app.UseCors("Open");
 // app.UseCors(x => x.WithOrigins("http://190.131.201.146:8050").AllowAnyMethod().AllowAnyHeader());
 app.UseCors("Open");
+
+// app.UseRouting();
 
 app.UseHttpsRedirection();
 
