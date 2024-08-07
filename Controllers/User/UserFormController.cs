@@ -80,7 +80,7 @@ public class UserFormController : ApiBaseController
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
         [FromQuery] string PersonalIdentification = "",
-        [FromQuery] ReviewStepForm step = ReviewStepForm.officer1,
+        [FromQuery] ReviewStepForm? step = null,
         [FromQuery] ConfigurationTypeProcedure? TypeProcedure = null,
         [FromQuery] string? CreatedAt = null,
         [FromQuery] string? status = null
