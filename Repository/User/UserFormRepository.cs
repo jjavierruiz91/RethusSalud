@@ -387,6 +387,7 @@ namespace rethus_backend.Repository
             }
 
             comment.StepForm = ReviewStepForm.officer1;
+            comment.Status = UserFormStatus.reject;
 
             _context.SaveChanges();
             response.Messages.Add("El formulario ha sido rechazado");
