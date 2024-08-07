@@ -29,3 +29,30 @@ dotnet publish -c ReleaseTest -r win-x64 --self-contained -o ./publish/productio
 
 ### 
 dotnet publish -c ReleaseV3 -o ./publish/production
+
+
+# IP DE LOS PROYECTOS
+
+FRONT PUBLICO 
+http://190.131.201.146:8050/
+
+BACKEND publico
+http://190.131.201.146:8056
+
+==================================
+
+FRONT PRIVADO 
+http://192.168.0.156:8057
+
+BACKEND PRIVADA
+http://192.168.0.156:8056
+
+
+# Comando sql para superAdmin
+Este comando setea un usuario que va hacer el superadmin
+
+UPDATE [dbo].[Users]
+SET
+    roles = 'SuperAdmin'
+WHERE UserId = '12'
+GO

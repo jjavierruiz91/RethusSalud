@@ -8,6 +8,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using rethus_backend;
+using System.Net;
+using Microsoft.AspNetCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -128,23 +130,13 @@ builder.Services.AddCors(options =>
         "Open",
         policy =>
         {
-            policy
-                .WithOrigins(
-                    "http://190.131.201.146:8050",
-                    "http://190.131.201.146:8050/",
-                    "http://192.168.0.156:8050/",
-                    "http://192.168.0.156:8050/",
-                    "http://192.168.0.156:8057/",
-                    "http://192.168.0.156:805"
-                )
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials();
+            policy.WithOrigins();
         }
     );
 });
 
 var app = builder.Build();
+app.UseCors("Open");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsProduction())
@@ -160,12 +152,29 @@ else
     app.UseHsts();
 }
 
-// app.UseCors("Open");
-// app.UseCors(x => x.WithOrigins("http://190.131.201.146:8050").AllowAnyMethod().AllowAnyHeader());
-app.UseCors("Open");
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        context.Response.ContentType = "application/json";
 
-// app.UseRouting();
+        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+        var exception = exceptionHandlerPathFeature?.Error;
 
+        var result = new
+        {
+            Error = "Ha ocurrido un error interno en el servidor.",
+            Details = exception?.Message
+        };
+
+        // Registrar el error
+        var logger = app.Services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(exception, "Error procesando la solicitud.");
+
+        await context.Response.WriteAsJsonAsync(result);
+    });
+});
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
