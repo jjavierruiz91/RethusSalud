@@ -31,6 +31,7 @@ namespace rethus_backend.Repository.IRepository
         );
         Task<User> UpdateStatusUserAdministaration(User _user, UserStatus newStatus);
         bool ValidateUserRole(string userType);
+        bool ValidateUserStatus(string userStatus);
 
         Task<bool> restorePassword(RestoreSendEmailUser payload);
         Task<Boolean> updatePassword(UserPayloadPassword payload);

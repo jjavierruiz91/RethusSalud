@@ -100,6 +100,15 @@ public class UserController : ApiBaseController
             return BadRequest(_response);
         }
 
+        bool validStatus = _unitOfWork.User.ValidateUserStatus(_user.status);
+        if (!validStatus)
+        {
+            _response.IsSuccess = false;
+            _response.StatusCode = HttpStatusCode.BadRequest;
+            _response.Messages.Add("Invalid user status");
+            return BadRequest(_response);
+        }
+
         User ExistUser = _unitOfWork.User.GetByUserId(id);
 
         if (ExistUser == null)

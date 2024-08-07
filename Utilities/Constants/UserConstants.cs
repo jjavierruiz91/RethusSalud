@@ -79,15 +79,19 @@ namespace rethus_backend.Utilities.Constants.UserConstants
 
     public class UserConstants
     {
-        // public static EnumStepConfiguration GetNextStep(int currentStep)
-        // {
-        //   int nextValue = (int)currentStep + 1;
-        //   EnumStepConfiguration[] enumValues = (EnumStepConfiguration[])Enum.GetValues(typeof(EnumStepConfiguration));
+        public static UserStatus getFormatStringToUserStatus(string status)
+        {
+            switch (status)
+            {
+                case "active":
+                    return UserStatus.active;
 
-        //   if (nextValue <= (int)EnumStepConfiguration.success)
-        //     return enumValues[nextValue];
+                case "inactive":
+                    return UserStatus.inactive;
 
-        //   return EnumStepConfiguration.success;
-        // }
+                default:
+                    return UserStatus.inactive;
+            }
+        }
     }
 }

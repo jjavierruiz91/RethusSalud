@@ -1,3 +1,5 @@
+using rethus_backend.Utilities.Constants.UserConstants;
+
 namespace rethus_backend.Models.Dto.User
 {
     public class CreateRequestDto
@@ -21,5 +23,6 @@ namespace rethus_backend.Models.Dto.User
         public string? name { get; set; }
         public string? type { get; set; }
         public string? password { get; set; }
+        public string? status { get; set; }
     }
 }

@@ -134,6 +134,16 @@ namespace rethus_backend.Repository
             return false;
         }
 
+        public bool ValidateUserStatus(string userStatus)
+        {
+            if (Enum.TryParse<UserStatus>(userStatus, out var user))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public async Task<User> RegisterUserAdministration(
             CreateUserAdministrativeRequestDto createRequestDto
         )
@@ -176,6 +186,7 @@ namespace rethus_backend.Repository
             _user.name = updateRequestDto.name;
             _user.roles = updateRequestDto.type;
             _user.UpdatedAt = DateTime.Now;
+            _user.Status = UserConstants.getFormatStringToUserStatus(updateRequestDto.status);
 
             if (updateRequestDto.password != null)
             {
