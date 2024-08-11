@@ -10,7 +10,10 @@ namespace rethus_backend.Utilities.Templates
         )
         {
             templateContent = templateContent.Replace("${CONSECUTIVO}", dto.CONSECUTIVO);
-            templateContent = templateContent.Replace("${RED_DATE}", dto.CONSECUTIVO_FECHA);
+            templateContent = templateContent.Replace(
+                "${CONSECUTIVO_FECHA}",
+                dto.CONSECUTIVO_FECHA
+            );
             templateContent = templateContent.Replace(
                 "${NOMBRE_PROFESIONAL}",
                 dto.NOMBRE_PROFESIONAL

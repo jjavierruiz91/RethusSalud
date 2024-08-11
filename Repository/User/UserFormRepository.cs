@@ -520,7 +520,12 @@ namespace rethus_backend.Repository
         {
             UserForm formFile = _context.UserForm.FirstOrDefault(x => x.UserFormId == userFormId);
 
-            if (formFile == null || formFile.Status != UserFormStatus.approved)
+            if (formFile == null)
+            {
+                return;
+            }
+
+            if (formFile != null && formFile.Status != UserFormStatus.approved)
             {
                 return;
             }
@@ -545,8 +550,6 @@ namespace rethus_backend.Repository
                 + ".pdf";
 
             string certificateRethus = "";
-
-            Console.WriteLine(form.AcademicsGradeDate);
 
             var rethusDto = new TemplateRethusDto
             {
