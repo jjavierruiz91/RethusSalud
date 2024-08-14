@@ -21,6 +21,12 @@ namespace rethus_backend.Models
         public required string Region { get; set; }
 
         [Required]
+        public required string Subregion { get; set; }
+
+        [Required]
+        public required string Nationality { get; set; }
+
+        [Required]
         public required string Flag { get; set; }
 
         [Required]
@@ -30,7 +36,10 @@ namespace rethus_backend.Models
         public required string IsoCode { get; set; }
 
         [Required]
-        public required int Population { get; set; }
+        public required string Currency { get; set; }
+
+        [Required]
+        public required string ZoneName { get; set; }
 
         public ICollection<Department>? Departments { get; set; }
     }

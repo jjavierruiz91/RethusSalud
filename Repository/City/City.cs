@@ -30,7 +30,7 @@ namespace rethus_backend.Repository
 
         public void LoadCityJsonToBd()
         {
-            var jsonFilePath = "./resources/loadFiles/city.json";
+            var jsonFilePath = "./resources/loadFiles/country-state-city/city.json";
             using var fileStream = new FileStream(jsonFilePath, FileMode.Open);
             var options = new JsonSerializerOptions
             {
