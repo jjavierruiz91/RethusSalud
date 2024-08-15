@@ -1,5 +1,19 @@
 [
   {
+    "CountryId": 48,
+    "Name": "Colombia",
+    "Code": "COL",
+    "Capital": "Bogotá",
+    "Region": "Americas",
+    "Subregion": "South America",
+    "Nationality": "Colombian",
+    "Flag": "🇨🇴",
+    "DiallingCode": "CO",
+    "IsoCode": "57",
+    "ZoneName": "America/Bogota",
+    "Currency": "COP"
+  },
+  {
     "CountryId": 1,
     "Name": "Afghanistan",
     "Code": "AFG",
@@ -656,20 +670,6 @@
     "IsoCode": "61",
     "ZoneName": "Indian/Cocos",
     "Currency": "AUD"
-  },
-  {
-    "CountryId": 48,
-    "Name": "Colombia",
-    "Code": "COL",
-    "Capital": "Bogotá",
-    "Region": "Americas",
-    "Subregion": "South America",
-    "Nationality": "Colombian",
-    "Flag": "🇨🇴",
-    "DiallingCode": "CO",
-    "IsoCode": "57",
-    "ZoneName": "America/Bogota",
-    "Currency": "COP"
   },
   {
     "CountryId": 49,

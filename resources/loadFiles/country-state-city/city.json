@@ -1,5 +1,11 @@
 [
   {
+    "CityId": 21582,
+    "Name": "Valledupar",
+    "CountryId": 48,
+    "DepartmentId": 2899
+  },
+  {
     "CityId": 52,
     "Name": "Ashkāsham",
     "CountryId": 1,
@@ -120194,12 +120200,6 @@
   {
     "CityId": 21507,
     "Name": "Tamalameque",
-    "CountryId": 48,
-    "DepartmentId": 2899
-  },
-  {
-    "CityId": 21582,
-    "Name": "Valledupar",
     "CountryId": 48,
     "DepartmentId": 2899
   },
