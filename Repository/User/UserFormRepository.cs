@@ -516,7 +516,7 @@ namespace rethus_backend.Repository
             return fileBase64;
         }
 
-        public void ValidateCertificateUserForm(string userFormId)
+        public async void ValidateCertificateUserForm(string userFormId)
         {
             UserForm formFile = _context.UserForm.FirstOrDefault(x => x.UserFormId == userFormId);
 
@@ -532,11 +532,11 @@ namespace rethus_backend.Repository
 
             if (formFile.TypeProcedure == ConfigurationTypeProcedure.RETHUS)
             {
-                Task.Run(async () => CreateCertificateRethus(formFile));
+                await Task.Run(async () => CreateCertificateRethus(formFile));
             }
             else
             {
-                Task.Run(async () => CreateCertificateSso(formFile));
+                await Task.Run(async () => CreateCertificateSso(formFile));
             }
         }
 
