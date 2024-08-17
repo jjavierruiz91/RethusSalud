@@ -183,38 +183,5 @@ namespace rethus_backend.Repository
                 Base64Content = url
             };
         }
-
-        public async void CreateCertificate(string userFormId)
-        {
-            UserForm form = _useForm.GetById(userFormId);
-
-            if (form.StepForm != ReviewStepForm.success)
-                return;
-
-            var outputPath =
-                _config.GetSection("routeFileProcedures").Value
-                + form.PersonalIdentification
-                + "//certifcate-"
-                + form.PersonalIdentification
-                + ".pdf";
-
-            string certificateRethus = "";
-
-            if (form.TypeProcedure == ConfigurationTypeProcedure.RETHUS)
-            {
-                var rethusDto = new TemplateRethusDto { };
-
-                certificateRethus = await _useForm.DownloadCertificateRethus(rethusDto);
-                await ConverPdfService.ConvertHtmlToPdf(certificateRethus, outputPath);
-
-                var fileInfov1 = new FileInfo(outputPath);
-                if (!fileInfov1.Exists)
-                {
-                    throw new FileNotFoundException("El archivo no existe.");
-                }
-
-                return;
-            }
-        }
     }
 }
