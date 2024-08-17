@@ -179,7 +179,6 @@ namespace rethus_backend.Utilities.FileHelper
 
         public static async Task<string> ReadFileContentAsync(string filePath)
         {
-            Console.WriteLine(filePath);
             if (!File.Exists(filePath))
             {
                 throw new FileNotFoundException("File not found", filePath);

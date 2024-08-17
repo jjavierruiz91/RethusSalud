@@ -43,7 +43,6 @@ namespace rethus_backend.Repository
                 return null;
             }
 
-            Console.WriteLine(user.UserId);
             Configurations user_configuration = _context.Configurations.SingleOrDefault(
                 x => x.UserId == user.UserId.ToString()
             );
@@ -188,7 +187,6 @@ namespace rethus_backend.Repository
             catch (Exception ex)
             {
                 // El token no es válido
-                Console.WriteLine($"Token inválido: {ex.Message}");
                 return false;
             }
         }

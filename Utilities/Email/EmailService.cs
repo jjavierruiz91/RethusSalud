@@ -41,7 +41,6 @@ namespace rethus_backend.Utilities.Email.EmailService
                 mailMessage.IsBodyHtml = payload.IsBodyHtml;
 
                 client.Send(mailMessage);
-                Console.WriteLine("Correo enviado exitosamente.");
                 return true;
             }
             catch (Exception ex)
