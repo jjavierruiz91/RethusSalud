@@ -56,3 +56,7 @@ SET
     roles = 'SuperAdmin'
 WHERE UserId = '12'
 GO
+
+
+# Remove package reference
+dotnet remove package -h|--help
