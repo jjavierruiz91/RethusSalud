@@ -563,7 +563,8 @@ namespace rethus_backend.Repository
             };
 
             certificateRethus = await DownloadCertificateRethus(rethusDto);
-            await ConverPdfService.ConvertHtmlToPdf(certificateRethus, outputPath);
+            var file = new ConverPdfService();
+            await file.ConvertHtmlToPdf(certificateRethus, outputPath);
         }
 
         public async void CreateCertificateSso(UserForm form)
@@ -586,7 +587,8 @@ namespace rethus_backend.Repository
             };
 
             certificateRethus = await DownloadCertificateSso(rethusDto);
-            await ConverPdfService.ConvertHtmlToPdf(certificateRethus, outputPath);
+            var file = new ConverPdfService();
+            await file.ConvertHtmlToPdf(certificateRethus, outputPath);
         }
 
         public Task<string?> GetConsecutive(string userFormId)

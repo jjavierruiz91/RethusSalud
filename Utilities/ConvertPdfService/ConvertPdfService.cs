@@ -1,17 +1,23 @@
 using HtmlToPdfMaster;
+using System.Diagnostics;
 
 public class ConverPdfService
 {
-    public static async Task ConvertHtmlToPdf(string htmlContent, string outputPath)
+    public async Task ConvertHtmlToPdf(string htmlContent, string outputPath)
     {
         try
         {
             var pdfBytes = HtmlConverter.FromHtmlString(htmlContent, 220, 335);
             File.WriteAllBytes(outputPath, pdfBytes);
         }
-        catch (System.Exception)
+        catch (System.Exception ex)
         {
-            Console.WriteLine("Exepcion manejada!");
+            EventLog.WriteEntry("Application", "Exepcion manejada", EventLogEntryType.Error);
+            EventLog.WriteEntry(
+                "Application",
+                $"Excepción: {ex.Message}\nStack Trace: {ex.StackTrace}",
+                EventLogEntryType.Error
+            );
         }
     }
 }
