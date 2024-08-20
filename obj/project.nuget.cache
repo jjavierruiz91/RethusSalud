@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "PvC6Mcp5hyJGWNacmrAHrUd+T3CKs9Kw7iUk5a3Kp0o5f6kdeTO+EGoijQ9VWmLnQ9SZqoEhiRVyf0c3lBLbgg==",
+  "dgSpecHash": "+sHO9kLQNQS+qC+xfwnEPfGWLHfnzNzObvMCoUS7ze4w1sgVyldG2lfvnWqLW1nUqjT7WHw/sEAwztYv9r6cVA==",
   "success": true,
   "projectFilePath": "/Users/alvis/Documents/PracticasGobernacion/Proyecto Backend/rethus-backend/rethus-backend.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,7 @@
     "/Users/alvis/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.0/automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",
     "/Users/alvis/.nuget/packages/azure.core/1.24.0/azure.core.1.24.0.nupkg.sha512",
     "/Users/alvis/.nuget/packages/azure.identity/1.6.0/azure.identity.1.6.0.nupkg.sha512",
+    "/Users/alvis/.nuget/packages/htmltopdfmaster/1.0.0.3/htmltopdfmaster.1.0.0.3.nupkg.sha512",
     "/Users/alvis/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/Users/alvis/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/7.0.4/microsoft.aspnetcore.authentication.jwtbearer.7.0.4.nupkg.sha512",
     "/Users/alvis/.nuget/packages/microsoft.aspnetcore.openapi/7.0.4/microsoft.aspnetcore.openapi.7.0.4.nupkg.sha512",
@@ -50,6 +51,14 @@
     "/Users/alvis/.nuget/packages/mono.texttemplating/2.2.1/mono.texttemplating.2.2.1.nupkg.sha512",
     "/Users/alvis/.nuget/packages/newtonsoft.json/13.0.1/newtonsoft.json.13.0.1.nupkg.sha512",
     "/Users/alvis/.nuget/packages/puppeteersharp/18.0.0/puppeteersharp.18.0.0.nupkg.sha512",
+    "/Users/alvis/.nuget/packages/runtime.any.system.globalization/4.3.0/runtime.any.system.globalization.4.3.0.nupkg.sha512",
+    "/Users/alvis/.nuget/packages/runtime.any.system.io/4.3.0/runtime.any.system.io.4.3.0.nupkg.sha512",
+    "/Users/alvis/.nuget/packages/runtime.any.system.reflection/4.3.0/runtime.any.system.reflection.4.3.0.nupkg.sha512",
+    "/Users/alvis/.nuget/packages/runtime.any.system.reflection.primitives/4.3.0/runtime.any.system.reflection.primitives.4.3.0.nupkg.sha512",
+    "/Users/alvis/.nuget/packages/runtime.any.system.resources.resourcemanager/4.3.0/runtime.any.system.resources.resourcemanager.4.3.0.nupkg.sha512",
+    "/Users/alvis/.nuget/packages/runtime.any.system.runtime/4.3.0/runtime.any.system.runtime.4.3.0.nupkg.sha512",
+    "/Users/alvis/.nuget/packages/runtime.any.system.text.encoding/4.3.0/runtime.any.system.text.encoding.4.3.0.nupkg.sha512",
+    "/Users/alvis/.nuget/packages/runtime.any.system.threading.tasks/4.3.0/runtime.any.system.threading.tasks.4.3.0.nupkg.sha512",
     "/Users/alvis/.nuget/packages/sglab.library.dependencyinjection/6.0.1/sglab.library.dependencyinjection.6.0.1.nupkg.sha512",
     "/Users/alvis/.nuget/packages/swashbuckle.aspnetcore/6.4.0/swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
     "/Users/alvis/.nuget/packages/swashbuckle.aspnetcore.swagger/6.4.0/swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
@@ -67,6 +76,7 @@
     "/Users/alvis/.nuget/packages/system.memory/4.5.4/system.memory.4.5.4.nupkg.sha512",
     "/Users/alvis/.nuget/packages/system.memory.data/1.0.2/system.memory.data.1.0.2.nupkg.sha512",
     "/Users/alvis/.nuget/packages/system.numerics.vectors/4.5.0/system.numerics.vectors.4.5.0.nupkg.sha512",
+    "/Users/alvis/.nuget/packages/system.private.uri/4.3.0/system.private.uri.4.3.0.nupkg.sha512",
     "/Users/alvis/.nuget/packages/system.reflection/4.3.0/system.reflection.4.3.0.nupkg.sha512",
     "/Users/alvis/.nuget/packages/system.reflection.primitives/4.3.0/system.reflection.primitives.4.3.0.nupkg.sha512",
     "/Users/alvis/.nuget/packages/system.resources.resourcemanager/4.3.0/system.resources.resourcemanager.4.3.0.nupkg.sha512",
@@ -83,7 +93,10 @@
     "/Users/alvis/.nuget/packages/system.text.json/7.0.0/system.text.json.7.0.0.nupkg.sha512",
     "/Users/alvis/.nuget/packages/system.threading.tasks/4.3.0/system.threading.tasks.4.3.0.nupkg.sha512",
     "/Users/alvis/.nuget/packages/system.threading.tasks.extensions/4.5.4/system.threading.tasks.extensions.4.5.4.nupkg.sha512",
-    "/Users/alvis/.nuget/packages/system.windows.extensions/5.0.0/system.windows.extensions.5.0.0.nupkg.sha512"
+    "/Users/alvis/.nuget/packages/system.windows.extensions/5.0.0/system.windows.extensions.5.0.0.nupkg.sha512",
+    "/Users/alvis/.nuget/packages/microsoft.netcore.app.runtime.win-x64/7.0.4/microsoft.netcore.app.runtime.win-x64.7.0.4.nupkg.sha512",
+    "/Users/alvis/.nuget/packages/microsoft.aspnetcore.app.runtime.win-x64/7.0.4/microsoft.aspnetcore.app.runtime.win-x64.7.0.4.nupkg.sha512",
+    "/Users/alvis/.nuget/packages/microsoft.netcore.app.host.win-x64/7.0.4/microsoft.netcore.app.host.win-x64.7.0.4.nupkg.sha512"
   ],
   "logs": []
 }
