@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "+sHO9kLQNQS+qC+xfwnEPfGWLHfnzNzObvMCoUS7ze4w1sgVyldG2lfvnWqLW1nUqjT7WHw/sEAwztYv9r6cVA==",
+  "dgSpecHash": "mBGdH/tWNUtTAaeizwnzuhfhL+fyC11J099O46KCp7C8Dj1T7uueAamMlWyPlUSLTIjLN2MKYaLetIQZvMB/bw==",
   "success": true,
   "projectFilePath": "/Users/alvis/Documents/PracticasGobernacion/Proyecto Backend/rethus-backend/rethus-backend.csproj",
   "expectedPackageFiles": [
@@ -49,8 +49,6 @@
     "/Users/alvis/.nuget/packages/microsoft.win32.registry/5.0.0/microsoft.win32.registry.5.0.0.nupkg.sha512",
     "/Users/alvis/.nuget/packages/microsoft.win32.systemevents/5.0.0/microsoft.win32.systemevents.5.0.0.nupkg.sha512",
     "/Users/alvis/.nuget/packages/mono.texttemplating/2.2.1/mono.texttemplating.2.2.1.nupkg.sha512",
-    "/Users/alvis/.nuget/packages/newtonsoft.json/13.0.1/newtonsoft.json.13.0.1.nupkg.sha512",
-    "/Users/alvis/.nuget/packages/puppeteersharp/18.0.0/puppeteersharp.18.0.0.nupkg.sha512",
     "/Users/alvis/.nuget/packages/runtime.any.system.globalization/4.3.0/runtime.any.system.globalization.4.3.0.nupkg.sha512",
     "/Users/alvis/.nuget/packages/runtime.any.system.io/4.3.0/runtime.any.system.io.4.3.0.nupkg.sha512",
     "/Users/alvis/.nuget/packages/runtime.any.system.reflection/4.3.0/runtime.any.system.reflection.4.3.0.nupkg.sha512",
