@@ -563,7 +563,7 @@ namespace rethus_backend.Repository
             };
 
             certificateRethus = await DownloadCertificateRethus(rethusDto);
-            var file = new ConverPdfService();
+            var file = new ConvertPdfService();
             await file.ConvertHtmlToPdf(certificateRethus, outputPath);
         }
 
@@ -587,7 +587,7 @@ namespace rethus_backend.Repository
             };
 
             certificateRethus = await DownloadCertificateSso(rethusDto);
-            var file = new ConverPdfService();
+            var file = new ConvertPdfService();
             await file.ConvertHtmlToPdf(certificateRethus, outputPath);
         }
 

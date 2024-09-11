@@ -45,7 +45,7 @@ FRONT PRIVADO
 http://192.168.0.156:8057
 
 BACKEND PRIVADA
-http://192.168.0.156:8056
+http://192.168.0.156:8057 
 
 
 # Comando sql para superAdmin
