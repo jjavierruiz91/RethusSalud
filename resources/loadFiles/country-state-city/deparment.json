@@ -1,172 +1,172 @@
 [
   {
     "DepartmentId": 2899,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Cesar"
   },
   {
     "DepartmentId": 3901,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Badakhshan"
   },
   {
     "DepartmentId": 3871,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Badghis"
   },
   {
     "DepartmentId": 3875,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Baghlan"
   },
   {
     "DepartmentId": 3884,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Balkh"
   },
   {
     "DepartmentId": 3872,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Bamyan"
   },
   {
     "DepartmentId": 3892,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Daykundi"
   },
   {
     "DepartmentId": 3899,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Farah"
   },
   {
     "DepartmentId": 3889,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Faryab"
   },
   {
     "DepartmentId": 3870,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Ghazni"
   },
   {
     "DepartmentId": 3888,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Ghōr"
   },
   {
     "DepartmentId": 3873,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Helmand"
   },
   {
     "DepartmentId": 3887,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Herat"
   },
   {
     "DepartmentId": 3886,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Jowzjan"
   },
   {
     "DepartmentId": 3902,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Kabul"
   },
   {
     "DepartmentId": 3890,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Kandahar"
   },
   {
     "DepartmentId": 3879,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Kapisa"
   },
   {
     "DepartmentId": 3878,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Khost"
   },
   {
     "DepartmentId": 3876,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Kunar"
   },
   {
     "DepartmentId": 3900,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Kunduz Province"
   },
   {
     "DepartmentId": 3891,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Laghman"
   },
   {
     "DepartmentId": 3897,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Logar"
   },
   {
     "DepartmentId": 3882,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Nangarhar"
   },
   {
     "DepartmentId": 3896,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Nimruz"
   },
   {
     "DepartmentId": 3880,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Nuristan"
   },
   {
     "DepartmentId": 3894,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Paktia"
   },
   {
     "DepartmentId": 3877,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Paktika"
   },
   {
     "DepartmentId": 3881,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Panjshir"
   },
   {
     "DepartmentId": 3895,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Parwan"
   },
   {
     "DepartmentId": 3883,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Samangan"
   },
   {
     "DepartmentId": 3885,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Sar-e Pol"
   },
   {
     "DepartmentId": 3893,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Takhar"
   },
   {
     "DepartmentId": 3898,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Urozgan"
   },
   {
     "DepartmentId": 3874,
-    "CountryId": 1,
+    "CountryId": 48,
     "Name": "Zabul"
   },
   {
@@ -3896,162 +3896,162 @@
   },
   {
     "DepartmentId": 2895,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Amazonas"
   },
   {
     "DepartmentId": 2890,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Antioquia"
   },
   {
     "DepartmentId": 2881,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Arauca"
   },
   {
     "DepartmentId": 2900,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Archipiélago de San Andrés, Providencia y Santa Catalina"
   },
   {
     "DepartmentId": 2880,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Atlántico"
   },
   {
     "DepartmentId": 4921,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Bogotá D.C."
   },
   {
     "DepartmentId": 2893,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Bolívar"
   },
   {
     "DepartmentId": 2903,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Boyacá"
   },
   {
     "DepartmentId": 2887,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Caldas"
   },
   {
     "DepartmentId": 2891,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Caquetá"
   },
   {
     "DepartmentId": 2892,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Casanare"
   },
   {
     "DepartmentId": 2884,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Cauca"
   },
   {
     "DepartmentId": 2876,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Chocó"
   },
   {
     "DepartmentId": 2898,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Córdoba"
   },
   {
     "DepartmentId": 2875,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Cundinamarca"
   },
   {
     "DepartmentId": 2882,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Guainía"
   },
   {
     "DepartmentId": 2888,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Guaviare"
   },
   {
     "DepartmentId": 4871,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Huila"
   },
   {
     "DepartmentId": 2889,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "La Guajira"
   },
   {
     "DepartmentId": 2886,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Magdalena"
   },
   {
     "DepartmentId": 2878,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Meta"
   },
   {
     "DepartmentId": 2897,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Nariño"
   },
   {
     "DepartmentId": 2877,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Norte de Santander"
   },
   {
     "DepartmentId": 2896,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Putumayo"
   },
   {
     "DepartmentId": 2874,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Quindío"
   },
   {
     "DepartmentId": 2879,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Risaralda"
   },
   {
     "DepartmentId": 2901,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Santander"
   },
   {
     "DepartmentId": 2902,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Sucre"
   },
   {
     "DepartmentId": 2883,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Tolima"
   },
   {
     "DepartmentId": 2904,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Valle del Cauca"
   },
   {
     "DepartmentId": 2885,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Vaupés"
   },
   {
     "DepartmentId": 2894,
-    "CountryId": 48,
+    "CountryId": 1,
     "Name": "Vichada"
   },
   {
@@ -5915,7 +5915,7 @@
     "Name": "Somali Region"
   },
   {
-    "DepartmentId": 1,
+    "DepartmentId": 48,
     "CountryId": 70,
     "Name": "Southern Nations, Nationalities, and Peoples' Region"
   },
@@ -6990,7 +6990,7 @@
     "Name": "Ahafo"
   },
   {
-    "DepartmentId": 48,
+    "DepartmentId": 1,
     "CountryId": 83,
     "Name": "Ashanti"
   },
