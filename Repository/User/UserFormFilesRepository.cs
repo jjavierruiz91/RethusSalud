@@ -63,7 +63,10 @@ namespace rethus_backend.Repository
             return user == null;
         }
 
-        public ApiResponse RegisterUserFormFile(string userId, UserFormFilesCreateDto payload)
+        public async Task<ApiResponse> RegisterUserFormFileAsync(
+            string userId,
+            UserFormFilesCreateDto payload
+        )
         {
             var response = new ApiResponse();
 
@@ -95,37 +98,39 @@ namespace rethus_backend.Repository
                 response.AddError("La lista de archivo no puede estar vacia");
             }
 
-            // var amount = GetAmountFilesByTypeProcedure(userForm.typeProcedure);
-
-            // if (amount == 0 || payload.files.Count != (int)amount)
-            // {
-            //   response.IsSuccess = false;
-            //   response.AddError("El tipo de tramite no coincide con la cantidad de archivo requerida");
-            // }
-
             var ruta =
                 _config.GetSection("routeFileProcedures").Value + userForm.PersonalIdentification;
 
             FileHelper.CreateFolder(ruta);
 
+            var tareas = new List<Task>();
+
             foreach (var item in payload.Files)
             {
-                var baseUrlFile = FileHelper.AddAsync(item.File, ruta);
-
-                var form = new UserFormFiles
-                {
-                    Size = item.File.Length,
-                    Filename = item.File.FileName,
-                    Type = item.File.ContentType,
-                    Url = baseUrlFile,
-                    UserFormId = userForm.UserFormId,
-                    TypeUploadFile = item.Id
-                };
-
-                var createRegister = _context.UserFormFiles.Add(form);
-                _context.SaveChanges();
+                tareas.Add(this.SaveFileAsync(item, ruta, userForm));
             }
+
+            await Task.WhenAll(tareas);
+
             return response;
+        }
+
+        private async Task SaveFileAsync(FileUpload item, string ruta, UserForm userForm)
+        {
+            var baseUrlFile = FileHelper.AddAsync(item.File, ruta);
+
+            var form = new UserFormFiles
+            {
+                Size = item.File.Length,
+                Filename = item.File.FileName,
+                Type = item.File.ContentType,
+                Url = baseUrlFile,
+                UserFormId = userForm.UserFormId,
+                TypeUploadFile = item.Id
+            };
+
+            _context.UserFormFiles.Add(form);
+            await _context.SaveChangesAsync();
         }
 
         public EnumMaximumAmountFiles GetAmountFilesByTypeProcedure(int typeProcedure)

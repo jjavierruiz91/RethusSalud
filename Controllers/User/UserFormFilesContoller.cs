@@ -21,7 +21,7 @@ public class UserFormFilesController : ApiBaseController
         [FromForm] UserFormFilesCreateDto _files
     )
     {
-        var response = _unitOfWork.UserFormFiles.RegisterUserFormFile(userId, _files);
+        var response = await _unitOfWork.UserFormFiles.RegisterUserFormFileAsync(userId, _files);
 
         if (response.IsSuccess = false)
         {
