@@ -9,5 +9,10 @@ namespace rethus_backend.Repository.IRepository
 
         public Task<List<CountryResponseDto>> GetCountries();
         public Task<CountryResponseDto> GetCountryId(int countryId);
+
+        public Task<List<CountryResponseDto>> GetCountriesPagination(
+            int pageNumber,
+            int pageSize = 10
+        );
     }
 }

@@ -39,6 +39,24 @@ namespace rethus_backend.Repository
             var response = new ApiResponse();
 
             var countries = _context.Country
+                .AsNoTracking()
+                .Select(c => new CountryResponseDto { Id = c.CountryId, Name = c.Name })
+                .ToListAsync();
+
+            return countries;
+        }
+
+        public Task<List<CountryResponseDto>> GetCountriesPagination(
+            int pageNumber,
+            int pageSize = 10
+        )
+        {
+            var response = new ApiResponse();
+
+            var countries = _context.Country
+                .AsNoTracking()
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .Select(c => new CountryResponseDto { Id = c.CountryId, Name = c.Name })
                 .ToListAsync();
 

@@ -43,6 +43,30 @@ public class CountryController : ApiBaseController
         return Ok(_response);
     }
 
+    [HttpGet("paginate")]
+    public async Task<ActionResult<ApiResponse>> GetCountriesPaginate(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10
+    )
+    {
+        var countries = await _unitOfWork.Country.GetCountriesPagination(page, pageSize);
+
+        if (countries == null)
+        {
+            _response.IsSuccess = false;
+            _response.StatusCode = HttpStatusCode.BadRequest;
+            BadRequest(_response);
+        }
+
+        _response.IsSuccess = true;
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.Result = countries;
+
+        Response.Headers["Cache-Control"] = "public,max-age=86400"; // 86400 segundos = 24 horas
+
+        return Ok(_response);
+    }
+
     [HttpGet("{countryId}")]
     public async Task<ActionResult<ApiResponse>> GetCities(int countryId)
     {

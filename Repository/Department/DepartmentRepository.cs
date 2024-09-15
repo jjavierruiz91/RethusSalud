@@ -21,6 +21,7 @@ namespace rethus_backend.Repository
             var response = new ApiResponse();
 
             var department = _context.Departments
+                .AsNoTracking()
                 .Where(c => c.CountryId == countryId)
                 .Select(v => new DepartmentResponseDto { Id = v.DepartmentId, Name = v.Name })
                 .ToListAsync();
