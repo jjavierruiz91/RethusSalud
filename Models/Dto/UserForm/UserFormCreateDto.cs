@@ -54,15 +54,12 @@ namespace rethus_backend.Models.Dto.UserForm
         [Required(ErrorMessage = "PersonalAddress is required")]
         public string PersonalAddress { get; set; }
 
-        [Required(ErrorMessage = "PersonalTelephone is required")]
-        public string PersonalTelephone { get; set; }
+        public string? PersonalTelephone { get; set; }
 
-        [Required(ErrorMessage = "PersonalPhone is required")]
-        public string PersonalPhone { get; set; }
+        public string? PersonalPhone { get; set; }
 
-        [Required(ErrorMessage = "PersonalEmail is required")]
         [DataType(DataType.EmailAddress, ErrorMessage = "PersonalEmail is not valid.")]
-        public string PersonalEmail { get; set; }
+        public string? PersonalEmail { get; set; }
 
         [Required(ErrorMessage = "PersonalEthnicGroup is required")]
         [EnumDataType(typeof(TypeEthnicGroup), ErrorMessage = "Invalid PersonalEthnicGroup Value")]

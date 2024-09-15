@@ -28,12 +28,13 @@ namespace rethus_backend.Utilities.Constants.UserConstants
 
     public enum TypeIdentification
     {
-        CDC,
-        TDI,
-        CDE,
-        RUT,
-        PPE,
-        TP,
+        CDC, // Cédula de ciudadanía
+        TDI, // Tarjeta de identidad
+        CDE, // Cédula de extranjería
+        RUT, // Registro Único Tributario
+        PPE, // Pasaporte
+        TP, // Tarjeta profesional
+        PP // Protección personal
     }
 
     public enum TypeGender

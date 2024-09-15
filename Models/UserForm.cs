@@ -28,9 +28,9 @@ namespace rethus_backend.Models
         public City MunicipalityResidence { get; set; }
         public required string PersonalAddress { get; set; }
         public required DateTime DateBirth { get; set; }
-        public required string PersonalTelephone { get; set; }
-        public required string PersonalPhone { get; set; }
-        public required string PersonalEmail { get; set; }
+        public string? PersonalTelephone { get; set; }
+        public string? PersonalPhone { get; set; }
+        public string? PersonalEmail { get; set; }
         public required TypeEthnicGroup PersonalEthnicGroup { get; set; }
         public required string AcademicsOriginTitle { get; set; }
         public required TypeInstitution AcademicsTypeInstitution { get; set; }
