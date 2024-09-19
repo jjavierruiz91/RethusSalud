@@ -13,18 +13,18 @@ namespace rethus_backend.Repository
     {
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _config;
-        private readonly IUserFormRepository _useForm;
+        private readonly IUserConfigurationRepository _configuration;
 
         public UserFormFilesRepository(
             ApplicationDbContext db,
             IConfiguration config,
-            IUserFormRepository userForm
+            IUserConfigurationRepository userConfiguration
         )
             : base(db)
         {
             _context = db;
             _config = config;
-            _useForm = userForm;
+            _configuration = userConfiguration;
         }
 
         public IEnumerable<UserFormFiles> GetAll()
@@ -113,7 +113,7 @@ namespace rethus_backend.Repository
             var urls = await Task.WhenAll(tareas); // Esperar que todos los archivos sean guardados
 
             await SaveFileDetailsToDatabaseAsync(payload.Files, urls, userForm);
-
+            await UpdateUserFormStatusAsync(userId);
             return response;
         }
 
@@ -231,6 +231,30 @@ namespace rethus_backend.Repository
                 Type = formFile.Type,
                 Base64Content = url
             };
+        }
+
+        private async Task UpdateUserFormStatusAsync(string userId)
+        {
+            try
+            {
+                var user_configuration = this._configuration.GetByUserId(userId);
+
+                this._configuration.updateAutomaticStepConfiguration(
+                    user_configuration.ConfigurationsId
+                );
+
+                this._configuration.updateAutomaticStateConfiguration(
+                    user_configuration.ConfigurationsId
+                );
+
+                await Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(
+                    $"Error al actualizar el estado del formulario de usuario: {ex.Message}"
+                );
+            }
         }
     }
 }

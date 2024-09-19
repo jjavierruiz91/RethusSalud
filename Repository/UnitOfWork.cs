@@ -29,7 +29,7 @@ namespace rethus_backend.Repository
             >(_db);
 
             UserForm = new UserFormRepository(_db, _configuration, paginationUserFormService);
-            UserFormFiles = new UserFormFilesRepository(_db, _configuration, UserForm);
+            UserFormFiles = new UserFormFilesRepository(_db, _configuration, UserConfiguration);
 
             var paginationCommentsService = new PaginationService<
                 Comments,
