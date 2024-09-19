@@ -13,6 +13,7 @@ using rethus_backend.Models.Dto.Comments;
 using rethus_backend.Utilities.Templates.dto;
 using rethus_backend.Utilities.Templates;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace rethus_backend.Repository
 {
@@ -437,14 +438,33 @@ namespace rethus_backend.Repository
             return resultContent;
         }
 
-        public ApiResponse AddConsecutive(string userFormId, string consecutive)
+        public ApiResponse AddConsecutive(string userFormId, UserFormConsecutiveDto payload)
         {
             var response = new ApiResponse();
 
-            if (consecutive.Length == 0)
+            if (payload.consecutive.Length == 0)
             {
                 response.AddError(
                     "El consecutivo no puede estar vacio",
+                    HttpStatusCode.BadRequest,
+                    false
+                );
+                response.IsSuccess = false;
+                return response;
+            }
+
+            if (
+                !DateTime.TryParseExact(
+                    payload.consecutiveDate,
+                    "dd/MM/yyyy",
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out var parsedDate
+                )
+            )
+            {
+                response.AddError(
+                    "La fecha es inválida o no está en el formato dd/MM/yyyy",
                     HttpStatusCode.BadRequest,
                     false
                 );
@@ -470,7 +490,8 @@ namespace rethus_backend.Repository
                 );
             }
 
-            userForm.Consecutive = consecutive;
+            userForm.Consecutive = payload.consecutive;
+            userForm.ConsecutiveDate = payload.consecutiveDate;
             userForm.Status = UserFormStatus.approved;
 
             _context.SaveChanges();
@@ -591,14 +612,21 @@ namespace rethus_backend.Repository
             await file.ConvertHtmlToPdf(certificateRethus, outputPath);
         }
 
-        public Task<string?> GetConsecutive(string userFormId)
+        public Task<UserFormConsecutiveResponseDto> GetInformationConsecutive(string userFormId)
         {
-            var consecutive = _context.UserForm
+            var response = _context.UserForm
                 .Where(c => c.UserFormId == userFormId)
-                .Select(c => c.Consecutive)
+                .Select(
+                    c =>
+                        new UserFormConsecutiveResponseDto
+                        {
+                            Consecutive = c.Consecutive,
+                            ConsecutiveDate = c.ConsecutiveDate
+                        }
+                )
                 .FirstOrDefaultAsync();
 
-            return consecutive;
+            return response;
         }
 
         public string GetUserByUserFormId(string userFormId)

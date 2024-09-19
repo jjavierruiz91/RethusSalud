@@ -64,5 +64,6 @@ namespace rethus_backend.Models
         public ReviewStepForm StepForm { get; set; }
 
         public string? Consecutive { get; set; }
+        public string? ConsecutiveDate { get; set; }
     }
 }

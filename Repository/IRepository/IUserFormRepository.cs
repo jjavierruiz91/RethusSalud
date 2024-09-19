@@ -40,13 +40,13 @@ namespace rethus_backend.Repository.IRepository
 
         Task<string> DownloadCertificateSso(TemplateSSODto sSODto);
 
-        ApiResponse AddConsecutive(string userFormId, string consecutive);
+        ApiResponse AddConsecutive(string userFormId, UserFormConsecutiveDto payload);
 
         Task<string> GetFileInventory(string userFormFileId);
 
         void ValidateCertificateUserForm(string userFormId);
 
-        Task<string> GetConsecutive(string userFormId);
+        Task<UserFormConsecutiveResponseDto> GetInformationConsecutive(string userFormId);
 
         bool ValidateExistFileForDownload(string userId);
 

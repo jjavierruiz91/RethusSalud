@@ -204,7 +204,7 @@ public class UserFormController : ApiBaseController
         UserFormConsecutiveDto payload
     )
     {
-        ApiResponse response = _unitOfWork.UserForm.AddConsecutive(formId, payload.consecutive);
+        ApiResponse response = _unitOfWork.UserForm.AddConsecutive(formId, payload);
         if (!response.IsSuccess)
         {
             return BadRequest(response);
@@ -230,7 +230,7 @@ public class UserFormController : ApiBaseController
         UserFormConsecutiveDto payload
     )
     {
-        ApiResponse response = _unitOfWork.UserForm.AddConsecutive(formId, payload.consecutive);
+        ApiResponse response = _unitOfWork.UserForm.AddConsecutive(formId, payload);
         if (!response.IsSuccess)
         {
             return BadRequest(response);
@@ -254,7 +254,7 @@ public class UserFormController : ApiBaseController
     [Authorize(Roles = Policies.Inventory)]
     public async Task<ActionResult<ApiResponse>> GetConsecutive(string formId)
     {
-        var consecutive = await _unitOfWork.UserForm.GetConsecutive(formId);
+        var consecutive = await _unitOfWork.UserForm.GetInformationConsecutive(formId);
 
         if (consecutive == null)
         {
