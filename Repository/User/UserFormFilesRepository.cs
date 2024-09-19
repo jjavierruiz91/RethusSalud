@@ -5,7 +5,7 @@ using rethus_backend.Repository.IRepository;
 using rethus_backend.Utilities.Constants.User.UserFormConstants;
 using rethus_backend.Utilities.Constants.UserConstants;
 using rethus_backend.Utilities.FileHelper;
-using rethus_backend.Utilities.Templates.dto;
+using System.Diagnostics;
 
 namespace rethus_backend.Repository
 {
@@ -103,16 +103,60 @@ namespace rethus_backend.Repository
 
             FileHelper.CreateFolder(ruta);
 
-            var tareas = new List<Task>();
+            var tareas = new List<Task<string>>();
 
             foreach (var item in payload.Files)
             {
-                tareas.Add(this.SaveFileAsync(item, ruta, userForm));
+                tareas.Add(SaveFileToDiskAsync(item, ruta)); // Solo guarda el archivo
             }
 
-            await Task.WhenAll(tareas);
+            var urls = await Task.WhenAll(tareas); // Esperar que todos los archivos sean guardados
+
+            await SaveFileDetailsToDatabaseAsync(payload.Files, urls, userForm);
 
             return response;
+        }
+
+        private async Task<string> SaveFileToDiskAsync(FileUpload item, string ruta)
+        {
+            var baseUrlFile = FileHelper.AddAsync(item.File, ruta); // Guardar el archivo en el disco
+            return baseUrlFile; // Retornar la URL o path del archivo guardado
+        }
+
+        private async Task SaveFileDetailsToDatabaseAsync(
+            List<FileUpload> files,
+            string[] urls,
+            UserForm userForm
+        )
+        {
+            try
+            {
+                for (int i = 0; i < files.Count; i++)
+                {
+                    var form = new UserFormFiles
+                    {
+                        Size = files[i].File.Length,
+                        Filename = files[i].File.FileName,
+                        Type = files[i].File.ContentType,
+                        Url = urls[i],
+                        UserFormId = userForm.UserFormId,
+                        TypeUploadFile = files[i].Id
+                    };
+
+                    _context.UserFormFiles.Add(form);
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            catch (System.Exception ex)
+            {
+                // EventLog.WriteEntry("Application", "Error al guarder archivo funcion SaveFileDetailsToDatabaseAsync", EventLogEntryType.Error);
+                // EventLog.WriteEntry(
+                //     "Application",
+                //     $"Excepción: {ex.Message}\nStack Trace: {ex.StackTrace}",
+                //     EventLogEntryType.Error
+                // );
+            }
         }
 
         private async Task SaveFileAsync(FileUpload item, string ruta, UserForm userForm)
@@ -128,8 +172,8 @@ namespace rethus_backend.Repository
                 UserFormId = userForm.UserFormId,
                 TypeUploadFile = item.Id
             };
-
             _context.UserFormFiles.Add(form);
+
             await _context.SaveChangesAsync();
         }
 
