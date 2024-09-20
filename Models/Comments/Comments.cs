@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using rethus_backend.Utilities.Constants.User.CommentsConstants;
 
 namespace rethus_backend.Models
 {
@@ -21,10 +22,10 @@ namespace rethus_backend.Models
         public string UserFormId { get; set; }
 
         [Required]
-        public required string Status { get; set; } // Pendiente, Aprobada, Rechazada
+        public required CommentsStatus Status { get; set; } // Pendiente, Aprobada, Rechazada
 
         [Required]
-        public required string Type { get; set; } // Comentario General, Aprobación, Rechazo
+        public required CommentsType Type { get; set; } // Comentario General, Aprobación, Rechazo
 
         public DateTime CreatedAt { get; set; }
 

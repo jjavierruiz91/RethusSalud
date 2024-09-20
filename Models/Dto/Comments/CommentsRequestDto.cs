@@ -1,4 +1,6 @@
+using System.ComponentModel.DataAnnotations;
 using rethus_backend.Models.Dto.UserForm;
+using rethus_backend.Utilities.Constants.User.CommentsConstants;
 using rethus_backend.Utilities.Constants.User.UserFormConstants;
 
 namespace rethus_backend.Models.Dto.Comments
@@ -8,6 +10,9 @@ namespace rethus_backend.Models.Dto.Comments
         public required string Description { get; set; }
         public required string UserFuncionarioId { get; set; }
         public required string UserFormId { get; set; }
+
+        [EnumDataType(typeof(CommentsType), ErrorMessage = "Invalid CommentsType Value")]
+        public required CommentsType Type { get; set; }
     }
 
     public class CommentsQueryParametersDto
@@ -39,8 +44,8 @@ namespace rethus_backend.Models.Dto.Comments
         public string CommentId { get; set; }
         public string Description { get; set; }
         public string UserFormId { get; set; }
-        public string status { get; set; }
-        public string type { get; set; }
+        public CommentsStatus status { get; set; }
+        public CommentsType type { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

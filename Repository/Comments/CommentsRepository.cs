@@ -6,6 +6,7 @@ using rethus_backend.Models;
 using rethus_backend.Models.Dto.Comments;
 using rethus_backend.Repository.IRepository;
 using rethus_backend.Utilities.Constants.PaginatioConstants;
+using rethus_backend.Utilities.Constants.User.CommentsConstants;
 
 namespace rethus_backend.Repository
 {
@@ -68,8 +69,8 @@ namespace rethus_backend.Repository
                     Description = createRequestDto.Description,
                     UserId = createRequestDto.UserFuncionarioId,
                     UserFormId = createRequestDto.UserFormId,
-                    Status = "pending",
-                    Type = "comments",
+                    Status = CommentsStatus.pending,
+                    Type = createRequestDto.Type,
                     CreatedAt = DateTime.Now,
                     UpdateAt = DateTime.Now
                 };
@@ -135,7 +136,7 @@ namespace rethus_backend.Repository
                 return response;
             }
 
-            comment.Status = "approved";
+            comment.Status = CommentsStatus.approved;
 
             _context.SaveChanges();
             response.Messages.Add("El comentario ha sido resuelto");
@@ -155,7 +156,7 @@ namespace rethus_backend.Repository
                 return response;
             }
 
-            comment.Status = "rejected";
+            comment.Status = CommentsStatus.rejected;
 
             _context.SaveChanges();
             response.Messages.Add("El comentario ha sido rechazado");
