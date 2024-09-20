@@ -367,6 +367,7 @@ namespace rethus_backend.Repository
             }
 
             form.StepForm = UserFormConstants.GetNextRebiewStepForm(form.StepForm);
+            form.Status = UserFormStatus.pending;
             _context.SaveChanges();
 
             response.Messages.Add("El formulario ha sido aprobado");
