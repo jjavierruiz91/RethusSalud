@@ -370,7 +370,6 @@ namespace rethus_backend.Repository
             _context.SaveChanges();
 
             response.Messages.Add("El formulario ha sido aprobado");
-            response.Result = form;
             response.StatusCode = HttpStatusCode.OK;
             return response;
         }
