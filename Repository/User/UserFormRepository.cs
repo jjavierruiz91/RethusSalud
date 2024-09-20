@@ -28,6 +28,8 @@ namespace rethus_backend.Repository
             UserFormResponseDto
         > _paginationService;
 
+        private readonly IUserConfigurationRepository _userConfiguration;
+
         public UserFormRepository(
             ApplicationDbContext db,
             IConfiguration config,
@@ -35,13 +37,15 @@ namespace rethus_backend.Repository
                 UserForm,
                 CommonQueryParametersDto,
                 UserFormResponseDto
-            > paginationService
+            > paginationService,
+            IUserConfigurationRepository userConfiguration
         )
             : base(db)
         {
             _context = db;
             _config = config;
             _paginationService = paginationService;
+            _userConfiguration = userConfiguration;
         }
 
         public PaginationResult<UserForm> GetAll(int? page)
@@ -359,7 +363,7 @@ namespace rethus_backend.Repository
             var response = new ApiResponse();
 
             UserForm form = GetFormUserId(userFormId);
-
+            var oldStatus = form.Status;
             if (form == null)
             {
                 response.AddError("El formulario no existe", HttpStatusCode.NotFound, false);
@@ -368,7 +372,12 @@ namespace rethus_backend.Repository
 
             form.StepForm = UserFormConstants.GetNextRebiewStepForm(form.StepForm);
             form.Status = UserFormStatus.pending;
+
             _context.SaveChanges();
+            if (oldStatus == UserFormStatus.reject)
+            {
+                _userConfiguration.updateStateInPogressConfiguration(form.UserId);
+            }
 
             response.Messages.Add("El formulario ha sido aprobado");
             response.StatusCode = HttpStatusCode.OK;
@@ -389,6 +398,8 @@ namespace rethus_backend.Repository
 
             comment.StepForm = ReviewStepForm.officer1;
             comment.Status = UserFormStatus.reject;
+
+            _userConfiguration.updateStateRejectConfiguration(comment.UserId);
 
             _context.SaveChanges();
             response.Messages.Add("El formulario ha sido rechazado");

@@ -191,5 +191,77 @@ namespace rethus_backend.Repository
             response.Result = user_configuration.Step;
             return response;
         }
+
+        public ApiResponse updateStateRejectConfiguration(string userId)
+        {
+            var response = new ApiResponse();
+            var user_configuration = GetByUserId(userId);
+
+            if (user_configuration == null)
+            {
+                response.AddError(
+                    "El usuario no tiene configuracion asignada",
+                    HttpStatusCode.BadRequest,
+                    false
+                );
+                return response;
+            }
+
+            user_configuration.State = ConfigurationsState.rejected;
+
+            _context.Configurations.Update(user_configuration);
+            _context.SaveChanges();
+
+            response.Messages.Add("Se rechazado el proceso del usuario");
+            return response;
+        }
+
+        public ApiResponse updateStateInPogressConfiguration(string userId)
+        {
+            var response = new ApiResponse();
+            var user_configuration = GetByUserId(userId);
+
+            if (user_configuration == null)
+            {
+                response.AddError(
+                    "El usuario no tiene configuracion asignada",
+                    HttpStatusCode.BadRequest,
+                    false
+                );
+                return response;
+            }
+
+            user_configuration.State = ConfigurationsState.inprogress;
+
+            _context.Configurations.Update(user_configuration);
+            _context.SaveChanges();
+
+            response.Messages.Add("Se actualizo el proceso del usuario");
+            return response;
+        }
+
+        public ApiResponse updateStateInitialConfiguration(string userId)
+        {
+            var response = new ApiResponse();
+            var user_configuration = GetByUserId(userId);
+
+            if (user_configuration == null)
+            {
+                response.AddError(
+                    "El usuario no tiene configuracion asignada",
+                    HttpStatusCode.BadRequest,
+                    false
+                );
+                return response;
+            }
+
+            user_configuration.State = ConfigurationsState.initial;
+
+            _context.Configurations.Update(user_configuration);
+            _context.SaveChanges();
+
+            response.Messages.Add("Se reseteo el proceso del usuario");
+            return response;
+        }
     }
 }

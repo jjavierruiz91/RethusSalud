@@ -21,5 +21,8 @@ namespace rethus_backend.Repository.IRepository
         ApiResponse updateAutomaticStepConfiguration(string id);
         ApiResponse updateAutomaticStateConfiguration(string id);
         void Register(string email);
+        public ApiResponse updateStateRejectConfiguration(string userId);
+        public ApiResponse updateStateInPogressConfiguration(string userId);
+        public ApiResponse updateStateInitialConfiguration(string userId);
     }
 }

@@ -28,7 +28,12 @@ namespace rethus_backend.Repository
                 UserFormResponseDto
             >(_db);
 
-            UserForm = new UserFormRepository(_db, _configuration, paginationUserFormService);
+            UserForm = new UserFormRepository(
+                _db,
+                _configuration,
+                paginationUserFormService,
+                UserConfiguration
+            );
             UserFormFiles = new UserFormFilesRepository(_db, _configuration, UserConfiguration);
 
             var paginationCommentsService = new PaginationService<
