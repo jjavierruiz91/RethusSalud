@@ -56,7 +56,7 @@ namespace rethus_backend.Repository
                 return response;
             }
 
-            var userForm = _userFormRepository.IsExistUser(createRequestDto.UserFormId);
+            var userForm = _userFormRepository.GetUserByUserFormId(createRequestDto.UserFormId);
             if (userForm == null)
             {
                 response.AddError("El formulario no existe", HttpStatusCode.NotFound, false);
@@ -67,7 +67,7 @@ namespace rethus_backend.Repository
                 new()
                 {
                     Description = createRequestDto.Description,
-                    UserId = createRequestDto.UserFuncionarioId,
+                    UserId = userForm,
                     UserFormId = createRequestDto.UserFormId,
                     Status = CommentsStatus.pending,
                     Type = createRequestDto.Type,

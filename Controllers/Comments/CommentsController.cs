@@ -15,19 +15,21 @@ public class CommentsController : ApiBaseController
         : base(provider) { }
 
     [HttpGet]
-    [Authorize(Roles = Policies.FuncionarioEtapa1)]
+    [Authorize(Roles = Policies.FuncionarioEtapa1 + "," + Policies.User)]
     public PaginationResultDto<CommentsResponseDto> GetAllPaginado(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
         [FromQuery] string formId = "",
+        [FromQuery] string userId = "",
         [FromQuery] string status = ""
     )
     {
+        Console.WriteLine("ENTRO");
         var request = new PaginationRequestDto<CommonQueryParametersDto>
         {
             Page = page,
             PageSize = pageSize,
-            // QueryParameters = new CommonQueryParametersDto { UserFormId = formId, Status = status }
+            QueryParameters = new CommonQueryParametersDto { UserId = userId }
         };
 
         Func<Comments, CommentsResponseDto> mapper = user =>

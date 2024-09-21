@@ -37,6 +37,7 @@ namespace rethus_backend.Models.Dto.Comments
         public Dictionary<string, string> ComparisonOperators { get; set; } =
             new Dictionary<string, string>();
         public int? Consecutive { get; set; }
+        public string? UserId { get; set; }
     }
 
     public class CommentsResponseDto
