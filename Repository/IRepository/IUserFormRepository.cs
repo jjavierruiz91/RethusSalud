@@ -23,6 +23,8 @@ namespace rethus_backend.Repository.IRepository
         UserForm IsDownloadCertificate(string userId);
 
         DetailsProccessPersonalDto GetPersonalInformation(string userFormId);
+        DetailsEditProccessPersonalDto GetEditPersonalInformation(string userFormId);
+        DetailsEditProccessAcademicDto GetEditInformationAcademic(string userFormId);
         DetailsProccessAcademicDto GetProccessAcademic(string userFormId);
         PaginationResult<UserForm> GetAll(int? page);
         Task<ApiResponse> post(UserFormCreateDto createRequestDto);
@@ -53,5 +55,6 @@ namespace rethus_backend.Repository.IRepository
         ValidateFileUserForm IsValidUserForm(string userFormId);
 
         Task<string?> DonwloadCertificateFileByUserId(string userId);
+        ValidateFormUserDto ValidateFormUserId(string UserId);
     }
 }

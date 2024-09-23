@@ -149,10 +149,52 @@ public class UserFormController : ApiBaseController
         return Ok(_response);
     }
 
+    [HttpGet("personal/{userFormId}/edit")]
+    public IActionResult GetInformationPersonalEditProcess(string userFormId)
+    {
+        var user = _unitOfWork.UserForm.GetEditPersonalInformation(userFormId);
+        if (user == null)
+            return NotFound();
+
+        _response.IsSuccess = true;
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.Result = user;
+        return Ok(_response);
+    }
+
+    [HttpGet("validate/{userId}/exist")]
+    public IActionResult GetValidateFormUserId(string UserId)
+    {
+        var user = _unitOfWork.UserForm.ValidateFormUserId(UserId);
+
+        if (user == null)
+        {
+            _response.Result = null;
+        }
+
+        _response.IsSuccess = true;
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.Result = user;
+        return Ok(_response);
+    }
+
     [HttpGet("academic/{userFormId}")]
     public IActionResult GetInformationAcademicProcess(string userFormId)
     {
         var user = _unitOfWork.UserForm.GetProccessAcademic(userFormId);
+        if (user == null)
+            return NotFound();
+
+        _response.IsSuccess = true;
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.Result = user;
+        return Ok(_response);
+    }
+
+    [HttpGet("academic/{userFormId}/edit")]
+    public IActionResult GetInformationAcademicEditProcess(string userFormId)
+    {
+        var user = _unitOfWork.UserForm.GetEditInformationAcademic(userFormId);
         if (user == null)
             return NotFound();
 

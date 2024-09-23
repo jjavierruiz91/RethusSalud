@@ -24,7 +24,6 @@ public class CommentsController : ApiBaseController
         [FromQuery] string status = ""
     )
     {
-        Console.WriteLine("ENTRO");
         var request = new PaginationRequestDto<CommonQueryParametersDto>
         {
             Page = page,

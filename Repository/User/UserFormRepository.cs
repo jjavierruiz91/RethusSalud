@@ -330,6 +330,23 @@ namespace rethus_backend.Repository
             return userForm;
         }
 
+        public ValidateFormUserDto ValidateFormUserId(string UserId)
+        {
+            var UserForm = _context.UserForm
+                .Where(user => user.UserId == UserId)
+                .Select(
+                    columns =>
+                        new ValidateFormUserDto
+                        {
+                            UserId = columns.UserId,
+                            UserFormId = columns.UserFormId,
+                        }
+                )
+                .FirstOrDefault();
+
+            return UserForm;
+        }
+
         public DetailsProccessAcademicDto GetProccessAcademic(string userFormId)
         {
             var userForm = _context.UserForm
@@ -726,6 +743,91 @@ namespace rethus_backend.Repository
             var fileBase64 = await FileHelper.FileAsBase64Async(url);
 
             return fileBase64;
+        }
+
+        public DetailsEditProccessPersonalDto GetEditPersonalInformation(string userFormId)
+        {
+            var userForm = _context.UserForm
+                .Where(user => user.UserFormId == userFormId)
+                .Include(uf => uf.CountryOfBirth)
+                .Include(uf => uf.DepartmentBirth)
+                .Include(uf => uf.MunicipalityBirth)
+                .Include(uf => uf.PlaceResidence)
+                .Include(uf => uf.DepartmentResidence)
+                .Include(uf => uf.MunicipalityResidence)
+                .Include(uf => uf.CountryInstitution)
+                .Include(uf => uf.DepartmentInstitution)
+                .Include(uf => uf.MunicipalityInstitution)
+                .Select(
+                    columns =>
+                        new DetailsEditProccessPersonalDto
+                        {
+                            PersonalTypeIdentification =
+                                columns.PersonalTypeIdentification.ToString(),
+                            PersonalGender = columns.PersonalGender.ToString(),
+                            PersonalIdentification = columns.PersonalIdentification,
+                            PersonalFirstName = columns.PersonalFirstName,
+                            PersonalLastName = columns.PersonalLastName,
+                            PersonalCountryBirthName = columns.CountryOfBirth.Name,
+                            PersonalCountryBirth = columns.CountryOfBirth.CountryId,
+                            PersonalDepartmentBirthName = columns.DepartmentBirth.Name,
+                            PersonalDepartmentBirth = columns.DepartmentBirth.CountryId,
+                            PersonalMunicipalityBirthName = columns.MunicipalityBirth.Name,
+                            PersonalMunicipalityBirth = columns.MunicipalityBirth.CityId,
+                            DateBirth = columns.DateBirth,
+                            PersonalPlaceResidenceName = columns.PlaceResidence.Name,
+                            PersonalPlaceResidence = columns.PlaceResidence.CountryId,
+                            PersonalDepartmentResidenceName = columns.DepartmentResidence.Name,
+                            PersonalDepartmentResidence = columns.DepartmentResidence.CountryId,
+                            PersonalMunicipalityResidenceName = columns.MunicipalityResidence.Name,
+                            PersonalMunicipalityResidence = columns.MunicipalityResidence.CityId,
+                            PersonalAddress = columns.PersonalAddress,
+                            PersonalTelephone = columns.PersonalTelephone,
+                            PersonalPhone = columns.PersonalPhone,
+                            PersonalEmail = columns.PersonalEmail,
+                            PersonalEthnicGroup = columns.PersonalEthnicGroup.ToString(),
+                        }
+                )
+                .FirstOrDefault();
+
+            return userForm;
+        }
+
+        public DetailsEditProccessAcademicDto GetEditInformationAcademic(string userFormId)
+        {
+            var userForm = _context.UserForm
+                .Where(user => user.UserFormId == userFormId)
+                .Include(uf => uf.DepartmentInstitution)
+                .Include(uf => uf.MunicipalityInstitution)
+                .Select(
+                    columns =>
+                        new DetailsEditProccessAcademicDto
+                        {
+                            AcademicsOriginTitle = columns.AcademicsOriginTitle,
+                            AcademicsTypeInstitution = columns.AcademicsTypeInstitution.ToString(),
+                            AcademicsProgramType = columns.AcademicsProgramType,
+                            AcademicsDepartmentInstitutionName = columns.DepartmentInstitution.Name,
+                            AcademicsDepartmentInstitution = columns
+                                .DepartmentInstitution
+                                .DepartmentId,
+                            AcademicsMunicipalityInstitutionName = columns
+                                .MunicipalityInstitution
+                                .Name,
+                            AcademicsMunicipalityInstitution = columns
+                                .MunicipalityInstitution
+                                .CityId,
+                            AcademicsCountryInstitutionName = columns.CountryInstitution.Name,
+                            AcademicsCountryInstitution = columns.CountryInstitution.CountryId,
+                            AcademicsNameInstitution = columns.AcademicsNameInstitution,
+                            AcademicsProgramName = columns.AcademicsProgramName,
+                            AcademicsGradeDate = columns.AcademicsGradeDate,
+                            AcademicsNumberConvalidation = columns.AcademicsNumberConvalidation,
+                            AcademicsDateConvalidation = columns.AcademicsDateConvalidation,
+                            AcademicsEquivalentTitle = columns.AcademicsEquivalentTitle,
+                        }
+                )
+                .FirstOrDefault();
+            return userForm;
         }
     }
 }
