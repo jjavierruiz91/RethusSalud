@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using rethus_backend.Models;
-using rethus_backend.Models.Dto.UserForm;
 using rethus_backend.Models.Dto.UserFormFiles;
-using System.Net;
 
 namespace rethus_backend.Controllers;
 
@@ -23,7 +21,27 @@ public class UserFormFilesController : ApiBaseController
     {
         var response = await _unitOfWork.UserFormFiles.RegisterUserFormFileAsync(userId, _files);
 
-        if (response.IsSuccess = false)
+        if (!response.IsSuccess)
+        {
+            BadRequest(response);
+        }
+
+        return Ok(response);
+    }
+
+    [HttpPut("{userFormId}")]
+    [Authorize(Roles = Policies.User)]
+    public async Task<ActionResult<ApiResponse>> PutAsyncUserFormFiles(
+        string userFormId,
+        [FromForm] UserFormFilesUpdateDto _files
+    )
+    {
+        ApiResponse response = await _unitOfWork.UserFormFiles.UpdateUserFormFileAsync(
+            userFormId,
+            _files
+        );
+
+        if (!response.IsSuccess)
         {
             return BadRequest(response);
         }
@@ -31,7 +49,7 @@ public class UserFormFilesController : ApiBaseController
         return Ok(response);
     }
 
-    [Authorize]
+    [Authorize(Roles = Policies.User)]
     [HttpGet]
     public ActionResult<List<UserForm>> GetAll()
     {
@@ -39,7 +57,7 @@ public class UserFormFilesController : ApiBaseController
         return Ok(users);
     }
 
-    // [Authorize]
+    [Authorize(Roles = Policies.User)]
     [HttpGet("files/{id}")]
     public async Task<List<byte[]>> GetFilesByUserFomrId(string id)
     {
@@ -48,6 +66,7 @@ public class UserFormFilesController : ApiBaseController
         return user;
     }
 
+    [Authorize(Roles = Policies.User)]
     [HttpGet("view-file/{id}")]
     public async Task<UserFormFileDetails> GetFileByUserFomrId(string id)
     {
@@ -55,6 +74,7 @@ public class UserFormFilesController : ApiBaseController
         return detailsFile;
     }
 
+    [Authorize(Roles = Policies.User)]
     [HttpGet("{id}")]
     public ActionResult GetUserFomrId(string id)
     {

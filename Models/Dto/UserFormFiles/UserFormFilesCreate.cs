@@ -12,16 +12,35 @@ namespace rethus_backend.Models.Dto.UserFormFiles
         public IFormFile File { get; set; }
     }
 
+    public class FileUploadUpdate
+    {
+        [Required(ErrorMessage = "userFormFileId is required")]
+        public string userFormFileId { get; set; }
+
+        [Required(ErrorMessage = "typeUploadFile is required")]
+        public TypeUploadFile typeUploadFile { get; set; }
+
+        [Required(ErrorMessage = "file is required")]
+        public IFormFile File { get; set; }
+    }
+
     public class UserFormFilesCreateDto
     {
         [Required(ErrorMessage = "files is required")]
         public List<FileUpload> Files { get; set; }
     }
 
+    public class UserFormFilesUpdateDto
+    {
+        [Required(ErrorMessage = "files is required")]
+        public List<FileUploadUpdate> Files { get; set; }
+    }
+
     public class GetUserFormIdDto
     {
         public string UserFileId { get; set; }
         public string FileName { get; set; }
+        public TypeUploadFile TypeUploadFile { get; set; }
     }
 
     public class UserFormFileDetails

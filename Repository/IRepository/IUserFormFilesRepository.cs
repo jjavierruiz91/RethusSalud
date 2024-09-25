@@ -16,5 +16,9 @@ namespace rethus_backend.Repository.IRepository
         IEnumerable<UserFormFiles> GetAll();
 
         Task<ApiResponse> RegisterUserFormFileAsync(string userId, UserFormFilesCreateDto payload);
+        Task<ApiResponse> UpdateUserFormFileAsync(
+            string userFormId,
+            UserFormFilesUpdateDto payload
+        );
     }
 }

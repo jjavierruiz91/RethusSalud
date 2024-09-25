@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using rethus_backend.Data;
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.UserFormFiles;
@@ -5,7 +6,7 @@ using rethus_backend.Repository.IRepository;
 using rethus_backend.Utilities.Constants.User.UserFormConstants;
 using rethus_backend.Utilities.Constants.UserConstants;
 using rethus_backend.Utilities.FileHelper;
-using System.Diagnostics;
+using System.Net;
 
 namespace rethus_backend.Repository
 {
@@ -55,6 +56,13 @@ namespace rethus_backend.Repository
             return true;
         }
 
+        public bool IsExistUserFormFile(string userFormFileId)
+        {
+            bool isExist = _context.UserFormFiles.Any(x => x.UserFormFilesId == userFormFileId);
+
+            return isExist;
+        }
+
         public bool IsUnique(string userFormId)
         {
             UserFormFiles user = _context.UserFormFiles.FirstOrDefault(
@@ -69,6 +77,12 @@ namespace rethus_backend.Repository
         )
         {
             var response = new ApiResponse();
+
+            if (payload.Files.Count == 0)
+            {
+                response.IsSuccess = false;
+                response.AddError("La lista de archivo no puede estar vacia");
+            }
 
             var userConfig = _context.Configurations.Any(
                 c => c.UserId == userId && c.Step == ConfigurationStep.load_user_files
@@ -92,12 +106,6 @@ namespace rethus_backend.Repository
             }
             ;
 
-            if (payload.Files.Count == 0)
-            {
-                response.IsSuccess = false;
-                response.AddError("La lista de archivo no puede estar vacia");
-            }
-
             var ruta =
                 _config.GetSection("routeFileProcedures").Value + userForm.PersonalIdentification;
 
@@ -107,20 +115,20 @@ namespace rethus_backend.Repository
 
             foreach (var item in payload.Files)
             {
-                tareas.Add(SaveFileToDiskAsync(item, ruta)); // Solo guarda el archivo
+                tareas.Add(SaveFileToDiskAsync(item.File, ruta));
             }
 
-            var urls = await Task.WhenAll(tareas); // Esperar que todos los archivos sean guardados
+            var urls = await Task.WhenAll(tareas);
 
             await SaveFileDetailsToDatabaseAsync(payload.Files, urls, userForm);
             await UpdateUserFormStatusAsync(userId);
             return response;
         }
 
-        private async Task<string> SaveFileToDiskAsync(FileUpload item, string ruta)
+        private async Task<string> SaveFileToDiskAsync(IFormFile item, string ruta)
         {
-            var baseUrlFile = FileHelper.AddAsync(item.File, ruta); // Guardar el archivo en el disco
-            return baseUrlFile; // Retornar la URL o path del archivo guardado
+            var baseUrlFile = FileHelper.AddAsync(item, ruta);
+            return baseUrlFile;
         }
 
         private async Task SaveFileDetailsToDatabaseAsync(
@@ -199,7 +207,8 @@ namespace rethus_backend.Repository
                         new GetUserFormIdDto
                         {
                             UserFileId = columns.UserFormFilesId,
-                            FileName = columns.Filename
+                            FileName = columns.Filename,
+                            TypeUploadFile = columns.TypeUploadFile
                         }
                 )
                 .ToList();
@@ -247,6 +256,127 @@ namespace rethus_backend.Repository
                     user_configuration.ConfigurationsId
                 );
 
+                await Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(
+                    $"Error al actualizar el estado del formulario de usuario: {ex.Message}"
+                );
+            }
+        }
+
+        public async Task<ApiResponse> UpdateUserFormFileAsync(
+            string userFormId,
+            UserFormFilesUpdateDto payload
+        )
+        {
+            var response = new ApiResponse();
+
+            if (payload.Files.Count == 0)
+            {
+                response.IsSuccess = false;
+                response.AddError("La lista de archivo no puede estar vacia");
+                return response;
+            }
+
+            var userForm = _context.UserForm
+                .Where(x => x.UserFormId == userFormId)
+                .Select(
+                    x =>
+                        new { PersonalIdentification = x.PersonalIdentification, UserId = x.UserId }
+                )
+                .FirstOrDefault();
+
+            if (userForm == null)
+            {
+                response.IsSuccess = false;
+                response.AddError(
+                    "EL usuario usuario no tiene formulario pendiente por actualizar"
+                );
+                return response;
+            }
+
+            string basePath = Directory.GetCurrentDirectory();
+            string ruta = Path.Combine(
+                basePath,
+                _config.GetSection("routeFileProcedures").Value,
+                userForm.PersonalIdentification
+            );
+
+            var isValidPath = FileHelper.ValidateDirectoryPath(ruta);
+            if (!isValidPath)
+            {
+                response.IsSuccess = false;
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.AddError(
+                    "Se produjo un error, el usuario no tiene creado el archivo en el sitemas, contactar soporte"
+                );
+                return response;
+            }
+
+            var updateTask = new List<Task>();
+
+            var rutaFile =
+                _config.GetSection("routeFileProcedures").Value + userForm.PersonalIdentification;
+            foreach (var item in payload.Files)
+            {
+                await UpdateSingleFileAsync(item, rutaFile);
+            }
+
+            // await UpdateConfigurationStatusInPogress(userForm.UserId);
+
+            response.Messages.Add("El sistema esta procesando tu archivo!");
+            response.IsSuccess = true;
+            return response;
+        }
+
+        private async Task UpdateSingleFileAsync(FileUploadUpdate item, string ruta)
+        {
+            var userFormFile = await _context.UserFormFiles.FirstOrDefaultAsync(
+                f =>
+                    f.UserFormFilesId == item.userFormFileId
+                    && f.TypeUploadFile == item.typeUploadFile
+            );
+
+            if (userFormFile == null)
+            {
+                throw new FileNotFoundException($"File not found.");
+            }
+
+            var newFileUrl = await SaveFileToDiskAsync(item.File, ruta);
+
+            userFormFile.Filename = item.File.FileName;
+            userFormFile.Size = item.File.Length;
+            userFormFile.Type = item.File.ContentType;
+            userFormFile.Url = newFileUrl;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error updating the database.", ex);
+            }
+        }
+
+        private async Task UpdateConfigurationStatusInPogress(string userId)
+        {
+            try
+            {
+                this._configuration.updateStateInPogressConfiguration(userId);
+
+                var userForm = await _context.UserForm
+                    .Where(c => c.UserId == userId)
+                    .FirstOrDefaultAsync();
+
+                if (userForm != null)
+                {
+                    userForm.Status = UserFormStatus.pending;
+                    _context.UserForm.Update(userForm);
+                    await _context.SaveChangesAsync();
+                }
                 await Task.CompletedTask;
             }
             catch (Exception ex)
