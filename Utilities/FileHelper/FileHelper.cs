@@ -86,6 +86,18 @@ namespace rethus_backend.Utilities.FileHelper
             }
         }
 
+        public static bool ValidateDirectoryPath(string path)
+        {
+            if (System.IO.Directory.Exists(path))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public static bool CreateFolder(string sourcePath)
         {
             if (!ValidatePath(sourcePath))
