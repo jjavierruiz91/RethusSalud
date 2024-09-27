@@ -30,7 +30,17 @@ public class UserFormFilesController : ApiBaseController
     }
 
     [HttpPut("{userFormId}")]
-    [Authorize(Roles = Policies.User)]
+    [Authorize(
+        Roles = Policies.FuncionarioEtapa1
+            + ","
+            + Policies.FuncionarioEtapa2
+            + ","
+            + Policies.FuncionarioEtapa3
+            + ","
+            + Policies.Inventory
+            + ","
+            + Policies.User
+    )]
     public async Task<ActionResult<ApiResponse>> PutAsyncUserFormFiles(
         string userFormId,
         [FromForm] UserFormFilesUpdateDto _files
@@ -57,7 +67,17 @@ public class UserFormFilesController : ApiBaseController
         return Ok(users);
     }
 
-    [Authorize(Roles = Policies.User)]
+    [Authorize(
+        Roles = Policies.FuncionarioEtapa1
+            + ","
+            + Policies.FuncionarioEtapa2
+            + ","
+            + Policies.FuncionarioEtapa3
+            + ","
+            + Policies.Inventory
+            + ","
+            + Policies.User
+    )]
     [HttpGet("files/{id}")]
     public async Task<List<byte[]>> GetFilesByUserFomrId(string id)
     {
@@ -66,7 +86,17 @@ public class UserFormFilesController : ApiBaseController
         return user;
     }
 
-    [Authorize(Roles = Policies.User)]
+    [Authorize(
+        Roles = Policies.FuncionarioEtapa1
+            + ","
+            + Policies.FuncionarioEtapa2
+            + ","
+            + Policies.FuncionarioEtapa3
+            + ","
+            + Policies.Inventory
+            + ","
+            + Policies.User
+    )]
     [HttpGet("view-file/{id}")]
     public async Task<UserFormFileDetails> GetFileByUserFomrId(string id)
     {
@@ -74,7 +104,17 @@ public class UserFormFilesController : ApiBaseController
         return detailsFile;
     }
 
-    [Authorize(Roles = Policies.User)]
+    [Authorize(
+        Roles = Policies.FuncionarioEtapa1
+            + ","
+            + Policies.FuncionarioEtapa2
+            + ","
+            + Policies.FuncionarioEtapa3
+            + ","
+            + Policies.Inventory
+            + ","
+            + Policies.User
+    )]
     [HttpGet("{id}")]
     public ActionResult GetUserFomrId(string id)
     {

@@ -250,8 +250,7 @@ namespace rethus_backend.Repository
             //   response.AddError("El tipo de tramite no coincide con la cantidad de archivo requerida");
             // }
 
-            var ruta =
-                _config.GetSection("routeFileProcedures").Value + userForm.PersonalIdentification;
+            var ruta = _config.GetSection("routeFileProcedures").Value + userForm.UserFormId;
 
             FileHelper.CreateFolder(ruta);
 
@@ -540,18 +539,19 @@ namespace rethus_backend.Repository
                         {
                             Status = columns.Status,
                             TypeProcedure = columns.TypeProcedure,
-                            PersonalIdentification = columns.PersonalIdentification
+                            PersonalIdentification = columns.PersonalIdentification,
+                            UserFormId = columns.UserFormId
                         }
                 )
                 .FirstOrDefault();
 
             var outputPath =
                 _config.GetSection("routeFileProcedures").Value
-                + form.PersonalIdentification
+                + form.UserFormId
                 + "//certifcate-"
                 + form.TypeProcedure
                 + "-"
-                + form.PersonalIdentification
+                + form.UserFormId
                 + ".pdf";
             var url = await FileHelper.GetPdfFileAsync(outputPath);
 
@@ -593,9 +593,9 @@ namespace rethus_backend.Repository
         {
             var outputPath =
                 _config.GetSection("routeFileProcedures").Value
-                + form.PersonalIdentification
+                + form.UserFormId
                 + "//certifcate-rethus-"
-                + form.PersonalIdentification
+                + form.UserFormId
                 + ".pdf";
 
             string certificateRethus = "";
@@ -620,9 +620,9 @@ namespace rethus_backend.Repository
         {
             var outputPath =
                 _config.GetSection("routeFileProcedures").Value
-                + form.PersonalIdentification
+                + form.UserFormId
                 + "//certifcate-sso-"
-                + form.PersonalIdentification
+                + form.UserFormId
                 + ".pdf";
 
             string certificateRethus = "";
@@ -676,7 +676,8 @@ namespace rethus_backend.Repository
                         new ValidateFileUserForm
                         {
                             PersonalIdentification = x.PersonalIdentification,
-                            TypeProcedure = x.TypeProcedure
+                            TypeProcedure = x.TypeProcedure,
+                            UserFormId = x.UserFormId
                         }
                 )
                 .FirstOrDefault();
@@ -693,9 +694,9 @@ namespace rethus_backend.Repository
 
             var outputPath =
                 _config.GetSection("routeFileProcedures").Value
-                + userForm.PersonalIdentification
+                + userForm.UserFormId
                 + typeProcedure
-                + userForm.PersonalIdentification
+                + userForm.UserFormId
                 + ".pdf";
 
             bool existFile = FileHelper.ValidatePath(outputPath);
@@ -711,7 +712,8 @@ namespace rethus_backend.Repository
                         new ValidateFileUserForm
                         {
                             PersonalIdentification = columns.PersonalIdentification,
-                            TypeProcedure = columns.TypeProcedure
+                            TypeProcedure = columns.TypeProcedure,
+                            UserFormId = columns.UserFormId
                         }
                 )
                 .FirstOrDefault();
@@ -728,9 +730,9 @@ namespace rethus_backend.Repository
 
             var outputPath =
                 _config.GetSection("routeFileProcedures").Value
-                + userForm.PersonalIdentification
+                + userForm.UserFormId
                 + typeProcedure
-                + userForm.PersonalIdentification
+                + userForm.UserFormId
                 + ".pdf";
 
             var url = await FileHelper.GetPdfFileAsync(outputPath);

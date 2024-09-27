@@ -27,7 +27,9 @@ public class UserController : ApiBaseController
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;
-            _response.Messages.Add("Username already exists");
+            _response.Messages.Add(
+                "Algo salió mal. Por favor, verifica tus credenciales e inténtalo de nuevo."
+            );
             return BadRequest(_response);
         }
 
@@ -36,7 +38,7 @@ public class UserController : ApiBaseController
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;
-            _response.Messages.Add("Register Error");
+            _response.Messages.Add("Algo salio mal, el proceso de guardado fallo!");
             return BadRequest(_response);
         }
 
@@ -56,7 +58,7 @@ public class UserController : ApiBaseController
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;
-            _response.Messages.Add("Invalid user type");
+            _response.Messages.Add("Algo salio mal, el tipo de usuario no es correcto!");
             return BadRequest(_response);
         }
 
@@ -66,7 +68,9 @@ public class UserController : ApiBaseController
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;
-            _response.Messages.Add("Username already exists");
+            _response.Messages.Add(
+                "Algo salió mal. Por favor, verifica tus credenciales e inténtalo de nuevo."
+            );
             return BadRequest(_response);
         }
 
@@ -75,7 +79,9 @@ public class UserController : ApiBaseController
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;
-            _response.Messages.Add("Register Error");
+            _response.Messages.Add(
+                "Algo salió mal. Por favor, verifica tus credenciales e inténtalo de nuevo."
+            );
             return BadRequest(_response);
         }
 

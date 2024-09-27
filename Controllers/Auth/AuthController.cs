@@ -23,7 +23,9 @@ public class LoginController : ApiBaseController
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;
-            _response.Messages.Add("Username not exist");
+            _response.Messages.Add(
+                "Algo salió mal. Por favor, verifica tus credenciales e inténtalo de nuevo."
+            );
             return BadRequest(_response);
         }
 
@@ -42,7 +44,9 @@ public class LoginController : ApiBaseController
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;
-            _response.Messages.Add("Username or password is error");
+            _response.Messages.Add(
+                "Algo salió mal. Por favor, verifica tus credenciales e inténtalo de nuevo."
+            );
             return BadRequest(_response);
         }
 

@@ -6,6 +6,7 @@ using rethus_backend.Repository.IRepository;
 using rethus_backend.Utilities.Constants.User.UserFormConstants;
 using rethus_backend.Utilities.Constants.UserConstants;
 using rethus_backend.Utilities.FileHelper;
+using System.Diagnostics;
 using System.Net;
 
 namespace rethus_backend.Repository
@@ -106,8 +107,7 @@ namespace rethus_backend.Repository
             }
             ;
 
-            var ruta =
-                _config.GetSection("routeFileProcedures").Value + userForm.PersonalIdentification;
+            var ruta = _config.GetSection("routeFileProcedures").Value + userForm.UserFormId;
 
             FileHelper.CreateFolder(ruta);
 
@@ -158,12 +158,16 @@ namespace rethus_backend.Repository
             }
             catch (System.Exception ex)
             {
-                // EventLog.WriteEntry("Application", "Error al guarder archivo funcion SaveFileDetailsToDatabaseAsync", EventLogEntryType.Error);
-                // EventLog.WriteEntry(
-                //     "Application",
-                //     $"Excepción: {ex.Message}\nStack Trace: {ex.StackTrace}",
-                //     EventLogEntryType.Error
-                // );
+                EventLog.WriteEntry(
+                    "Application",
+                    "Error al guarder archivo funcion SaveFileDetailsToDatabaseAsync",
+                    EventLogEntryType.Error
+                );
+                EventLog.WriteEntry(
+                    "Application",
+                    $"Excepción: {ex.Message}\nStack Trace: {ex.StackTrace}",
+                    EventLogEntryType.Error
+                );
             }
         }
 
@@ -284,7 +288,12 @@ namespace rethus_backend.Repository
                 .Where(x => x.UserFormId == userFormId)
                 .Select(
                     x =>
-                        new { PersonalIdentification = x.PersonalIdentification, UserId = x.UserId }
+                        new
+                        {
+                            UserFormId = x.UserFormId,
+                            PersonalIdentification = x.PersonalIdentification,
+                            UserId = x.UserId
+                        }
                 )
                 .FirstOrDefault();
 
@@ -301,7 +310,7 @@ namespace rethus_backend.Repository
             string ruta = Path.Combine(
                 basePath,
                 _config.GetSection("routeFileProcedures").Value,
-                userForm.PersonalIdentification
+                userForm.UserFormId
             );
 
             var isValidPath = FileHelper.ValidateDirectoryPath(ruta);
@@ -317,8 +326,7 @@ namespace rethus_backend.Repository
 
             var updateTask = new List<Task>();
 
-            var rutaFile =
-                _config.GetSection("routeFileProcedures").Value + userForm.PersonalIdentification;
+            var rutaFile = _config.GetSection("routeFileProcedures").Value + userForm.UserFormId;
             foreach (var item in payload.Files)
             {
                 await UpdateSingleFileAsync(item, rutaFile);

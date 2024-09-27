@@ -224,12 +224,14 @@ namespace rethus_backend.Models.Dto.UserForm
         public ConfigurationTypeProcedure TypeProcedure { get; set; }
         public string StepForm { get; set; }
         public string PersonalIdentification { get; set; }
+        public string UserFormId { get; set; }
     }
 
     public class ValidateFileUserForm
     {
         public string PersonalIdentification { get; set; }
         public ConfigurationTypeProcedure TypeProcedure { get; set; }
+        public string UserFormId { get; set; }
     }
 
     public class ValidateFormUserDto
