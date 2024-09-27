@@ -829,5 +829,50 @@ namespace rethus_backend.Repository
                 .FirstOrDefault();
             return userForm;
         }
+
+        public async Task<ApiResponse> updateFormInformation(
+            string formId,
+            UserFormUpdateDto payload
+        )
+        {
+            ApiResponse response = new ApiResponse();
+
+            UserForm form = this.GetById(formId);
+
+            if (form == null)
+            {
+                response.AddError(
+                    "No se encontro el formulario del usuario",
+                    HttpStatusCode.NotFound,
+                    false
+                );
+            }
+
+            var payloadProperties = typeof(UserFormUpdateDto).GetProperties();
+
+            foreach (var property in payloadProperties)
+            {
+                // Obtener el valor de la propiedad del payload
+                var payloadValue = property.GetValue(payload);
+
+                // Solo actualizar si el valor no es nulo (significa que fue enviado)
+                if (payloadValue != null)
+                {
+                    // Buscar la propiedad correspondiente en el formulario (form)
+                    var formProperty = typeof(UserForm).GetProperty(property.Name);
+
+                    // Si la propiedad existe en la entidad, la actualizamos
+                    if (formProperty != null)
+                    {
+                        formProperty.SetValue(form, payloadValue);
+                    }
+                }
+            }
+            await _context.SaveChangesAsync();
+
+            response.IsSuccess = true;
+            response.Messages.Add("Se actualizo correctamente la informacion del formulario");
+            return response;
+        }
     }
 }

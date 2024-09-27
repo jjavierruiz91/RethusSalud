@@ -302,7 +302,7 @@ public class UserFormController : ApiBaseController
         {
             _response.IsSuccess = true;
             _response.Result = false;
-            return Ok(_response);
+            return BadRequest(_response);
         }
 
         _response.IsSuccess = true;
@@ -319,5 +319,29 @@ public class UserFormController : ApiBaseController
 
         _response.Result = existFile;
         return _response;
+    }
+
+    [HttpPatch("update/{formId}")]
+    [Authorize(Roles = Policies.User)]
+    public async Task<ActionResult<ApiResponse>> patchInformationForm(
+        string formId,
+        UserFormUpdateDto payload
+    )
+    {
+        if (string.IsNullOrEmpty(formId))
+        {
+            return BadRequest("Form ID is required.");
+        }
+
+        ApiResponse reponse = await _unitOfWork.UserForm.updateFormInformation(formId, payload);
+
+        if (!reponse.IsSuccess)
+        {
+            return BadRequest(_response);
+        }
+
+        _response.IsSuccess = true;
+        _response.Messages.Add("Se actualizo la informacion del formulario");
+        return Ok(_response);
     }
 }

@@ -28,6 +28,7 @@ namespace rethus_backend.Repository.IRepository
         DetailsProccessAcademicDto GetProccessAcademic(string userFormId);
         PaginationResult<UserForm> GetAll(int? page);
         Task<ApiResponse> post(UserFormCreateDto createRequestDto);
+        Task<ApiResponse> updateFormInformation(string formId, UserFormUpdateDto payload);
         ApiResponse ApprovedForm(string userFormId);
         ApiResponse RejectForm(string userFormId);
 
