@@ -1,9 +1,11 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using rethus_backend.Data;
 using rethus_backend.Models;
 using rethus_backend.Repository.IRepository;
+using rethus_backend.Repository.IRepository.Cache;
 
 namespace rethus_backend.Repository
 {
@@ -11,10 +13,13 @@ namespace rethus_backend.Repository
     {
         private readonly ApplicationDbContext _context;
 
-        public CountryRepository(ApplicationDbContext db)
+        private readonly MemoryCacheRepository<Country> _memoryCache;
+
+        public CountryRepository(ApplicationDbContext db, IMemoryCache memoryCache)
             : base(db)
         {
             _context = db;
+            _memoryCache = new MemoryCacheRepository<Country>(memoryCache);
         }
 
         public void LoadCountriesJsonToBd()
@@ -46,31 +51,56 @@ namespace rethus_backend.Repository
             return countries;
         }
 
-        public Task<List<CountryResponseDto>> GetCountriesPagination(
+        public async Task<List<CountryResponseDto>> GetCountriesPagination(
             int pageNumber,
             int pageSize = 10
         )
         {
-            var response = new ApiResponse();
+            var cacheKey = $"COUNTRIES_PAGE_{pageNumber}_SIZE_{pageSize}";
+            List<Country> countries;
 
-            var countries = _context.Country
-                .AsNoTracking()
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .Select(c => new CountryResponseDto { Id = c.CountryId, Name = c.Name })
-                .ToListAsync();
+            countries = _memoryCache.GetListFromCache(cacheKey);
+            if (countries == null)
+            {
+                countries = await _context.Country
+                    .AsNoTracking()
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
 
-            return countries;
+                var cacheDuration = TimeSpan.FromDays(7);
+                _memoryCache.SetList(cacheKey, countries, cacheDuration);
+            }
+            var response = countries.Select(c => MapToDto(c)).ToList();
+
+            return response;
         }
 
         public async Task<CountryResponseDto> GetCountryId(int countryId)
         {
-            var country = _context.Country
-                .Where(c => c.CountryId == countryId)
-                .Select(c => new CountryResponseDto { Id = c.CountryId, Name = c.Name })
-                .FirstOrDefault();
+            var cacheKey = $"COUNTRY_{countryId}"; // Clave para el caché
+            Country country;
 
-            return country;
+            country = _memoryCache.GetFromCache(cacheKey);
+
+            if (country == null)
+            {
+                country = await _context.Country
+                    .Where(c => c.CountryId == countryId)
+                    .FirstOrDefaultAsync();
+
+                if (country != null)
+                {
+                    var cacheDuration = TimeSpan.FromDays(7);
+                    _memoryCache.SetToCache(cacheKey, country, cacheDuration);
+                }
+            }
+            return MapToDto(country);
+        }
+
+        private CountryResponseDto MapToDto(Country country)
+        {
+            return new CountryResponseDto { Id = country.CountryId, Name = country.Name };
         }
     }
 }
