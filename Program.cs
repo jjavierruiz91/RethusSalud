@@ -10,6 +10,7 @@ using System.Text;
 using rethus_backend;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
+using rethus_backend.Repository.IRepository.Cache;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -122,6 +123,9 @@ builder.Services.AddSwaggerGen(options =>
     );
 });
 
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped(typeof(IMemoryCacheRepository<>), typeof(MemoryCacheRepository<>));
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddCors(options =>
@@ -165,7 +169,8 @@ app.UseExceptionHandler(errorApp =>
         var result = new
         {
             Error = "Ha ocurrido un error interno en el servidor.",
-            Details = exception?.Message
+            Details = exception?.Message,
+            StatusCode = HttpStatusCode.InternalServerError
         };
 
         // Registrar el error
