@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using rethus_backend.Data;
 using rethus_backend.Models;
 using rethus_backend.Repository.IRepository;
@@ -10,23 +11,35 @@ namespace rethus_backend.Repository
     {
         private readonly ApplicationDbContext _context;
 
-        public DepartmentRepository(ApplicationDbContext db)
+        private readonly MemoryCacheRepository<Department> _memoryCache;
+
+        public DepartmentRepository(ApplicationDbContext db, IMemoryCache memoryCache)
             : base(db)
         {
             _context = db;
+            _memoryCache = new MemoryCacheRepository<Department>(memoryCache);
         }
 
-        public Task<List<DepartmentResponseDto>> GetDepartments(int countryId)
+        public async Task<List<DepartmentResponseDto>> GetDepartments(int countryId)
         {
-            var response = new ApiResponse();
+            var cacheKey = $"DEPARTMENTS_COUNTRY_{countryId}";
+            List<Department> departments;
 
-            var department = _context.Departments
-                .AsNoTracking()
-                .Where(c => c.CountryId == countryId)
-                .Select(v => new DepartmentResponseDto { Id = v.DepartmentId, Name = v.Name })
-                .ToListAsync();
+            departments = _memoryCache.GetListFromCache(cacheKey);
 
-            return department;
+            if (departments == null)
+            {
+                departments = await _context.Departments
+                    .AsNoTracking()
+                    .Where(d => d.CountryId == countryId)
+                    .ToListAsync();
+
+                var cacheDuration = TimeSpan.FromDays(7);
+                _memoryCache.SetList(cacheKey, departments, cacheDuration);
+            }
+
+            var response = departments.Select(d => MapToDepartmentDto(d)).ToList();
+            return response;
         }
 
         public void LoadDeparmentJsonToBd()
@@ -43,6 +56,15 @@ namespace rethus_backend.Repository
 
             _context.Departments.AddRange(Department);
             _context.SaveChanges();
+        }
+
+        private DepartmentResponseDto MapToDepartmentDto(Department department)
+        {
+            return new DepartmentResponseDto
+            {
+                Id = department.DepartmentId,
+                Name = department.Name
+            };
         }
     }
 }

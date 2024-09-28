@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Caching.Memory;
 using rethus_backend.Data;
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.Comments;
@@ -11,9 +12,17 @@ namespace rethus_backend.Repository
     {
         private readonly ApplicationDbContext _db;
 
-        public UnitOfWork(ApplicationDbContext db, IConfiguration _configuration)
+        private readonly IMemoryCache _memoryCache;
+
+        public UnitOfWork(
+            ApplicationDbContext db,
+            IConfiguration _configuration,
+            IMemoryCache memoryCache
+        )
         {
             _db = db;
+            _memoryCache = memoryCache;
+
             UserConfiguration = new UserConfigurationRepository(_db);
 
             var paginationService = new PaginationService<User, UserQueryParametersDto, UserDto>(
@@ -43,11 +52,11 @@ namespace rethus_backend.Repository
             >(_db);
             Comments = new CommentsRepository(_db, User, UserForm, paginationCommentsService);
 
-            Country = new CountryRepository(_db);
+            Country = new CountryRepository(_db, _memoryCache);
 
-            Department = new DepartmentRepository(_db);
+            Department = new DepartmentRepository(_db, _memoryCache);
 
-            City = new CityRepository(_db);
+            City = new CityRepository(_db, _memoryCache);
         }
 
         public IUserRepository User { get; private set; }
