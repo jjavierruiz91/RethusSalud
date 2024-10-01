@@ -60,3 +60,20 @@ GO
 
 # Remove package reference
 dotnet remove package -h|--help
+
+# Add local origins
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "Open",
+        policy =>
+        {
+            policy
+                .WithOrigins("http://localhost:4200")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        }
+    );
+});
