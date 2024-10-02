@@ -39,4 +39,17 @@ namespace rethus_backend.Utilities.Templates.dto
         public string FIRMA_APROBO { get; set; }
         public string FIRMA_3 { get; set; }
     }
+
+    public class ConfigTemplate
+    {
+        public string FIRMA_PRINCIPAL { get; set; }
+        public string NOMBRE_FIRMANTE { get; set; }
+        public string TIPO_TRABAJO { get; set; }
+        public string FIRMA_PROYECTO { get; set; }
+        public string FIRMA_1 { get; set; }
+        public string FIRMA_REVISION { get; set; }
+        public string FIRMA_2 { get; set; }
+        public string FIRMA_APROBO { get; set; }
+        public string FIRMA_3 { get; set; }
+    }
 }

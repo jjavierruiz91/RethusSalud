@@ -14,6 +14,7 @@ using rethus_backend.Utilities.Templates.dto;
 using rethus_backend.Utilities.Templates;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using System.Text.Json;
 
 namespace rethus_backend.Repository
 {
@@ -603,14 +604,32 @@ namespace rethus_backend.Repository
             var rethusDto = new TemplateRethusDto
             {
                 CONSECUTIVO = form.Consecutive,
-                CONSECUTIVO_FECHA = form.CreatedAt.ToString("MM/dd/yyyy"),
+                CONSECUTIVO_FECHA = form.ConsecutiveDate,
                 NOMBRE_PROFESIONAL = form.PersonalFirstName + form.PersonalLastName,
-                EXPEDIDA_PROFESIONAL = form.AcademicsGradeDate.ToString("MM/dd/yyyy"),
+                EXPEDIDA_PROFESIONAL = form.AcademicsGradeDate.ToString("dd/MM/yyyy"),
                 PROFESION_PROFESIONAL = form.AcademicsProgramName,
                 UNIVERSIDAD_PROFESIONAL = form.AcademicsNameInstitution,
-                CEDULA_PROFESIONAL = form.PersonalIdentification,
+                CEDULA_PROFESIONAL = form.PersonalIdentification
             };
 
+            string jsonContent = await File.ReadAllTextAsync(
+                "./resources/templates/certificate/data_config_users.json"
+            );
+
+            ConfigTemplate config = JsonSerializer.Deserialize<ConfigTemplate>(jsonContent);
+
+            if (config != null)
+            {
+                rethusDto.FIRMA_PRINCIPAL = config.FIRMA_PRINCIPAL;
+                rethusDto.NOMBRE_FIRMANTE = config.NOMBRE_FIRMANTE;
+                rethusDto.TIPO_TRABAJO = config.TIPO_TRABAJO;
+                rethusDto.FIRMA_PROYECTO = config.FIRMA_PROYECTO;
+                rethusDto.FIRMA_1 = config.FIRMA_1;
+                rethusDto.FIRMA_REVISION = config.FIRMA_REVISION;
+                rethusDto.FIRMA_2 = config.FIRMA_2;
+                rethusDto.FIRMA_APROBO = config.FIRMA_APROBO;
+                rethusDto.FIRMA_3 = config.FIRMA_3;
+            }
             certificateRethus = await DownloadCertificateRethus(rethusDto);
             var file = new ConvertPdfService();
             await file.ConvertHtmlToPdf(certificateRethus, outputPath);
