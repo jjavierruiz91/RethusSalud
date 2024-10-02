@@ -609,7 +609,8 @@ namespace rethus_backend.Repository
                 EXPEDIDA_PROFESIONAL = form.AcademicsGradeDate.ToString("dd/MM/yyyy"),
                 PROFESION_PROFESIONAL = form.AcademicsProgramName,
                 UNIVERSIDAD_PROFESIONAL = form.AcademicsNameInstitution,
-                CEDULA_PROFESIONAL = form.PersonalIdentification
+                CEDULA_PROFESIONAL = form.PersonalIdentification,
+                FIRMA_PRINCIPAL = "TEST AQUI AQUI TEST"
             };
 
             string jsonContent = await File.ReadAllTextAsync(
