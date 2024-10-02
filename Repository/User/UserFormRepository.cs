@@ -603,6 +603,14 @@ namespace rethus_backend.Repository
             {
                 var deleted = FileHelper.DeleteAsync(outputPath);
 
+                outputPath =
+                    _config.GetSection("routeFileProcedures").Value
+                    + form.UserFormId
+                    + "//certifcate-rethus-"
+                    + form.UserFormId
+                    + Guid.NewGuid().ToString("N")
+                    + ".pdf";
+
                 if (!deleted)
                 {
                     throw new Exception("No se pudo eliminar el archivo existente.");
