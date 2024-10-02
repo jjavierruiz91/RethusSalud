@@ -599,6 +599,16 @@ namespace rethus_backend.Repository
                 + form.UserFormId
                 + ".pdf";
 
+            if (FileHelper.ValidatePath(outputPath))
+            {
+                var deleted = FileHelper.DeleteAsync(outputPath);
+
+                if (!deleted)
+                {
+                    throw new Exception("No se pudo eliminar el archivo existente.");
+                }
+            }
+
             string certificateRethus = "";
 
             var rethusDto = new TemplateRethusDto
