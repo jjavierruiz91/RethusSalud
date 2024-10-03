@@ -324,6 +324,7 @@ namespace rethus_backend.Repository
                             PersonalPhone = columns.PersonalPhone,
                             PersonalEmail = columns.PersonalEmail,
                             PersonalEthnicGroup = columns.PersonalEthnicGroup.ToString(),
+                            PersonalPlaceOfIssue = columns.PersonalPlaceOfIssue
                         }
                 )
                 .FirstOrDefault();
@@ -826,6 +827,7 @@ namespace rethus_backend.Repository
                             PersonalPhone = columns.PersonalPhone,
                             PersonalEmail = columns.PersonalEmail,
                             PersonalEthnicGroup = columns.PersonalEthnicGroup.ToString(),
+                            PersonalPlaceOfIssue = columns.PersonalPlaceOfIssue
                         }
                 )
                 .FirstOrDefault();

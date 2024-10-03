@@ -134,7 +134,8 @@ namespace rethus_backend.Models.Dto.UserForm
 
     public class DetailsProccessPersonalDto
     {
-        public string PersonalTypeIdentification { get; set; }
+        public string? PersonalTypeIdentification { get; set; }
+        public string? PersonalPlaceOfIssue { get; set; }
         public string? PersonalGender { get; set; }
         public string? PersonalIdentification { get; set; }
         public string? PersonalFirstName { get; set; }
