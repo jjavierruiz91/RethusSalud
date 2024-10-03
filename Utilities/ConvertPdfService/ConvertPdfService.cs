@@ -36,40 +36,72 @@ public class ConvertPdfService
         }
     }
 
-    public async Task ConvertHtmlToPdf(string htmlContent, string outputPath)
+public async Task ConvertHtmlToPdf(string htmlContent, string outputPath)
+{
+    try
     {
-        try
+        // Verifica si el archivo ya existe y lo elimina
+        if (File.Exists(outputPath))
         {
-            var document = new HtmlToPdfDocument()
-            {
-                GlobalSettings =
-                {
-                    ColorMode = ColorMode.Color,
-                    Orientation = Orientation.Portrait,
-                    PaperSize = PaperKind.A4,
-                    Out = outputPath // Ruta de salida
-                },
-                Objects =
-                {
-                    new ObjectSettings()
-                    {
-                        HtmlContent = htmlContent,
-                        WebSettings = { DefaultEncoding = "utf-8" }
-                    }
-                }
-            };
+            File.Delete(outputPath);
+        }
 
-            _converter.Convert(document);
-            await Task.CompletedTask;
-        }
-        catch (System.Exception ex)
+        // Crear un archivo temporal para el contenido HTML
+        string tempHtmlPath = Path.GetTempFileName() + ".html"; // Asegúrate de tener una extensión HTML
+        File.WriteAllText(tempHtmlPath, htmlContent); // Escribir el contenido en el archivo
+
+        // Prepara los argumentos de línea de comando para wkhtmltopdf
+        var processInfo = new ProcessStartInfo
         {
-            EventLog.WriteEntry("Application", "Excepción manejada", EventLogEntryType.Error);
-            EventLog.WriteEntry(
-                "Application",
-                $"Excepción: {ex.Message}\nStack Trace: {ex.StackTrace}",
-                EventLogEntryType.Error
-            );
+            FileName = @"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe",
+            Arguments = $"\"{tempHtmlPath}\" \"{outputPath}\"",
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+
+        Console.WriteLine("Iniciando la conversión a PDF...");
+
+        // Inicia el proceso
+        var process = Process.Start(processInfo);
+        
+        if (process != null)
+        {
+            // Espera a que el proceso termine
+            await process.WaitForExitAsync();
+
+            // Verifica si el proceso finalizó con éxito
+            if (process.ExitCode != 0)
+            {
+                string errorMessage = await process.StandardError.ReadToEndAsync();
+                throw new Exception($"Error al generar PDF: {errorMessage}");
+            }
         }
+        else
+        {
+            throw new Exception("No se pudo iniciar el proceso de wkhtmltopdf.");
+        }
+
+        // Elimina el archivo temporal
+        File.Delete(tempHtmlPath);
+
+        Console.WriteLine("PDF generado correctamente.");
     }
+    catch (Exception ex)
+    {
+        // Manejo de errores y registro
+        EventLog.WriteEntry("Application", "Excepción manejada en ConvertHtmlToPdf", EventLogEntryType.Error);
+        EventLog.WriteEntry(
+            "Application",
+            $"Excepción: {ex.Message}\nStack Trace: {ex.StackTrace}",
+            EventLogEntryType.Error
+        );
+    }
+}
+
+
+
+
+   
 }
