@@ -75,12 +75,20 @@ public class ConvertPdfService
                 if (process.ExitCode != 0)
                 {
                     string errorMessage = await process.StandardError.ReadToEndAsync();
-                    throw new Exception($"Error al generar PDF: {errorMessage}");
+                    EventLog.WriteEntry(
+                        "Application",
+                        $"Error al generar PDF:  {errorMessage}",
+                        EventLogEntryType.Error
+                    );
                 }
             }
             else
             {
-                throw new Exception("No se pudo iniciar el proceso de wkhtmltopdf.");
+                EventLog.WriteEntry(
+                    "Application",
+                    "No se pudo iniciar el proceso de wkhtmltopdf.",
+                    EventLogEntryType.Error
+                );
             }
 
             // Elimina el archivo temporal
