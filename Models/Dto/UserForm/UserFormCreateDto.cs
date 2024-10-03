@@ -24,6 +24,9 @@ namespace rethus_backend.Models.Dto.UserForm
         [Required(ErrorMessage = "PersonalIdentification is required")]
         public string PersonalIdentification { get; set; }
 
+        [Required(ErrorMessage = "PersonalPlaceOfIssue is required")]
+        public string PersonalPlaceOfIssue { get; set; }
+
         [Required(ErrorMessage = "PersonalFirstName is required")]
         public string PersonalFirstName { get; set; }
 
@@ -171,7 +174,8 @@ namespace rethus_backend.Models.Dto.UserForm
 
     public class DetailsEditProccessPersonalDto
     {
-        public string PersonalTypeIdentification { get; set; }
+        public string? PersonalTypeIdentification { get; set; }
+        public string? PersonalPlaceOfIssue { get; set; }
         public string? PersonalGender { get; set; }
         public string? PersonalIdentification { get; set; }
         public string? PersonalFirstName { get; set; }

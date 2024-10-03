@@ -14,6 +14,7 @@ namespace rethus_backend.Models.Dto.UserForm
         [EnumDataType(typeof(TypeGender), ErrorMessage = "Invalid Gender Value")]
         public TypeGender? PersonalGender { get; set; }
         public string? PersonalIdentification { get; set; }
+        public string? PersonalPlaceOfIssue { get; set; }
         public string? PersonalFirstName { get; set; }
         public string? PersonalLastName { get; set; }
         public int? PersonalCountryBirth { get; set; }

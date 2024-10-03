@@ -12,6 +12,7 @@ namespace rethus_backend.Models
         public required TypeIdentification PersonalTypeIdentification { get; set; }
         public required TypeGender PersonalGender { get; set; }
         public required string PersonalIdentification { get; set; }
+        public required string PersonalPlaceOfIssue { get; set; }
         public required string PersonalFirstName { get; set; }
         public required string PersonalLastName { get; set; }
         public required int PersonalCountryBirthId { get; set; }
