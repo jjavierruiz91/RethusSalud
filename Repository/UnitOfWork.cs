@@ -57,6 +57,8 @@ namespace rethus_backend.Repository
             Department = new DepartmentRepository(_db, _memoryCache);
 
             City = new CityRepository(_db, _memoryCache);
+
+            ConfigurationSetting = new ConfigurationSettingRepository(_db, _memoryCache);
         }
 
         public IUserRepository User { get; private set; }
@@ -75,6 +77,7 @@ namespace rethus_backend.Repository
 
         public IDepartmentRepository Department { get; private set; }
         public ICityRepository City { get; private set; }
+        public IConfigurationSettingRepository ConfigurationSetting { get; private set; }
 
         public void Dispose() => _db.Dispose();
 

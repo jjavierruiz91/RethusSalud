@@ -13,6 +13,7 @@ namespace rethus_backend.Repository.IRepository
         ICountryRepository Country { get; }
         IDepartmentRepository Department { get; }
         ICityRepository City { get; }
+        IConfigurationSettingRepository ConfigurationSetting { get; }
         void Save();
     }
 }
