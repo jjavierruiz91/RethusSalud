@@ -19,6 +19,7 @@ namespace rethus_backend.Models.Dto.Configuration
         ActiveConsecutive, // Para el booleano
         ConsecutiveStart, // Para el string
         ConsecutiveEnd, // Para el string
-        ConsecutiveDate // para el DateTime
+        ConsecutiveDate, // para el DateTime,
+        ConsevutiveCurrent // string consecutivo actual
     }
 }

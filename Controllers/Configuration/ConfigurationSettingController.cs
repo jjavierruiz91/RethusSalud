@@ -83,6 +83,14 @@ public class ConfigurationSettingController : ApiBaseController
                             config.Key.ToString(),
                             config.Value
                         );
+
+                        if (config.Key == ConfigKeys.ConsecutiveStart)
+                        {
+                            _unitOfWork.ConfigurationSetting.SaveSettingStringValue(
+                                ConfigKeys.ConsevutiveCurrent.ToString(),
+                                config.Value
+                            );
+                        }
                     }
                     else
                     {
