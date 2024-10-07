@@ -21,6 +21,7 @@ namespace rethus_backend.Data
         public DbSet<Country> Country { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<City> City { get; set; }
+        public DbSet<ConfigurationSetting> ConfigurationSetting { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
