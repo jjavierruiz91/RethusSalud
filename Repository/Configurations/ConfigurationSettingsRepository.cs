@@ -92,6 +92,7 @@ namespace rethus_backend.Repository
             {
                 _context.SaveChanges();
                 var cacheKey = $"CONFIGURATION_SETTING_{key}";
+                _memoryCache.RemoveFromCache(cacheKey);
                 var cacheDuration = TimeSpan.FromDays(7);
                 _memoryCache.SetToCache(cacheKey, setting, cacheDuration);
             }

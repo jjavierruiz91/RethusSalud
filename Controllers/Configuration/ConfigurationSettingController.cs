@@ -24,27 +24,33 @@ public class ConfigurationSettingController : ApiBaseController
             ActiveConsecutive = false,
             ConsecutiveStart = "0",
             ConsecutiveEnd = "0",
-            ConsecutiveDate = ""
+            ConsecutiveDate = "",
+            ConsevutiveCurrent = "0"
         };
 
         if (configuration)
         {
             string consecutiveStart = _unitOfWork.ConfigurationSetting.GetSettingStringValue(
-                "ConsecutiveStart"
+                ConfigKeys.ConsecutiveStart.ToString()
             );
 
             string consecutiveEnd = _unitOfWork.ConfigurationSetting.GetSettingStringValue(
-                "ConsecutiveEnd"
+                ConfigKeys.ConsecutiveEnd.ToString()
             );
 
             string ConsecutiveDate = _unitOfWork.ConfigurationSetting.GetSettingStringValue(
-                "ConsecutiveDate "
+                ConfigKeys.ConsecutiveDate.ToString()
+            );
+
+            string ConsevutiveCurrent = _unitOfWork.ConfigurationSetting.GetSettingStringValue(
+                ConfigKeys.ConsevutiveCurrent.ToString()
             );
 
             a.ActiveConsecutive = true;
             a.ConsecutiveStart = consecutiveStart ?? "0";
             a.ConsecutiveEnd = consecutiveEnd ?? "0";
             a.ConsecutiveDate = ConsecutiveDate ?? "";
+            a.ConsevutiveCurrent = ConsevutiveCurrent ?? "";
         }
 
         _response.Result = a;
@@ -86,6 +92,7 @@ public class ConfigurationSettingController : ApiBaseController
 
                         if (config.Key == ConfigKeys.ConsecutiveStart)
                         {
+                            Console.WriteLine(config.Key);
                             _unitOfWork.ConfigurationSetting.SaveSettingStringValue(
                                 ConfigKeys.ConsevutiveCurrent.ToString(),
                                 config.Value

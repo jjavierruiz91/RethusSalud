@@ -6,6 +6,7 @@ namespace rethus_backend.Models.Dto.Configuration
         public string ConsecutiveStart { get; set; }
         public string ConsecutiveEnd { get; set; }
         public string ConsecutiveDate { get; set; }
+        public string ConsevutiveCurrent { get; set; }
     }
 
     public class ConfigDto
