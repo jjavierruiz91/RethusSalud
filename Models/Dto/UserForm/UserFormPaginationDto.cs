@@ -16,5 +16,6 @@ public class UserFormResponseDto
     public string TypeProcedure { get; set; }
     public ReviewStepForm StepForm { get; set; }
     public string Status { get; set; }
+    public string Consecutive { get; set; }
     public DateTime CreatedAt { get; set; }
 }

@@ -129,7 +129,8 @@ public class UserFormController : ApiBaseController
                 TypeProcedure = user.TypeProcedure.ToString(),
                 StepForm = user.StepForm,
                 CreatedAt = user.CreatedAt,
-                Status = user.Status.ToString()
+                Status = user.Status.ToString(),
+                Consecutive = user.Consecutive,
             };
         var result = _unitOfWork.UserForm.GetPagination(request, mapper);
 
