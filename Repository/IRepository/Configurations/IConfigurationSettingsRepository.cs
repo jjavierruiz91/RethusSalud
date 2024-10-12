@@ -6,5 +6,9 @@ namespace rethus_backend.Repository.IRepository
         bool GetSettingBoolValue(string key);
         void SaveSettingStringValue(string key, string value);
         void SaveSettingBoolValue(string key, bool value);
+        bool? ValidateActiveConsecutive();
+        int validateConsevutiveCurrent();
+        string GetConsevutiveCurrent();
+        string GetConsecutiveDate();
     }
 }

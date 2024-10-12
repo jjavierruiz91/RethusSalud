@@ -510,14 +510,17 @@ namespace rethus_backend.Repository
                 response.IsSuccess = false;
                 return response;
             }
-
-            if (userForm.StepForm != ReviewStepForm.success)
+            if (
+                userForm.StepForm != ReviewStepForm.success
+                || userForm.Status != UserFormStatus.pending
+            )
             {
                 response.AddError(
                     "El formulario no esta listo para agregar el consecutivo",
                     HttpStatusCode.BadRequest,
                     false
                 );
+                return response;
             }
 
             userForm.Consecutive = payload.consecutive;
@@ -578,6 +581,11 @@ namespace rethus_backend.Repository
             }
 
             if (formFile != null && formFile.Status != UserFormStatus.approved)
+            {
+                return;
+            }
+
+            if (formFile.Consecutive == null || formFile.ConsecutiveDate == null)
             {
                 return;
             }

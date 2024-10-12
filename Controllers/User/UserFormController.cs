@@ -216,9 +216,45 @@ public class UserFormController : ApiBaseController
             + ","
             + Policies.Inventory
     )]
-    public ActionResult<ApiResponse> ApprovedForm(string formId)
+    public async Task<ActionResult<ApiResponse>> ApprovedForm(string formId)
     {
         ApiResponse approvedForm = _unitOfWork.UserForm.ApprovedForm(formId);
+
+        await Task.Run(async () =>
+        {
+            string newConsecutive = _unitOfWork.ConfigurationSetting.GetConsevutiveCurrent();
+
+            string ConsecutiveDate = _unitOfWork.ConfigurationSetting.GetSettingStringValue(
+                "ConsecutiveDate"
+            );
+
+            UserFormConsecutiveDto payload = new UserFormConsecutiveDto
+            {
+                consecutive = newConsecutive,
+                consecutiveDate = ConsecutiveDate
+            };
+
+            ApiResponse response = _unitOfWork.UserForm.AddConsecutive(formId, payload);
+
+            if (!response.IsSuccess)
+            {
+                return;
+            }
+
+            _unitOfWork.ConfigurationSetting.SaveSettingStringValue(
+                "ConsevutiveCurrent",
+                newConsecutive
+            );
+            await Task.Run(() => _unitOfWork.UserForm.ValidateCertificateUserForm(formId));
+            await Task.Run(() =>
+            {
+                string userId = _unitOfWork.UserForm.GetUserByUserFormId(formId);
+                var user_configuration = _unitOfWork.UserConfiguration.GetByUserId(userId);
+                _unitOfWork.UserConfiguration.updateAutomaticStateConfiguration(
+                    user_configuration.ConfigurationsId
+                );
+            });
+        });
 
         return approvedForm;
     }

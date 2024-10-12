@@ -137,5 +137,58 @@ namespace rethus_backend.Repository
                 throw;
             }
         }
+
+        public bool? ValidateActiveConsecutive()
+        {
+            bool? isActive = this.GetSettingBoolValue("ActiveConsecutive");
+
+            if (isActive == null)
+            {
+                return null;
+            }
+
+            return isActive;
+        }
+
+        public int validateConsevutiveCurrent()
+        {
+            string ConsevutiveCurrent = this.GetSettingStringValue("ConsevutiveCurrent");
+
+            int consecutiveNumber;
+            bool isConvert = int.TryParse(ConsevutiveCurrent, out consecutiveNumber);
+
+            if (!isConvert)
+            {
+                throw new Exception("No se logro convertir el numero de string a int");
+            }
+
+            return consecutiveNumber;
+        }
+
+        public string GetConsecutiveDate()
+        {
+            string ConsecutiveDate = this.GetSettingStringValue("ConsecutiveDate");
+
+            if (ConsecutiveDate == null)
+            {
+                throw new Exception("El valor de 'ConsecutiveDate' es nulo.");
+            }
+
+            return ConsecutiveDate;
+        }
+
+        public string GetConsevutiveCurrent()
+        {
+            bool? isActiveGenerate = this.ValidateActiveConsecutive();
+
+            if (isActiveGenerate == null)
+            {
+                throw new Exception("La generacion de automatica de cosecutivo no est activa");
+            }
+
+            int ConsecutiveCurrent = this.validateConsevutiveCurrent();
+            ConsecutiveCurrent++;
+            return ConsecutiveCurrent.ToString();
+        }
     }
 }
