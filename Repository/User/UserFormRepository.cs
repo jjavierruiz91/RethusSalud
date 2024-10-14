@@ -15,6 +15,7 @@ using rethus_backend.Utilities.Templates;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Text.Json;
+using ClosedXML.Excel;
 
 namespace rethus_backend.Repository
 {
@@ -923,6 +924,219 @@ namespace rethus_backend.Repository
             response.IsSuccess = true;
             response.Messages.Add("Se actualizo correctamente la informacion del formulario");
             return response;
+        }
+
+        private async Task<List<CombinedDetailsProccessDto>> GetUserFormsBatch(
+            ApplicationDbContext dbContext,
+            int skip,
+            int take,
+            DateTime startDate,
+            DateTime endDate
+        )
+        {
+            return await dbContext.UserForm
+                .Where(
+                    uf =>
+                        uf.Status == UserFormStatus.approved
+                        && uf.Consecutive != null
+                        && uf.ConsecutiveDate != null
+                        && uf.CreatedAt >= startDate
+                        && uf.CreatedAt <= endDate
+                )
+                .Include(uf => uf.DepartmentBirth)
+                .Include(uf => uf.MunicipalityBirth)
+                .Include(uf => uf.DepartmentResidence)
+                .Include(uf => uf.MunicipalityResidence)
+                .Include(uf => uf.CountryInstitution)
+                .Include(uf => uf.DepartmentInstitution)
+                .OrderBy(u => u.UserFormId)
+                .Skip(skip)
+                .Take(take)
+                .Select(
+                    columns =>
+                        new CombinedDetailsProccessDto
+                        {
+                            PersonalTypeIdentification =
+                                columns.PersonalTypeIdentification.ToString(),
+                            PersonalGender = columns.PersonalGender.ToString(),
+                            PersonalIdentification = columns.PersonalIdentification,
+                            PersonalFirstName = columns.PersonalFirstName,
+                            PersonalLastName = columns.PersonalLastName,
+                            PersonalDepartmentBirth = columns.DepartmentBirth.Name,
+                            PersonalMunicipalityBirth = columns.MunicipalityBirth.Name,
+                            DateBirth = columns.DateBirth,
+                            PersonalDepartmentResidence = columns.DepartmentResidence.Name,
+                            PersonalMunicipalityResidence = columns.MunicipalityResidence.Name,
+                            PersonalAddress = columns.PersonalAddress,
+                            PersonalTelephone = columns.PersonalTelephone,
+                            PersonalPhone = columns.PersonalPhone,
+                            PersonalEmail = columns.PersonalEmail,
+                            PersonalEthnicGroup = columns.PersonalEthnicGroup.ToString(),
+                            AcademicsTypeInstitution = columns.AcademicsTypeInstitution.ToString(),
+                            AcademicsProgramType = columns.AcademicsProgramType,
+                            AcademicsProgramName = columns.AcademicsProgramName,
+                            AcademicsGradeDate = columns.AcademicsGradeDate,
+                            AcademicsNumberConvalidation = columns.AcademicsNumberConvalidation,
+                            AcademicsDateConvalidation = columns.AcademicsDateConvalidation,
+                            AcademicsEquivalentTitle = columns.AcademicsEquivalentTitle,
+                            Consecutive = columns.Consecutive,
+                            ConsecutiveDate = columns.ConsecutiveDate,
+                        }
+                )
+                .ToListAsync();
+        }
+
+        public async Task GenerateExcelWithBatches(
+            string filePath,
+            int totalRecords,
+            int batchSize,
+            ApplicationDbContext dbContext,
+            DateTime startDate,
+            DateTime endDate
+        )
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("data");
+
+                // Definir las cabeceras del archivo Excel
+                worksheet.Cell(1, 1).Value = "TIPO DOCUMENTO";
+                worksheet.Cell(1, 2).Value = "GENERO";
+                worksheet.Cell(1, 3).Value = "IDENTIFICACION";
+                worksheet.Cell(1, 4).Value = "NOMBRE Y APELLIDOS";
+                worksheet.Cell(1, 5).Value = "DEPARTAMENTO DE NACIMIENTO";
+                worksheet.Cell(1, 6).Value = "MUNICIPIO NACIMIENTO";
+                worksheet.Cell(1, 7).Value = "FECHA NACIMIENTO";
+                worksheet.Cell(1, 8).Value = "DEPARTAMENTO DE RESIDENCIA";
+                worksheet.Cell(1, 9).Value = "MUNICIPIO DE RESIDENCIA";
+                worksheet.Cell(1, 10).Value = "DIRECCION";
+                worksheet.Cell(1, 11).Value = "TELEFONO FIJO";
+                worksheet.Cell(1, 12).Value = "CELULAR";
+                worksheet.Cell(1, 13).Value = "CORREO ELECTRONICO";
+                worksheet.Cell(1, 14).Value = "GRUPO ETNICO";
+                worksheet.Cell(1, 15).Value = "INSTITUCION";
+                worksheet.Cell(1, 16).Value = "TIPO DE PROGRAMA";
+                worksheet.Cell(1, 17).Value = "NOMBRE DEL PROGRAMA";
+                worksheet.Cell(1, 18).Value = "FECHA DE GRADO";
+                worksheet.Cell(1, 19).Value = "NUMERO CONVALIDACION";
+                worksheet.Cell(1, 20).Value = "FECHA DE CONVALIDACION";
+                worksheet.Cell(1, 21).Value = "TITULO EQUIVALENTE";
+                worksheet.Cell(1, 22).Value =
+                    "NUMERO DEL ACTO ADMINISTRATIVO QUE AUTORIZA EL SERVICIO";
+                worksheet.Cell(1, 23).Value =
+                    "FECHA DEL ACTO ADMINISTRATIVO QUE AUTORIZA EL SERVICIO";
+
+                int currentRow = 2;
+
+                int totalBatches = (int)Math.Ceiling((double)totalRecords / batchSize);
+
+                // Crear un semáforo que permite 5 tareas a la vez
+                SemaphoreSlim semaphore = new SemaphoreSlim(10);
+                try
+                {
+                    var tasks = new List<Task>();
+
+                    for (int i = 0; i < totalBatches; i++)
+                    {
+                        int skip = i * batchSize;
+                        var task = Task.Run(async () =>
+                        {
+                            await semaphore.WaitAsync();
+                            try
+                            {
+                                var batchData = await this.GetUserFormsBatch(
+                                    dbContext,
+                                    skip,
+                                    batchSize,
+                                    startDate,
+                                    endDate
+                                );
+
+                                lock (worksheet)
+                                {
+                                    foreach (var user in batchData)
+                                    {
+                                        worksheet.Cell(currentRow, 1).Value =
+                                            user.PersonalTypeIdentification;
+                                        worksheet.Cell(currentRow, 2).Value = user.PersonalGender;
+                                        worksheet.Cell(currentRow, 3).Value =
+                                            user.PersonalIdentification;
+                                        worksheet.Cell(currentRow, 4).Value =
+                                            user.PersonalFirstName + " " + user.PersonalLastName;
+                                        worksheet.Cell(currentRow, 5).Value =
+                                            user.PersonalDepartmentBirth;
+                                        worksheet.Cell(currentRow, 6).Value =
+                                            user.PersonalMunicipalityBirth;
+                                        worksheet.Cell(currentRow, 7).Value = user.DateBirth;
+                                        worksheet.Cell(currentRow, 8).Value =
+                                            user.PersonalDepartmentResidence;
+                                        worksheet.Cell(currentRow, 9).Value =
+                                            user.PersonalMunicipalityResidence;
+                                        worksheet.Cell(currentRow, 10).Value = user.PersonalAddress;
+                                        worksheet.Cell(currentRow, 11).Value =
+                                            user.PersonalTelephone;
+                                        worksheet.Cell(currentRow, 12).Value = user.PersonalPhone;
+                                        worksheet.Cell(currentRow, 13).Value = user.PersonalEmail;
+                                        worksheet.Cell(currentRow, 14).Value =
+                                            user.PersonalEthnicGroup;
+                                        worksheet.Cell(currentRow, 15).Value =
+                                            user.AcademicsTypeInstitution;
+                                        worksheet.Cell(currentRow, 16).Value =
+                                            user.AcademicsProgramType;
+                                        worksheet.Cell(currentRow, 17).Value =
+                                            user.AcademicsProgramName;
+                                        worksheet.Cell(currentRow, 18).Value =
+                                            user.AcademicsGradeDate;
+                                        worksheet.Cell(currentRow, 19).Value =
+                                            user.AcademicsNumberConvalidation;
+                                        worksheet.Cell(currentRow, 20).Value =
+                                            user.AcademicsDateConvalidation;
+                                        worksheet.Cell(currentRow, 21).Value =
+                                            user.AcademicsEquivalentTitle;
+                                        worksheet.Cell(currentRow, 22).Value = user.Consecutive;
+                                        worksheet.Cell(currentRow, 23).Value = user.ConsecutiveDate;
+
+                                        currentRow++;
+                                    }
+                                }
+                            }
+                            finally
+                            {
+                                semaphore.Release();
+                            }
+                        });
+                        tasks.Add(task);
+                    }
+
+                    await Task.WhenAll(tasks);
+                    try
+                    {
+                        workbook.SaveAs(filePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error al guardar el archivo: {ex.Message}");
+                        throw new Exception("No se pudo guardar el archivo de Excel.", ex);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($">>>>>>>>>>>>>>: {ex.Message}");
+                    throw new Exception("No se pudo guardar el archivo de Excel.", ex);
+                }
+            }
+        }
+
+        public int GetTotalRecords()
+        {
+            return _context.UserForm.Count();
+        }
+
+        public int GetTotalRecordsByDateRange(DateTime startDate, DateTime endDate)
+        {
+            return _context.UserForm.Count(
+                uf => uf.CreatedAt >= startDate && uf.CreatedAt <= endDate
+            );
         }
     }
 }

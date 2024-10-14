@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using rethus_backend.Data;
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.Comments;
 using rethus_backend.Models.Dto.UserForm;
 using rethus_backend.Models.Dto.UserFormFiles;
 using rethus_backend.Utilities.Constants.PaginatioConstants;
 using rethus_backend.Utilities.Constants.User.UserFormConstants;
+using System.Globalization;
 using System.Net;
 
 namespace rethus_backend.Controllers;
@@ -14,8 +16,16 @@ namespace rethus_backend.Controllers;
 [Route("[controller]")]
 public class UserFormController : ApiBaseController
 {
+    private static Task _excelGenerationTask; // Variable para almacenar la tarea de generación de Excel
+    private static object _lock = new object(); // Objeto de bloqueo para evitar condiciones de carrera
+
+    private readonly IServiceProvider _provider;
+
     public UserFormController(IServiceProvider provider)
-        : base(provider) { }
+        : base(provider)
+    {
+        _provider = provider;
+    }
 
     [HttpPost]
     [Authorize(Roles = Policies.User)]
@@ -379,6 +389,65 @@ public class UserFormController : ApiBaseController
 
         _response.IsSuccess = true;
         _response.Messages.Add("Se actualizo la informacion del formulario");
+        return Ok(_response);
+    }
+
+    [HttpGet("generate-excel")]
+    [Authorize(Roles = Policies.FuncionarioEtapa1)]
+    public async Task<ActionResult<ApiResponse>> GenerateExcel(DateTime startDate, DateTime endDate)
+    {
+        lock (_lock) // Asegurar que solo un hilo pueda acceder a esta sección a la vez
+        {
+            // Verificar si ya hay una tarea en curso
+            if (_excelGenerationTask != null && !_excelGenerationTask.IsCompleted)
+            {
+                _response.Messages.Add(
+                    "La generación del Excel ya está en progreso. Por favor, inténtelo más tarde."
+                );
+                _response.IsSuccess = false;
+                return Ok(_response);
+            }
+
+            var uuid = Guid.NewGuid().ToString();
+            var date = DateTime.Now.ToString("dd_MM_yyyy", CultureInfo.InvariantCulture);
+            var sheetName = $"{uuid}_{date}.xlsx";
+
+            var filePath = Path.Combine("resources", "loadFiles", sheetName);
+            int totalRecords = _unitOfWork.UserForm.GetTotalRecordsByDateRange(startDate, endDate);
+            int batchSize = 500;
+
+            _excelGenerationTask = Task.Run(async () =>
+            {
+                using (var scope = _provider.CreateScope())
+                {
+                    var dbContext =
+                        scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                    try
+                    {
+                        await Task.Run(async () =>
+                        {
+                            await _unitOfWork.UserForm.GenerateExcelWithBatches(
+                                filePath,
+                                totalRecords,
+                                batchSize,
+                                dbContext,
+                                startDate,
+                                endDate
+                            );
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        _response.Messages.Add("Error al generar el Excel: " + ex.Message);
+                        _response.IsSuccess = false;
+                    }
+                }
+            });
+        }
+        _response.Messages.Add("El Excel se está generando");
+        _response.IsSuccess = true;
+
         return Ok(_response);
     }
 }
