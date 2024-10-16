@@ -2,11 +2,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using rethus_backend.Data;
 using rethus_backend.Models;
-using rethus_backend.Models.Dto.Comments;
+using rethus_backend.Models.Dto.Pagination;
 using rethus_backend.Models.Dto.UserForm;
 using rethus_backend.Models.Dto.UserFormFiles;
 using rethus_backend.Utilities.Constants.PaginatioConstants;
-using rethus_backend.Utilities.Constants.User.UserFormConstants;
 using System.Globalization;
 using System.Net;
 
@@ -74,77 +73,6 @@ public class UserFormController : ApiBaseController
             return NotFound();
 
         return Ok(user);
-    }
-
-    [HttpGet("pagination")]
-    [Authorize(
-        Roles = Policies.FuncionarioEtapa1
-            + ","
-            + Policies.FuncionarioEtapa2
-            + ","
-            + Policies.FuncionarioEtapa3
-            + ","
-            + Policies.Inventory
-    )]
-    public PaginationResultDto<UserFormResponseDto> GetAllPaginado(
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10,
-        [FromQuery] string PersonalIdentification = "",
-        [FromQuery] ReviewStepForm? step = null,
-        [FromQuery] ConfigurationTypeProcedure? TypeProcedure = null,
-        [FromQuery] string? CreatedAt = null,
-        [FromQuery] string? status = null
-    )
-    {
-        var request = new PaginationRequestDto<CommonQueryParametersDto>
-        {
-            Page = page,
-            PageSize = pageSize,
-            QueryParameters = new CommonQueryParametersDto { StepForm = step }
-        };
-
-        if (PersonalIdentification.Length > 0)
-        {
-            request.QueryParameters.PersonalIdentification = PersonalIdentification;
-        }
-        if (TypeProcedure != null)
-        {
-            request.QueryParameters.TypeProcedure = TypeProcedure;
-        }
-        if (CreatedAt != null)
-        {
-            request.QueryParameters.CreatedAt = DateTime.Parse(CreatedAt);
-            request.QueryParameters.ComparisonOperators = new Dictionary<string, string>
-            {
-                ["CreatedAt"] = ">="
-            };
-        }
-
-        if (status != null)
-        {
-            var formStatus = UserFormConstants.GetStatus(status);
-
-            if (formStatus != null)
-            {
-                request.QueryParameters.status = formStatus;
-            }
-        }
-
-        Func<UserForm, UserFormResponseDto> mapper = user =>
-            new UserFormResponseDto
-            {
-                UserFormId = user.UserFormId,
-                PersonalFirstName = user.PersonalFirstName,
-                PersonalIdentification = user.PersonalIdentification,
-                TypeProcedure = user.TypeProcedure.ToString(),
-                StepForm = user.StepForm,
-                CreatedAt = user.CreatedAt,
-                Status = user.Status.ToString(),
-                Consecutive = user.Consecutive,
-            };
-        var result = _unitOfWork.UserForm.GetPagination(request, mapper);
-
-        return result;
     }
 
     [HttpGet("personal/{userFormId}")]
@@ -449,5 +377,61 @@ public class UserFormController : ApiBaseController
         _response.IsSuccess = true;
 
         return Ok(_response);
+    }
+
+    [HttpGet("pagination")]
+    [Authorize(
+        Roles = Policies.FuncionarioEtapa1
+            + ","
+            + Policies.FuncionarioEtapa2
+            + ","
+            + Policies.FuncionarioEtapa3
+            + ","
+            + Policies.Inventory
+    )]
+    public async Task<ActionResult<PaginationResultDto<UserFormResponseDto>>> GetPaginatedUserForms(
+        [FromQuery] FilterQueryParametersDto filters,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10
+    )
+    {
+        // Crea los parámetros de la query con los filtros recibidos
+        var queryParameters = new FilterQueryParametersDto
+        {
+            UserFormId = filters.UserFormId,
+            Status = filters.Status,
+            PersonalIdentification = filters.PersonalIdentification,
+            TypeProcedure = filters.TypeProcedure,
+            startDate = filters.startDate,
+            endDate = filters.endDate
+        };
+
+        // Construye la solicitud de paginación
+        var paginationRequest = new PaginationRequestDto<FilterQueryParametersDto>
+        {
+            Page = page,
+            PageSize = pageSize,
+            QueryParameters = queryParameters
+        };
+
+        // Ejecuta el método GetPagedData pasando el selector para el mapeo a UserFormResponseDto
+        var result = await _unitOfWork.UserForm.GetPagedData(
+            paginationRequest,
+            user =>
+                new UserFormResponseDto
+                {
+                    UserFormId = user.UserFormId,
+                    PersonalFirstName = user.PersonalFirstName,
+                    PersonalIdentification = user.PersonalIdentification,
+                    TypeProcedure = user.TypeProcedure.ToString(),
+                    StepForm = user.StepForm,
+                    CreatedAt = user.CreatedAt,
+                    Status = user.Status.ToString(),
+                    Consecutive = user.Consecutive
+                }
+        );
+
+        // Retorna el resultado con el formato esperado
+        return Ok(result);
     }
 }

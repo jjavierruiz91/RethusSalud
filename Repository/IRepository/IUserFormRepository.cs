@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
 using rethus_backend.Data;
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.Comments;
+using rethus_backend.Models.Dto.Pagination;
 using rethus_backend.Models.Dto.UserForm;
 using rethus_backend.Models.Dto.UserFormFiles;
 using rethus_backend.Utilities.Constants.PaginatioConstants;
@@ -36,11 +36,6 @@ namespace rethus_backend.Repository.IRepository
 
         ApiResponse RegisterUserFormFile(string userFormId, UserFormFilesCreateDto payload);
 
-        PaginationResultDto<UserFormResponseDto> GetPagination(
-            PaginationRequestDto<CommonQueryParametersDto> request,
-            Func<UserForm, UserFormResponseDto> mapper
-        );
-
         Task<string> DownloadCertificateRethus(TemplateRethusDto rethusDto);
 
         Task<string> DownloadCertificateSso(TemplateSSODto sSODto);
@@ -66,6 +61,11 @@ namespace rethus_backend.Repository.IRepository
             ApplicationDbContext dbContext,
             DateTime startDate,
             DateTime endDate
+        );
+
+        Task<PaginationResultDto<TResult>> GetPagedData<TResult>(
+            PaginationRequestDto<FilterQueryParametersDto> request,
+            Func<UserForm, TResult> selector
         );
     }
 }

@@ -9,13 +9,16 @@ using rethus_backend.Utilities.FileHelper;
 using rethus_backend.Utilities.Constants.User.UserFormConstants;
 
 using System.Net;
-using rethus_backend.Models.Dto.Comments;
+
 using rethus_backend.Utilities.Templates.dto;
 using rethus_backend.Utilities.Templates;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Text.Json;
 using ClosedXML.Excel;
+using rethus_backend.Models.Dto.Comments;
+using rethus_backend.RepositoryV2;
+using rethus_backend.Models.Dto.Pagination;
 
 namespace rethus_backend.Repository
 {
@@ -24,30 +27,22 @@ namespace rethus_backend.Repository
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _config;
 
-        private readonly PaginationService<
-            UserForm,
-            CommonQueryParametersDto,
-            UserFormResponseDto
-        > _paginationService;
+        private readonly IPaginationRepositoryV2<UserForm> _repositoryPaginationV2;
 
         private readonly IUserConfigurationRepository _userConfiguration;
 
         public UserFormRepository(
             ApplicationDbContext db,
             IConfiguration config,
-            PaginationService<
-                UserForm,
-                CommonQueryParametersDto,
-                UserFormResponseDto
-            > paginationService,
-            IUserConfigurationRepository userConfiguration
+            IUserConfigurationRepository userConfiguration,
+            IPaginationRepositoryV2<UserForm> repositoryPaginationV2
         )
             : base(db)
         {
             _context = db;
             _config = config;
-            _paginationService = paginationService;
             _userConfiguration = userConfiguration;
+            _repositoryPaginationV2 = repositoryPaginationV2;
         }
 
         public PaginationResult<UserForm> GetAll(int? page)
@@ -69,16 +64,6 @@ namespace rethus_backend.Repository
             };
 
             return paginationResult;
-        }
-
-        public PaginationResultDto<UserFormResponseDto> GetPagination(
-            PaginationRequestDto<CommonQueryParametersDto> request,
-            Func<UserForm, UserFormResponseDto> mapper
-        )
-        {
-            var result = _paginationService.GetPaginatedEntities(request, mapper);
-
-            return result;
         }
 
         public UserForm GetById(string id)
@@ -1137,6 +1122,14 @@ namespace rethus_backend.Repository
             return _context.UserForm.Count(
                 uf => uf.CreatedAt >= startDate && uf.CreatedAt <= endDate
             );
+        }
+
+        public async Task<PaginationResultDto<TResult>> GetPagedData<TResult>(
+            PaginationRequestDto<FilterQueryParametersDto> request,
+            Func<UserForm, TResult> selector
+        )
+        {
+            return await _repositoryPaginationV2.GetPagedAsync(request, selector);
         }
     }
 }
