@@ -1164,13 +1164,5 @@ namespace rethus_backend.Repository
         {
             return await _repositoryPaginationV2.GetPagedAsync(request, selector);
         }
-
-        public async Task<PaginationResultDto<TResult>> GetPagedData<TResult>(
-            PaginationRequestDto<FilterQueryParametersDto> request,
-            Func<UserForm, TResult> selector
-        )
-        {
-            return await _repositoryPaginationV2.GetPagedAsync(request, selector);
-        }
     }
 }
