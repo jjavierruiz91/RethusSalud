@@ -915,18 +915,31 @@ namespace rethus_backend.Repository
             ApplicationDbContext dbContext,
             int skip,
             int take,
-            DateTime startDate,
-            DateTime endDate
+            string startDate,
+            string endDate
         )
         {
+            string startDateString = startDate?.Trim();
+            string endDateString = endDate?.Trim();
+
+            DateTime parseStartDate = DateTime.ParseExact(
+                startDateString,
+                "yyyy-MM-dd",
+                CultureInfo.InvariantCulture
+            );
+            DateTime parseEndDate = DateTime
+                .ParseExact(endDateString, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                .AddDays(1)
+                .AddTicks(-1);
+
             return await dbContext.UserForm
                 .Where(
                     uf =>
                         uf.Status == UserFormStatus.approved
                         && uf.Consecutive != null
                         && uf.ConsecutiveDate != null
-                        && uf.CreatedAt >= startDate
-                        && uf.CreatedAt <= endDate
+                        && uf.CreatedAt >= parseStartDate
+                        && uf.CreatedAt <= parseEndDate
                 )
                 .Include(uf => uf.DepartmentBirth)
                 .Include(uf => uf.MunicipalityBirth)
@@ -972,12 +985,11 @@ namespace rethus_backend.Repository
         }
 
         public async Task GenerateExcelWithBatches(
-            string filePath,
             int totalRecords,
             int batchSize,
             ApplicationDbContext dbContext,
-            DateTime startDate,
-            DateTime endDate
+            string startDate,
+            string endDate
         )
         {
             using (var workbook = new XLWorkbook())
@@ -1096,6 +1108,14 @@ namespace rethus_backend.Repository
                     await Task.WhenAll(tasks);
                     try
                     {
+                        var uuid = Guid.NewGuid().ToString();
+                        var date = DateTime.Now.ToString(
+                            "dd_MM_yyyy",
+                            CultureInfo.InvariantCulture
+                        );
+                        var sheetName = $"{uuid}_{date}.xlsx";
+                        var filePath = _config.GetSection("routeTempPathExcel").Value + sheetName;
+
                         workbook.SaveAs(filePath);
                     }
                     catch (Exception ex)
@@ -1117,11 +1137,32 @@ namespace rethus_backend.Repository
             return _context.UserForm.Count();
         }
 
-        public int GetTotalRecordsByDateRange(DateTime startDate, DateTime endDate)
+        public int GetTotalRecordsByDateRange(string startDate, string endDate)
         {
-            return _context.UserForm.Count(
-                uf => uf.CreatedAt >= startDate && uf.CreatedAt <= endDate
+            string startDateString = startDate?.Trim();
+            string endDateString = endDate?.Trim();
+
+            DateTime parseStartDate = DateTime.ParseExact(
+                startDateString,
+                "yyyy-MM-dd",
+                CultureInfo.InvariantCulture
             );
+            DateTime parseEndDate = DateTime
+                .ParseExact(endDateString, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                .AddDays(1)
+                .AddTicks(-1);
+
+            return _context.UserForm.Count(
+                uf => uf.CreatedAt >= parseStartDate && uf.CreatedAt <= parseEndDate
+            );
+        }
+
+        public async Task<PaginationResultDto<TResult>> GetPagedData<TResult>(
+            PaginationRequestDto<FilterQueryParametersDto> request,
+            Func<UserForm, TResult> selector
+        )
+        {
+            return await _repositoryPaginationV2.GetPagedAsync(request, selector);
         }
 
         public async Task<PaginationResultDto<TResult>> GetPagedData<TResult>(

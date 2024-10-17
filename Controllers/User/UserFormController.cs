@@ -322,7 +322,7 @@ public class UserFormController : ApiBaseController
 
     [HttpGet("generate-excel")]
     [Authorize(Roles = Policies.FuncionarioEtapa1)]
-    public async Task<ActionResult<ApiResponse>> GenerateExcel(DateTime startDate, DateTime endDate)
+    public async Task<ActionResult<ApiResponse>> GenerateExcel(string startDate, string endDate)
     {
         lock (_lock) // Asegurar que solo un hilo pueda acceder a esta sección a la vez
         {
@@ -336,11 +336,6 @@ public class UserFormController : ApiBaseController
                 return Ok(_response);
             }
 
-            var uuid = Guid.NewGuid().ToString();
-            var date = DateTime.Now.ToString("dd_MM_yyyy", CultureInfo.InvariantCulture);
-            var sheetName = $"{uuid}_{date}.xlsx";
-
-            var filePath = Path.Combine("resources", "loadFiles", sheetName);
             int totalRecords = _unitOfWork.UserForm.GetTotalRecordsByDateRange(startDate, endDate);
             int batchSize = 500;
 
@@ -356,7 +351,6 @@ public class UserFormController : ApiBaseController
                         await Task.Run(async () =>
                         {
                             await _unitOfWork.UserForm.GenerateExcelWithBatches(
-                                filePath,
                                 totalRecords,
                                 batchSize,
                                 dbContext,

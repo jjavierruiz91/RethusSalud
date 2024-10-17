@@ -23,7 +23,7 @@ namespace rethus_backend.Repository.IRepository
         UserForm GetFormUserId(string userFormId);
         UserForm IsDownloadCertificate(string userId);
         int GetTotalRecords();
-        int GetTotalRecordsByDateRange(DateTime startDate, DateTime endDate);
+        int GetTotalRecordsByDateRange(string startDate, string endDate);
         DetailsProccessPersonalDto GetPersonalInformation(string userFormId);
         DetailsEditProccessPersonalDto GetEditPersonalInformation(string userFormId);
         DetailsEditProccessAcademicDto GetEditInformationAcademic(string userFormId);
@@ -55,12 +55,16 @@ namespace rethus_backend.Repository.IRepository
         Task<string?> DonwloadCertificateFileByUserId(string userId);
         ValidateFormUserDto ValidateFormUserId(string UserId);
         Task GenerateExcelWithBatches(
-            string filePath,
             int totalRecords,
             int batchSize,
             ApplicationDbContext dbContext,
-            DateTime startDate,
-            DateTime endDate
+            string startDate,
+            string endDate
+        );
+
+        Task<PaginationResultDto<TResult>> GetPagedData<TResult>(
+            PaginationRequestDto<FilterQueryParametersDto> request,
+            Func<UserForm, TResult> selector
         );
 
         Task<PaginationResultDto<TResult>> GetPagedData<TResult>(
