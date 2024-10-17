@@ -110,6 +110,33 @@ namespace rethus_backend.Data
                 .WithMany()
                 .HasForeignKey(p => p.AcademicsMunicipalityInstitutionId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<UserForm>()
+                .HasIndex(u => u.CreatedAt) // Índice en CreatedAt
+                .HasDatabaseName("IX_UserForm_CreatedAt");
+
+            modelBuilder
+                .Entity<UserForm>()
+                .HasIndex(u => new { u.Status, u.CreatedAt }) // Índice compuesto en Status y CreatedAt
+                .HasDatabaseName("IX_UserForm_Status_CreatedAt");
+
+            modelBuilder
+                .Entity<UserForm>()
+                .HasIndex(u => new { u.Status, u.CreatedAt }) // Claves del índice
+                .HasDatabaseName("IX_UserForm_Coverage")
+                .IncludeProperties(
+                    u =>
+                        new
+                        {
+                            u.UserFormId,
+                            u.PersonalFirstName,
+                            u.PersonalIdentification,
+                            u.TypeProcedure,
+                            u.StepForm,
+                            u.Consecutive // Columnas incluidas en el índice para cobertura
+                        }
+                );
         }
     }
 }

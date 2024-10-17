@@ -397,7 +397,8 @@ public class UserFormController : ApiBaseController
             PersonalIdentification = filters.PersonalIdentification,
             TypeProcedure = filters.TypeProcedure,
             startDate = filters.startDate,
-            endDate = filters.endDate
+            endDate = filters.endDate,
+            Step = filters.Step
         };
 
         // Construye la solicitud de paginación

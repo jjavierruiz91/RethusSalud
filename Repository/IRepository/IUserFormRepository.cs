@@ -66,10 +66,5 @@ namespace rethus_backend.Repository.IRepository
             PaginationRequestDto<FilterQueryParametersDto> request,
             Func<UserForm, TResult> selector
         );
-
-        Task<PaginationResultDto<TResult>> GetPagedData<TResult>(
-            PaginationRequestDto<FilterQueryParametersDto> request,
-            Func<UserForm, TResult> selector
-        );
     }
 }

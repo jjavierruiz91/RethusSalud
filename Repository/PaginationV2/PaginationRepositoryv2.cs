@@ -25,9 +25,6 @@ public class RepositoryPaginationV2<T> : IPaginationRepositoryV2<T>
     {
         IQueryable<T> query = _context.Set<T>();
 
-        // Aplicar ordenación por una columna (por ejemplo, CreatedAt)
-        query = query.OrderByDescending(x => EF.Property<DateTime>(x, "CreatedAt"));
-
         // Aplicar los filtros de acuerdo a los parámetros en request.QueryParameters
         if (!string.IsNullOrEmpty(request.QueryParameters.UserFormId))
         {
@@ -61,6 +58,13 @@ public class RepositoryPaginationV2<T> : IPaginationRepositoryV2<T>
             );
         }
 
+        if (request.QueryParameters.Step.HasValue)
+        {
+            query = query.Where(
+                x => EF.Property<ReviewStepForm>(x, "StepForm") == request.QueryParameters.Step
+            );
+        }
+
         if (
             !string.IsNullOrEmpty(request.QueryParameters.startDate)
             && !string.IsNullOrEmpty(request.QueryParameters.endDate)
@@ -85,6 +89,8 @@ public class RepositoryPaginationV2<T> : IPaginationRepositoryV2<T>
                     && EF.Property<DateTime>(x, "CreatedAt") <= endDate
             );
         }
+        // Aplicar ordenación por una columna (por ejemplo, CreatedAt)
+        query = query.OrderByDescending(x => EF.Property<DateTime>(x, "CreatedAt"));
 
         // Contar total de ítems
         int totalItems = await query.CountAsync();

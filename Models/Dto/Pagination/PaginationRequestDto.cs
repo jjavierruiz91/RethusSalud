@@ -10,5 +10,6 @@ namespace rethus_backend.Models.Dto.Pagination
         public ConfigurationTypeProcedure? TypeProcedure { get; set; }
         public string? startDate { get; set; }
         public string? endDate { get; set; }
+        public ReviewStepForm? Step { get; set; }
     }
 }
