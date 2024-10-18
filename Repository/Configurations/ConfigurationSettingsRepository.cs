@@ -24,6 +24,7 @@ namespace rethus_backend.Repository
             var cacheKey = $"CONFIGURATION_SETTING_{key}";
             ConfigurationSetting setting;
 
+            // Intentar obtener el valor desde la caché
             setting = _memoryCache.GetFromCache(cacheKey);
 
             if (setting == null)
@@ -31,12 +32,22 @@ namespace rethus_backend.Repository
                 // Si no está en caché, consulta la base de datos
                 setting = _context.ConfigurationSetting.FirstOrDefault(c => c.SettingKey == key);
 
-                // Establecer la lista de ciudades en caché por un tiempo específico
-                var cacheDuration = TimeSpan.FromDays(7);
-                _memoryCache.SetToCache(cacheKey, setting, cacheDuration);
+                // Verificar si el setting obtenido de la base de datos es nulo
+                if (setting != null)
+                {
+                    // Establecer en caché por un tiempo específico si se encontró el setting
+                    var cacheDuration = TimeSpan.FromDays(7);
+                    _memoryCache.SetToCache(cacheKey, setting, cacheDuration);
+                }
+                else
+                {
+                    // Manejo en caso de que no se encuentre el setting en la base de datos
+                    return null; // O lanza una excepción si es necesario
+                }
             }
 
-            return setting.SettingValue ?? "";
+            // Asegurarse de que el setting no sea nulo antes de retornar su valor
+            return setting?.SettingValue;
         }
 
         public bool GetSettingBoolValue(string key)

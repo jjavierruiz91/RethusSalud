@@ -92,7 +92,6 @@ public class ConfigurationSettingController : ApiBaseController
 
                         if (config.Key == ConfigKeys.ConsecutiveStart)
                         {
-                            Console.WriteLine(config.Key);
                             _unitOfWork.ConfigurationSetting.SaveSettingStringValue(
                                 ConfigKeys.ConsevutiveCurrent.ToString(),
                                 config.Value
