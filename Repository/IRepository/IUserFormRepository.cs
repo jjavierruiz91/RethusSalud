@@ -55,6 +55,7 @@ namespace rethus_backend.Repository.IRepository
         Task<string?> DonwloadCertificateFileByUserId(string userId);
         ValidateFormUserDto ValidateFormUserId(string UserId);
         Task GenerateExcelWithBatches(
+            string filePath,
             int totalRecords,
             int batchSize,
             ApplicationDbContext dbContext,

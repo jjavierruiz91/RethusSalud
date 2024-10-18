@@ -985,6 +985,7 @@ namespace rethus_backend.Repository
         }
 
         public async Task GenerateExcelWithBatches(
+            string filePath,
             int totalRecords,
             int batchSize,
             ApplicationDbContext dbContext,
@@ -1108,14 +1109,6 @@ namespace rethus_backend.Repository
                     await Task.WhenAll(tasks);
                     try
                     {
-                        var uuid = Guid.NewGuid().ToString();
-                        var date = DateTime.Now.ToString(
-                            "dd_MM_yyyy",
-                            CultureInfo.InvariantCulture
-                        );
-                        var sheetName = $"{uuid}_{date}.xlsx";
-                        var filePath = _config.GetSection("routeTempPathExcel").Value + sheetName;
-
                         workbook.SaveAs(filePath);
                     }
                     catch (Exception ex)

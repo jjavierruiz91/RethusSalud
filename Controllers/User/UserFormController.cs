@@ -17,6 +17,7 @@ public class UserFormController : ApiBaseController
 {
     private static Task _excelGenerationTask; // Variable para almacenar la tarea de generación de Excel
     private static object _lock = new object(); // Objeto de bloqueo para evitar condiciones de carrera
+    private string _excelFilePath;
 
     private readonly IServiceProvider _provider;
 
@@ -322,9 +323,14 @@ public class UserFormController : ApiBaseController
 
     [HttpGet("generate-excel")]
     [Authorize(Roles = Policies.FuncionarioEtapa1)]
-    public async Task<ActionResult<ApiResponse>> GenerateExcel(string startDate, string endDate)
+    public async Task<ActionResult> GenerateExcel(string startDate, string endDate)
     {
-        lock (_lock) // Asegurar que solo un hilo pueda acceder a esta sección a la vez
+        // Usamos SemaphoreSlim para gestionar concurrencia de manera asíncrona
+        var semaphore = new SemaphoreSlim(1, 1);
+
+        await semaphore.WaitAsync();
+
+        try
         {
             // Verificar si ya hay una tarea en curso
             if (_excelGenerationTask != null && !_excelGenerationTask.IsCompleted)
@@ -336,28 +342,44 @@ public class UserFormController : ApiBaseController
                 return Ok(_response);
             }
 
+            // Obtener total de registros y tamaño de lote
             int totalRecords = _unitOfWork.UserForm.GetTotalRecordsByDateRange(startDate, endDate);
             int batchSize = 500;
 
+            // Generar el archivo Excel de forma asíncrona
             _excelGenerationTask = Task.Run(async () =>
             {
                 using (var scope = _provider.CreateScope())
                 {
                     var dbContext =
                         scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
                     try
                     {
-                        await Task.Run(async () =>
-                        {
-                            await _unitOfWork.UserForm.GenerateExcelWithBatches(
-                                totalRecords,
-                                batchSize,
-                                dbContext,
-                                startDate,
-                                endDate
-                            );
-                        });
+                        // Generar un nombre único para el archivo Excel
+                        var uuid = Guid.NewGuid().ToString();
+                        var date = DateTime.Now.ToString(
+                            "dd_MM_yyyy",
+                            CultureInfo.InvariantCulture
+                        );
+                        var sheetName = $"{uuid}_{date}.xlsx";
+
+                        // Ruta donde se guardará el archivo
+                        string filePath = Path.Combine(
+                            Directory.GetCurrentDirectory(),
+                            "resources",
+                            sheetName
+                        );
+                        _excelFilePath = filePath;
+
+                        // Llamar al método que genera el archivo en lotes
+                        await _unitOfWork.UserForm.GenerateExcelWithBatches(
+                            filePath,
+                            totalRecords,
+                            batchSize,
+                            dbContext,
+                            startDate,
+                            endDate
+                        );
                     }
                     catch (Exception ex)
                     {
@@ -366,11 +388,33 @@ public class UserFormController : ApiBaseController
                     }
                 }
             });
-        }
-        _response.Messages.Add("El Excel se está generando");
-        _response.IsSuccess = true;
 
-        return Ok(_response);
+            // Esperar a que se complete la tarea de generación del Excel
+            await _excelGenerationTask;
+
+            // Verificar si se generó el archivo exitosamente
+            if (System.IO.File.Exists(_excelFilePath))
+            {
+                var fileBytes = await System.IO.File.ReadAllBytesAsync(_excelFilePath);
+                var fileName = Path.GetFileName(_excelFilePath);
+                return File(
+                    fileBytes,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    fileName
+                );
+            }
+            else
+            {
+                _response.Messages.Add("Error: El archivo Excel no se pudo generar.");
+                _response.IsSuccess = false;
+                return Ok(_response);
+            }
+        }
+        finally
+        {
+            // Liberar el semáforo
+            semaphore.Release();
+        }
     }
 
     [HttpGet("pagination")]
@@ -428,5 +472,40 @@ public class UserFormController : ApiBaseController
 
         // Retorna el resultado con el formato esperado
         return Ok(result);
+    }
+
+    [HttpGet("download-excel")]
+    // [Authorize(Roles = Policies.FuncionarioEtapa1)]
+    public IActionResult DownloadExcel()
+    {
+        lock (_lock)
+        {
+            // Verificar si la tarea sigue en progreso
+            if (_excelGenerationTask != null && !_excelGenerationTask.IsCompleted)
+            {
+                return Ok(new { isSuccess = false, message = "El archivo aún se está generando." });
+            }
+            Console.WriteLine("1111111111");
+            Console.WriteLine(_excelFilePath);
+            // Verificar si el archivo está disponible
+            if (string.IsNullOrEmpty(_excelFilePath) || !System.IO.File.Exists(_excelFilePath))
+            {
+                return NotFound(
+                    new
+                    {
+                        isSuccess = false,
+                        message = "No se ha generado ningún archivo o no está disponible."
+                    }
+                );
+            }
+
+            // Si el archivo ya está generado, devolver el archivo
+            var excelBytes = System.IO.File.ReadAllBytes(_excelFilePath);
+            return File(
+                excelBytes,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "Excel_Generado.xlsx"
+            );
+        }
     }
 }
