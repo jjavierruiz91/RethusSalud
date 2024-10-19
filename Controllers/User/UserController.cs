@@ -348,6 +348,17 @@ public class UserController : ApiBaseController
             return _response;
         }
 
+        if (System.IO.File.Exists(existFile))
+        {
+            var fileBytes = await System.IO.File.ReadAllBytesAsync(existFile);
+            var fileName = Path.GetFileName(existFile);
+            return File(
+                fileBytes,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                fileName
+            );
+        }
+
         _response.Result = existFile;
         _response.IsSuccess = true;
         return Ok(_response);

@@ -768,16 +768,7 @@ namespace rethus_backend.Repository
                 + userForm.UserFormId
                 + ".pdf";
 
-            var url = await FileHelper.GetPdfFileAsync(outputPath);
-
-            if (url == null)
-            {
-                return null;
-            }
-
-            var fileBase64 = await FileHelper.FileAsBase64Async(url);
-
-            return fileBase64;
+            return outputPath;
         }
 
         public DetailsEditProccessPersonalDto GetEditPersonalInformation(string userFormId)
