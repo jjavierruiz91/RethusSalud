@@ -354,7 +354,7 @@ public class UserController : ApiBaseController
             var fileName = Path.GetFileName(existFile);
             return File(
                 fileBytes,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "application/pdf",
                 fileName
             );
         }
