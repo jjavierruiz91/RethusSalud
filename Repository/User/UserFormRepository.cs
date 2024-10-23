@@ -606,8 +606,7 @@ namespace rethus_backend.Repository
                     _config.GetSection("routeFileProcedures").Value
                     + form.UserFormId
                     + "//certifcate-rethus-"
-                    + form.UserFormId
-                    + Guid.NewGuid().ToString("N")
+                    + form.PersonalIdentification
                     + ".pdf";
 
                 if (!deleted)
@@ -658,7 +657,7 @@ namespace rethus_backend.Repository
                 _config.GetSection("routeFileProcedures").Value
                 + form.UserFormId
                 + "//certifcate-sso-"
-                + form.UserFormId
+                + form.PersonalIdentification
                 + ".pdf";
 
             string certificateRethus = "";

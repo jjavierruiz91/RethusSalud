@@ -171,19 +171,22 @@ public class UserFormFilesController : ApiBaseController
         Console.WriteLine(configs.ConsecutiveEnd);
         Console.WriteLine(configs.ConsecutiveDate);
 
-        using (var scope = _provider.CreateScope())
+        await Task.Run(async () =>
         {
-            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            using (var scope = _provider.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            await _unitOfWork.UserForm.ProcessUserFormCertificatesByBatch(
-                500,
-                100,
-                configs.ConsecutiveStart,
-                configs.ConsecutiveEnd,
-                configs.ConsecutiveDate,
-                dbContext
-            );
-        }
+                await _unitOfWork.UserForm.ProcessUserFormCertificatesByBatch(
+                    500,
+                    100,
+                    configs.ConsecutiveStart,
+                    configs.ConsecutiveEnd,
+                    configs.ConsecutiveDate,
+                    dbContext
+                );
+            }
+        });
 
         _response.Messages.Add("Certificados generandoce");
         return _response;
