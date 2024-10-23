@@ -475,7 +475,7 @@ namespace rethus_backend.Repository
             if (
                 !DateTime.TryParseExact(
                     payload.consecutiveDate,
-                    "yyyy-MM-dd-",
+                    "yyyy-MM-dd",
                     CultureInfo.InvariantCulture,
                     DateTimeStyles.None,
                     out var parsedDate
@@ -483,7 +483,7 @@ namespace rethus_backend.Repository
             )
             {
                 response.AddError(
-                    "La fecha es inválida o no está en el formato dd/MM/yyyy",
+                    "La fecha es inválida o no está en el formato yyyy-MM-dd",
                     HttpStatusCode.BadRequest,
                     false
                 );
@@ -545,7 +545,7 @@ namespace rethus_backend.Repository
             if (
                 !DateTime.TryParseExact(
                     payload.consecutiveDate,
-                    "yyyy-MM-dd-",
+                    "yyyy-MM-dd",
                     CultureInfo.InvariantCulture,
                     DateTimeStyles.None,
                     out var parsedDate
@@ -553,7 +553,7 @@ namespace rethus_backend.Repository
             )
             {
                 response.AddError(
-                    "La fecha es inválida o no está en el formato dd/MM/yyyy",
+                    "La fecha es inválida o no está en el formato yyyy-MM-dd",
                     HttpStatusCode.BadRequest,
                     false
                 );
