@@ -1236,10 +1236,18 @@ namespace rethus_backend.Repository
                                     userForm.ConsecutiveDate = consecutiveDate;
                                     userForm.Status = UserFormStatus.approved;
 
-                                    dbContext.SaveChanges();
+                                    await dbContext.SaveChangesAsync();
 
                                     Console.WriteLine("llego 5");
-                                    await ValidateCertificateUserForm(userForm.UserFormId);
+
+                                    if (userForm.TypeProcedure == ConfigurationTypeProcedure.RETHUS)
+                                    {
+                                        CreateCertificateRethus(userForm);
+                                    }
+                                    else
+                                    {
+                                        CreateCertificateSso(userForm);
+                                    }
                                 }
                             }
                             finally
