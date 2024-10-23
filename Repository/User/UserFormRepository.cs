@@ -475,7 +475,7 @@ namespace rethus_backend.Repository
             if (
                 !DateTime.TryParseExact(
                     payload.consecutiveDate,
-                    "dd/MM/yyyy",
+                    "yyyy-MM-dd-",
                     CultureInfo.InvariantCulture,
                     DateTimeStyles.None,
                     out var parsedDate
@@ -545,7 +545,7 @@ namespace rethus_backend.Repository
             if (
                 !DateTime.TryParseExact(
                     payload.consecutiveDate,
-                    "dd/MM/yyyy",
+                    "yyyy-MM-dd-",
                     CultureInfo.InvariantCulture,
                     DateTimeStyles.None,
                     out var parsedDate
