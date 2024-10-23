@@ -617,7 +617,7 @@ namespace rethus_backend.Repository
                 + "//certifcate-"
                 + form.TypeProcedure
                 + "-"
-                + form.UserFormId
+                + form.PersonalIdentification
                 + ".pdf";
             var url = await FileHelper.GetPdfFileAsync(outputPath);
 
