@@ -310,7 +310,8 @@ namespace rethus_backend.Repository
                             PersonalPhone = columns.PersonalPhone,
                             PersonalEmail = columns.PersonalEmail,
                             PersonalEthnicGroup = columns.PersonalEthnicGroup.ToString(),
-                            PersonalPlaceOfIssue = columns.PersonalPlaceOfIssue
+                            PersonalPlaceOfIssue = columns.PersonalPlaceOfIssue,
+                            Status = columns.Status.ToString()
                         }
                 )
                 .FirstOrDefault();
