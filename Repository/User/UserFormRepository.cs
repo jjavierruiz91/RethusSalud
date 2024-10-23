@@ -770,7 +770,7 @@ namespace rethus_backend.Repository
                 _config.GetSection("routeFileProcedures").Value
                 + userForm.UserFormId
                 + typeProcedure
-                + userForm.UserFormId
+                + userForm.PersonalIdentification
                 + ".pdf";
 
             return outputPath;
