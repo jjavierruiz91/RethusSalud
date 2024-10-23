@@ -175,14 +175,14 @@ public class UserFormFilesController : ApiBaseController
         {
             var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            // await _unitOfWork.UserForm.ProcessUserFormCertificatesByBatch(
-            //     500,
-            //     100,
-            //     configs.ConsecutiveStart,
-            //     configs.ConsecutiveEnd,
-            //     configs.ConsecutiveDate,
-            //     dbContext
-            // );
+            await _unitOfWork.UserForm.ProcessUserFormCertificatesByBatch(
+                500,
+                100,
+                configs.ConsecutiveStart,
+                configs.ConsecutiveEnd,
+                configs.ConsecutiveDate,
+                dbContext
+            );
         }
 
         _response.Messages.Add("Certificados generandoce");
