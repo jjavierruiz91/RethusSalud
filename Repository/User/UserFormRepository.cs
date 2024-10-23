@@ -1187,94 +1187,78 @@ namespace rethus_backend.Repository
 
             List<UserForm> userFormsBatch;
 
-            // SemaphoreSlim para controlar la concurrencia
-            using (SemaphoreSlim semaphore = new SemaphoreSlim(maxDegreeOfParallelism))
+            // Bucle para obtener y procesar cada lote de formularios
+            do
             {
-                // Bucle para obtener y procesar cada lote de formularios
-                do
+                // Obtener un lote paginado de formularios
+                Console.WriteLine("llego 0");
+                userFormsBatch = await GetUserFormsByBatch(batchSize, pageNumber, dbContext);
+
+                if (
+                    userFormsBatch == null
+                    || !userFormsBatch.Any()
+                    || consecutiveStart == completedForms
+                )
                 {
-                    // Obtener un lote paginado de formularios
-                    Console.WriteLine("llego 0");
-                    userFormsBatch = await GetUserFormsByBatch(batchSize, pageNumber, dbContext);
+                    break; // No hay más formularios para procesar
+                }
 
-                    if (
-                        userFormsBatch == null
-                        || !userFormsBatch.Any()
-                        || consecutiveStart == completedForms
-                    )
+                if (totalForms == 0)
+                {
+                    Console.WriteLine("llego 1");
+                    // Solo calcular el total una vez en el primer lote
+                    totalForms = await dbContext.UserForm.CountAsync(
+                        x =>
+                            x.Status == UserFormStatus.approved
+                            && x.Consecutive != null
+                            && x.ConsecutiveDate != null
+                    );
+                }
+
+                var tasks = new List<Task>();
+
+                Console.WriteLine("llego 2");
+                foreach (var userForm in userFormsBatch)
+                {
+                    var task = Task.Run(async () =>
                     {
-                        break; // No hay más formularios para procesar
-                    }
-
-                    if (totalForms == 0)
-                    {
-                        Console.WriteLine("llego 1");
-                        // Solo calcular el total una vez en el primer lote
-                        totalForms = await dbContext.UserForm.CountAsync(
-                            x =>
-                                x.Status == UserFormStatus.approved
-                                && x.Consecutive != null
-                                && x.ConsecutiveDate != null
-                        );
-                    }
-
-                    var tasks = new List<Task>();
-
-                    Console.WriteLine("llego 2");
-                    foreach (var userForm in userFormsBatch)
-                    {
-                        var task = Task.Run(async () =>
+                        lock (dbContext)
                         {
-                            await semaphore.WaitAsync();
-
-                            lock (dbContext)
+                            Console.WriteLine("llego 3");
+                            if (userForm.StepForm == ReviewStepForm.success)
                             {
-                                try
+                                userForm.Consecutive = consecutiveStart.ToString();
+                                userForm.ConsecutiveDate = consecutiveDate;
+                                userForm.Status = UserFormStatus.approved;
+
+                                dbContext.UserForm.Update(userForm);
+                                _ = dbContext.SaveChanges();
+                                consecutiveStart++;
+
+                                Console.WriteLine("llego 5");
+
+                                if (userForm.TypeProcedure == ConfigurationTypeProcedure.RETHUS)
                                 {
-                                    Console.WriteLine("llego 3");
-                                    if (userForm.StepForm == ReviewStepForm.success)
-                                    {
-                                        userForm.Consecutive = consecutiveStart.ToString();
-                                        userForm.ConsecutiveDate = consecutiveDate;
-                                        userForm.Status = UserFormStatus.approved;
-
-                                        dbContext.UserForm.Update(userForm);
-                                        _ = dbContext.SaveChanges();
-                                        consecutiveStart++;
-
-                                        Console.WriteLine("llego 5");
-
-                                        if (
-                                            userForm.TypeProcedure
-                                            == ConfigurationTypeProcedure.RETHUS
-                                        )
-                                        {
-                                            CreateCertificateRethus(userForm);
-                                        }
-                                        else
-                                        {
-                                            CreateCertificateSso(userForm);
-                                        }
-                                        Console.WriteLine("llego 6");
-                                    }
+                                    CreateCertificateRethus(userForm);
                                 }
-                                finally
+                                else
                                 {
-                                    semaphore.Release();
+                                    CreateCertificateSso(userForm);
                                 }
+                                Console.WriteLine("llego 6");
                             }
-                        });
+                        }
+                    });
 
-                        tasks.Add(task);
-                    }
+                    tasks.Add(task);
+                }
 
-                    // Esperar a que todas las tareas del lote terminen
-                    await Task.WhenAll(tasks);
+                // Esperar a que todas las tareas del lote terminen
+                await Task.WhenAll(tasks);
 
-                    // Pasar a la siguiente página
-                    pageNumber++;
-                } while (userFormsBatch.Count == batchSize); // Continuar si el tamaño del lote es igual al batchSize
-            }
+                // Pasar a la siguiente página
+                pageNumber++;
+            } while (userFormsBatch.Count == batchSize); // Continuar si el tamaño del lote es igual al batchSize
         }
     }
 }
