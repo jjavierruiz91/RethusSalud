@@ -167,26 +167,22 @@ public class UserFormFilesController : ApiBaseController
             return BadRequest(_response);
         }
 
-        Console.WriteLine(configs.ConsecutiveStart);
-        Console.WriteLine(configs.ConsecutiveEnd);
-        Console.WriteLine(configs.ConsecutiveDate);
+        // await Task.Run(async () =>
+        // {
+        //     using (var scope = _provider.CreateScope())
+        //     {
+        //         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        await Task.Run(async () =>
-        {
-            using (var scope = _provider.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-                await _unitOfWork.UserForm.ProcessUserFormCertificatesByBatch(
-                    500,
-                    100,
-                    configs.ConsecutiveStart,
-                    configs.ConsecutiveEnd,
-                    configs.ConsecutiveDate,
-                    dbContext
-                );
-            }
-        });
+        //         await _unitOfWork.UserForm.ProcessUserFormCertificatesByBatch(
+        //             500,
+        //             100,
+        //             configs.ConsecutiveStart,
+        //             configs.ConsecutiveEnd,
+        //             configs.ConsecutiveDate,
+        //             dbContext
+        //         );
+        //     }
+        // });
 
         _response.Messages.Add("Certificados generandoce");
         return _response;

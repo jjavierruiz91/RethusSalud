@@ -1190,7 +1190,7 @@ namespace rethus_backend.Repository
             do
             {
                 // Obtener un lote paginado de formularios
-                Console.WriteLine("llego 0");
+
                 userFormsBatch = await GetUserFormsByBatch(batchSize, pageNumber, dbContext);
 
                 if (
@@ -1204,7 +1204,6 @@ namespace rethus_backend.Repository
 
                 if (totalForms == 0)
                 {
-                    Console.WriteLine("llego 1");
                     // Solo calcular el total una vez en el primer lote
                     totalForms = await dbContext.UserForm.CountAsync(
                         x =>
@@ -1216,14 +1215,12 @@ namespace rethus_backend.Repository
 
                 var tasks = new List<Task>();
 
-                Console.WriteLine("llego 2");
                 foreach (var userForm in userFormsBatch)
                 {
                     var task = Task.Run(async () =>
                     {
                         lock (dbContext)
                         {
-                            Console.WriteLine("llego 3");
                             if (userForm.StepForm == ReviewStepForm.success)
                             {
                                 userForm.Consecutive = consecutiveStart.ToString();
@@ -1234,8 +1231,6 @@ namespace rethus_backend.Repository
                                 _ = dbContext.SaveChanges();
                                 consecutiveStart++;
 
-                                Console.WriteLine("llego 5");
-
                                 if (userForm.TypeProcedure == ConfigurationTypeProcedure.RETHUS)
                                 {
                                     CreateCertificateRethus(userForm);
@@ -1244,7 +1239,6 @@ namespace rethus_backend.Repository
                                 {
                                     CreateCertificateSso(userForm);
                                 }
-                                Console.WriteLine("llego 6");
                             }
                         }
                     });
