@@ -1244,9 +1244,9 @@ namespace rethus_backend.Repository
                                     );
                                 }
 
-                                userConfiguration.State = UserConfiguration.getStateConfiguration(
-                                    userConfiguration.State
-                                );
+                                userConfiguration.State = ConfigurationsState.completed;
+                                userConfiguration.Step = ConfigurationStep.success;
+
                                 _context.Configurations.Update(userConfiguration);
                                 _context.SaveChanges();
 
