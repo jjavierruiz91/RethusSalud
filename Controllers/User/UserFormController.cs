@@ -159,40 +159,14 @@ public class UserFormController : ApiBaseController
     {
         ApiResponse approvedForm = _unitOfWork.UserForm.ApprovedForm(formId);
 
-        await Task.Run(async () =>
+        await Task.Run(() => _unitOfWork.UserForm.ValidateCertificateUserForm(formId));
+        await Task.Run(() =>
         {
-            string newConsecutive = _unitOfWork.ConfigurationSetting.GetConsevutiveCurrent();
-
-            string ConsecutiveDate = _unitOfWork.ConfigurationSetting.GetSettingStringValue(
-                "ConsecutiveDate"
+            string userId = _unitOfWork.UserForm.GetUserByUserFormId(formId);
+            var user_configuration = _unitOfWork.UserConfiguration.GetByUserId(userId);
+            _unitOfWork.UserConfiguration.updateAutomaticStateConfiguration(
+                user_configuration.ConfigurationsId
             );
-
-            UserFormConsecutiveDto payload = new UserFormConsecutiveDto
-            {
-                consecutive = newConsecutive,
-                consecutiveDate = ConsecutiveDate
-            };
-
-            ApiResponse response = _unitOfWork.UserForm.AddConsecutive(formId, payload);
-
-            if (!response.IsSuccess)
-            {
-                return;
-            }
-
-            _unitOfWork.ConfigurationSetting.SaveSettingStringValue(
-                "ConsevutiveCurrent",
-                newConsecutive
-            );
-            await Task.Run(() => _unitOfWork.UserForm.ValidateCertificateUserForm(formId));
-            await Task.Run(() =>
-            {
-                string userId = _unitOfWork.UserForm.GetUserByUserFormId(formId);
-                var user_configuration = _unitOfWork.UserConfiguration.GetByUserId(userId);
-                _unitOfWork.UserConfiguration.updateAutomaticStateConfiguration(
-                    user_configuration.ConfigurationsId
-                );
-            });
         });
 
         return approvedForm;
@@ -222,7 +196,7 @@ public class UserFormController : ApiBaseController
         UserFormConsecutiveDto payload
     )
     {
-        ApiResponse response = _unitOfWork.UserForm.AddConsecutive(formId, payload);
+        ApiResponse response = await _unitOfWork.UserForm.AddConsecutive(formId, payload);
         if (!response.IsSuccess)
         {
             return BadRequest(response);
@@ -248,7 +222,7 @@ public class UserFormController : ApiBaseController
         UserFormConsecutiveDto payload
     )
     {
-        ApiResponse response = _unitOfWork.UserForm.AddConsecutive(formId, payload);
+        ApiResponse response = await _unitOfWork.UserForm.AddConsecutive(formId, payload);
         if (!response.IsSuccess)
         {
             return BadRequest(response);
