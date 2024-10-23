@@ -41,6 +41,7 @@ namespace rethus_backend.Repository.IRepository
         Task<string> DownloadCertificateSso(TemplateSSODto sSODto);
 
         Task<ApiResponse> AddConsecutive(string userFormId, UserFormConsecutiveDto payload);
+        Task<ApiResponse> UpdateConsecutive(string userFormId, UserFormConsecutiveDto payload);
 
         Task<string> GetFileInventory(string userFormFileId);
 

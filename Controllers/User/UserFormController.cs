@@ -222,7 +222,7 @@ public class UserFormController : ApiBaseController
         UserFormConsecutiveDto payload
     )
     {
-        ApiResponse response = await _unitOfWork.UserForm.AddConsecutive(formId, payload);
+        ApiResponse response = await _unitOfWork.UserForm.UpdateConsecutive(formId, payload);
         if (!response.IsSuccess)
         {
             return BadRequest(response);

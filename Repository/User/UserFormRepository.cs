@@ -16,11 +16,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Text.Json;
 using ClosedXML.Excel;
-using rethus_backend.Models.Dto.Comments;
 using rethus_backend.RepositoryV2;
 using rethus_backend.Models.Dto.Pagination;
-using rethus_backend.Utilities.Constants.User.UserConfiguration;
-using DocumentFormat.OpenXml.Drawing;
 
 namespace rethus_backend.Repository
 {
@@ -518,6 +515,77 @@ namespace rethus_backend.Repository
             userForm.Consecutive = payload.consecutive;
             userForm.ConsecutiveDate = payload.consecutiveDate;
             userForm.Status = UserFormStatus.approved;
+
+            _context.SaveChanges();
+
+            response.Messages.Add("El consecutivo a sido agregado");
+            response.StatusCode = HttpStatusCode.OK;
+            response.IsSuccess = true;
+            return response;
+        }
+
+        public async Task<ApiResponse> UpdateConsecutive(
+            string userFormId,
+            UserFormConsecutiveDto payload
+        )
+        {
+            var response = new ApiResponse();
+
+            if (payload.consecutive.Length == 0)
+            {
+                response.AddError(
+                    "El consecutivo no puede estar vacio",
+                    HttpStatusCode.BadRequest,
+                    false
+                );
+                response.IsSuccess = false;
+                return response;
+            }
+
+            if (
+                !DateTime.TryParseExact(
+                    payload.consecutiveDate,
+                    "dd/MM/yyyy",
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out var parsedDate
+                )
+            )
+            {
+                response.AddError(
+                    "La fecha es inválida o no está en el formato dd/MM/yyyy",
+                    HttpStatusCode.BadRequest,
+                    false
+                );
+                response.IsSuccess = false;
+                return response;
+            }
+
+            UserForm userForm = GetById(userFormId);
+
+            if (userForm == null)
+            {
+                response.AddError("El formulario no existe", HttpStatusCode.NotFound, false);
+                response.IsSuccess = false;
+                return response;
+            }
+            if (
+                userForm.StepForm != ReviewStepForm.success
+                && userForm.Status != UserFormStatus.approved
+                && userForm.Consecutive != null
+                && userForm.ConsecutiveDate != null
+            )
+            {
+                response.AddError(
+                    "El formulario no esta aprovado o no ha sido genrado anteriormente un consecutive y una fecha",
+                    HttpStatusCode.BadRequest,
+                    false
+                );
+                return response;
+            }
+
+            userForm.Consecutive = payload.consecutive;
+            userForm.ConsecutiveDate = payload.consecutiveDate;
 
             _context.SaveChanges();
 
