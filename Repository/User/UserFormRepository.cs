@@ -20,6 +20,7 @@ using rethus_backend.Models.Dto.Comments;
 using rethus_backend.RepositoryV2;
 using rethus_backend.Models.Dto.Pagination;
 using rethus_backend.Utilities.Constants.User.UserConfiguration;
+using DocumentFormat.OpenXml.Drawing;
 
 namespace rethus_backend.Repository
 {
@@ -1232,9 +1233,16 @@ namespace rethus_backend.Repository
                                 dbContext.UserForm.Update(userForm);
                                 _ = dbContext.SaveChanges();
 
-                                var userConfiguration = dbContext.Configurations.Find(
-                                    userForm.UserId
+                                var userConfiguration = dbContext.Configurations.FirstOrDefault(
+                                    c => c.UserId == userForm.UserId
                                 );
+
+                                if (userConfiguration == null)
+                                {
+                                    throw new InvalidOperationException(
+                                        $"No se encontró la configuración para el UserId {userForm.UserId}"
+                                    );
+                                }
 
                                 userConfiguration.State = UserConfiguration.getStateConfiguration(
                                     userConfiguration.State
