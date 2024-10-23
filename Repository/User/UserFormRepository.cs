@@ -1227,35 +1227,41 @@ namespace rethus_backend.Repository
                         {
                             await semaphore.WaitAsync();
 
-                            try
+                            lock (dbContext)
                             {
-                                Console.WriteLine("llego 3");
-                                if (userForm.StepForm == ReviewStepForm.success)
+                                try
                                 {
-                                    userForm.Consecutive = consecutiveStart.ToString();
-                                    userForm.ConsecutiveDate = consecutiveDate;
-                                    userForm.Status = UserFormStatus.approved;
-
-                                    dbContext.UserForm.Update(userForm);
-                                    dbContext.SaveChangesAsync();
-
-                                    Console.WriteLine("llego 5");
-
-                                    if (userForm.TypeProcedure == ConfigurationTypeProcedure.RETHUS)
+                                    Console.WriteLine("llego 3");
+                                    if (userForm.StepForm == ReviewStepForm.success)
                                     {
-                                        CreateCertificateRethus(userForm);
+                                        userForm.Consecutive = consecutiveStart.ToString();
+                                        userForm.ConsecutiveDate = consecutiveDate;
+                                        userForm.Status = UserFormStatus.approved;
+
+                                        dbContext.UserForm.Update(userForm);
+                                        _ = dbContext.SaveChanges();
+                                        consecutiveStart++;
+
+                                        Console.WriteLine("llego 5");
+
+                                        if (
+                                            userForm.TypeProcedure
+                                            == ConfigurationTypeProcedure.RETHUS
+                                        )
+                                        {
+                                            CreateCertificateRethus(userForm);
+                                        }
+                                        else
+                                        {
+                                            CreateCertificateSso(userForm);
+                                        }
+                                        Console.WriteLine("llego 6");
                                     }
-                                    else
-                                    {
-                                        CreateCertificateSso(userForm);
-                                    }
-                                    Console.WriteLine("llego 6");
                                 }
-                            }
-                            finally
-                            {
-                                semaphore.Release();
-                                consecutiveStart++;
+                                finally
+                                {
+                                    semaphore.Release();
+                                }
                             }
                         });
 
