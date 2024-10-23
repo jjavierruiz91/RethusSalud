@@ -66,8 +66,10 @@ namespace rethus_backend.Repository
                 // Si se encuentra en la base de datos, almacenarlo en caché
                 if (setting != null)
                 {
+                    setting.SettingValue = "false";
                     var cacheDuration = TimeSpan.FromDays(7);
                     _memoryCache.SetToCache(cacheKey, setting, cacheDuration);
+                    return false;
                 }
             }
 
