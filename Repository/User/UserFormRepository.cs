@@ -19,6 +19,7 @@ using ClosedXML.Excel;
 using rethus_backend.Models.Dto.Comments;
 using rethus_backend.RepositoryV2;
 using rethus_backend.Models.Dto.Pagination;
+using rethus_backend.Utilities.Constants.User.UserConfiguration;
 
 namespace rethus_backend.Repository
 {
@@ -1230,6 +1231,17 @@ namespace rethus_backend.Repository
 
                                 dbContext.UserForm.Update(userForm);
                                 _ = dbContext.SaveChanges();
+
+                                var userConfiguration = dbContext.Configurations.Find(
+                                    userForm.UserId
+                                );
+
+                                userConfiguration.State = UserConfiguration.getStateConfiguration(
+                                    userConfiguration.State
+                                );
+                                _context.Configurations.Update(userConfiguration);
+                                _context.SaveChanges();
+
                                 consecutiveStart++;
 
                                 if (userForm.TypeProcedure == ConfigurationTypeProcedure.RETHUS)
