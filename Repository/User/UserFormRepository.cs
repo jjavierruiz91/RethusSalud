@@ -454,7 +454,10 @@ namespace rethus_backend.Repository
             return resultContent;
         }
 
-        public ApiResponse AddConsecutive(string userFormId, UserFormConsecutiveDto payload)
+        public async Task<ApiResponse> AddConsecutive(
+            string userFormId,
+            UserFormConsecutiveDto payload
+        )
         {
             var response = new ApiResponse();
 
@@ -557,7 +560,7 @@ namespace rethus_backend.Repository
             return fileBase64;
         }
 
-        public async void ValidateCertificateUserForm(string userFormId)
+        public async Task ValidateCertificateUserForm(string userFormId)
         {
             UserForm formFile = _context.UserForm.FirstOrDefault(x => x.UserFormId == userFormId);
 
@@ -1147,6 +1150,115 @@ namespace rethus_backend.Repository
         )
         {
             return await _repositoryPaginationV2.GetPagedAsync(request, selector);
+        }
+
+        public async Task<List<UserForm>> GetUserFormsByBatch(
+            int batchSize,
+            int pageNumber,
+            ApplicationDbContext dbContext
+        )
+        {
+            return await dbContext.UserForm
+                .Where(
+                    x =>
+                        x.Status == UserFormStatus.pending
+                        && x.StepForm == ReviewStepForm.success
+                        && x.Consecutive == null
+                        && x.ConsecutiveDate == null
+                )
+                .OrderByDescending(x => x.CreatedAt) // Ordenar por fecha de creación, más reciente primero
+                .Skip((pageNumber - 1) * batchSize) // Paginación: saltar los formularios de páginas anteriores
+                .Take(batchSize) // Tomar solo la cantidad definida por batchSize
+                .ToListAsync();
+        }
+
+        public async Task ProcessUserFormCertificatesByBatch(
+            int batchSize,
+            int maxDegreeOfParallelism,
+            int consecutiveStart,
+            int consecutiveEnd,
+            string consecutiveDate,
+            ApplicationDbContext dbContext
+        )
+        {
+            int pageNumber = 1;
+            int totalForms = 0;
+            int completedForms = consecutiveEnd;
+
+            List<UserForm> userFormsBatch;
+
+            // SemaphoreSlim para controlar la concurrencia
+            using (SemaphoreSlim semaphore = new SemaphoreSlim(maxDegreeOfParallelism))
+            {
+                // Bucle para obtener y procesar cada lote de formularios
+                do
+                {
+                    // Obtener un lote paginado de formularios
+                    Console.WriteLine("llego 0");
+                    userFormsBatch = await GetUserFormsByBatch(batchSize, pageNumber, dbContext);
+
+                    if (
+                        userFormsBatch == null
+                        || !userFormsBatch.Any()
+                        || consecutiveStart == completedForms
+                    )
+                    {
+                        break; // No hay más formularios para procesar
+                    }
+
+                    if (totalForms == 0)
+                    {
+                        Console.WriteLine("llego 1");
+                        // Solo calcular el total una vez en el primer lote
+                        totalForms = await dbContext.UserForm.CountAsync(
+                            x =>
+                                x.Status == UserFormStatus.approved
+                                && x.Consecutive != null
+                                && x.ConsecutiveDate != null
+                        );
+                    }
+
+                    var tasks = new List<Task>();
+
+                    Console.WriteLine("llego 2");
+                    foreach (var userForm in userFormsBatch)
+                    {
+                        await semaphore.WaitAsync();
+
+                        var task = Task.Run(async () =>
+                        {
+                            try
+                            {
+                                Console.WriteLine("llego 3");
+                                if (userForm.StepForm == ReviewStepForm.success)
+                                {
+                                    userForm.Consecutive = consecutiveStart.ToString();
+                                    userForm.ConsecutiveDate = consecutiveDate;
+                                    userForm.Status = UserFormStatus.approved;
+
+                                    dbContext.SaveChanges();
+
+                                    Console.WriteLine("llego 5");
+                                    await ValidateCertificateUserForm(userForm.UserFormId);
+                                }
+                            }
+                            finally
+                            {
+                                semaphore.Release();
+                                consecutiveStart++;
+                            }
+                        });
+
+                        tasks.Add(task);
+                    }
+
+                    // Esperar a que todas las tareas del lote terminen
+                    await Task.WhenAll(tasks);
+
+                    // Pasar a la siguiente página
+                    pageNumber++;
+                } while (userFormsBatch.Count == batchSize); // Continuar si el tamaño del lote es igual al batchSize
+            }
         }
     }
 }

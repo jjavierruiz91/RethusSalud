@@ -49,4 +49,12 @@ namespace rethus_backend.Models.Dto.UserFormFiles
         public string Type { get; set; }
         public string Base64Content { get; set; }
     }
+
+    public class ConfigGenerateCerticateDto
+    {
+        // public bool ActiveConsecutive { get; set; }
+        public int ConsecutiveStart { get; set; }
+        public int ConsecutiveEnd { get; set; }
+        public string ConsecutiveDate { get; set; }
+    }
 }

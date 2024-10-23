@@ -1,5 +1,7 @@
+using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using rethus_backend.Data;
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.UserFormFiles;
 
@@ -9,8 +11,13 @@ namespace rethus_backend.Controllers;
 [Route("[controller]")]
 public class UserFormFilesController : ApiBaseController
 {
+    private readonly IServiceProvider _provider;
+
     public UserFormFilesController(IServiceProvider provider)
-        : base(provider) { }
+        : base(provider)
+    {
+        _provider = provider;
+    }
 
     [HttpPost("{userId}")]
     [Authorize(Roles = Policies.User)]
@@ -123,5 +130,62 @@ public class UserFormFilesController : ApiBaseController
             return NotFound();
 
         return Ok(user);
+    }
+
+    [HttpPatch("generate")]
+    [Authorize(Roles = Policies.Inventory)]
+    public async Task<ActionResult<ApiResponse>> PatchGenerateCertificate(
+        [FromBody] ConfigGenerateCerticateDto configs
+    )
+    {
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.IsSuccess = true;
+
+        if (configs.ConsecutiveStart == 0)
+        {
+            _response.StatusCode = HttpStatusCode.BadRequest;
+            _response.IsSuccess = false;
+            _response.Messages.Add("ConsecutiveStart no puede ser cero.");
+        }
+
+        if (configs.ConsecutiveEnd == 0)
+        {
+            _response.StatusCode = HttpStatusCode.BadRequest;
+            _response.IsSuccess = false;
+            _response.Messages.Add("ConsecutiveEnd no puede ser cero.");
+        }
+
+        if (string.IsNullOrEmpty(configs.ConsecutiveDate))
+        {
+            _response.StatusCode = HttpStatusCode.BadRequest;
+            _response.IsSuccess = false;
+            _response.Messages.Add("ConsecutiveDate no puede estar vacío.");
+        }
+
+        if (!_response.IsSuccess)
+        {
+            return BadRequest(_response);
+        }
+
+        Console.WriteLine(configs.ConsecutiveStart);
+        Console.WriteLine(configs.ConsecutiveEnd);
+        Console.WriteLine(configs.ConsecutiveDate);
+
+        using (var scope = _provider.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            // await _unitOfWork.UserForm.ProcessUserFormCertificatesByBatch(
+            //     500,
+            //     100,
+            //     configs.ConsecutiveStart,
+            //     configs.ConsecutiveEnd,
+            //     configs.ConsecutiveDate,
+            //     dbContext
+            // );
+        }
+
+        _response.Messages.Add("Certificados generandoce");
+        return _response;
     }
 }

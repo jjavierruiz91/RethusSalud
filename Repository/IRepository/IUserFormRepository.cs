@@ -40,11 +40,11 @@ namespace rethus_backend.Repository.IRepository
 
         Task<string> DownloadCertificateSso(TemplateSSODto sSODto);
 
-        ApiResponse AddConsecutive(string userFormId, UserFormConsecutiveDto payload);
+        Task<ApiResponse> AddConsecutive(string userFormId, UserFormConsecutiveDto payload);
 
         Task<string> GetFileInventory(string userFormFileId);
 
-        void ValidateCertificateUserForm(string userFormId);
+        Task ValidateCertificateUserForm(string userFormId);
 
         Task<UserFormConsecutiveResponseDto> GetInformationConsecutive(string userFormId);
 
@@ -66,6 +66,19 @@ namespace rethus_backend.Repository.IRepository
         Task<PaginationResultDto<TResult>> GetPagedData<TResult>(
             PaginationRequestDto<FilterQueryParametersDto> request,
             Func<UserForm, TResult> selector
+        );
+        Task<List<UserForm>> GetUserFormsByBatch(
+            int batchSize,
+            int pageNumber,
+            ApplicationDbContext dbContext
+        );
+        Task ProcessUserFormCertificatesByBatch(
+            int batchSize,
+            int maxDegreeOfParallelism,
+            int consecutiveStart,
+            int consecutiveEnd,
+            string consecutiveDate,
+            ApplicationDbContext dbContext
         );
     }
 }
