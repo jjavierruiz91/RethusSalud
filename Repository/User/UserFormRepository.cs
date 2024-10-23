@@ -1223,44 +1223,39 @@ namespace rethus_backend.Repository
                     Console.WriteLine("llego 2");
                     foreach (var userForm in userFormsBatch)
                     {
-                        await semaphore.WaitAsync();
-
                         var task = Task.Run(async () =>
                         {
-                            lock (dbContext)
+                            await semaphore.WaitAsync();
+
+                            try
                             {
-                                try
+                                Console.WriteLine("llego 3");
+                                if (userForm.StepForm == ReviewStepForm.success)
                                 {
-                                    Console.WriteLine("llego 3");
-                                    if (userForm.StepForm == ReviewStepForm.success)
+                                    userForm.Consecutive = consecutiveStart.ToString();
+                                    userForm.ConsecutiveDate = consecutiveDate;
+                                    userForm.Status = UserFormStatus.approved;
+
+                                    dbContext.UserForm.Update(userForm);
+                                    dbContext.SaveChangesAsync();
+
+                                    Console.WriteLine("llego 5");
+
+                                    if (userForm.TypeProcedure == ConfigurationTypeProcedure.RETHUS)
                                     {
-                                        userForm.Consecutive = consecutiveStart.ToString();
-                                        userForm.ConsecutiveDate = consecutiveDate;
-                                        userForm.Status = UserFormStatus.approved;
-
-                                        dbContext.SaveChangesAsync();
-
-                                        Console.WriteLine("llego 5");
-
-                                        if (
-                                            userForm.TypeProcedure
-                                            == ConfigurationTypeProcedure.RETHUS
-                                        )
-                                        {
-                                            CreateCertificateRethus(userForm);
-                                        }
-                                        else
-                                        {
-                                            CreateCertificateSso(userForm);
-                                        }
-                                        Console.WriteLine("llego 6");
+                                        CreateCertificateRethus(userForm);
                                     }
+                                    else
+                                    {
+                                        CreateCertificateSso(userForm);
+                                    }
+                                    Console.WriteLine("llego 6");
                                 }
-                                finally
-                                {
-                                    semaphore.Release();
-                                    consecutiveStart++;
-                                }
+                            }
+                            finally
+                            {
+                                semaphore.Release();
+                                consecutiveStart++;
                             }
                         });
 
