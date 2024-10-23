@@ -595,7 +595,7 @@ namespace rethus_backend.Repository
                 _config.GetSection("routeFileProcedures").Value
                 + form.UserFormId
                 + "//certifcate-rethus-"
-                + form.UserFormId
+                + form.PersonalIdentification
                 + ".pdf";
 
             if (FileHelper.ValidatePath(outputPath))
