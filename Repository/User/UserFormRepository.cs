@@ -1247,8 +1247,8 @@ namespace rethus_backend.Repository
                                 userConfiguration.State = ConfigurationsState.completed;
                                 userConfiguration.Step = ConfigurationStep.success;
 
-                                _context.Configurations.Update(userConfiguration);
-                                _context.SaveChanges();
+                                dbContext.Configurations.Update(userConfiguration);
+                                dbContext.SaveChanges();
 
                                 consecutiveStart++;
 
