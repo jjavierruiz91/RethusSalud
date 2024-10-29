@@ -4,7 +4,9 @@ using System.Net.Http.Headers;
 using rethus_backend.Data;
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.Comments;
+using rethus_backend.Models.Dto.Pagination;
 using rethus_backend.Repository.IRepository;
+using rethus_backend.RepositoryV2;
 using rethus_backend.Utilities.Constants.PaginatioConstants;
 using rethus_backend.Utilities.Constants.User.CommentsConstants;
 
@@ -14,7 +16,10 @@ namespace rethus_backend.Repository
     {
         private readonly ApplicationDbContext _context;
         private readonly IUserRepository _userRepository;
+
         private readonly IUserFormRepository _userFormRepository;
+
+        private readonly IPaginationRepositoryV2<Comments> _repositoryPaginationV2;
 
         // Pagination
         private readonly PaginationService<
@@ -27,18 +32,14 @@ namespace rethus_backend.Repository
             ApplicationDbContext db,
             IUserRepository _users,
             IUserFormRepository _userForm,
-            PaginationService<
-                Comments,
-                CommonQueryParametersDto,
-                CommentsResponseDto
-            > paginationService
+            IPaginationRepositoryV2<Comments> repositoryPaginationV2
         )
             : base(db)
         {
             _context = db;
             _userRepository = _users;
             _userFormRepository = _userForm;
-            _paginationService = paginationService;
+            _repositoryPaginationV2 = repositoryPaginationV2;
         }
 
         public Task CreateAsync(Comments entity)
@@ -107,6 +108,14 @@ namespace rethus_backend.Repository
             var result = _paginationService.GetPaginatedEntities(request, mapper);
 
             return result;
+        }
+
+          public async Task<PaginationResultDto<TResult>> GetPagedData<TResult>(
+            PaginationRequestDto<FilterQueryParametersDto> request,
+            Func<Comments, TResult> selector
+        )
+        {
+            return await _repositoryPaginationV2.GetPagedAsync(request, selector);
         }
 
         public Task RemoveAsync(Comments entity)

@@ -42,12 +42,9 @@ namespace rethus_backend.Repository
 
             UserFormFiles = new UserFormFilesRepository(_db, _configuration, UserConfiguration);
 
-            var paginationCommentsService = new PaginationService<
-                Comments,
-                CommonQueryParametersDto,
-                CommentsResponseDto
-            >(_db);
-            Comments = new CommentsRepository(_db, User, UserForm, paginationCommentsService);
+            var paginationRepositoryComments = new RepositoryPaginationV2<Comments>(_db);
+
+            Comments = new CommentsRepository(_db, User, UserForm, paginationRepositoryComments);
 
             Country = new CountryRepository(_db, _memoryCache);
 

@@ -2,7 +2,6 @@ using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using rethus_backend.Data;
 using rethus_backend.Models;
-using rethus_backend.Models.Dto.Comments;
 using rethus_backend.Models.Dto.Pagination;
 using rethus_backend.RepositoryV2;
 using rethus_backend.Utilities.Constants.PaginatioConstants;
@@ -33,11 +32,26 @@ public class RepositoryPaginationV2<T> : IPaginationRepositoryV2<T>
             );
         }
 
-        if (request.QueryParameters.Status.HasValue)
-        {
-            query = query.Where(
-                x => EF.Property<UserFormStatus>(x, "Status") == request.QueryParameters.Status
-            );
+        if (!string.IsNullOrEmpty(request.QueryParameters.Status))
+        {   
+           var statusPropertyType = typeof(T).GetProperty("Status")?.PropertyType;
+
+           var statusValue = Enum.Parse(statusPropertyType, request.QueryParameters.Status);
+
+
+            query = query.Where(x => EF.Property<object>(x, "Status").Equals(statusValue));
+       
+        }
+
+        if (!string.IsNullOrEmpty(request.QueryParameters.Type))
+        {   
+           var statusPropertyType = typeof(T).GetProperty("Type")?.PropertyType;
+
+           var statusValue = Enum.Parse(statusPropertyType, request.QueryParameters.Type);
+
+
+            query = query.Where(x => EF.Property<object>(x, "Type").Equals(statusValue));
+       
         }
 
         if (!string.IsNullOrEmpty(request.QueryParameters.PersonalIdentification))
