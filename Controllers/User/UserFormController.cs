@@ -234,7 +234,11 @@ public class UserFormController : ApiBaseController
     }
 
     [HttpGet("donwload/inventory/file/{formId}")]
-    [Authorize(Roles = Policies.Inventory)]
+    [Authorize(
+        Roles = Policies.FuncionarioEtapa1
+            + ","
+            + Policies.Inventory
+    )]
     public async Task<ActionResult<ApiResponse>> GetFileByUserFomrId(string formId)
     {
         var detailsFile = await _unitOfWork.UserForm.GetFileInventory(formId);
