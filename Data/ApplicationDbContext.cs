@@ -137,6 +137,19 @@ namespace rethus_backend.Data
                             u.Consecutive // Columnas incluidas en el índice para cobertura
                         }
                 );
+
+            modelBuilder
+                .Entity<Comments>()
+                .HasIndex(
+                    c =>
+                        new
+                        {
+                            c.UserFormId,
+                            c.Status,
+                            c.Type
+                        }
+                )
+                .HasDatabaseName("IX_Comment_UserFormId_Status_Type");
         }
     }
 }
