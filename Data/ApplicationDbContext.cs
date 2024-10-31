@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using rethus_backend.Models;
+using rethus_backend.Utilities.Constants.User.UserConfiguration;
 
 namespace rethus_backend.Data
 {
@@ -27,6 +28,7 @@ namespace rethus_backend.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // RELATION MODEL USERFORM
             modelBuilder
                 .Entity<Country>()
                 .HasMany(c => c.Departments)
@@ -111,6 +113,12 @@ namespace rethus_backend.Data
                 .HasForeignKey(p => p.AcademicsMunicipalityInstitutionId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // INDICE MODEL USERFORM
+            modelBuilder
+                .Entity<UserForm>()
+                .HasIndex(u => u.UserFormId) // Índice en CreatedAt
+                .HasDatabaseName("IX_UserForm_UserFormId");
+
             modelBuilder
                 .Entity<UserForm>()
                 .HasIndex(u => u.CreatedAt) // Índice en CreatedAt
@@ -134,10 +142,26 @@ namespace rethus_backend.Data
                             u.PersonalIdentification,
                             u.TypeProcedure,
                             u.StepForm,
-                            u.Consecutive // Columnas incluidas en el índice para cobertura
+                            u.Consecutive
                         }
                 );
 
+            modelBuilder
+                .Entity<UserForm>()
+                .HasIndex(u => new { u.UserId, u.Status })
+                .HasDatabaseName("IX_UserForm_UserId_Status");
+
+            modelBuilder
+                .Entity<UserForm>()
+                .HasIndex(u => new { u.PersonalTypeIdentification, u.PersonalIdentification })
+                .HasDatabaseName("IX_UserForm_PersonalTypeIdentification_PersonalIdentification");
+
+            modelBuilder
+                .Entity<UserForm>()
+                .HasIndex(u => new { u.Consecutive })
+                .HasDatabaseName("IX_UserForm_Consecutive");
+
+            // INDICE MODEL COMMENTS
             modelBuilder
                 .Entity<Comments>()
                 .HasIndex(
@@ -150,6 +174,68 @@ namespace rethus_backend.Data
                         }
                 )
                 .HasDatabaseName("IX_Comment_UserFormId_Status_Type");
+
+            // INDICE MODEL USERFORMFILES
+            modelBuilder
+                .Entity<UserFormFiles>()
+                .HasIndex(c => new { c.UserFormFilesId, })
+                .HasDatabaseName("IX_UserForm_UserFormFilesId");
+
+            modelBuilder
+                .Entity<UserFormFiles>()
+                .HasIndex(c => new { c.UserFormId, })
+                .HasDatabaseName("IX_UserForm_UserFormId");
+
+            // INDICE MODEL COMMENTS
+            modelBuilder
+                .Entity<Comments>()
+                .HasIndex(c => new { c.CommentId, })
+                .HasDatabaseName("IX_Comments_CommentId");
+
+            // INDICE MODEL USERCONFIGURATION
+            modelBuilder
+                .Entity<Configurations>()
+                .HasIndex(c => new { c.UserId, c.Step })
+                .HasDatabaseName("IX_Configurations_UserId_Step");
+
+            modelBuilder
+                .Entity<Configurations>()
+                .HasIndex(c => new { c.ConfigurationsId })
+                .HasDatabaseName("IX_Configurations_UserId");
+
+            // INDICE MODEL USER
+            modelBuilder
+                .Entity<User>()
+                .HasIndex(c => new { c.UserId })
+                .HasDatabaseName("IX_User_UserId");
+
+            modelBuilder
+                .Entity<User>()
+                .HasIndex(c => new { c.email, c.Status })
+                .HasDatabaseName("IX_User_Email_Status");
+
+            modelBuilder
+                .Entity<User>()
+                .HasIndex(c => new { c.Token })
+                .HasDatabaseName("IX_User_Token");
+
+            // INDICE MODEL COUNTRY
+            modelBuilder
+                .Entity<Country>()
+                .HasIndex(c => new { c.CountryId })
+                .HasDatabaseName("IX_Country_CountryId");
+
+            // INDICE MODEL DEPARMENTS
+            modelBuilder
+                .Entity<Department>()
+                .HasIndex(c => new { c.CountryId })
+                .HasDatabaseName("IX_Department_CountryId");
+
+            // INDICE MODEL CITY
+            modelBuilder
+                .Entity<City>()
+                .HasIndex(c => new { c.DepartmentId })
+                .HasDatabaseName("IX_Department_DepartmentId");
         }
     }
 }
