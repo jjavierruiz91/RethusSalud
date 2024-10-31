@@ -6,6 +6,7 @@ namespace rethus_backend.Models
 {
     public class User
     {
+        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string UserId { get; set; }
 

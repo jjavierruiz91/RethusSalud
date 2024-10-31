@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using rethus_backend.Utilities.Constants.User.UserFormConstants;
 
@@ -5,6 +6,7 @@ namespace rethus_backend.Models
 {
     public class UserFormFiles
     {
+        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string? UserFormFilesId { get; set; }
         public long Size { get; set; }

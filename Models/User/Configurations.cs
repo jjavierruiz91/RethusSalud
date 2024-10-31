@@ -1,9 +1,11 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace rethus_backend.Models
 {
     public class Configurations
     {
+        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string ConfigurationsId { get; set; }
 

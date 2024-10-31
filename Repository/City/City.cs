@@ -33,6 +33,7 @@ namespace rethus_backend.Repository
                 // Si no está en caché, consulta la base de datos
                 cities = await _context.City
                     .AsNoTracking()
+                    .OrderBy(c => c.CityId)
                     .Where(c => c.DepartmentId == departmentId)
                     .ToListAsync();
 

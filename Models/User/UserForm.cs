@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using rethus_backend.Utilities.Constants.User.UserFormConstants;
 using rethus_backend.Utilities.Constants.UserConstants;
@@ -6,6 +7,7 @@ namespace rethus_backend.Models
 {
     public class UserForm
     {
+        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string UserFormId { get; set; }
 
