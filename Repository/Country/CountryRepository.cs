@@ -47,7 +47,6 @@ namespace rethus_backend.Repository
                 .AsNoTracking()
                 .Select(c => new CountryResponseDto { Id = c.CountryId, Name = c.Name })
                 .ToListAsync();
-
             return countries;
         }
 
@@ -64,6 +63,7 @@ namespace rethus_backend.Repository
             {
                 countries = await _context.Country
                     .AsNoTracking()
+                    .OrderBy(c => c.CountryId)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();

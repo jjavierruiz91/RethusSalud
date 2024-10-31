@@ -31,6 +31,7 @@ namespace rethus_backend.Repository
             {
                 departments = await _context.Departments
                     .AsNoTracking()
+                    .OrderBy(c => c.CountryId)
                     .Where(d => d.CountryId == countryId)
                     .ToListAsync();
 
