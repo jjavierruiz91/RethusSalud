@@ -2,9 +2,10 @@ namespace rethus_backend.Utilities.Constants.User.CommentsConstants
 {
     public enum CommentsStatus
     {
-        pending,
-        approved,
-        rejected
+        pending, // pendiente por revision de parte del usuario
+        approved, // aprobado por el usuario o funcionario
+        rejected, // Rechazado por el funcionario
+        updated // Actualizado por el usuario
     }
 
     public enum CommentsType

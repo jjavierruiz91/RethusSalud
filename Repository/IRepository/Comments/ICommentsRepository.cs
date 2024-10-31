@@ -14,6 +14,8 @@ namespace rethus_backend.Repository.IRepository
 
         public ApiResponse UpdateStatusRejectedComments(string commentId);
 
+        ApiResponse UpdateStatusUpdatedComments(string commentId);
+        ApiResponse UpdateStatusProcesssComments(string commentId);
         bool isExistsComment(string commentId);
 
         Comments GetByCommentsId(string commentId);

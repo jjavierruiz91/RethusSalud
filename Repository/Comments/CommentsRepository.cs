@@ -110,7 +110,7 @@ namespace rethus_backend.Repository
             return result;
         }
 
-          public async Task<PaginationResultDto<TResult>> GetPagedData<TResult>(
+        public async Task<PaginationResultDto<TResult>> GetPagedData<TResult>(
             PaginationRequestDto<FilterQueryParametersDto> request,
             Func<Comments, TResult> selector
         )
@@ -169,6 +169,46 @@ namespace rethus_backend.Repository
 
             _context.SaveChanges();
             response.Messages.Add("El comentario ha sido rechazado");
+            response.StatusCode = HttpStatusCode.OK;
+            return response;
+        }
+
+        public ApiResponse UpdateStatusUpdatedComments(string commentId)
+        {
+            var response = new ApiResponse();
+
+            Comments comment = GetByCommentsId(commentId);
+
+            if (comment == null)
+            {
+                response.AddError("El commentario no existe", HttpStatusCode.NotFound, false);
+                return response;
+            }
+
+            comment.Status = CommentsStatus.updated;
+
+            _context.SaveChanges();
+            response.Messages.Add("El comentario ha sido actulizado");
+            response.StatusCode = HttpStatusCode.OK;
+            return response;
+        }
+
+        public ApiResponse UpdateStatusProcesssComments(string commentId)
+        {
+            var response = new ApiResponse();
+
+            Comments comment = GetByCommentsId(commentId);
+
+            if (comment == null)
+            {
+                response.AddError("El commentario no existe", HttpStatusCode.NotFound, false);
+                return response;
+            }
+
+            comment.Status = CommentsStatus.pending;
+
+            _context.SaveChanges();
+            response.Messages.Add("El comentario ha sido actualizo a en progreso");
             response.StatusCode = HttpStatusCode.OK;
             return response;
         }

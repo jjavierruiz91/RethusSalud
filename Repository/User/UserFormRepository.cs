@@ -524,6 +524,11 @@ namespace rethus_backend.Repository
             return response;
         }
 
+        public bool ExistFormWithConsecutive(string consecutive)
+        {
+            return _context.UserForm.Any(uf => uf.Consecutive == consecutive);
+        }
+
         public async Task<ApiResponse> UpdateConsecutive(
             string userFormId,
             UserFormConsecutiveDto payload
@@ -555,6 +560,19 @@ namespace rethus_backend.Repository
                 response.AddError(
                     "La fecha es inválida o no está en el formato yyyy-MM-dd",
                     HttpStatusCode.BadRequest,
+                    false
+                );
+                response.IsSuccess = false;
+                return response;
+            }
+
+            bool existFormWhitConsecutive = ExistFormWithConsecutive(payload.consecutive);
+
+            if (existFormWhitConsecutive)
+            {
+                response.AddError(
+                    "Ya existe un formulario con este consecutivo",
+                    HttpStatusCode.Conflict,
                     false
                 );
                 response.IsSuccess = false;

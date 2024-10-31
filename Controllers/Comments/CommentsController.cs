@@ -47,7 +47,7 @@ public class CommentsController : ApiBaseController
     }
 
     [HttpPost]
-     [Authorize(
+    [Authorize(
         Roles = Policies.FuncionarioEtapa1
             + ","
             + Policies.FuncionarioEtapa2
@@ -71,7 +71,7 @@ public class CommentsController : ApiBaseController
     }
 
     [HttpPatch("approved/{commentId}")]
-     [Authorize(
+    [Authorize(
         Roles = Policies.FuncionarioEtapa1
             + ","
             + Policies.FuncionarioEtapa2
@@ -89,7 +89,7 @@ public class CommentsController : ApiBaseController
     }
 
     [HttpPatch("reject/{commentId}")]
-     [Authorize(
+    [Authorize(
         Roles = Policies.FuncionarioEtapa1
             + ","
             + Policies.FuncionarioEtapa2
@@ -103,6 +103,42 @@ public class CommentsController : ApiBaseController
     public ActionResult<ApiResponse> RejectComments(string commentId)
     {
         ApiResponse resolverComments = _unitOfWork.Comments.UpdateStatusRejectedComments(commentId);
+        return resolverComments;
+    }
+
+    [HttpPatch("updated/{commentId}")]
+    [Authorize(
+        Roles = Policies.FuncionarioEtapa1
+            + ","
+            + Policies.FuncionarioEtapa2
+            + ","
+            + Policies.FuncionarioEtapa3
+            + ","
+            + Policies.Inventory
+            + ","
+            + Policies.User
+    )]
+    public ActionResult<ApiResponse> UpdatedComments(string commentId)
+    {
+        ApiResponse resolverComments = _unitOfWork.Comments.UpdateStatusUpdatedComments(commentId);
+        return resolverComments;
+    }
+
+    [HttpPatch("process/{commentId}")]
+    [Authorize(
+        Roles = Policies.FuncionarioEtapa1
+            + ","
+            + Policies.FuncionarioEtapa2
+            + ","
+            + Policies.FuncionarioEtapa3
+            + ","
+            + Policies.Inventory
+            + ","
+            + Policies.User
+    )]
+    public ActionResult<ApiResponse> processComments(string commentId)
+    {
+        ApiResponse resolverComments = _unitOfWork.Comments.UpdateStatusProcesssComments(commentId);
         return resolverComments;
     }
 
@@ -156,6 +192,8 @@ public class CommentsController : ApiBaseController
         );
 
         // Retorna el resultado con el formato esperado
-        return Ok(result);
-    } 
+        _response.Result = result;
+        _response.IsSuccess = true;
+        return Ok(_response);
+    }
 }
