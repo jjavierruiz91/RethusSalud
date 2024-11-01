@@ -31,6 +31,18 @@ public class UserFormController : ApiBaseController
     [Authorize(Roles = Policies.User)]
     public async Task<ActionResult<ApiResponse>> PostAsync([FromBody] UserFormCreateDto userForm)
     {
+        var configuration = _unitOfWork.UserConfiguration.ValidateStepConfiguration(
+            userForm.userId,
+            ConfigurationStep.load_user_form
+        );
+        if (!configuration.IsSuccess)
+        {
+            _response.IsSuccess = false;
+            _response.Messages = configuration.Messages;
+            _response.StatusCode = HttpStatusCode.Conflict;
+            return BadRequest(_response);
+        }
+
         ApiResponse createUser = await _unitOfWork.UserForm.post(userForm);
 
         if (createUser.IsSuccess == false)
@@ -234,11 +246,7 @@ public class UserFormController : ApiBaseController
     }
 
     [HttpGet("donwload/inventory/file/{formId}")]
-    [Authorize(
-        Roles = Policies.FuncionarioEtapa1
-            + ","
-            + Policies.Inventory
-    )]
+    [Authorize(Roles = Policies.FuncionarioEtapa1 + "," + Policies.Inventory)]
     public async Task<ActionResult<ApiResponse>> GetFileByUserFomrId(string formId)
     {
         var detailsFile = await _unitOfWork.UserForm.GetFileInventory(formId);

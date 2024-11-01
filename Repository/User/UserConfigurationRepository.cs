@@ -124,13 +124,23 @@ namespace rethus_backend.Repository
                     HttpStatusCode.BadRequest,
                     false
                 );
+                response.IsSuccess = false;
                 return response;
             }
 
-            var nextStep = UserConfiguration.GetNextStepOnboarding(user_configuration.Step);
+            if (user_configuration.Step != ConfigurationStep.select_procedure)
+            {
+                response.AddError(
+                    "El usuario ha seleccionado anteriormente un tipo de procedimiento",
+                    HttpStatusCode.Conflict,
+                    false
+                );
+                response.IsSuccess = false;
+                return response;
+            }
 
             user_configuration.TypeProcedure = type_procedure;
-            user_configuration.Step = nextStep;
+            user_configuration.Step = ConfigurationStep.load_user_form;
 
             _context.Configurations.Update(user_configuration);
             _context.SaveChanges();
@@ -154,9 +164,19 @@ namespace rethus_backend.Repository
                 return response;
             }
 
+            if (user_configuration.Step != ConfigurationStep.acept_terms_conditions)
+            {
+                response.AddError(
+                    "El usuario ha aceptado anteriormente los terminos y condiciones",
+                    HttpStatusCode.Conflict,
+                    false
+                );
+                response.IsSuccess = false;
+                return response;
+            }
+
             var nextStep = UserConfiguration.GetNextStepOnboarding(user_configuration.Step);
             user_configuration.Step = nextStep;
-
             user_configuration.TermCondition = term;
 
             _context.Configurations.Update(user_configuration);
@@ -261,6 +281,24 @@ namespace rethus_backend.Repository
             _context.SaveChanges();
 
             response.Messages.Add("Se reseteo el proceso del usuario");
+            return response;
+        }
+
+        public ApiResponse ValidateStepConfiguration(string userId, ConfigurationStep step)
+        {
+            var response = new ApiResponse();
+
+            var configurations = _context.Configurations.Any(
+                user => user.UserId == userId && user.Step == step
+            );
+
+            if (!configurations)
+            {
+                response.IsSuccess = false;
+                response.Messages.Add("El Usuario ha realizado esta paso anteriormente");
+                return response;
+            }
+
             return response;
         }
     }

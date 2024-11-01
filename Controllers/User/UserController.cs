@@ -290,16 +290,16 @@ public class UserController : ApiBaseController
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;
             _response.Messages.Add("El tipo de tramite no es permitido");
-            BadRequest(_response);
+            return BadRequest(_response);
         }
 
         var user = _unitOfWork.UserConfiguration.updateTypeProcessConfiguration(id, typeProcedure);
-        if (user == null)
+        if (!user.IsSuccess)
         {
-            _response.IsSuccess = false;
-            _response.StatusCode = HttpStatusCode.BadRequest;
-            _response.Messages.Add("Error al actualizar el tipo de tramite");
-            BadRequest(_response);
+            _response.IsSuccess = user.IsSuccess;
+            _response.StatusCode = user.StatusCode;
+            _response.Messages = user.Messages;
+            return BadRequest(_response);
         }
 
         _response.IsSuccess = true;
@@ -319,11 +319,12 @@ public class UserController : ApiBaseController
             id,
             payload.termCondition
         );
-        if (user == null)
+        if (!user.IsSuccess)
         {
-            _response.IsSuccess = false;
-            _response.StatusCode = HttpStatusCode.BadRequest;
-            _response.Messages.Add("Error al actualizar los terminos y condiciones");
+            _response.IsSuccess = user.IsSuccess;
+            _response.StatusCode = user.StatusCode;
+            _response.Messages = user.Messages;
+            return BadRequest(_response);
         }
 
         _response.IsSuccess = true;
@@ -352,11 +353,7 @@ public class UserController : ApiBaseController
         {
             var fileBytes = await System.IO.File.ReadAllBytesAsync(existFile);
             var fileName = Path.GetFileName(existFile);
-            return File(
-                fileBytes,
-                "application/pdf",
-                fileName
-            );
+            return File(fileBytes, "application/pdf", fileName);
         }
 
         _response.Result = existFile;

@@ -26,6 +26,18 @@ public class UserFormFilesController : ApiBaseController
         [FromForm] UserFormFilesCreateDto _files
     )
     {
+        var configuration = _unitOfWork.UserConfiguration.ValidateStepConfiguration(
+            userId,
+            ConfigurationStep.load_user_form
+        );
+        if (!configuration.IsSuccess)
+        {
+            _response.IsSuccess = false;
+            _response.Messages = configuration.Messages;
+            _response.StatusCode = HttpStatusCode.Conflict;
+            return BadRequest(_response);
+        }
+
         var response = await _unitOfWork.UserFormFiles.RegisterUserFormFileAsync(userId, _files);
 
         if (!response.IsSuccess)
