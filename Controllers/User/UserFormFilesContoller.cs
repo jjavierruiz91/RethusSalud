@@ -28,7 +28,7 @@ public class UserFormFilesController : ApiBaseController
     {
         var configuration = _unitOfWork.UserConfiguration.ValidateStepConfiguration(
             userId,
-            ConfigurationStep.load_user_form
+            ConfigurationStep.load_user_files
         );
         if (!configuration.IsSuccess)
         {

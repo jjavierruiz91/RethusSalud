@@ -295,7 +295,7 @@ namespace rethus_backend.Repository
             if (!configurations)
             {
                 response.IsSuccess = false;
-                response.Messages.Add("El Usuario ha realizado esta paso anteriormente");
+                response.Messages.Add("El Usuario ha realizado este paso anteriormente");
                 return response;
             }
 
