@@ -8,6 +8,7 @@ namespace rethus_backend.Models.Dto.Configuration
         public string typeProcedure { get; set; }
         public bool termCondition { get; set; }
         public string userId { get; set; }
+        public string? userFormId { get; set; }
 
         public ConfigurationResponseDto(Configurations _configuration)
         {
@@ -17,6 +18,7 @@ namespace rethus_backend.Models.Dto.Configuration
             this.typeProcedure = _configuration.TypeProcedure.ToString();
             this.termCondition = _configuration.TermCondition;
             this.userId = _configuration.UserId;
+            this.userFormId = _configuration.UserFormId;
         }
     }
 }

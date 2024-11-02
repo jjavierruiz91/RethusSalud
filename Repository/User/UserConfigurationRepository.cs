@@ -4,6 +4,7 @@ using rethus_backend.Repository.IRepository;
 using System.Net;
 using rethus_backend.Utilities.Constants.UserConstants;
 using rethus_backend.Utilities.Constants.User.UserConfiguration;
+using Microsoft.EntityFrameworkCore;
 
 namespace rethus_backend.Repository
 {
@@ -300,6 +301,26 @@ namespace rethus_backend.Repository
             }
 
             return response;
+        }
+
+        public Task<ApiResponse> UpdateFormIdConfiguration(
+            string configurationsId,
+            string userFormId
+        )
+        {
+            var response = new ApiResponse();
+
+            int rowsAffected = _context.Configurations
+                .Where(c => c.ConfigurationsId == configurationsId)
+                .ExecuteUpdate(c => c.SetProperty(cfg => cfg.UserFormId, userFormId));
+
+            if (rowsAffected == 0)
+            {
+                response.IsSuccess = true;
+                return Task.FromResult(response);
+            }
+
+            return Task.FromResult(response);
         }
     }
 }

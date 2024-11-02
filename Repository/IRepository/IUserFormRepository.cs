@@ -17,7 +17,7 @@ namespace rethus_backend.Repository.IRepository
 
         UserForm GetById(string id);
         string GetUserByUserFormId(string userFormId);
-
+        string GetUserFormIdByUserId(string userId);
         DetailsProcessUserDto GetDetailProcess(UserFormProcessDto payload);
 
         bool ExistFormWithConsecutive(string Consecutive);

@@ -49,12 +49,26 @@ public class UserFormController : ApiBaseController
         {
             return BadRequest(createUser);
         }
+        await Task.Run(() =>
+        {
+            Configurations user_configuration = _unitOfWork.UserConfiguration.GetByUserId(
+                userForm.userId
+            );
+            var result = _unitOfWork.UserConfiguration.updateAutomaticStepConfiguration(
+                user_configuration.ConfigurationsId
+            );
 
-        var user_configuration = _unitOfWork.UserConfiguration.GetByUserId(userForm.userId);
-        _unitOfWork.UserConfiguration.updateAutomaticStepConfiguration(
-            user_configuration.ConfigurationsId
-        );
+            var userFormId = _unitOfWork.UserForm.GetUserFormIdByUserId(userForm.userId);
 
+            if (userFormId == null)
+            {
+                return;
+            }
+            _unitOfWork.UserConfiguration.UpdateFormIdConfiguration(
+                user_configuration.ConfigurationsId,
+                userFormId
+            );
+        });
         return Ok(createUser);
     }
 

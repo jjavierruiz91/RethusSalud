@@ -15,6 +15,7 @@ namespace rethus_backend.Models.Dto.Auth
         public string typeProcedure { get; set; }
 
         public string configurationId { get; set; }
+        public string? UserFormId { get; set; }
 
         public AuthResponseDto(Models.User user, string jwtToken, Models.Configurations user_config)
         {
@@ -28,6 +29,7 @@ namespace rethus_backend.Models.Dto.Auth
             this.configurationId = user_config.ConfigurationsId;
             this.termCondition = user_config.TermCondition == true ? true : false;
             this.typeProcedure = user_config.TypeProcedure.ToString();
+            this.UserFormId = user_config.UserFormId;
         }
     }
 }

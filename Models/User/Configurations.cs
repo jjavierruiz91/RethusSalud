@@ -13,14 +13,11 @@ namespace rethus_backend.Models
 
         public required ConfigurationStep Step { get; set; }
         public required ConfigurationTypeProcedure TypeProcedure { get; set; }
-        public required Boolean TermCondition { get; set; }
-
+        public required bool TermCondition { get; set; }
+        public string? UserFormId { get; set; }
         public DateTime CreatedAt { get; set; }
-
         public DateTime UpdatedAt { get; set; }
-
         public string UserId { get; set; }
-
         public User User { get; set; }
     }
 

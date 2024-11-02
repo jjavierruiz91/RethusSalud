@@ -791,6 +791,16 @@ namespace rethus_backend.Repository
             return userId;
         }
 
+        public string GetUserFormIdByUserId(string userId)
+        {
+            var userFormId = _context.UserForm
+                .Where(x => x.UserId == userId)
+                .Select(x => x.UserFormId)
+                .FirstOrDefault();
+
+            return userFormId;
+        }
+
         public bool ValidateExistFileForDownload(string userId)
         {
             var userForm = _context.UserForm
