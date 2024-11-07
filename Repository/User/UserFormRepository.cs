@@ -753,11 +753,37 @@ namespace rethus_backend.Repository
 
             var rethusDto = new TemplateSSODto
             {
-                CODIGO_PLAZA = form.Consecutive,
-                MODALIDAD = "ESPERA",
-                NOMBRE_INSTITUCION = form.AcademicsNameInstitution,
-                UBICACION_PLAZA = form.AcademicsProgramName,
+                NOMBRE_PROFESIONAL = form.PersonalFirstName + " " + form.PersonalLastName,
+                CEDULA_PROFESIONAL = form.PersonalIdentification,
+                EXPEDICION_PROFESIONAL = form.PersonalPlaceOfIssue,
+                PROFESION_PROFESIONAL = form.AcademicsProgramName,
+                CODIGO_PLAZA = form.Consecutive
             };
+
+            string jsonContent = await File.ReadAllTextAsync(
+                "./resources/templates/certificate/data_config_users.json"
+            );
+
+            ConfigTemplate config = JsonSerializer.Deserialize<ConfigTemplate>(jsonContent);
+
+            if (config != null)
+            { 
+                rethusDto.MODALIDAD = "Espera";
+                rethusDto.FECHA_INICION = "";
+                rethusDto.FECHA_TERMINACION = "";
+                rethusDto.DIAS = "16";
+                rethusDto.MES = "1";
+                rethusDto.ANO = "2024";
+                rethusDto.ANO_LETRAS = "2024";
+                rethusDto.FIRMA_SECRETARIO = config.FIRMA_PRINCIPAL;
+                rethusDto.TIPO_TRABAJO = config.TIPO_TRABAJO;
+                rethusDto.FIRMA_PROYECTO = config.FIRMA_PROYECTO;
+                rethusDto.FIRMA_1 = config.FIRMA_1;
+                rethusDto.FIRMA_REVISION = config.FIRMA_REVISION;
+                rethusDto.FIRMA_2 = config.FIRMA_2;
+                rethusDto.FIRMA_APROBO = config.FIRMA_APROBO;
+                rethusDto.FIRMA_3 = config.FIRMA_3; 
+            }
 
             certificateRethus = await DownloadCertificateSso(rethusDto);
             var file = new ConvertPdfService();
@@ -974,6 +1000,7 @@ namespace rethus_backend.Repository
                     HttpStatusCode.NotFound,
                     false
                 );
+                return response;
             }
 
             var payloadProperties = typeof(UserFormUpdateDto).GetProperties();
@@ -996,6 +1023,7 @@ namespace rethus_backend.Repository
                     }
                 }
             }
+            form.Status = UserFormStatus.needsReview;
             await _context.SaveChangesAsync();
 
             response.IsSuccess = true;

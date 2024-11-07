@@ -5,9 +5,10 @@ namespace rethus_backend.Utilities.Constants.User.UserFormConstants
 {
     public enum UserFormStatus
     {
-        pending,
-        reject,
-        approved
+        pending, // Formulario pendiente de revisión inicial
+        reject, // Formulario rechazado por el usuario 1
+        approved, // Formulario aprobado
+        needsReview // Usuario 2 ha realizado cambios y el formulario requiere revisión nuevamente
     }
 
     public enum ReviewStepForm

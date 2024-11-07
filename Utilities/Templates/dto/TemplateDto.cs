@@ -22,6 +22,10 @@ namespace rethus_backend.Utilities.Templates.dto
 
     public class TemplateSSODto
     {
+        public string NOMBRE_PROFESIONAL { get; set; }
+        public string CEDULA_PROFESIONAL { get; set; }
+        public string EXPEDICION_PROFESIONAL { get; set; }
+        public string PROFESION_PROFESIONAL { get; set; }
         public string CODIGO_PLAZA { get; set; }
         public string MODALIDAD { get; set; }
         public string NOMBRE_INSTITUCION { get; set; }
@@ -33,7 +37,9 @@ namespace rethus_backend.Utilities.Templates.dto
         public string ANO_LETRAS { get; set; }
         public string ANO { get; set; }
         public string FIRMA_SECRETARIO { get; set; }
+        public string TIPO_TRABAJO { get; set; }
         public string FIRMA_PROYECTO { get; set; }
+        public string FIRMA_REVISION { get; set; }
         public string FIRMA_1 { get; set; }
         public string FIRMA_2 { get; set; }
         public string FIRMA_APROBO { get; set; }

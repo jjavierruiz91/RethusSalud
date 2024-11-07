@@ -305,8 +305,10 @@ public class UserFormController : ApiBaseController
     )
     {
         if (string.IsNullOrEmpty(formId))
-        {
-            return BadRequest("Form ID is required.");
+        {   
+            _response.Messages.Add("Form ID is required");
+            _response.IsSuccess = false;
+            return BadRequest(_response);
         }
 
         ApiResponse reponse = await _unitOfWork.UserForm.updateFormInformation(formId, payload);
