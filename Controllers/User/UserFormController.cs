@@ -6,6 +6,7 @@ using rethus_backend.Models.Dto.Pagination;
 using rethus_backend.Models.Dto.UserForm;
 using rethus_backend.Models.Dto.UserFormFiles;
 using rethus_backend.Utilities.Constants.PaginatioConstants;
+using rethus_backend.Utilities.Constants.User.UserFormConstants;
 using System.Globalization;
 using System.Net;
 
@@ -181,9 +182,17 @@ public class UserFormController : ApiBaseController
             + ","
             + Policies.Inventory
     )]
-    public async Task<ActionResult<ApiResponse>> ApprovedForm(string formId)
+    public async Task<ActionResult<ApiResponse>> ApprovedForm(
+        string formId,
+        [FromBody] UserReviewRolDto payload
+    )
     {
-        ApiResponse approvedForm = _unitOfWork.UserForm.ApprovedForm(formId);
+        ApiResponse approvedForm = _unitOfWork.UserForm.ApprovedForm(formId, payload.userRol);
+
+        if (!approvedForm.IsSuccess)
+        {
+            return BadRequest(approvedForm);
+        }
 
         await Task.Run(() => _unitOfWork.UserForm.ValidateCertificateUserForm(formId));
         await Task.Run(() =>
@@ -305,7 +314,7 @@ public class UserFormController : ApiBaseController
     )
     {
         if (string.IsNullOrEmpty(formId))
-        {   
+        {
             _response.Messages.Add("Form ID is required");
             _response.IsSuccess = false;
             return BadRequest(_response);

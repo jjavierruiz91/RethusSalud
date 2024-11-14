@@ -197,7 +197,7 @@ namespace rethus_backend.Repository
 
             form.UserId = createRequestDto.userId;
             form.Status = UserFormStatus.pending;
-            form.StepForm = ReviewStepForm.officer1;
+            form.StepForm = ReviewStepForm.FuncionarioEtapa1;
             form.CreatedAt = DateTime.Now;
             form.UpdatedAt = DateTime.Now;
 
@@ -363,7 +363,7 @@ namespace rethus_backend.Repository
             return userForm;
         }
 
-        public ApiResponse ApprovedForm(string userFormId)
+        public ApiResponse ApprovedForm(string userFormId, ReviewStepForm stepForm)
         {
             var response = new ApiResponse();
 
@@ -372,6 +372,16 @@ namespace rethus_backend.Repository
             if (form == null)
             {
                 response.AddError("El formulario no existe", HttpStatusCode.NotFound, false);
+                return response;
+            }
+
+            if (form.StepForm != stepForm)
+            {
+                response.AddError(
+                    "El funcionario no puede aprobar variar veces el mismo formulario",
+                    HttpStatusCode.NotFound,
+                    false
+                );
                 return response;
             }
 
@@ -401,7 +411,7 @@ namespace rethus_backend.Repository
                 return response;
             }
 
-            comment.StepForm = ReviewStepForm.officer1;
+            comment.StepForm = ReviewStepForm.FuncionarioEtapa1;
             comment.Status = UserFormStatus.reject;
 
             _userConfiguration.updateStateRejectConfiguration(comment.UserId);
@@ -767,7 +777,7 @@ namespace rethus_backend.Repository
             ConfigTemplate config = JsonSerializer.Deserialize<ConfigTemplate>(jsonContent);
 
             if (config != null)
-            { 
+            {
                 rethusDto.MODALIDAD = "Espera";
                 rethusDto.FECHA_INICION = "";
                 rethusDto.FECHA_TERMINACION = "";
@@ -782,7 +792,7 @@ namespace rethus_backend.Repository
                 rethusDto.FIRMA_REVISION = config.FIRMA_REVISION;
                 rethusDto.FIRMA_2 = config.FIRMA_2;
                 rethusDto.FIRMA_APROBO = config.FIRMA_APROBO;
-                rethusDto.FIRMA_3 = config.FIRMA_3; 
+                rethusDto.FIRMA_3 = config.FIRMA_3;
             }
 
             certificateRethus = await DownloadCertificateSso(rethusDto);

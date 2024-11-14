@@ -13,9 +13,9 @@ namespace rethus_backend.Utilities.Constants.User.UserFormConstants
 
     public enum ReviewStepForm
     {
-        officer1,
-        officer2,
-        officer3,
+        FuncionarioEtapa1,
+        FuncionarioEtapa2,
+        FuncionarioEtapa3,
         success,
         error
     }
@@ -26,13 +26,13 @@ namespace rethus_backend.Utilities.Constants.User.UserFormConstants
         {
             switch (step)
             {
-                case ReviewStepForm.officer1:
-                    return ReviewStepForm.officer2;
+                case ReviewStepForm.FuncionarioEtapa1:
+                    return ReviewStepForm.FuncionarioEtapa2;
 
-                case ReviewStepForm.officer2:
-                    return ReviewStepForm.officer3;
+                case ReviewStepForm.FuncionarioEtapa2:
+                    return ReviewStepForm.FuncionarioEtapa3;
 
-                case ReviewStepForm.officer3:
+                case ReviewStepForm.FuncionarioEtapa3:
                     return ReviewStepForm.success;
                 default:
                     return ReviewStepForm.error;

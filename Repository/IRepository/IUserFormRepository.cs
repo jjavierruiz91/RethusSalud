@@ -5,6 +5,7 @@ using rethus_backend.Models.Dto.Pagination;
 using rethus_backend.Models.Dto.UserForm;
 using rethus_backend.Models.Dto.UserFormFiles;
 using rethus_backend.Utilities.Constants.PaginatioConstants;
+using rethus_backend.Utilities.Constants.User.UserFormConstants;
 using rethus_backend.Utilities.Templates.dto;
 
 namespace rethus_backend.Repository.IRepository
@@ -33,7 +34,7 @@ namespace rethus_backend.Repository.IRepository
         PaginationResult<UserForm> GetAll(int? page);
         Task<ApiResponse> post(UserFormCreateDto createRequestDto);
         Task<ApiResponse> updateFormInformation(string formId, UserFormUpdateDto payload);
-        ApiResponse ApprovedForm(string userFormId);
+        ApiResponse ApprovedForm(string userFormId, ReviewStepForm stepForm);
         ApiResponse RejectForm(string userFormId);
 
         ApiResponse RegisterUserFormFile(string userFormId, UserFormFilesCreateDto payload);
