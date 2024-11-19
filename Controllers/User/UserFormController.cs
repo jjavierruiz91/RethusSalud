@@ -329,18 +329,8 @@ public class UserFormController : ApiBaseController
 
         await Task.Run(() =>
         {
-            Console.WriteLine("entro");
             string userId = _unitOfWork.UserForm.GetUserByUserFormId(formId);
-            Console.WriteLine("entro 3");
-            try
-            {
-                _unitOfWork.UserConfiguration.UpdateStateUpdateConfiguration(userId);
-                Console.WriteLine("entro xxx");
-            }
-            catch (System.Exception)
-            {
-                throw;
-            }
+            _unitOfWork.UserConfiguration.UpdateStateUpdateConfiguration(userId);
         });
 
         _response.IsSuccess = true;
