@@ -1034,6 +1034,7 @@ namespace rethus_backend.Repository
                 }
             }
             form.Status = UserFormStatus.needsReview;
+            form.StepForm = ReviewStepForm.FuncionarioEtapa1;
             await _context.SaveChangesAsync();
 
             response.IsSuccess = true;

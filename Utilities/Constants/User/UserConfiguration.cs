@@ -39,6 +39,15 @@ namespace rethus_backend.Utilities.Constants.User.UserConfiguration
 
         public static ConfigurationsState getStateConfiguration(ConfigurationsState state)
         {
+            // Validación si el estado es un valor no reconocido.
+            if (!Enum.IsDefined(typeof(ConfigurationsState), state))
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(state),
+                    "El estado proporcionado no es válido."
+                );
+            }
+
             switch (state)
             {
                 case ConfigurationsState.initial:
@@ -47,8 +56,14 @@ namespace rethus_backend.Utilities.Constants.User.UserConfiguration
                 case ConfigurationsState.inprogress:
                     return ConfigurationsState.completed;
 
+                case ConfigurationsState.updated:
+                    return ConfigurationsState.inprogress;
+
+                case ConfigurationsState.rejected:
+                    return ConfigurationsState.inprogress;
+
                 default:
-                    return ConfigurationsState.rejected;
+                    return ConfigurationsState.inprogress;
             }
         }
     }

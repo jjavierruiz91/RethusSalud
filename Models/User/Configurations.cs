@@ -26,7 +26,8 @@ namespace rethus_backend.Models
         initial,
         inprogress,
         completed,
-        rejected
+        rejected,
+        updated
     }
 
     public enum ConfigurationStep

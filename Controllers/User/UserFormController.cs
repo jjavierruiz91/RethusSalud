@@ -194,7 +194,6 @@ public class UserFormController : ApiBaseController
             return BadRequest(approvedForm);
         }
 
-        await Task.Run(() => _unitOfWork.UserForm.ValidateCertificateUserForm(formId));
         await Task.Run(() =>
         {
             string userId = _unitOfWork.UserForm.GetUserByUserFormId(formId);
@@ -203,6 +202,7 @@ public class UserFormController : ApiBaseController
                 user_configuration.ConfigurationsId
             );
         });
+        await Task.Run(() => _unitOfWork.UserForm.ValidateCertificateUserForm(formId));
 
         return approvedForm;
     }
@@ -327,8 +327,24 @@ public class UserFormController : ApiBaseController
             return BadRequest(_response);
         }
 
+        await Task.Run(() =>
+        {
+            Console.WriteLine("entro");
+            string userId = _unitOfWork.UserForm.GetUserByUserFormId(formId);
+            Console.WriteLine("entro 3");
+            try
+            {
+                _unitOfWork.UserConfiguration.UpdateStateUpdateConfiguration(userId);
+                Console.WriteLine("entro xxx");
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        });
+
         _response.IsSuccess = true;
-        _response.Messages.Add("Se actualizo la informacion del formulario");
+        _response.Messages.Add("Se actualizo la informacion del formulario x");
         return Ok(_response);
     }
 

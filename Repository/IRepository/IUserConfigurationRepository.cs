@@ -26,5 +26,6 @@ namespace rethus_backend.Repository.IRepository
         public ApiResponse updateStateInitialConfiguration(string userId);
         ApiResponse ValidateStepConfiguration(string userId, ConfigurationStep step);
         Task<ApiResponse> UpdateFormIdConfiguration(string configurationsId, string userFormId);
+        ApiResponse UpdateStateUpdateConfiguration(string userId);
     }
 }
