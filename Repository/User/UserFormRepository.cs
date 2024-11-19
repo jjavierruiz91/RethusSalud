@@ -720,7 +720,7 @@ namespace rethus_backend.Repository
             {
                 CONSECUTIVO = form.Consecutive,
                 CONSECUTIVO_FECHA = form.ConsecutiveDate,
-                NOMBRE_PROFESIONAL = form.PersonalFirstName + form.PersonalLastName,
+                NOMBRE_PROFESIONAL = form.PersonalFirstName + " " + form.PersonalLastName,
                 EXPEDIDA_PROFESIONAL = form.PersonalPlaceOfIssue,
                 PROFESION_PROFESIONAL = form.AcademicsProgramName,
                 UNIVERSIDAD_PROFESIONAL = form.AcademicsNameInstitution,
