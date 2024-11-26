@@ -720,10 +720,11 @@ namespace rethus_backend.Repository
             {
                 CONSECUTIVO = form.Consecutive,
                 CONSECUTIVO_FECHA = form.ConsecutiveDate,
-                NOMBRE_PROFESIONAL = form.PersonalFirstName + " " + form.PersonalLastName,
+                NOMBRE_PROFESIONAL =
+                    form.PersonalFirstName.ToUpper() + " " + form.PersonalLastName.ToUpper(),
                 EXPEDIDA_PROFESIONAL = form.PersonalPlaceOfIssue,
-                PROFESION_PROFESIONAL = form.AcademicsProgramName,
-                UNIVERSIDAD_PROFESIONAL = form.AcademicsNameInstitution,
+                PROFESION_PROFESIONAL = form.AcademicsProgramName.ToUpper(),
+                UNIVERSIDAD_PROFESIONAL = form.AcademicsNameInstitution.ToUpper(),
                 CEDULA_PROFESIONAL = form.PersonalIdentification,
             };
 
@@ -736,13 +737,13 @@ namespace rethus_backend.Repository
             if (config != null)
             {
                 rethusDto.FIRMA_PRINCIPAL = config.FIRMA_PRINCIPAL;
-                rethusDto.NOMBRE_FIRMANTE = config.NOMBRE_FIRMANTE;
-                rethusDto.TIPO_TRABAJO = config.TIPO_TRABAJO;
-                rethusDto.FIRMA_PROYECTO = config.FIRMA_PROYECTO;
+                rethusDto.NOMBRE_FIRMANTE = config.NOMBRE_FIRMANTE.ToUpper();
+                rethusDto.TIPO_TRABAJO = config.TIPO_TRABAJO.ToUpper();
+                rethusDto.FIRMA_PROYECTO = config.FIRMA_PROYECTO.ToUpper();
                 rethusDto.FIRMA_1 = config.FIRMA_1;
-                rethusDto.FIRMA_REVISION = config.FIRMA_REVISION;
+                rethusDto.FIRMA_REVISION = config.FIRMA_REVISION.ToUpper();
                 rethusDto.FIRMA_2 = config.FIRMA_2;
-                rethusDto.FIRMA_APROBO = config.FIRMA_APROBO;
+                rethusDto.FIRMA_APROBO = config.FIRMA_APROBO.ToUpper();
                 rethusDto.FIRMA_3 = config.FIRMA_3;
             }
             certificateRethus = await DownloadCertificateRethus(rethusDto);
@@ -763,10 +764,11 @@ namespace rethus_backend.Repository
 
             var rethusDto = new TemplateSSODto
             {
-                NOMBRE_PROFESIONAL = form.PersonalFirstName + " " + form.PersonalLastName,
+                NOMBRE_PROFESIONAL =
+                    form.PersonalFirstName.ToUpper() + " " + form.PersonalLastName.ToUpper(),
                 CEDULA_PROFESIONAL = form.PersonalIdentification,
-                EXPEDICION_PROFESIONAL = form.PersonalPlaceOfIssue,
-                PROFESION_PROFESIONAL = form.AcademicsProgramName,
+                EXPEDICION_PROFESIONAL = form.PersonalPlaceOfIssue.ToUpper(),
+                PROFESION_PROFESIONAL = form.AcademicsProgramName.ToUpper(),
                 CODIGO_PLAZA = form.Consecutive
             };
 
@@ -778,20 +780,20 @@ namespace rethus_backend.Repository
 
             if (config != null)
             {
-                rethusDto.MODALIDAD = "Espera";
+                rethusDto.MODALIDAD = "Espera".ToUpper();
                 rethusDto.FECHA_INICION = "";
                 rethusDto.FECHA_TERMINACION = "";
                 rethusDto.DIAS = "16";
                 rethusDto.MES = "1";
                 rethusDto.ANO = "2024";
                 rethusDto.ANO_LETRAS = "2024";
-                rethusDto.FIRMA_SECRETARIO = config.FIRMA_PRINCIPAL;
-                rethusDto.TIPO_TRABAJO = config.TIPO_TRABAJO;
-                rethusDto.FIRMA_PROYECTO = config.FIRMA_PROYECTO;
+                rethusDto.FIRMA_SECRETARIO = config.FIRMA_PRINCIPAL.ToUpper();
+                rethusDto.TIPO_TRABAJO = config.TIPO_TRABAJO.ToUpper();
+                rethusDto.FIRMA_PROYECTO = config.FIRMA_PROYECTO.ToUpper();
                 rethusDto.FIRMA_1 = config.FIRMA_1;
-                rethusDto.FIRMA_REVISION = config.FIRMA_REVISION;
+                rethusDto.FIRMA_REVISION = config.FIRMA_REVISION.ToUpper();
                 rethusDto.FIRMA_2 = config.FIRMA_2;
-                rethusDto.FIRMA_APROBO = config.FIRMA_APROBO;
+                rethusDto.FIRMA_APROBO = config.FIRMA_APROBO.ToUpper();
                 rethusDto.FIRMA_3 = config.FIRMA_3;
             }
 
