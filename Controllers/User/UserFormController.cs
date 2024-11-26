@@ -502,8 +502,6 @@ public class UserFormController : ApiBaseController
             {
                 return Ok(new { isSuccess = false, message = "El archivo aún se está generando." });
             }
-            Console.WriteLine("1111111111");
-            Console.WriteLine(_excelFilePath);
             // Verificar si el archivo está disponible
             if (string.IsNullOrEmpty(_excelFilePath) || !System.IO.File.Exists(_excelFilePath))
             {

@@ -262,7 +262,7 @@ namespace rethus_backend.Models.Dto.UserForm
         public string? PersonalTelephone { get; set; }
         public string? PersonalPhone { get; set; }
         public string? PersonalEmail { get; set; }
-        public string? PersonalEthnicGroup { get; set; }
+        public TypeEthnicGroup? PersonalEthnicGroup { get; set; }
 
         public string AcademicsTypeInstitution { get; set; }
         public string AcademicsProgramType { get; set; }

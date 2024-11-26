@@ -94,5 +94,37 @@ namespace rethus_backend.Utilities.Constants.UserConstants
                     return UserStatus.inactive;
             }
         }
+
+        public static string EthnicGroupToSpanish(TypeEthnicGroup? ethnicGroup)
+        {
+            string translation;
+
+            switch (ethnicGroup)
+            {
+                case TypeEthnicGroup.indigenous:
+                    translation = "Indígena";
+                    break;
+                case TypeEthnicGroup.palenquero:
+                    translation = "Palenquero";
+                    break;
+                case TypeEthnicGroup.rom:
+                    translation = "Rom";
+                    break;
+                case TypeEthnicGroup.afro:
+                    translation = "Afrodescendiente";
+                    break;
+                case TypeEthnicGroup.razal:
+                    translation = "Razal";
+                    break;
+                case TypeEthnicGroup.noneAbove:
+                    translation = "Ninguno de los anteriores";
+                    break;
+                default:
+                    translation = "Ninguno de los anteriores";
+                    break;
+            }
+
+            return translation;
+        }
     }
 }

@@ -1100,7 +1100,7 @@ namespace rethus_backend.Repository
                             PersonalTelephone = columns.PersonalTelephone,
                             PersonalPhone = columns.PersonalPhone,
                             PersonalEmail = columns.PersonalEmail,
-                            PersonalEthnicGroup = columns.PersonalEthnicGroup.ToString(),
+                            PersonalEthnicGroup = columns.PersonalEthnicGroup,
                             AcademicsTypeInstitution = columns.AcademicsTypeInstitution.ToString(),
                             AcademicsProgramType = columns.AcademicsProgramType,
                             AcademicsProgramName = columns.AcademicsProgramName,
@@ -1132,27 +1132,28 @@ namespace rethus_backend.Repository
                 worksheet.Cell(1, 1).Value = "TIPO DOCUMENTO";
                 worksheet.Cell(1, 2).Value = "GENERO";
                 worksheet.Cell(1, 3).Value = "IDENTIFICACION";
-                worksheet.Cell(1, 4).Value = "NOMBRE Y APELLIDOS";
-                worksheet.Cell(1, 5).Value = "DEPARTAMENTO DE NACIMIENTO";
-                worksheet.Cell(1, 6).Value = "MUNICIPIO NACIMIENTO";
-                worksheet.Cell(1, 7).Value = "FECHA NACIMIENTO";
-                worksheet.Cell(1, 8).Value = "DEPARTAMENTO DE RESIDENCIA";
-                worksheet.Cell(1, 9).Value = "MUNICIPIO DE RESIDENCIA";
-                worksheet.Cell(1, 10).Value = "DIRECCION";
-                worksheet.Cell(1, 11).Value = "TELEFONO FIJO";
-                worksheet.Cell(1, 12).Value = "CELULAR";
-                worksheet.Cell(1, 13).Value = "CORREO ELECTRONICO";
-                worksheet.Cell(1, 14).Value = "GRUPO ETNICO";
-                worksheet.Cell(1, 15).Value = "INSTITUCION";
-                worksheet.Cell(1, 16).Value = "TIPO DE PROGRAMA";
-                worksheet.Cell(1, 17).Value = "NOMBRE DEL PROGRAMA";
-                worksheet.Cell(1, 18).Value = "FECHA DE GRADO";
-                worksheet.Cell(1, 19).Value = "NUMERO CONVALIDACION";
-                worksheet.Cell(1, 20).Value = "FECHA DE CONVALIDACION";
-                worksheet.Cell(1, 21).Value = "TITULO EQUIVALENTE";
-                worksheet.Cell(1, 22).Value =
-                    "NUMERO DEL ACTO ADMINISTRATIVO QUE AUTORIZA EL SERVICIO";
+                worksheet.Cell(1, 4).Value = "NOMBRES";
+                worksheet.Cell(1, 5).Value = "APELLIDOS";
+                worksheet.Cell(1, 6).Value = "DEPARTAMENTO DE NACIMIENTO";
+                worksheet.Cell(1, 7).Value = "MUNICIPIO NACIMIENTO";
+                worksheet.Cell(1, 8).Value = "FECHA NACIMIENTO";
+                worksheet.Cell(1, 9).Value = "DEPARTAMENTO DE RESIDENCIA";
+                worksheet.Cell(1, 10).Value = "MUNICIPIO DE RESIDENCIA";
+                worksheet.Cell(1, 11).Value = "DIRECCION";
+                worksheet.Cell(1, 12).Value = "TELEFONO FIJO";
+                worksheet.Cell(1, 13).Value = "CELULAR";
+                worksheet.Cell(1, 14).Value = "CORREO ELECTRONICO";
+                worksheet.Cell(1, 15).Value = "GRUPO ETNICO";
+                worksheet.Cell(1, 16).Value = "INSTITUCION";
+                worksheet.Cell(1, 17).Value = "TIPO DE PROGRAMA";
+                worksheet.Cell(1, 18).Value = "NOMBRE DEL PROGRAMA";
+                worksheet.Cell(1, 19).Value = "FECHA DE GRADO";
+                worksheet.Cell(1, 20).Value = "NUMERO CONVALIDACION";
+                worksheet.Cell(1, 21).Value = "FECHA DE CONVALIDACION";
+                worksheet.Cell(1, 22).Value = "TITULO EQUIVALENTE";
                 worksheet.Cell(1, 23).Value =
+                    "NUMERO DEL ACTO ADMINISTRATIVO QUE AUTORIZA EL SERVICIO";
+                worksheet.Cell(1, 24).Value =
                     "FECHA DEL ACTO ADMINISTRATIVO QUE AUTORIZA EL SERVICIO";
 
                 int currentRow = 2;
@@ -1186,44 +1187,53 @@ namespace rethus_backend.Repository
                                     foreach (var user in batchData)
                                     {
                                         worksheet.Cell(currentRow, 1).Value =
-                                            user.PersonalTypeIdentification;
-                                        worksheet.Cell(currentRow, 2).Value = user.PersonalGender;
+                                            user.PersonalTypeIdentification.ToUpper();
+                                        worksheet.Cell(currentRow, 2).Value =
+                                            user.PersonalGender.ToUpper();
                                         worksheet.Cell(currentRow, 3).Value =
-                                            user.PersonalIdentification;
+                                            user.PersonalIdentification.ToUpper();
                                         worksheet.Cell(currentRow, 4).Value =
-                                            user.PersonalFirstName + " " + user.PersonalLastName;
+                                            user.PersonalFirstName.ToUpper();
                                         worksheet.Cell(currentRow, 5).Value =
-                                            user.PersonalDepartmentBirth;
+                                            user.PersonalLastName.ToUpper();
                                         worksheet.Cell(currentRow, 6).Value =
-                                            user.PersonalMunicipalityBirth;
-                                        worksheet.Cell(currentRow, 7).Value = user.DateBirth;
-                                        worksheet.Cell(currentRow, 8).Value =
-                                            user.PersonalDepartmentResidence;
+                                            user.PersonalDepartmentBirth.ToUpper();
+                                        worksheet.Cell(currentRow, 7).Value =
+                                            user.PersonalMunicipalityBirth.ToUpper();
+                                        worksheet.Cell(currentRow, 8).Value = user.DateBirth;
                                         worksheet.Cell(currentRow, 9).Value =
-                                            user.PersonalMunicipalityResidence;
-                                        worksheet.Cell(currentRow, 10).Value = user.PersonalAddress;
+                                            user.PersonalDepartmentResidence.ToUpper();
+                                        worksheet.Cell(currentRow, 10).Value =
+                                            user.PersonalMunicipalityResidence.ToUpper();
                                         worksheet.Cell(currentRow, 11).Value =
-                                            user.PersonalTelephone;
-                                        worksheet.Cell(currentRow, 12).Value = user.PersonalPhone;
-                                        worksheet.Cell(currentRow, 13).Value = user.PersonalEmail;
+                                            user.PersonalAddress.ToUpper();
+                                        worksheet.Cell(currentRow, 12).Value =
+                                            user.PersonalTelephone.ToUpper();
+                                        worksheet.Cell(currentRow, 13).Value =
+                                            user.PersonalPhone.ToUpper();
                                         worksheet.Cell(currentRow, 14).Value =
-                                            user.PersonalEthnicGroup;
-                                        worksheet.Cell(currentRow, 15).Value =
-                                            user.AcademicsTypeInstitution;
+                                            user.PersonalEmail.ToUpper();
+                                        worksheet.Cell(currentRow, 15).Value = UserConstants
+                                            .EthnicGroupToSpanish(user.PersonalEthnicGroup)
+                                            .ToUpper();
                                         worksheet.Cell(currentRow, 16).Value =
-                                            user.AcademicsProgramType;
+                                            user.AcademicsTypeInstitution.ToUpper();
                                         worksheet.Cell(currentRow, 17).Value =
-                                            user.AcademicsProgramName;
+                                            user.AcademicsProgramType.ToUpper();
                                         worksheet.Cell(currentRow, 18).Value =
-                                            user.AcademicsGradeDate;
+                                            user.AcademicsProgramName.ToUpper();
                                         worksheet.Cell(currentRow, 19).Value =
-                                            user.AcademicsNumberConvalidation;
+                                            user.AcademicsGradeDate;
                                         worksheet.Cell(currentRow, 20).Value =
-                                            user.AcademicsDateConvalidation;
+                                            user.AcademicsNumberConvalidation?.ToUpper();
                                         worksheet.Cell(currentRow, 21).Value =
-                                            user.AcademicsEquivalentTitle;
-                                        worksheet.Cell(currentRow, 22).Value = user.Consecutive;
-                                        worksheet.Cell(currentRow, 23).Value = user.ConsecutiveDate;
+                                            user.AcademicsDateConvalidation;
+                                        worksheet.Cell(currentRow, 22).Value =
+                                            user.AcademicsEquivalentTitle?.ToUpper();
+                                        worksheet.Cell(currentRow, 23).Value =
+                                            user.Consecutive.ToUpper();
+                                        worksheet.Cell(currentRow, 24).Value =
+                                            user.ConsecutiveDate.ToUpper();
 
                                         currentRow++;
                                     }
@@ -1250,6 +1260,7 @@ namespace rethus_backend.Repository
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine($">>>>>>>>>>: {ex}");
                     Console.WriteLine($">>>>>>>>>>>>>>: {ex.Message}");
                     throw new Exception("No se pudo guardar el archivo de Excel.", ex);
                 }
