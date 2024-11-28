@@ -84,5 +84,6 @@ namespace rethus_backend.Repository.IRepository
             string consecutiveDate,
             ApplicationDbContext dbContext
         );
+        public bool IsTypeProgramIsPsicologia(string FormId);
     }
 }

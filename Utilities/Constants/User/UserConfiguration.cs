@@ -47,15 +47,10 @@ namespace rethus_backend.Utilities.Constants.User.UserConfiguration
                     "El estado proporcionado no es válido."
                 );
             }
-
             switch (state)
             {
                 case ConfigurationsState.initial:
                     return ConfigurationsState.inprogress;
-
-                case ConfigurationsState.inprogress:
-                    return ConfigurationsState.completed;
-
                 case ConfigurationsState.updated:
                     return ConfigurationsState.inprogress;
 

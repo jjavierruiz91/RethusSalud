@@ -202,10 +202,10 @@ namespace rethus_backend.Repository
                 return response;
             }
 
-            ConfigurationsState nextStep = UserConfiguration.getStateConfiguration(
+            ConfigurationsState nextState = UserConfiguration.getStateConfiguration(
                 user_configuration.State
             );
-            user_configuration.State = nextStep;
+            user_configuration.State = nextState;
 
             _context.Configurations.Update(user_configuration);
             _context.SaveChanges();
@@ -345,6 +345,30 @@ namespace rethus_backend.Repository
             _context.SaveChanges();
 
             response.Messages.Add("Se reseteo el proceso del usuario");
+            return response;
+        }
+
+        public ApiResponse UpdateStateComplateConfiguration(string userId)
+        {
+            var response = new ApiResponse();
+            var user_configuration = GetByUserId(userId);
+
+            if (user_configuration == null)
+            {
+                response.AddError(
+                    "El usuario no tiene configuracion asignada",
+                    HttpStatusCode.BadRequest,
+                    false
+                );
+                return response;
+            }
+
+            user_configuration.State = ConfigurationsState.completed;
+
+            _context.Configurations.Update(user_configuration);
+            _context.SaveChanges();
+
+            response.Messages.Add("Se completo el proceso del usuario");
             return response;
         }
     }

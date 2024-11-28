@@ -265,6 +265,7 @@ namespace rethus_backend.Models.Dto.UserForm
         public TypeEthnicGroup? PersonalEthnicGroup { get; set; }
 
         public string AcademicsTypeInstitution { get; set; }
+        public string AcademicsNameInstitution { get; set; }
         public string AcademicsProgramType { get; set; }
 
         public string AcademicsProgramName { get; set; }

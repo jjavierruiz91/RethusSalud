@@ -237,14 +237,11 @@ public class UserFormController : ApiBaseController
             return BadRequest(response);
         }
 
-        await Task.Run(() => _unitOfWork.UserForm.ValidateCertificateUserForm(formId));
         await Task.Run(() =>
         {
             string userId = _unitOfWork.UserForm.GetUserByUserFormId(formId);
-            var user_configuration = _unitOfWork.UserConfiguration.GetByUserId(userId);
-            _unitOfWork.UserConfiguration.updateAutomaticStateConfiguration(
-                user_configuration.ConfigurationsId
-            );
+            _unitOfWork.UserConfiguration.UpdateStateComplateConfiguration(userId);
+            _unitOfWork.UserForm.ValidateCertificateUserForm(formId);
         });
 
         return response;
@@ -522,5 +519,15 @@ public class UserFormController : ApiBaseController
                 "Excel_Generado.xlsx"
             );
         }
+    }
+
+    [HttpGet("validate/program/psicologia/{formId}")]
+    [Authorize(Roles = Policies.User)]
+    public async Task<ActionResult<ApiResponse>> isTypeProgramPsicologia(string formId)
+    {
+        bool isProgramPsicologia = _unitOfWork.UserForm.IsTypeProgramIsPsicologia(formId);
+
+        _response.Result = isProgramPsicologia;
+        return _response;
     }
 }

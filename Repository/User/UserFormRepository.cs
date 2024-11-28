@@ -1103,7 +1103,7 @@ namespace rethus_backend.Repository
                             PersonalPhone = columns.PersonalPhone,
                             PersonalEmail = columns.PersonalEmail,
                             PersonalEthnicGroup = columns.PersonalEthnicGroup,
-                            AcademicsTypeInstitution = columns.AcademicsTypeInstitution.ToString(),
+                            AcademicsNameInstitution = columns.AcademicsNameInstitution.ToString(),
                             AcademicsProgramType = columns.AcademicsProgramType,
                             AcademicsProgramName = columns.AcademicsProgramName,
                             AcademicsGradeDate = columns.AcademicsGradeDate,
@@ -1132,21 +1132,21 @@ namespace rethus_backend.Repository
 
                 // Definir las cabeceras del archivo Excel
                 worksheet.Cell(1, 1).Value = "TIPO DOCUMENTO";
-                worksheet.Cell(1, 2).Value = "GENERO";
-                worksheet.Cell(1, 3).Value = "IDENTIFICACION";
+                worksheet.Cell(1, 2).Value = "NUMERO DE DOCUMENTO DE IDENTIFICACION";
+                worksheet.Cell(1, 3).Value = "APELLIDOS";
                 worksheet.Cell(1, 4).Value = "NOMBRES";
-                worksheet.Cell(1, 5).Value = "APELLIDOS";
-                worksheet.Cell(1, 6).Value = "DEPARTAMENTO DE NACIMIENTO";
-                worksheet.Cell(1, 7).Value = "MUNICIPIO NACIMIENTO";
-                worksheet.Cell(1, 8).Value = "FECHA NACIMIENTO";
-                worksheet.Cell(1, 9).Value = "DEPARTAMENTO DE RESIDENCIA";
-                worksheet.Cell(1, 10).Value = "MUNICIPIO DE RESIDENCIA";
+                worksheet.Cell(1, 5).Value = "GENERO";
+                worksheet.Cell(1, 6).Value = "DEPARTAMENTO DE NACIMIENTO PERSONA INSCRITA";
+                worksheet.Cell(1, 7).Value = "MUNICIPIO DE NACIMIENTO PERSONA INSCRITA";
+                worksheet.Cell(1, 8).Value = "FECHA DE NACIMIENTO";
+                worksheet.Cell(1, 9).Value = "DEPARTAMENTO DE RECIDENCIA";
+                worksheet.Cell(1, 10).Value = "MUNICIPIO DE RECIDENCIA";
                 worksheet.Cell(1, 11).Value = "DIRECCION";
                 worksheet.Cell(1, 12).Value = "TELEFONO FIJO";
                 worksheet.Cell(1, 13).Value = "CELULAR";
                 worksheet.Cell(1, 14).Value = "CORREO ELECTRONICO";
                 worksheet.Cell(1, 15).Value = "GRUPO ETNICO";
-                worksheet.Cell(1, 16).Value = "INSTITUCION";
+                worksheet.Cell(1, 16).Value = "NOMBRE DE LA INSTITUCION DONDE ESTUDIO";
                 worksheet.Cell(1, 17).Value = "TIPO DE PROGRAMA";
                 worksheet.Cell(1, 18).Value = "NOMBRE DEL PROGRAMA";
                 worksheet.Cell(1, 19).Value = "FECHA DE GRADO";
@@ -1191,13 +1191,13 @@ namespace rethus_backend.Repository
                                         worksheet.Cell(currentRow, 1).Value =
                                             user.PersonalTypeIdentification.ToUpper();
                                         worksheet.Cell(currentRow, 2).Value =
-                                            user.PersonalGender.ToUpper();
-                                        worksheet.Cell(currentRow, 3).Value =
                                             user.PersonalIdentification.ToUpper();
+                                        worksheet.Cell(currentRow, 3).Value =
+                                            user.PersonalLastName.ToUpper();
                                         worksheet.Cell(currentRow, 4).Value =
                                             user.PersonalFirstName.ToUpper();
                                         worksheet.Cell(currentRow, 5).Value =
-                                            user.PersonalLastName.ToUpper();
+                                            user.PersonalGender.ToUpper();
                                         worksheet.Cell(currentRow, 6).Value =
                                             user.PersonalDepartmentBirth.ToUpper();
                                         worksheet.Cell(currentRow, 7).Value =
@@ -1219,7 +1219,7 @@ namespace rethus_backend.Repository
                                             .EthnicGroupToSpanish(user.PersonalEthnicGroup)
                                             .ToUpper();
                                         worksheet.Cell(currentRow, 16).Value =
-                                            user.AcademicsTypeInstitution.ToUpper();
+                                            user.AcademicsNameInstitution.ToUpper();
                                         worksheet.Cell(currentRow, 17).Value =
                                             user.AcademicsProgramType.ToUpper();
                                         worksheet.Cell(currentRow, 18).Value =
@@ -1421,6 +1421,16 @@ namespace rethus_backend.Repository
                 // Pasar a la siguiente página
                 pageNumber++;
             } while (userFormsBatch.Count == batchSize); // Continuar si el tamaño del lote es igual al batchSize
+        }
+
+        public bool IsTypeProgramIsPsicologia(string FormId)
+        {
+            var AcademicsProgramName = _context.UserForm
+                .Where(x => x.UserFormId == FormId)
+                .Select(x => x.AcademicsProgramName)
+                .FirstOrDefault();
+
+            return AcademicsProgramName == "Psicologia";
         }
     }
 }
