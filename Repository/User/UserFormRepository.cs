@@ -1086,7 +1086,7 @@ namespace rethus_backend.Repository
                 .Include(uf => uf.MunicipalityResidence)
                 .Include(uf => uf.CountryInstitution)
                 .Include(uf => uf.DepartmentInstitution)
-                .OrderBy(u => u.UserFormId)
+                .OrderByDescending(u => u.CreatedAt)
                 .Skip(skip)
                 .Take(take)
                 .Select(
@@ -1296,7 +1296,12 @@ namespace rethus_backend.Repository
                 .AddTicks(-1);
 
             return _context.UserForm.Count(
-                uf => uf.CreatedAt >= parseStartDate && uf.CreatedAt <= parseEndDate
+                uf =>
+                    uf.Status == UserFormStatus.approved
+                    && uf.Consecutive != null
+                    && uf.ConsecutiveDate != null
+                    && uf.CreatedAt >= parseStartDate
+                    && uf.CreatedAt <= parseEndDate
             );
         }
 
