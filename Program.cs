@@ -64,29 +64,7 @@ builder.Services
     });
 builder.Services.AddAuthorization();
 
-// builder.Services.AddAuthorization(options =>
-// {
-//     options.AddPolicy(
-//   	Policies.User ,
-// 		policy => policy.RequireAuthenticatedUser().RequireClaim("role", Policies.User)
-// 	);
-//     //  options.AddPolicy(Policies.Admin, Policies.AdminPolicy());
-//     //  options.AddPolicy(Policies.User, Policies.UserPolicy());
-
-
-//     // options.AddPolicy(Policies.User, policy => policy.RequireRole(Policies.User));
-//     // options.AddPolicy("AdminPolicy", policy => policy.RequireRole(UserRoles.Admin.ToString()));
-//     // options.AddPolicy("SuperAdminPolicy", policy => policy.RequireRole(UserRoles.SuperAdmin.ToString()));
-//     // options.AddPolicy("OfficialPolicy", policy => policy.RequireRole(UserRoles.FuncionarioEtapa1.ToString()));
-//     // options.AddPolicy("PublicPolicy", policy => policy.RequireAssertion(context => true));
-
-// });
 builder.Services.AddEndpointsApiExplorer();
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-// builder.Services.AddEndpointsApiExplorer();
-
-// builder.Services.AddSingleton<ConverPdfService>();
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -145,8 +123,6 @@ app.UseCors("Open");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsProduction())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
     app.UseHsts();
 }
 else
