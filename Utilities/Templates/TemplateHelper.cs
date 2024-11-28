@@ -23,6 +23,10 @@ namespace rethus_backend.Utilities.Templates
                 dto.CEDULA_PROFESIONAL
             );
             templateContent = templateContent.Replace(
+                "${TYPE_IDENTIFICATION}",
+                dto.TYPE_IDENTIFICATION
+            );
+            templateContent = templateContent.Replace(
                 "${EXPEDIDA_PROFESIONAL}",
                 dto.EXPEDIDA_PROFESIONAL
             );
