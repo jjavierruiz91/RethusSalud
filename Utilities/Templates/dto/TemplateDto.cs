@@ -9,6 +9,7 @@ namespace rethus_backend.Utilities.Templates.dto
         public string PROFESION_PROFESIONAL { get; set; }
         public string UNIVERSIDAD_PROFESIONAL { get; set; }
         public string CEDULA_PROFESIONAL { get; set; }
+        public string TYPE_IDENTIFICATION { get; set; }
         public string FIRMA_PRINCIPAL { get; set; }
         public string NOMBRE_FIRMANTE { get; set; }
         public string TIPO_TRABAJO { get; set; }
@@ -24,6 +25,7 @@ namespace rethus_backend.Utilities.Templates.dto
     {
         public string NOMBRE_PROFESIONAL { get; set; }
         public string CEDULA_PROFESIONAL { get; set; }
+        public string TYPE_IDENTIFICATION { get; set; }
         public string EXPEDICION_PROFESIONAL { get; set; }
         public string PROFESION_PROFESIONAL { get; set; }
         public string CODIGO_PLAZA { get; set; }

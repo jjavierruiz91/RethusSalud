@@ -726,6 +726,9 @@ namespace rethus_backend.Repository
                 PROFESION_PROFESIONAL = form.AcademicsProgramName.ToUpper(),
                 UNIVERSIDAD_PROFESIONAL = form.AcademicsNameInstitution.ToUpper(),
                 CEDULA_PROFESIONAL = form.PersonalIdentification,
+                TYPE_IDENTIFICATION = UserConstants
+                    .GetIdentificationTypeInSpanish(form.PersonalTypeIdentification)
+                    .ToUpper()
             };
 
             string jsonContent = await File.ReadAllTextAsync(
@@ -769,7 +772,10 @@ namespace rethus_backend.Repository
                 CEDULA_PROFESIONAL = form.PersonalIdentification,
                 EXPEDICION_PROFESIONAL = form.PersonalPlaceOfIssue.ToUpper(),
                 PROFESION_PROFESIONAL = form.AcademicsProgramName.ToUpper(),
-                CODIGO_PLAZA = form.Consecutive
+                CODIGO_PLAZA = form.Consecutive,
+                TYPE_IDENTIFICATION = UserConstants
+                    .GetIdentificationTypeInSpanish(form.PersonalTypeIdentification)
+                    .ToUpper()
             };
 
             string jsonContent = await File.ReadAllTextAsync(

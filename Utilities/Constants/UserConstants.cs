@@ -126,5 +126,28 @@ namespace rethus_backend.Utilities.Constants.UserConstants
 
             return translation;
         }
+
+        public static string GetIdentificationTypeInSpanish(TypeIdentification tipo)
+        {
+            switch (tipo)
+            {
+                case TypeIdentification.CDC:
+                    return "Cédula de ciudadanía";
+                case TypeIdentification.TDI:
+                    return "Tarjeta de identidad";
+                case TypeIdentification.CDE:
+                    return "Cédula de extranjería";
+                case TypeIdentification.RUT:
+                    return "Registro Único Tributario";
+                case TypeIdentification.PPE:
+                    return "Pasaporte";
+                case TypeIdentification.TP:
+                    return "Tarjeta profesional";
+                case TypeIdentification.PP:
+                    return "Protección personal";
+                default:
+                    return "Tipo de identificación desconocido";
+            }
+        }
     }
 }
