@@ -310,6 +310,16 @@ public class UserFormController : ApiBaseController
         UserFormUpdateDto payload
     )
     {
+        bool isHaveComments = _unitOfWork.Comments.CountPendingCommentsExternalForm(formId);
+        if (isHaveComments)
+        {
+            _response.Messages.Add(
+                "Te recomendamos revisar y aprobar los comentarios antes de proceder con la actualización de la información."
+            );
+            _response.IsSuccess = false;
+            return BadRequest(_response);
+        }
+
         if (string.IsNullOrEmpty(formId))
         {
             _response.Messages.Add("Form ID is required");

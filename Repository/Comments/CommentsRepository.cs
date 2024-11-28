@@ -212,5 +212,15 @@ namespace rethus_backend.Repository
             response.StatusCode = HttpStatusCode.OK;
             return response;
         }
+
+        public bool CountPendingCommentsExternalForm(string formId)
+        {
+            return _context.Comments.Any(
+                c =>
+                    c.UserFormId == formId
+                    && c.Status == CommentsStatus.pending
+                    && c.Type == CommentsType.External
+            );
+        }
     }
 }

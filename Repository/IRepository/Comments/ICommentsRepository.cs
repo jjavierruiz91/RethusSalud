@@ -28,5 +28,6 @@ namespace rethus_backend.Repository.IRepository
             PaginationRequestDto<FilterQueryParametersDto> request,
             Func<Comments, TResult> selector
         );
+        bool CountPendingCommentsExternalForm(string formId);
     }
 }
