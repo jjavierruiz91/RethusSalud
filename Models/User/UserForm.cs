@@ -57,8 +57,6 @@ namespace rethus_backend.Models
 
         public User User { get; set; }
 
-        public ICollection<UserFormFiles>? UserFormFiles { get; set; }
-
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 

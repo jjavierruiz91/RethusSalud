@@ -113,6 +113,20 @@ namespace rethus_backend.Data
                 .HasForeignKey(p => p.AcademicsMunicipalityInstitutionId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder
+                .Entity<User>()
+                .HasOne(u => u.UserForm) // Un usuario tiene un formulario
+                .WithOne(uf => uf.User) // Un formulario pertenece a un solo usuario
+                .HasForeignKey<UserForm>(uf => uf.UserId) // UserId es la clave foránea en UserForm
+                .OnDelete(DeleteBehavior.Cascade); // Opcional: comportamiento de eliminación
+
+            modelBuilder
+                .Entity<User>()
+                .HasOne(u => u.Configurations) // Un usuario tiene un formulario
+                .WithOne(uf => uf.User) // Un formulario pertenece a un solo usuario
+                .HasForeignKey<Configurations>(uf => uf.UserId) // UserId es la clave foránea en UserForm
+                .OnDelete(DeleteBehavior.Cascade); // Opcional: comportamiento de eliminación
+
             // INDICE MODEL USERFORM
             modelBuilder
                 .Entity<UserForm>()

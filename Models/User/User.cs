@@ -32,6 +32,8 @@ namespace rethus_backend.Models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
-        public Configurations? Configurations { get; set; }
+        public Configurations Configurations { get; set; }
+
+        public UserForm UserForm { get; set; }
     }
 }
