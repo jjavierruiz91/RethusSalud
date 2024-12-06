@@ -289,7 +289,7 @@ namespace rethus_backend.Utilities.FileHelper
             string uniqueId = Guid.NewGuid().ToString();
 
             // Combinar la fecha y el GUID para formar el nombre del archivo ZIP
-            string zipName = $"generate_zip_{currentDate}_{uniqueId}.zip";
+            string zipName = $"resources/zip/generate_zip_{currentDate}_{uniqueId}.zip";
 
             return zipName;
         }

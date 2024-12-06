@@ -1583,22 +1583,6 @@ namespace rethus_backend.Repository
             } while (userFormsBatch.Count == batchSize); // Continuar si el tamaño del lote es igual al batchSize
         }
 
-        private string GetMainFolder()
-        {
-            // Obtener la ruta desde la configuración
-            var route = _config.GetSection("routeFileProcedures").Value;
-
-            // Obtener la ruta base
-            var basePath = Directory.GetCurrentDirectory();
-
-            // Eliminar las barras finales de la ruta base y las barras iniciales de la ruta configurada
-            basePath = basePath.TrimEnd(Path.DirectorySeparatorChar);
-            route = route.TrimStart(Path.DirectorySeparatorChar);
-
-            // Combinar correctamente las rutas usando el separador adecuado para el sistema operativo
-            return Path.Combine(basePath, route);
-        }
-
         private string BuildCertificatePath(string userFormId, string userIdentification)
         {
             var outputPath =
