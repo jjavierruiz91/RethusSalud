@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.IO.Compression;
 
 namespace rethus_backend.Utilities.FileHelper
 {
@@ -230,6 +231,50 @@ namespace rethus_backend.Utilities.FileHelper
                 Console.WriteLine($"Failed to read file: {ex.Message}");
                 return null;
             }
+        }
+
+        public static async Task AddPdfToZip(string pdfFilePath, string zipFilePath)
+        {
+            try
+            {
+                // Crear o abrir el archivo ZIP
+                using (var zip = ZipFile.Open(zipFilePath, ZipArchiveMode.Update))
+                {
+                    // Obtener el nombre del archivo PDF (solo el nombre, no la ruta completa)
+                    string fileName = Path.GetFileName(pdfFilePath);
+
+                    // Verificar si el archivo ya existe en el ZIP
+                    var existingEntry = zip.GetEntry(fileName);
+                    if (existingEntry == null)
+                    {
+                        // Agregar el archivo PDF al ZIP
+                        zip.CreateEntryFromFile(pdfFilePath, fileName);
+                        Console.WriteLine($"Added PDF {fileName} to ZIP.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"File {fileName} already exists in the ZIP.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding file to ZIP: {ex.Message}");
+            }
+        }
+
+        public static string GenerateUniqueZipName()
+        {
+            // Obtener la fecha y hora actual
+            string currentDate = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
+
+            // Generar un GUID único
+            string uniqueId = Guid.NewGuid().ToString();
+
+            // Combinar la fecha y el GUID para formar el nombre del archivo ZIP
+            string zipName = $"generate_zip_{currentDate}_{uniqueId}.zip";
+
+            return zipName;
         }
     }
 }

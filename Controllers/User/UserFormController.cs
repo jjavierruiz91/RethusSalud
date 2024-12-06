@@ -540,4 +540,68 @@ public class UserFormController : ApiBaseController
         _response.Result = isProgramPsicologia;
         return _response;
     }
+
+    [HttpGet("generate-zip")]
+    public async Task<ActionResult<ApiResponse>> GenerateZip([FromQuery] DateTime? date)
+    {
+        // Verificar que la fecha sea proporcionada
+        if (date == null)
+        {
+            _response.AddError(
+                "El campo de fecha es obligatorio",
+                HttpStatusCode.NotAcceptable,
+                false
+            );
+            return BadRequest(_response);
+        }
+
+        var currentDate = DateTime.Today;
+        // Verificar que la fecha proporcionada sea del día actual
+        if (date.Value.Date != currentDate)
+        {
+            _response.AddError(
+                "Solo se permite generar archivos del día actual",
+                HttpStatusCode.NotAcceptable,
+                false
+            );
+            return BadRequest(_response);
+        }
+
+        try
+        {
+            var startDate = currentDate; // Inicio del día (00:00:00)
+            var endDate = currentDate.AddDays(1).AddTicks(-1); // Fin del día (23:59:59.9999999)
+
+            // Iniciar la creación de scope para obtener el contexto de la base de datos
+            using (var scope = _provider.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                // Llamar al servicio que procesa el ZIP y los PDFs
+                await _unitOfWork.UserForm.ProcessGenerateZipPdf(
+                    500,
+                    startDate,
+                    endDate,
+                    dbContext
+                );
+
+                // Responder que el proceso fue iniciado correctamente
+                _response.Messages.Add(
+                    "El proceso para generar el ZIP ha comenzado correctamente."
+                );
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Manejar errores inesperados
+            _response.AddError(
+                $"Error al procesar la solicitud: {ex.Message}",
+                HttpStatusCode.InternalServerError,
+                false
+            );
+            return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+        }
+    }
 }

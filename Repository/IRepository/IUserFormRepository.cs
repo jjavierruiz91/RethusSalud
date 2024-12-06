@@ -85,5 +85,12 @@ namespace rethus_backend.Repository.IRepository
             ApplicationDbContext dbContext
         );
         public bool IsTypeProgramIsPsicologia(string FormId);
+
+        Task ProcessGenerateZipPdf(
+            int batchSize,
+            DateTime startDate,
+            DateTime endDate,
+            ApplicationDbContext dbContext
+        );
     }
 }

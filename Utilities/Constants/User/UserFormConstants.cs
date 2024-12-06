@@ -69,4 +69,10 @@ namespace rethus_backend.Utilities.Constants.User.UserFormConstants
         rethus_acta_grado,
         rethus_tarjeta_profesional,
     }
+
+    public class IFormGenerateData
+    {
+        public string UserFormId { get; set; }
+        public string PersonalIdentification { get; set; }
+    }
 }

@@ -525,6 +525,7 @@ namespace rethus_backend.Repository
             userForm.Consecutive = payload.consecutive;
             userForm.ConsecutiveDate = payload.consecutiveDate;
             userForm.Status = UserFormStatus.approved;
+            userForm.UpdatedAt = DateTime.Now;
 
             _context.SaveChanges();
 
@@ -614,6 +615,7 @@ namespace rethus_backend.Repository
 
             userForm.Consecutive = payload.consecutive;
             userForm.ConsecutiveDate = payload.consecutiveDate;
+            userForm.UpdatedAt = DateTime.Now;
 
             _context.SaveChanges();
 
@@ -1442,6 +1444,166 @@ namespace rethus_backend.Repository
                 .FirstOrDefault();
 
             return AcademicsProgramName == "Psicologia";
+        }
+
+        public async Task<List<IFormGenerateData>> GetFormByBatch(
+            int batchSize,
+            int pageNumber,
+            DateTime startDate,
+            DateTime endDate,
+            ApplicationDbContext dbContext
+        )
+        {
+            return await dbContext.UserForm
+                .Where(
+                    x =>
+                        x.Status == UserFormStatus.approved
+                        && x.StepForm == ReviewStepForm.success
+                        && x.Consecutive != null
+                        && x.UpdatedAt >= startDate
+                        && x.UpdatedAt <= endDate
+                )
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((pageNumber - 1) * batchSize)
+                .Take(batchSize)
+                .Select(
+                    x =>
+                        new IFormGenerateData
+                        {
+                            UserFormId = x.UserFormId,
+                            PersonalIdentification = x.PersonalIdentification
+                        }
+                )
+                .Cast<IFormGenerateData>()
+                .ToListAsync();
+        }
+
+        public async Task ProcessGenerateZipPdf(
+            int batchSize,
+            DateTime startDate,
+            DateTime endDate,
+            ApplicationDbContext dbContext
+        )
+        {
+            if (batchSize <= 0)
+                throw new ArgumentException("Batch size must be greater than 0.");
+
+            int pageNumber = 1;
+            int totalForms = 0;
+            List<IFormGenerateData> userFormsBatch;
+            var semaphore = new SemaphoreSlim(50); // Limitar concurrencia a 5 tareas
+
+            // Obtener el total de formularios al inicio
+            totalForms = await dbContext.UserForm.CountAsync(
+                x =>
+                    x.Status == UserFormStatus.approved
+                    && x.StepForm == ReviewStepForm.success
+                    && x.Consecutive != null
+                    && x.UpdatedAt >= startDate
+                    && x.UpdatedAt <= endDate
+            );
+
+            // Verificar si hay formularios para procesar
+            if (totalForms == 0)
+            {
+                Console.WriteLine($"NO hay nada que procesar mijo ombe");
+                return;
+            }
+            string filePathZip = FileHelper.GenerateUniqueZipName();
+            do
+            {
+                // Obtener un lote paginado de formularios
+                userFormsBatch = await GetFormByBatch(
+                    batchSize,
+                    pageNumber,
+                    startDate,
+                    endDate,
+                    dbContext
+                );
+
+                if (userFormsBatch == null || !userFormsBatch.Any())
+                {
+                    break; // No hay más formularios para procesar
+                }
+
+                var tasks = new List<Task>();
+
+                foreach (var userForm in userFormsBatch)
+                {
+                    await semaphore.WaitAsync();
+
+                    var task = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            // Lógica para generar PDFs y manejar archivos
+                            Console.WriteLine($"Processing UserFormId: {userForm.UserFormId}");
+
+                            // TODO: Agregar lógica para generar el PDF, comprimir en ZIP, etc.
+                            // Construir la ruta del certificado
+                            string certificatePath = BuildCertificatePath(
+                                userForm.UserFormId,
+                                userForm.PersonalIdentification
+                            );
+
+                            // Validar si el certificado existe
+                            if (!File.Exists(certificatePath))
+                            {
+                                Console.WriteLine(
+                                    $"Certificate not found for UserFormId {userForm.UserFormId}"
+                                );
+                            }
+                            {
+                                Console.WriteLine($"Certificate found at: {certificatePath}");
+
+                                await FileHelper.AddPdfToZip(filePathZip, certificatePath);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log de errores para cada tarea sin interrumpir el flujo
+                            Console.WriteLine(
+                                $"Error processing UserFormId {userForm.UserFormId}: {ex.Message}"
+                            );
+                        }
+                        finally
+                        {
+                            semaphore.Release(); // Liberar el espacio del semáforo
+                        }
+                    });
+
+                    tasks.Add(task);
+                }
+
+                // Esperar a que todas las tareas del lote terminen
+                await Task.WhenAll(tasks);
+
+                // Pasar a la siguiente página
+                pageNumber++;
+            } while (userFormsBatch.Count == batchSize); // Continuar si el tamaño del lote es igual al batchSize
+        }
+
+        private string GetMainFolder()
+        {
+            // Devolver la ruta principal para los certificados
+            return Path.Combine(
+                Directory.GetCurrentDirectory(),
+                _config.GetSection("routeFileProcedures").Value
+            );
+        }
+
+        private string BuildCertificatePath(string userFormId, string userIdentification)
+        {
+            string mainFolder = GetMainFolder();
+
+            // Construir la ruta del certificado
+            string certificateFolderPath = Path.Combine(mainFolder, userFormId);
+            string certificateFilePath = Path.Combine(
+                certificateFolderPath,
+                $"certificate-rethus-{userIdentification}.pdf"
+            );
+
+            return certificateFilePath;
         }
     }
 }
