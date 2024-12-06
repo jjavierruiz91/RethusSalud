@@ -32,9 +32,20 @@ namespace rethus_backend.Models.Dto.UserPublic
         public string Token { get; set; }
     }
 
+    public class TemplateConfigurationZipDto
+    {
+        public string TemplatePathEmail { get; set; }
+        public string PathZip { get; set; }
+    }
+
     public class RestoreSendEmailUser
     {
         public string Email { get; set; }
         public string Token { get; set; }
+    }
+
+    public class PlaceHolderSendEmailZip
+    {
+        public string PathZip { get; set; }
     }
 }

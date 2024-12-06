@@ -90,5 +90,40 @@ namespace rethus_backend.Utilities.Email.EmailService
 
             return bodyTemplate;
         }
+
+        public async static Task<string> ReplacePlacesHoldersZip(
+            string bodyTemplate,
+            PlaceHolderSendEmailZip placeHolders
+        )
+        {
+            bodyTemplate = bodyTemplate.Replace("${LINK_FILE_ZIP}", placeHolders.PathZip);
+
+            return bodyTemplate;
+        }
+
+        public async Task<string> ConfigurationTemplateZip(TemplateConfigurationZipDto payload)
+        {
+            var domailUrl = _config.GetSection("ApiBackendPrivate").Value;
+
+            var linkUrl = domailUrl;
+
+            var linkUrlWithPathZip =
+                linkUrl + "/UserFormFiles" + "/donwload/zip/" + payload.PathZip;
+
+            string body = await FileHelper.FileHelper.ReadFileContentAsync(
+                payload.TemplatePathEmail
+            );
+
+            var placeHoldersTemplateDto = new PlaceHolderSendEmailZip
+            {
+                PathZip = linkUrlWithPathZip
+            };
+            var newBodyWithPlaceHolders = await ReplacePlacesHoldersZip(
+                body,
+                placeHoldersTemplateDto
+            );
+
+            return newBodyWithPlaceHolders;
+        }
     }
 }

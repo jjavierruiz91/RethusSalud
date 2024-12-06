@@ -18,6 +18,9 @@ using System.Text.Json;
 using ClosedXML.Excel;
 using rethus_backend.RepositoryV2;
 using rethus_backend.Models.Dto.Pagination;
+using rethus_backend.Utilities.Email.EmailService;
+using rethus_backend.Utilities.Constants.Email.EmailDto;
+using rethus_backend.Models.Dto.UserPublic;
 
 namespace rethus_backend.Repository
 {
@@ -1463,6 +1466,7 @@ namespace rethus_backend.Repository
                         && x.UpdatedAt >= startDate
                         && x.UpdatedAt <= endDate
                 )
+                .Include(u => u.User)
                 .OrderByDescending(x => x.CreatedAt)
                 .Skip((pageNumber - 1) * batchSize)
                 .Take(batchSize)
@@ -1509,6 +1513,12 @@ namespace rethus_backend.Repository
                 Console.WriteLine($"NO hay nada que procesar mijo ombe");
                 return;
             }
+
+            var emails = await dbContext.Users
+                .Where(u => u.roles.Contains(UserRoles.Inventory.ToString()))
+                .Select(u => u.email)
+                .ToListAsync();
+
             string filePathZip = FileHelper.GenerateUniqueZipName();
             do
             {
@@ -1539,7 +1549,6 @@ namespace rethus_backend.Repository
                             // Lógica para generar PDFs y manejar archivos
                             Console.WriteLine($"Processing UserFormId: {userForm.UserFormId}");
 
-                            // TODO: Agregar lógica para generar el PDF, comprimir en ZIP, etc.
                             // Construir la ruta del certificado
                             string certificatePath = BuildCertificatePath(
                                 userForm.UserFormId,
@@ -1554,9 +1563,18 @@ namespace rethus_backend.Repository
                                 );
                             }
                             {
-                                Console.WriteLine($"Certificate found at: {certificatePath}");
-
-                                await FileHelper.AddPdfToZip(certificatePath, filePathZip);
+                                try
+                                {
+                                    await FileHelper.AddPdfToZip(certificatePath, filePathZip);
+                                    await SendEmailGenerateZip(emails, filePathZip);
+                                }
+                                catch (System.Exception)
+                                {
+                                    Console.WriteLine(
+                                        "No se logro enviar el correo con los archivos generados"
+                                    );
+                                    throw;
+                                }
                             }
                         }
                         catch (Exception ex)
@@ -1593,6 +1611,30 @@ namespace rethus_backend.Repository
                 + ".pdf";
 
             return outputPath;
+        }
+
+        private async Task SendEmailGenerateZip(List<string> emails, string filePathZip)
+        {
+            var filePathTemplateZip = _config.GetSection("routeTemplateDonwloadZip").Value;
+
+            SendEmailDto payloadSendEmail = new SendEmailDto
+            {
+                IsBodyHtml = true,
+                Subject = "Restablecer contrasena",
+                To = emails,
+            };
+            var EmailServer = new EmailService(_config);
+
+            TemplateConfigurationZipDto ConfigTemplate = new TemplateConfigurationZipDto
+            {
+                TemplatePathEmail = filePathTemplateZip,
+                PathZip = filePathZip
+            };
+
+            var configTemplate = await EmailServer.ConfigurationTemplateZip(ConfigTemplate);
+            payloadSendEmail.TemplateEmail = configTemplate;
+
+            await EmailServer.SendEmail(payloadSendEmail);
         }
     }
 }
