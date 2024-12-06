@@ -1588,10 +1588,14 @@ namespace rethus_backend.Repository
             // Obtener la ruta desde la configuración
             var route = _config.GetSection("routeFileProcedures").Value;
 
-            // Eliminar las barras finales de la ruta principal y asegurarse de que no haya barras dobles al combinar
+            // Obtener la ruta base
             var basePath = Directory.GetCurrentDirectory();
-            route = route.TrimEnd(Path.DirectorySeparatorChar); // Eliminar barra final
 
+            // Eliminar las barras finales de la ruta base y las barras iniciales de la ruta configurada
+            basePath = basePath.TrimEnd(Path.DirectorySeparatorChar);
+            route = route.TrimStart(Path.DirectorySeparatorChar);
+
+            // Combinar correctamente las rutas usando el separador adecuado para el sistema operativo
             return Path.Combine(basePath, route);
         }
 
