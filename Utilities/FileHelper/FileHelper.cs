@@ -237,30 +237,42 @@ namespace rethus_backend.Utilities.FileHelper
         {
             try
             {
-                // Verificar si el archivo ZIP ya existe
-                bool zipFileExists = File.Exists(zipFilePath);
-
-                // Crear o abrir el archivo ZIP
-                using (
-                    var zip = zipFileExists
-                        ? ZipFile.Open(zipFilePath, ZipArchiveMode.Update)
-                        : ZipFile.Open(zipFilePath, ZipArchiveMode.Create)
-                )
+                // Verificar si el archivo ZIP existe
+                if (!File.Exists(zipFilePath))
                 {
-                    // Obtener el nombre del archivo PDF (solo el nombre, no la ruta completa)
-                    string fileName = Path.GetFileName(pdfFilePath);
-
-                    // Verificar si el archivo ya existe en el ZIP
-                    var existingEntry = zip.GetEntry(fileName);
-                    if (existingEntry == null)
+                    using (var zip = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
                     {
-                        // Agregar el archivo PDF al ZIP
-                        zip.CreateEntryFromFile(pdfFilePath, fileName);
-                        Console.WriteLine($"Added PDF {fileName} to ZIP.");
+                        Console.WriteLine($"ZIP file created at: {zipFilePath}");
                     }
-                    else
+
+                    // Si no existe, crear un nuevo archivo ZIP
+                    ZipFile.CreateFromDirectory(
+                        pdfFilePath,
+                        zipFilePath,
+                        CompressionLevel.Optimal,
+                        false
+                    );
+                }
+                else
+                {
+                    // Si el archivo ZIP ya existe, actualizarlo
+                    using (var zip = ZipFile.Open(zipFilePath, ZipArchiveMode.Update))
                     {
-                        Console.WriteLine($"File {fileName} already exists in the ZIP.");
+                        // Obtener el nombre del archivo PDF (solo el nombre, no la ruta completa)
+                        string fileName = Path.GetFileName(pdfFilePath);
+
+                        // Verificar si el archivo ya existe en el ZIP
+                        var existingEntry = zip.GetEntry(fileName);
+                        if (existingEntry == null)
+                        {
+                            // Agregar el archivo PDF al ZIP
+                            zip.CreateEntryFromFile(pdfFilePath, fileName);
+                            Console.WriteLine($"Added PDF {fileName} to ZIP.");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"File {fileName} already exists in the ZIP.");
+                        }
                     }
                 }
             }
