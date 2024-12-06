@@ -544,23 +544,10 @@ public class UserFormController : ApiBaseController
     [HttpGet("generate-zip")]
     public async Task<ActionResult<ApiResponse>> GenerateZip([FromQuery] DateTime? date)
     {
-        // Verificar que la fecha sea proporcionada
-        if (date == null)
+        if (date == null || date.Value.Date > DateTime.Today)
         {
             _response.AddError(
-                "El campo de fecha es obligatorio",
-                HttpStatusCode.NotAcceptable,
-                false
-            );
-            return BadRequest(_response);
-        }
-
-        var currentDate = DateTime.Today;
-        // Verificar que la fecha proporcionada sea del día actual
-        if (date.Value.Date != currentDate)
-        {
-            _response.AddError(
-                "Solo se permite generar archivos del día actual",
+                "La fecha proporcionada no es válida. Debe ser un día no futuro.",
                 HttpStatusCode.NotAcceptable,
                 false
             );
@@ -569,6 +556,7 @@ public class UserFormController : ApiBaseController
 
         try
         {
+            var currentDate = DateTime.Today;
             var startDate = currentDate; // Inicio del día (00:00:00)
             var endDate = currentDate.AddDays(1).AddTicks(-1); // Fin del día (23:59:59.9999999)
 
