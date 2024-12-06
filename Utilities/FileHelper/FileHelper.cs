@@ -288,10 +288,16 @@ namespace rethus_backend.Utilities.FileHelper
             // Generar un GUID único
             string uniqueId = Guid.NewGuid().ToString();
 
-            // Combinar la fecha y el GUID para formar el nombre del archivo ZIP
+            // Generar el nombre único del archivo ZIP
             string zipName = $"generate_zip_{currentDate}_{uniqueId}.zip";
 
-            return zipName;
+            // Obtener la ruta base configurada
+            string basePath = Path.Combine(Directory.GetCurrentDirectory(), "resources");
+
+            // Combinar la ruta base con el nombre del archivo ZIP
+            string fullPath = Path.Combine(basePath, zipName);
+
+            return fullPath;
         }
     }
 }
