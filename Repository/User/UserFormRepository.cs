@@ -1601,16 +1601,14 @@ namespace rethus_backend.Repository
 
         private string BuildCertificatePath(string userFormId, string userIdentification)
         {
-            string mainFolder = GetMainFolder();
+            var outputPath =
+                _config.GetSection("routeFileProcedures").Value
+                + userFormId
+                + "//certifcate-rethus-"
+                + userIdentification
+                + ".pdf";
 
-            // Construir la ruta del certificado
-            string certificateFolderPath = Path.Combine(mainFolder, userFormId);
-            string certificateFilePath = Path.Combine(
-                certificateFolderPath,
-                $"certificate-rethus-{userIdentification}.pdf"
-            );
-
-            return certificateFilePath;
+            return outputPath;
         }
     }
 }
