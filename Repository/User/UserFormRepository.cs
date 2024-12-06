@@ -1556,7 +1556,7 @@ namespace rethus_backend.Repository
                             {
                                 Console.WriteLine($"Certificate found at: {certificatePath}");
 
-                                await FileHelper.AddPdfToZip(filePathZip, certificatePath);
+                                await FileHelper.AddPdfToZip(certificatePath, filePathZip);
                             }
                         }
                         catch (Exception ex)
