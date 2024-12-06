@@ -1585,10 +1585,13 @@ namespace rethus_backend.Repository
 
         private string GetMainFolder()
         {
-            // Devolver la ruta principal para los certificados
+            // Obtener la ruta desde la configuración
+            var route = _config.GetSection("routeFileProcedures").Value;
+
+            // Asegurarse de que no haya dobles barras
             return Path.Combine(
                 Directory.GetCurrentDirectory(),
-                _config.GetSection("routeFileProcedures").Value
+                route.TrimEnd(Path.DirectorySeparatorChar)
             );
         }
 
