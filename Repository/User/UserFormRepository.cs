@@ -1588,11 +1588,11 @@ namespace rethus_backend.Repository
             // Obtener la ruta desde la configuración
             var route = _config.GetSection("routeFileProcedures").Value;
 
-            // Asegurarse de que no haya dobles barras
-            return Path.Combine(
-                Directory.GetCurrentDirectory(),
-                route.TrimEnd(Path.DirectorySeparatorChar)
-            );
+            // Eliminar las barras finales de la ruta principal y asegurarse de que no haya barras dobles al combinar
+            var basePath = Directory.GetCurrentDirectory();
+            route = route.TrimEnd(Path.DirectorySeparatorChar); // Eliminar barra final
+
+            return Path.Combine(basePath, route);
         }
 
         private string BuildCertificatePath(string userFormId, string userIdentification)
