@@ -240,18 +240,16 @@ namespace rethus_backend.Utilities.FileHelper
                 // Verificar si el archivo ZIP existe
                 if (!File.Exists(zipFilePath))
                 {
+                    // Si no existe, crear un nuevo archivo ZIP
                     using (var zip = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
                     {
-                        Console.WriteLine($"ZIP file created at: {zipFilePath}");
-                    }
+                        // Obtener el nombre del archivo PDF (solo el nombre, no la ruta completa)
+                        string fileName = Path.GetFileName(pdfFilePath);
 
-                    // Si no existe, crear un nuevo archivo ZIP
-                    ZipFile.CreateFromDirectory(
-                        pdfFilePath,
-                        zipFilePath,
-                        CompressionLevel.Optimal,
-                        false
-                    );
+                        // Agregar el archivo PDF al ZIP
+                        zip.CreateEntryFromFile(pdfFilePath, fileName);
+                        Console.WriteLine($"Created and added PDF {fileName} to ZIP.");
+                    }
                 }
                 else
                 {
@@ -290,16 +288,10 @@ namespace rethus_backend.Utilities.FileHelper
             // Generar un GUID único
             string uniqueId = Guid.NewGuid().ToString();
 
-            // Generar el nombre único del archivo ZIP
+            // Combinar la fecha y el GUID para formar el nombre del archivo ZIP
             string zipName = $"generate_zip_{currentDate}_{uniqueId}.zip";
 
-            // Obtener la ruta base configurada
-            string basePath = Path.Combine(Directory.GetCurrentDirectory(), "resources");
-
-            // Combinar la ruta base con el nombre del archivo ZIP
-            string fullPath = Path.Combine(basePath, zipName);
-
-            return fullPath;
+            return zipName;
         }
     }
 }
