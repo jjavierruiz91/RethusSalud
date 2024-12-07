@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using rethus_backend.Data;
 using rethus_backend.Models;
 using rethus_backend.Models.Dto.UserFormFiles;
+using rethus_backend.Utilities.FileHelper;
 
 namespace rethus_backend.Controllers;
 
@@ -198,5 +199,27 @@ public class UserFormFilesController : ApiBaseController
 
         _response.Messages.Add("Certificados generandoce");
         return _response;
+    }
+
+    [HttpGet("donwload/zip")]
+    public IActionResult DownloadZip([FromQuery] string target)
+    {
+        if (string.IsNullOrEmpty(target))
+        {
+            _response.AddError("Error al descargar el archivo", HttpStatusCode.BadRequest);
+            return BadRequest(_response);
+        }
+
+        string filePath = FileHelper.GetPathZip(target);
+
+        if (!System.IO.File.Exists(filePath))
+        {
+            _response.AddError("El archivo no se encuentra", HttpStatusCode.BadRequest);
+            return NotFound(_response);
+        }
+
+        // Si todo está bien, devolvemos el archivo como un archivo zip.
+        var fileBytes = System.IO.File.ReadAllBytes(filePath);
+        return File(fileBytes, "application/zip", Path.GetFileName(filePath));
     }
 }
