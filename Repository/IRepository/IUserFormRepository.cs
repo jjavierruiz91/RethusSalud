@@ -92,5 +92,7 @@ namespace rethus_backend.Repository.IRepository
             DateTime endDate,
             ApplicationDbContext dbContext
         );
+
+        Task<int> GetCountFormReadyForGenerate(DateTime startDate, DateTime endDate);
     }
 }

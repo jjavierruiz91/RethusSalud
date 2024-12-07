@@ -554,14 +554,29 @@ public class UserFormController : ApiBaseController
             return BadRequest(_response);
         }
 
+        DateTime dateToUse = date ?? DateTime.Today; // Si 'date' es null, usa la fecha actual
+
+        // Generar startDate y endDate a partir de la fecha proporcionada
+        var startDate = dateToUse.Date; // Inicio del día (00:00:00)
+        var endDate = dateToUse.Date.AddDays(1).AddTicks(-1); // Fin del día (23:59:59.9999999)
+
+        var totalForms = await _unitOfWork.UserForm.GetCountFormReadyForGenerate(
+            startDate,
+            endDate
+        );
+
+        if (totalForms == 0)
+        {
+            _response.AddError(
+                "No se encontro registros para descargar del dia seleccionado",
+                HttpStatusCode.NotAcceptable,
+                false
+            );
+            return NotFound(_response);
+        }
+
         try
         {
-            DateTime dateToUse = date ?? DateTime.Today; // Si 'date' es null, usa la fecha actual
-
-            // Generar startDate y endDate a partir de la fecha proporcionada
-            var startDate = dateToUse.Date; // Inicio del día (00:00:00)
-            var endDate = dateToUse.Date.AddDays(1).AddTicks(-1); // Fin del día (23:59:59.9999999)
-
             // Iniciar la creación de scope para obtener el contexto de la base de datos
             using (var scope = _provider.CreateScope())
             {

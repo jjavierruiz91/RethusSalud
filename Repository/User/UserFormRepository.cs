@@ -1356,8 +1356,6 @@ namespace rethus_backend.Repository
             // Bucle para obtener y procesar cada lote de formularios
             do
             {
-                // Obtener un lote paginado de formularios
-
                 userFormsBatch = await GetUserFormsByBatch(batchSize, pageNumber, dbContext);
 
                 if (
@@ -1493,26 +1491,8 @@ namespace rethus_backend.Repository
                 throw new ArgumentException("Batch size must be greater than 0.");
 
             int pageNumber = 1;
-            int totalForms = 0;
             List<IFormGenerateData> userFormsBatch;
-            var semaphore = new SemaphoreSlim(50); // Limitar concurrencia a 5 tareas
-
-            // Obtener el total de formularios al inicio
-            totalForms = await dbContext.UserForm.CountAsync(
-                x =>
-                    x.Status == UserFormStatus.approved
-                    && x.StepForm == ReviewStepForm.success
-                    && x.Consecutive != null
-                    && x.UpdatedAt >= startDate
-                    && x.UpdatedAt <= endDate
-            );
-
-            // Verificar si hay formularios para procesar
-            if (totalForms == 0)
-            {
-                Console.WriteLine($"NO hay nada que procesar mijo ombe");
-                return;
-            }
+            var semaphore = new SemaphoreSlim(500);
 
             var emails = await dbContext.Users
                 .Where(u => u.roles.Contains(UserRoles.Inventory.ToString()))
@@ -1638,6 +1618,18 @@ namespace rethus_backend.Repository
             payloadSendEmail.TemplateEmail = configTemplate;
 
             await EmailServer.SendEmail(payloadSendEmail);
+        }
+
+        public Task<int> GetCountFormReadyForGenerate(DateTime startDate, DateTime endDate)
+        {
+            return _context.UserForm.CountAsync(
+                x =>
+                    x.Status == UserFormStatus.approved
+                    && x.StepForm == ReviewStepForm.success
+                    && x.Consecutive != null
+                    && x.UpdatedAt >= startDate
+                    && x.UpdatedAt <= endDate
+            );
         }
     }
 }
