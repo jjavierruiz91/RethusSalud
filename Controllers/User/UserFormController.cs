@@ -556,9 +556,11 @@ public class UserFormController : ApiBaseController
 
         try
         {
-            var currentDate = DateTime.Today;
-            var startDate = currentDate; // Inicio del día (00:00:00)
-            var endDate = currentDate.AddDays(1).AddTicks(-1); // Fin del día (23:59:59.9999999)
+            DateTime dateToUse = date ?? DateTime.Today; // Si 'date' es null, usa la fecha actual
+
+            // Generar startDate y endDate a partir de la fecha proporcionada
+            var startDate = dateToUse.Date; // Inicio del día (00:00:00)
+            var endDate = dateToUse.Date.AddDays(1).AddTicks(-1); // Fin del día (23:59:59.9999999)
 
             // Iniciar la creación de scope para obtener el contexto de la base de datos
             using (var scope = _provider.CreateScope())
