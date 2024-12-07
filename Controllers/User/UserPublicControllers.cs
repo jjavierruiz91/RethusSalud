@@ -16,6 +16,7 @@ public class UserPublicController : ApiBaseController
     public UserPublicController(IServiceProvider provider)
         : base(provider) { }
 
+    [AllowAnonymous]
     [HttpPost]
     public async Task<ActionResult<ApiResponse>> PostAsync([FromBody] CreateRequestDto _user)
     {
@@ -45,6 +46,7 @@ public class UserPublicController : ApiBaseController
         return Ok(_response);
     }
 
+    [AllowAnonymous]
     [HttpPost("process")]
     public IActionResult GetStateProcess([FromBody] UserFormProcessDto identification)
     {
@@ -61,6 +63,7 @@ public class UserPublicController : ApiBaseController
         return Ok(_response);
     }
 
+    [AllowAnonymous]
     [HttpPost("restore")]
     public async Task<IActionResult> restorePassword([FromBody] UserRestorePassword payload)
     {
@@ -88,6 +91,7 @@ public class UserPublicController : ApiBaseController
         return Ok(_response);
     }
 
+    [AllowAnonymous]
     [HttpPut("update")]
     public async Task<IActionResult> newPassword([FromBody] UserUpdatePassword payload)
     {

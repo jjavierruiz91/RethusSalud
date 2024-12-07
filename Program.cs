@@ -50,8 +50,9 @@ builder.Services
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT_SECRET)),
             ValidateIssuer = false,
             ValidateAudience = false,
-            // ValidateLifetime = true,
-            ValidateIssuerSigningKey = true
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.Zero
         };
     });
 builder.Services
@@ -159,6 +160,7 @@ app.UseExceptionHandler(errorApp =>
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+app.UseMiddleware<JwtExpirationValidationMiddleware>();
 
 app.UseAuthorization();
 

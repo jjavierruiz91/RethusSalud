@@ -82,7 +82,7 @@ namespace rethus_backend.Repository
 
             var tokenDescriptor = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(30),
+                expires: DateTime.Now.AddMinutes(24),
                 signingCredentials: credentials
             );
 
