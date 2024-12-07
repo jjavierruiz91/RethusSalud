@@ -206,7 +206,7 @@ public class UserFormFilesController : ApiBaseController
     {
         if (string.IsNullOrEmpty(target))
         {
-            _response.AddError("Error al descargar el archivo", HttpStatusCode.BadRequest);
+            _response.AddError("Error al descargar el archivo", HttpStatusCode.BadRequest, false);
             return BadRequest(_response);
         }
 
@@ -214,7 +214,7 @@ public class UserFormFilesController : ApiBaseController
 
         if (!System.IO.File.Exists(filePath))
         {
-            _response.AddError("El archivo no se encuentra", HttpStatusCode.BadRequest);
+            _response.AddError("El archivo no se encuentra", HttpStatusCode.BadRequest, false);
             return NotFound(_response);
         }
 
