@@ -108,7 +108,7 @@ namespace rethus_backend.Utilities.Email.EmailService
             var linkUrl = domailUrl;
 
             var linkUrlWithPathZip =
-                linkUrl + "/UserFormFiles" + "/donwload/zip/" + payload.PathZip;
+                linkUrl + "UserFormFiles" + "/donwload/zip" + "?target=" + payload.PathZip;
 
             string body = await FileHelper.FileHelper.ReadFileContentAsync(
                 payload.TemplatePathEmail
