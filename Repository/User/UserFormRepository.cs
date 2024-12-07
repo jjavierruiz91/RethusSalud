@@ -1174,7 +1174,7 @@ namespace rethus_backend.Repository
                 int totalBatches = (int)Math.Ceiling((double)totalRecords / batchSize);
 
                 // Crear un semáforo que permite 5 tareas a la vez
-                SemaphoreSlim semaphore = new SemaphoreSlim(10);
+                SemaphoreSlim semaphore = new SemaphoreSlim(800);
                 try
                 {
                     var tasks = new List<Task>();
@@ -1267,14 +1267,11 @@ namespace rethus_backend.Repository
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error al guardar el archivo: {ex.Message}");
                         throw new Exception("No se pudo guardar el archivo de Excel.", ex);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($">>>>>>>>>>: {ex}");
-                    Console.WriteLine($">>>>>>>>>>>>>>: {ex.Message}");
                     throw new Exception("No se pudo guardar el archivo de Excel.", ex);
                 }
             }
@@ -1492,7 +1489,7 @@ namespace rethus_backend.Repository
 
             int pageNumber = 1;
             List<IFormGenerateData> userFormsBatch;
-            var semaphore = new SemaphoreSlim(500);
+            var semaphore = new SemaphoreSlim(800);
 
             var emails = await dbContext.Users
                 .Where(u => u.roles.Contains(UserRoles.Inventory.ToString()))
@@ -1503,7 +1500,6 @@ namespace rethus_backend.Repository
             string filePathZip = FileHelper.GetPathZip(fileUniqueName);
             do
             {
-                // Obtener un lote paginado de formularios
                 userFormsBatch = await GetFormByBatch(
                     batchSize,
                     pageNumber,
@@ -1514,7 +1510,7 @@ namespace rethus_backend.Repository
 
                 if (userFormsBatch == null || !userFormsBatch.Any())
                 {
-                    break; // No hay más formularios para procesar
+                    break;
                 }
 
                 var tasks = new List<Task>();
@@ -1527,22 +1523,12 @@ namespace rethus_backend.Repository
                     {
                         try
                         {
-                            // Lógica para generar PDFs y manejar archivos
-                            Console.WriteLine($"Processing UserFormId: {userForm.UserFormId}");
-
-                            // Construir la ruta del certificado
                             string certificatePath = BuildCertificatePath(
                                 userForm.UserFormId,
                                 userForm.PersonalIdentification
                             );
 
-                            // Validar si el certificado existe
-                            if (!File.Exists(certificatePath))
-                            {
-                                Console.WriteLine(
-                                    $"Certificate not found for UserFormId {userForm.UserFormId}"
-                                );
-                            }
+                            if (File.Exists(certificatePath))
                             {
                                 try
                                 {
@@ -1552,24 +1538,22 @@ namespace rethus_backend.Repository
                                 }
                                 catch (Exception ex)
                                 {
-                                    Console.WriteLine(
-                                        "No se logro enviar el correo con los archivos generados"
+                                    throw new Exception(
+                                        $"No se logro enviar el correo con los archivos generados {userForm.UserFormId}: {ex.Message}"
                                     );
-                                    Console.WriteLine(ex);
                                     throw;
                                 }
                             }
                         }
                         catch (Exception ex)
                         {
-                            // Log de errores para cada tarea sin interrumpir el flujo
-                            Console.WriteLine(
+                            throw new Exception(
                                 $"Error processing UserFormId {userForm.UserFormId}: {ex.Message}"
                             );
                         }
                         finally
                         {
-                            semaphore.Release(); // Liberar el espacio del semáforo
+                            semaphore.Release();
                         }
                     });
 
