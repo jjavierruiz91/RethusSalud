@@ -1566,13 +1566,15 @@ namespace rethus_backend.Repository
                                 try
                                 {
                                     await FileHelper.AddPdfToZip(certificatePath, filePathZip);
+                                    Console.WriteLine(filePathZip);
                                     await SendEmailGenerateZip(emails, filePathZip);
                                 }
-                                catch (System.Exception)
+                                catch (Exception ex)
                                 {
                                     Console.WriteLine(
                                         "No se logro enviar el correo con los archivos generados"
                                     );
+                                    Console.WriteLine(ex);
                                     throw;
                                 }
                             }
