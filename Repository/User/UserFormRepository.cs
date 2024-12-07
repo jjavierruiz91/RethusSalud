@@ -1518,7 +1518,6 @@ namespace rethus_backend.Repository
                 .Where(u => u.roles.Contains(UserRoles.Inventory.ToString()))
                 .Select(u => u.email)
                 .ToListAsync();
-            emails.Add("aandresherrera@unicesar.edu.co");
 
             string fileUniqueName = FileHelper.GenerateUniqueZipName();
             string filePathZip = FileHelper.GetPathZip(fileUniqueName);
