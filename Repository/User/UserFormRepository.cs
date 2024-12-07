@@ -1520,7 +1520,8 @@ namespace rethus_backend.Repository
                 .ToListAsync();
             emails.Add("aandresherrera@unicesar.edu.co");
 
-            string filePathZip = FileHelper.GenerateUniqueZipName();
+            string fileUniqueName = FileHelper.GenerateUniqueZipName();
+            string filePathZip = FileHelper.GetPathZip(fileUniqueName);
             do
             {
                 // Obtener un lote paginado de formularios
@@ -1567,8 +1568,8 @@ namespace rethus_backend.Repository
                                 try
                                 {
                                     await FileHelper.AddPdfToZip(certificatePath, filePathZip);
-                                    Console.WriteLine(filePathZip);
-                                    await SendEmailGenerateZip(emails, filePathZip);
+                                    Console.WriteLine(fileUniqueName);
+                                    await SendEmailGenerateZip(emails, fileUniqueName);
                                 }
                                 catch (Exception ex)
                                 {
