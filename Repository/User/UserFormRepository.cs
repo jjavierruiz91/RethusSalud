@@ -1624,7 +1624,7 @@ namespace rethus_backend.Repository
             SendEmailDto payloadSendEmail = new SendEmailDto
             {
                 IsBodyHtml = true,
-                Subject = "Restablecer contrasena",
+                Subject = "Generacion de archivo de rethus",
                 To = emails,
             };
             var EmailServer = new EmailService(_config);
