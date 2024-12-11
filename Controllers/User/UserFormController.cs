@@ -578,28 +578,28 @@ public class UserFormController : ApiBaseController
         try
         {
             // Iniciar la creación de scope para obtener el contexto de la base de datos
-            using (var scope = _provider.CreateScope())
+            _ = Task.Run(async () =>
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-                // Llamar al servicio que procesa el ZIP y los PDFs
-                Task.Run(async () =>
+                using (var scope = _provider.CreateScope())
                 {
+                    var dbContext =
+                        scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                    // Llamar al servicio que procesa el ZIP y los PDFs
+
                     await _unitOfWork.UserForm.ProcessGenerateZipPdf(
                         500,
                         startDate,
                         endDate,
                         dbContext
                     );
-                });
 
-                // Responder que el proceso fue iniciado correctamente
-                _response.Messages.Add(
-                    "El proceso para generar el ZIP ha comenzado correctamente."
-                );
-                _response.IsSuccess = true;
-                return Ok(_response);
-            }
+                    // Responder que el proceso fue iniciado correctamente
+                }
+            });
+            _response.Messages.Add("El proceso para generar el ZIP ha comenzado correctamente.");
+            _response.IsSuccess = true;
+            return Ok(_response);
         }
         catch (Exception ex)
         {
