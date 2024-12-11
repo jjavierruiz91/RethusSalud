@@ -578,7 +578,7 @@ public class UserFormController : ApiBaseController
         try
         {
             // Iniciar la creación de scope para obtener el contexto de la base de datos
-            _ = Task.Run(async () =>
+            await Task.Run(async () =>
             {
                 using (var scope = _provider.CreateScope())
                 {
