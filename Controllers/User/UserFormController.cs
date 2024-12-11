@@ -583,12 +583,15 @@ public class UserFormController : ApiBaseController
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
                 // Llamar al servicio que procesa el ZIP y los PDFs
-                await _unitOfWork.UserForm.ProcessGenerateZipPdf(
-                    500,
-                    startDate,
-                    endDate,
-                    dbContext
-                );
+                Task.Run(async () =>
+                {
+                    await _unitOfWork.UserForm.ProcessGenerateZipPdf(
+                        500,
+                        startDate,
+                        endDate,
+                        dbContext
+                    );
+                });
 
                 // Responder que el proceso fue iniciado correctamente
                 _response.Messages.Add(
@@ -606,7 +609,7 @@ public class UserFormController : ApiBaseController
                 HttpStatusCode.InternalServerError,
                 false
             );
-            return StatusCode((int)HttpStatusCode.InternalServerError, _response);
+            return StatusCode((int)HttpStatusCode.BadRequest, _response);
         }
     }
 }
