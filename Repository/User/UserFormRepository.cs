@@ -1604,30 +1604,6 @@ namespace rethus_backend.Repository
             return outputPath;
         }
 
-        private async Task SendEmailGenerateZip(List<string> emails, string filePathZip)
-        {
-            var filePathTemplateZip = _config.GetSection("routeTemplateDonwloadZip").Value;
-
-            SendEmailDto payloadSendEmail = new SendEmailDto
-            {
-                IsBodyHtml = true,
-                Subject = "Generacion de archivo de rethus",
-                To = emails,
-            };
-            var EmailServer = new EmailService(_config);
-
-            TemplateConfigurationZipDto ConfigTemplate = new TemplateConfigurationZipDto
-            {
-                TemplatePathEmail = filePathTemplateZip,
-                PathZip = filePathZip
-            };
-
-            var configTemplate = await EmailServer.ConfigurationTemplateZip(ConfigTemplate);
-            payloadSendEmail.TemplateEmail = configTemplate;
-
-            await EmailServer.SendEmail(payloadSendEmail);
-        }
-
         public Task<int> GetCountFormReadyForGenerate(
             int page,
             int skip,

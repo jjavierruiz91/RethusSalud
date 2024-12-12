@@ -628,16 +628,77 @@ public class UserFormController : ApiBaseController
                 return BadRequest(zipResponse);
             }
 
-            var fileBytes = System.IO.File.ReadAllBytes(zipResponse.Result as string);
-            return File(
-                fileBytes,
-                "application/zip",
-                Path.GetFileName(zipResponse.Result as string)
-            );
+            var filePath = zipResponse.Result as string;
+
+            try
+            {
+                if (!System.IO.File.Exists(filePath))
+                {
+                    _response.AddError(
+                        "No se encontró el archivo solicitado en el sistema.",
+                        HttpStatusCode.NotFound,
+                        false
+                    );
+                    return NotFound(_response);
+                }
+
+                var fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+                try
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    _response.AddError(
+                        "No se puede eliminar el archivo debido a restricciones de acceso.",
+                        HttpStatusCode.InternalServerError,
+                        false
+                    );
+                    return StatusCode(501, _response);
+                }
+                catch (IOException ex)
+                {
+                    _response.AddError(
+                        $"Error al intentar eliminar el archivo: {ex.Message}",
+                        HttpStatusCode.InternalServerError,
+                        false
+                    );
+                    return StatusCode(501, _response);
+                }
+
+                return File(fileBytes, "application/zip", Path.GetFileName(filePath));
+            }
+            catch (FileNotFoundException)
+            {
+                _response.AddError(
+                    "No se pudo encontrar el archivo solicitado en el sistema.",
+                    HttpStatusCode.NotFound,
+                    false
+                );
+                return NotFound(_response);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                _response.AddError(
+                    "No tiene permisos suficientes para leer el archivo.",
+                    HttpStatusCode.InternalServerError,
+                    false
+                );
+                return StatusCode(501, _response);
+            }
+            catch (IOException ex)
+            {
+                _response.AddError(
+                    $"Error al leer el archivo: {ex.Message}",
+                    HttpStatusCode.InternalServerError,
+                    false
+                );
+                return StatusCode(500, _response);
+            }
         }
         catch (Exception ex)
         {
-            // Manejar errores inesperados
             _response.AddError(
                 $"Error al procesar la solicitud: {ex.Message}",
                 HttpStatusCode.InternalServerError,

@@ -61,8 +61,6 @@ public class ConvertPdfService
                 CreateNoWindow = true
             };
 
-            Console.WriteLine("Iniciando la conversión a PDF...");
-
             // Inicia el proceso
             var process = Process.Start(processInfo);
 
@@ -93,8 +91,6 @@ public class ConvertPdfService
 
             // Elimina el archivo temporal
             File.Delete(tempHtmlPath);
-
-            Console.WriteLine("PDF generado correctamente.");
         }
         catch (Exception ex)
         {
