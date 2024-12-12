@@ -490,7 +490,8 @@ public class UserFormController : ApiBaseController
                     StepForm = user.StepForm,
                     CreatedAt = user.CreatedAt,
                     Status = user.Status.ToString(),
-                    Consecutive = user.Consecutive
+                    Consecutive = user.Consecutive,
+                    UpdateAt = user.UpdatedAt
                 }
         );
 
