@@ -1377,8 +1377,8 @@ namespace rethus_backend.Repository
                         lock (dbContext)
                         {
                             userForm.Consecutive = newConsecutive;
+                            userForm.ConsecutiveDate = consecutiveDate;
                             userForm.Status = UserFormStatus.approved;
-                            userForm.UpdatedAt = DateTime.Now;
 
                             dbContext.UserForm.Update(userForm);
                             _ = dbContext.SaveChanges();
