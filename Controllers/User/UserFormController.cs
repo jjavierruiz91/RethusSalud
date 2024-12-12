@@ -491,7 +491,7 @@ public class UserFormController : ApiBaseController
                     CreatedAt = user.CreatedAt,
                     Status = user.Status.ToString(),
                     Consecutive = user.Consecutive,
-                    UpdateAt = user.UpdatedAt
+                    updatedAt = user.UpdatedAt
                 }
         );
 
