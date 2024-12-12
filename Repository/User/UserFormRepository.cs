@@ -1645,8 +1645,8 @@ namespace rethus_backend.Repository
                         && x.CreatedAt <= endDate
                 )
                 .OrderByDescending(o => o.CreatedAt)
-                .Skip(skip)
-                .Take(page)
+                .Skip((page - 1) * skip)
+                .Take(skip)
                 .CountAsync();
 
             return count;
