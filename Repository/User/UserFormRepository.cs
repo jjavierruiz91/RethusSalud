@@ -1477,15 +1477,24 @@ namespace rethus_backend.Repository
                 .ToListAsync();
         }
 
-        public async Task ProcessGenerateZipPdf(
+        public async Task<ApiResponse> ProcessGenerateZipPdf(
             int batchSize,
             DateTime startDate,
             DateTime endDate,
             ApplicationDbContext dbContext
         )
         {
+            ApiResponse _response = new ApiResponse();
+
             if (batchSize <= 0)
-                throw new ArgumentException("Batch size must be greater than 0.");
+            {
+                _response.AddError(
+                    "Error interno: Tamaño de lote inválido",
+                    HttpStatusCode.BadRequest,
+                    false
+                );
+                return _response;
+            }
 
             int pageNumber = 1;
             List<IFormGenerateData> userFormsBatch;
@@ -1498,74 +1507,89 @@ namespace rethus_backend.Repository
 
             string fileUniqueName = FileHelper.GenerateUniqueZipName();
             string filePathZip = FileHelper.GetPathZip(fileUniqueName);
-            do
+
+            try
             {
-                userFormsBatch = await GetFormByBatch(
-                    batchSize,
-                    pageNumber,
-                    startDate,
-                    endDate,
-                    dbContext
-                );
-
-                if (userFormsBatch == null || !userFormsBatch.Any())
+                do
                 {
-                    break;
-                }
+                    userFormsBatch = await GetFormByBatch(
+                        batchSize,
+                        pageNumber,
+                        startDate,
+                        endDate,
+                        dbContext
+                    );
 
-                var tasks = new List<Task>();
-
-                foreach (var userForm in userFormsBatch)
-                {
-                    await semaphore.WaitAsync();
-
-                    var task = Task.Run(async () =>
+                    if (userFormsBatch == null || !userFormsBatch.Any())
                     {
-                        try
-                        {
-                            string certificatePath = BuildCertificatePath(
-                                userForm.UserFormId,
-                                userForm.PersonalIdentification
-                            );
+                        break;
+                    }
 
-                            if (File.Exists(certificatePath))
+                    var tasks = new List<Task>();
+
+                    foreach (var userForm in userFormsBatch)
+                    {
+                        await semaphore.WaitAsync();
+
+                        var task = Task.Run(async () =>
+                        {
+                            try
                             {
-                                try
+                                string certificatePath = BuildCertificatePath(
+                                    userForm.UserFormId,
+                                    userForm.PersonalIdentification
+                                );
+
+                                if (File.Exists(certificatePath))
                                 {
                                     await FileHelper.AddPdfToZip(certificatePath, filePathZip);
-                                    Console.WriteLine(fileUniqueName);
-                                    await SendEmailGenerateZip(emails, fileUniqueName);
-                                }
-                                catch (Exception ex)
-                                {
-                                    throw new Exception(
-                                        $"No se logro enviar el correo con los archivos generados {userForm.UserFormId}: {ex.Message}"
-                                    );
-                                    throw;
                                 }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new Exception(
-                                $"Error processing UserFormId {userForm.UserFormId}: {ex.Message}"
-                            );
-                        }
-                        finally
-                        {
-                            semaphore.Release();
-                        }
-                    });
+                            catch (Exception ex)
+                            {
+                                _response.AddError(
+                                    $"Error procesando UserFormId {userForm.UserFormId}: {ex.Message}",
+                                    HttpStatusCode.PartialContent,
+                                    false
+                                );
+                                _response.IsSuccess = false;
+                            }
+                            finally
+                            {
+                                semaphore.Release();
+                            }
+                        });
 
-                    tasks.Add(task);
-                }
+                        tasks.Add(task);
+                    }
 
-                // Esperar a que todas las tareas del lote terminen
-                await Task.WhenAll(tasks);
+                    // Esperar a que todas las tareas del lote terminen
+                    await Task.WhenAll(tasks);
 
-                // Pasar a la siguiente página
-                pageNumber++;
-            } while (userFormsBatch.Count == batchSize); // Continuar si el tamaño del lote es igual al batchSize
+                    // Pasar a la siguiente página
+                    pageNumber++;
+                } while (userFormsBatch.Count == batchSize);
+
+                // Si no hubo errores graves, establece el archivo zip como resultado exitoso
+                _response.Result = filePathZip;
+                _response.IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                // Manejo de errores generales
+                _response.AddError(
+                    $"Error general al generar ZIP: {ex.Message}",
+                    HttpStatusCode.InternalServerError,
+                    false
+                );
+            }
+            finally
+            {
+                // Liberar el semáforo
+                semaphore.Dispose();
+            }
+
+            return _response;
         }
 
         private string BuildCertificatePath(string userFormId, string userIdentification)
@@ -1604,16 +1628,27 @@ namespace rethus_backend.Repository
             await EmailServer.SendEmail(payloadSendEmail);
         }
 
-        public Task<int> GetCountFormReadyForGenerate(DateTime startDate, DateTime endDate)
+        public Task<int> GetCountFormReadyForGenerate(
+            int page,
+            int skip,
+            DateTime startDate,
+            DateTime endDate
+        )
         {
-            return _context.UserForm.CountAsync(
-                x =>
-                    x.Status == UserFormStatus.approved
-                    && x.StepForm == ReviewStepForm.success
-                    && x.Consecutive != null
-                    && x.UpdatedAt >= startDate
-                    && x.UpdatedAt <= endDate
-            );
+            var count = _context.UserForm
+                .Where(
+                    x =>
+                        x.Status == UserFormStatus.approved
+                        && x.StepForm == ReviewStepForm.success
+                        && x.Consecutive != null
+                        && x.UpdatedAt >= startDate
+                        && x.UpdatedAt <= endDate
+                )
+                .Skip(skip)
+                .Take(page)
+                .CountAsync();
+
+            return count;
         }
     }
 }

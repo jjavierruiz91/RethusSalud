@@ -542,25 +542,47 @@ public class UserFormController : ApiBaseController
     }
 
     [HttpGet("generate-zip")]
-    public async Task<ActionResult<ApiResponse>> GenerateZip([FromQuery] DateTime? date)
+    public async Task<ActionResult<ApiResponse>> GenerateZip(
+        [FromQuery] DateTime startDate,
+        [FromQuery] DateTime endDate,
+        [FromQuery] int page
+    )
     {
-        if (date == null || date.Value.Date > DateTime.Today)
+        if (startDate == null)
         {
             _response.AddError(
-                "La fecha proporcionada no es válida. Debe ser un día no futuro.",
+                "La fecha de inicio proporcionada no puede ser una fecha futura.",
                 HttpStatusCode.NotAcceptable,
                 false
             );
             return BadRequest(_response);
         }
 
-        DateTime dateToUse = date ?? DateTime.Today; // Si 'date' es null, usa la fecha actual
+        // Validación para endDate: no puede ser una fecha futura
+        if (endDate == null)
+        {
+            _response.AddError(
+                "La fecha de fin proporcionada no puede ser una fecha futura.",
+                HttpStatusCode.NotAcceptable,
+                false
+            );
+            return BadRequest(_response);
+        }
 
-        // Generar startDate y endDate a partir de la fecha proporcionada
-        var startDate = dateToUse.Date; // Inicio del día (00:00:00)
-        var endDate = dateToUse.Date.AddDays(1).AddTicks(-1); // Fin del día (23:59:59.9999999)
+        // Validación para el parámetro page: debe ser un número entero positivo
+        if (page == null) // Validamos que 'page' no sea null y que sea mayor que 0
+        {
+            _response.AddError(
+                "El número de página debe ser un valor mayor que cero.",
+                HttpStatusCode.NotAcceptable,
+                false
+            );
+            return BadRequest(_response);
+        }
 
         var totalForms = await _unitOfWork.UserForm.GetCountFormReadyForGenerate(
+            page,
+            10,
             startDate,
             endDate
         );
@@ -577,29 +599,37 @@ public class UserFormController : ApiBaseController
 
         try
         {
-            // Iniciar la creación de scope para obtener el contexto de la base de datos
-            await Task.Run(async () =>
+            var zipGenerationTask = Task.Run(async () =>
             {
                 using (var scope = _provider.CreateScope())
                 {
                     var dbContext =
                         scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                    // Llamar al servicio que procesa el ZIP y los PDFs
-
-                    await _unitOfWork.UserForm.ProcessGenerateZipPdf(
-                        500,
+                    var zipResponse = await _unitOfWork.UserForm.ProcessGenerateZipPdf(
+                        10,
                         startDate,
                         endDate,
                         dbContext
                     );
 
-                    // Responder que el proceso fue iniciado correctamente
+                    return zipResponse;
                 }
             });
-            _response.Messages.Add("El proceso para generar el ZIP ha comenzado correctamente.");
-            _response.IsSuccess = true;
-            return Ok(_response);
+
+            var zipResponse = await zipGenerationTask;
+
+            if (!zipResponse.IsSuccess)
+            {
+                return BadRequest(zipResponse);
+            }
+
+            var fileBytes = System.IO.File.ReadAllBytes(zipResponse.Result as string);
+            return File(
+                fileBytes,
+                "application/zip",
+                Path.GetFileName(zipResponse.Result as string)
+            );
         }
         catch (Exception ex)
         {
