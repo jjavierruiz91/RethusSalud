@@ -597,6 +597,8 @@ public class UserFormController : ApiBaseController
             return NotFound(_response);
         }
 
+        endDate = endDate.Date.AddDays(1).AddTicks(-1);
+
         try
         {
             var zipGenerationTask = Task.Run(async () =>
