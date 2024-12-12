@@ -72,6 +72,7 @@ namespace rethus_backend.Repository
 
             var nextStep = UserConfiguration.GetNextStepOnboarding(step);
             user_configuration.Step = nextStep;
+            user_configuration.UpdatedAt = DateTime.Now;
 
             _context.Configurations.Update(user_configuration);
             _context.SaveChanges();
@@ -103,6 +104,7 @@ namespace rethus_backend.Repository
                 user_configuration.State = ConfigurationsState.rejected;
             }
 
+            user_configuration.UpdatedAt = DateTime.Now;
             _context.Configurations.Update(user_configuration);
             _context.SaveChanges();
 
@@ -142,6 +144,7 @@ namespace rethus_backend.Repository
 
             user_configuration.TypeProcedure = type_procedure;
             user_configuration.Step = ConfigurationStep.load_user_form;
+            user_configuration.UpdatedAt = DateTime.Now;
 
             _context.Configurations.Update(user_configuration);
             _context.SaveChanges();
@@ -206,7 +209,7 @@ namespace rethus_backend.Repository
                 user_configuration.State
             );
             user_configuration.State = nextState;
-
+            user_configuration.UpdatedAt = DateTime.Now;
             _context.Configurations.Update(user_configuration);
             _context.SaveChanges();
 
@@ -230,7 +233,7 @@ namespace rethus_backend.Repository
             }
 
             user_configuration.State = ConfigurationsState.rejected;
-
+            user_configuration.UpdatedAt = DateTime.Now;
             _context.Configurations.Update(user_configuration);
             _context.SaveChanges();
 
@@ -254,7 +257,7 @@ namespace rethus_backend.Repository
             }
 
             user_configuration.State = ConfigurationsState.inprogress;
-
+            user_configuration.UpdatedAt = DateTime.Now;
             _context.Configurations.Update(user_configuration);
             _context.SaveChanges();
 
@@ -278,7 +281,7 @@ namespace rethus_backend.Repository
             }
 
             user_configuration.State = ConfigurationsState.initial;
-
+            user_configuration.UpdatedAt = DateTime.Now;
             _context.Configurations.Update(user_configuration);
             _context.SaveChanges();
 
@@ -340,7 +343,7 @@ namespace rethus_backend.Repository
             }
 
             user_configuration.State = ConfigurationsState.updated;
-
+            user_configuration.UpdatedAt = DateTime.Now;
             _context.Configurations.Update(user_configuration);
             _context.SaveChanges();
 
@@ -364,7 +367,7 @@ namespace rethus_backend.Repository
             }
 
             user_configuration.State = ConfigurationsState.completed;
-
+            user_configuration.UpdatedAt = DateTime.Now;
             _context.Configurations.Update(user_configuration);
             _context.SaveChanges();
 

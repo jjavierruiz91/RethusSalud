@@ -146,6 +146,7 @@ namespace rethus_backend.Repository
             }
 
             comment.Status = CommentsStatus.approved;
+            comment.UpdateAt = DateTime.Now;
 
             _context.SaveChanges();
             response.Messages.Add("El comentario ha sido resuelto");
@@ -166,6 +167,7 @@ namespace rethus_backend.Repository
             }
 
             comment.Status = CommentsStatus.rejected;
+            comment.UpdateAt = DateTime.Now;
 
             _context.SaveChanges();
             response.Messages.Add("El comentario ha sido rechazado");
@@ -186,6 +188,7 @@ namespace rethus_backend.Repository
             }
 
             comment.Status = CommentsStatus.updated;
+            comment.UpdateAt = DateTime.Now;
 
             _context.SaveChanges();
             response.Messages.Add("El comentario ha sido actulizado");
@@ -206,6 +209,7 @@ namespace rethus_backend.Repository
             }
 
             comment.Status = CommentsStatus.pending;
+            comment.UpdateAt = DateTime.Now;
 
             _context.SaveChanges();
             response.Messages.Add("El comentario ha sido actualizo a en progreso");

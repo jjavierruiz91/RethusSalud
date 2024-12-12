@@ -390,6 +390,7 @@ namespace rethus_backend.Repository
 
             form.StepForm = UserFormConstants.GetNextRebiewStepForm(form.StepForm);
             form.Status = UserFormStatus.pending;
+            form.UpdatedAt = DateTime.Now;
 
             _context.SaveChanges();
             if (oldStatus == UserFormStatus.reject)
@@ -406,18 +407,19 @@ namespace rethus_backend.Repository
         {
             var response = new ApiResponse();
 
-            UserForm comment = GetById(userFormId);
+            UserForm form = GetById(userFormId);
 
-            if (comment == null)
+            if (form == null)
             {
                 response.AddError("El formulario no existe", HttpStatusCode.NotFound, false);
                 return response;
             }
 
-            comment.StepForm = ReviewStepForm.FuncionarioEtapa1;
-            comment.Status = UserFormStatus.reject;
+            form.StepForm = ReviewStepForm.FuncionarioEtapa1;
+            form.Status = UserFormStatus.reject;
+            form.UpdatedAt = DateTime.Now;
 
-            _userConfiguration.updateStateRejectConfiguration(comment.UserId);
+            _userConfiguration.updateStateRejectConfiguration(form.UserId);
 
             _context.SaveChanges();
             response.Messages.Add("El formulario ha sido rechazado");
@@ -1048,6 +1050,7 @@ namespace rethus_backend.Repository
             }
             form.Status = UserFormStatus.needsReview;
             form.StepForm = ReviewStepForm.FuncionarioEtapa1;
+            form.UpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
 
             response.IsSuccess = true;
