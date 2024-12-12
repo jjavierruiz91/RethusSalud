@@ -55,6 +55,28 @@ namespace rethus_backend.Utilities.Constants.User.UserFormConstants
                     return null;
             }
         }
+
+        public static string GetNextConsecutive(string consecutiveStart, string consecutiveEnd)
+        {
+            // Obtener la longitud del valor de inicio
+            int length = consecutiveStart.Length;
+
+            // Convertir los valores de inicio y fin a enteros
+            int start = int.Parse(consecutiveStart);
+            int end = int.Parse(consecutiveEnd);
+
+            // Incrementar el valor consecutivo
+            int next = start + 1;
+
+            // Si el siguiente valor excede o iguala al valor final, retornamos null
+            if (next > end)
+            {
+                return null;
+            }
+
+            // Formatear el número incrementado con ceros a la izquierda según la longitud original
+            return next.ToString("D" + length);
+        }
     }
 
     public enum TypeUploadFile

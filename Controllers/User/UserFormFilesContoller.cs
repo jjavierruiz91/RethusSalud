@@ -154,18 +154,18 @@ public class UserFormFilesController : ApiBaseController
         _response.StatusCode = HttpStatusCode.OK;
         _response.IsSuccess = true;
 
-        if (configs.ConsecutiveStart == 0)
+        if (string.IsNullOrEmpty(configs.ConsecutiveStart))
         {
             _response.StatusCode = HttpStatusCode.BadRequest;
             _response.IsSuccess = false;
-            _response.Messages.Add("ConsecutiveStart no puede ser cero.");
+            _response.Messages.Add("ConsecutiveStart es requerido");
         }
 
-        if (configs.ConsecutiveEnd == 0)
+        if (string.IsNullOrEmpty(configs.ConsecutiveEnd))
         {
             _response.StatusCode = HttpStatusCode.BadRequest;
             _response.IsSuccess = false;
-            _response.Messages.Add("ConsecutiveEnd no puede ser cero.");
+            _response.Messages.Add("ConsecutiveEnd es requerido.");
         }
 
         if (string.IsNullOrEmpty(configs.ConsecutiveDate))
@@ -187,7 +187,7 @@ public class UserFormFilesController : ApiBaseController
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
                 await _unitOfWork.UserForm.ProcessUserFormCertificatesByBatch(
-                    500,
+                    300,
                     100,
                     configs.ConsecutiveStart,
                     configs.ConsecutiveEnd,

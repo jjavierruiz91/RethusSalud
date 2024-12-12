@@ -1338,41 +1338,34 @@ namespace rethus_backend.Repository
         public async Task ProcessUserFormCertificatesByBatch(
             int batchSize,
             int maxDegreeOfParallelism,
-            int consecutiveStart,
-            int consecutiveEnd,
+            string consecutiveStart,
+            string consecutiveEnd,
             string consecutiveDate,
             ApplicationDbContext dbContext
         )
         {
             int pageNumber = 1;
             int totalForms = 0;
-            int completedForms = consecutiveEnd;
+            int parseConsecutiveStartint = 0;
+            var newConsecutive = consecutiveStart;
 
             List<UserForm> userFormsBatch;
 
             // Bucle para obtener y procesar cada lote de formularios
+            totalForms = await dbContext.UserForm.CountAsync(
+                x =>
+                    x.Status == UserFormStatus.approved
+                    && x.Consecutive != null
+                    && x.ConsecutiveDate != null
+            );
+
             do
             {
                 userFormsBatch = await GetUserFormsByBatch(batchSize, pageNumber, dbContext);
 
-                if (
-                    userFormsBatch == null
-                    || !userFormsBatch.Any()
-                    || consecutiveStart == completedForms
-                )
+                if (userFormsBatch == null || !userFormsBatch.Any())
                 {
-                    break; // No hay más formularios para procesar
-                }
-
-                if (totalForms == 0)
-                {
-                    // Solo calcular el total una vez en el primer lote
-                    totalForms = await dbContext.UserForm.CountAsync(
-                        x =>
-                            x.Status == UserFormStatus.approved
-                            && x.Consecutive != null
-                            && x.ConsecutiveDate != null
-                    );
+                    break;
                 }
 
                 var tasks = new List<Task>();
@@ -1383,42 +1376,49 @@ namespace rethus_backend.Repository
                     {
                         lock (dbContext)
                         {
-                            if (userForm.StepForm == ReviewStepForm.success)
+                            userForm.Consecutive = newConsecutive;
+                            userForm.Status = UserFormStatus.approved;
+                            userForm.UpdatedAt = DateTime.Now;
+
+                            dbContext.UserForm.Update(userForm);
+                            _ = dbContext.SaveChanges();
+
+                            var userConfiguration = dbContext.Configurations.FirstOrDefault(
+                                c => c.UserId == userForm.UserId
+                            );
+
+                            if (userConfiguration == null)
                             {
-                                userForm.Consecutive = consecutiveStart.ToString();
-                                userForm.ConsecutiveDate = consecutiveDate;
-                                userForm.Status = UserFormStatus.approved;
-
-                                dbContext.UserForm.Update(userForm);
-                                _ = dbContext.SaveChanges();
-
-                                var userConfiguration = dbContext.Configurations.FirstOrDefault(
-                                    c => c.UserId == userForm.UserId
+                                throw new InvalidOperationException(
+                                    $"No se encontró la configuración para el UserId {userForm.UserId}"
                                 );
+                            }
 
-                                if (userConfiguration == null)
-                                {
-                                    throw new InvalidOperationException(
-                                        $"No se encontró la configuración para el UserId {userForm.UserId}"
-                                    );
-                                }
+                            userConfiguration.State = ConfigurationsState.completed;
+                            userConfiguration.Step = ConfigurationStep.success;
 
-                                userConfiguration.State = ConfigurationsState.completed;
-                                userConfiguration.Step = ConfigurationStep.success;
+                            dbContext.Configurations.Update(userConfiguration);
+                            dbContext.SaveChanges();
 
-                                dbContext.Configurations.Update(userConfiguration);
-                                dbContext.SaveChanges();
+                            if (userForm.TypeProcedure == ConfigurationTypeProcedure.RETHUS)
+                            {
+                                CreateCertificateRethus(userForm);
+                            }
+                            else
+                            {
+                                CreateCertificateSso(userForm);
+                            }
 
-                                consecutiveStart++;
+                            newConsecutive = UserFormConstants.GetNextConsecutive(
+                                newConsecutive,
+                                consecutiveEnd
+                            );
 
-                                if (userForm.TypeProcedure == ConfigurationTypeProcedure.RETHUS)
-                                {
-                                    CreateCertificateRethus(userForm);
-                                }
-                                else
-                                {
-                                    CreateCertificateSso(userForm);
-                                }
+                            if (string.IsNullOrEmpty(newConsecutive))
+                            {
+                                throw new InvalidOperationException(
+                                    $"No se encontró la configuración para el UserId {userForm.UserId}"
+                                );
                             }
                         }
                     });

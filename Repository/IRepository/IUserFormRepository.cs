@@ -79,8 +79,8 @@ namespace rethus_backend.Repository.IRepository
         Task ProcessUserFormCertificatesByBatch(
             int batchSize,
             int maxDegreeOfParallelism,
-            int consecutiveStart,
-            int consecutiveEnd,
+            string consecutiveStart,
+            string consecutiveEnd,
             string consecutiveDate,
             ApplicationDbContext dbContext
         );
