@@ -1458,8 +1458,8 @@ namespace rethus_backend.Repository
                         x.Status == UserFormStatus.approved
                         && x.StepForm == ReviewStepForm.success
                         && x.Consecutive != null
-                        && x.UpdatedAt >= startDate
-                        && x.UpdatedAt <= endDate
+                        && x.CreatedAt >= startDate
+                        && x.CreatedAt <= endDate
                 )
                 .Include(u => u.User)
                 .OrderByDescending(x => x.CreatedAt)
@@ -1641,9 +1641,10 @@ namespace rethus_backend.Repository
                         x.Status == UserFormStatus.approved
                         && x.StepForm == ReviewStepForm.success
                         && x.Consecutive != null
-                        && x.UpdatedAt >= startDate
-                        && x.UpdatedAt <= endDate
+                        && x.CreatedAt >= startDate
+                        && x.CreatedAt <= endDate
                 )
+                .OrderByDescending(o => o.CreatedAt)
                 .Skip(skip)
                 .Take(page)
                 .CountAsync();

@@ -579,6 +579,7 @@ public class UserFormController : ApiBaseController
             );
             return BadRequest(_response);
         }
+        endDate = endDate.Date.AddDays(1).AddTicks(-1);
 
         var totalForms = await _unitOfWork.UserForm.GetCountFormReadyForGenerate(
             page,
@@ -596,8 +597,6 @@ public class UserFormController : ApiBaseController
             );
             return NotFound(_response);
         }
-
-        endDate = endDate.Date.AddDays(1).AddTicks(-1);
 
         try
         {
