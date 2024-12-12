@@ -250,24 +250,6 @@ namespace rethus_backend.Data
                 .Entity<City>()
                 .HasIndex(c => new { c.DepartmentId })
                 .HasDatabaseName("IX_Department_DepartmentId");
-
-            modelBuilder
-                .Entity<UserForm>()
-                .Property(e => e.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql("GETDATE()");
-
-            modelBuilder
-                .Entity<User>()
-                .Property(e => e.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql("GETDATE()");
-
-            modelBuilder
-                .Entity<Configurations>()
-                .Property(e => e.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql("GETDATE()");
         }
     }
 }
