@@ -1517,7 +1517,7 @@ namespace rethus_backend.Repository
                     dbContext
                 );
                 Console.WriteLine("cuentao");
-                Console.WriteLine(userFormsBatch);
+                Console.WriteLine(userFormsBatch.Count);
                 if (userFormsBatch == null || !userFormsBatch.Any())
                 {
                     _response.AddError(
@@ -1561,6 +1561,7 @@ namespace rethus_backend.Repository
                             semaphore.Release();
                         }
                     });
+                    await Task.WhenAll(task);
                 }
 
                 if (certificatePaths.Any())
