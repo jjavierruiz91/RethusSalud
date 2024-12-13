@@ -266,6 +266,7 @@ namespace rethus_backend.Utilities.FileHelper
                             // Agregar el archivo PDF al ZIP
                             zip.CreateEntryFromFile(pdfFilePath, fileName);
                             Console.WriteLine($"Added PDF {fileName} to ZIP.");
+                            Task.Delay(2000);
                         }
                         else
                         {
