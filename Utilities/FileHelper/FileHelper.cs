@@ -247,7 +247,8 @@ namespace rethus_backend.Utilities.FileHelper
                         string fileName = Path.GetFileName(pdfFilePath);
 
                         // Agregar el archivo PDF al ZIP
-                        zip.CreateEntryFromFile(pdfFilePath, fileName);
+                        await Task.Run(() => zip.CreateEntryFromFile(pdfFilePath, fileName));
+
                         Console.WriteLine($"Created and added PDF {fileName} to ZIP.");
                     }
                 }
@@ -264,7 +265,7 @@ namespace rethus_backend.Utilities.FileHelper
                         if (existingEntry == null)
                         {
                             // Agregar el archivo PDF al ZIP
-                            zip.CreateEntryFromFile(pdfFilePath, fileName);
+                            await Task.Run(() => zip.CreateEntryFromFile(pdfFilePath, fileName));
                             Console.WriteLine($"Added PDF {fileName} to ZIP.");
                             Task.Delay(2000);
                         }
