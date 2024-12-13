@@ -1475,7 +1475,6 @@ namespace rethus_backend.Repository
                             PersonalIdentification = x.PersonalIdentification
                         }
                 )
-                .Cast<IFormGenerateData>()
                 .ToListAsync();
         }
 
@@ -1519,7 +1518,8 @@ namespace rethus_backend.Repository
                         endDate,
                         dbContext
                     );
-
+                    Console.WriteLine("cuentao");
+                    Console.WriteLine(userFormsBatch);
                     if (userFormsBatch == null || !userFormsBatch.Any())
                     {
                         break;
@@ -1564,8 +1564,6 @@ namespace rethus_backend.Repository
                         tasks.Add(task);
                     }
                     await Task.WhenAll(tasks);
-
-                    pageNumber++;
                 } while (userFormsBatch.Count == batchSize);
 
                 if (certificatePaths.Any())
