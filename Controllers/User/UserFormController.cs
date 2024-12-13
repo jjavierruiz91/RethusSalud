@@ -546,7 +546,7 @@ public class UserFormController : ApiBaseController
     public async Task<ActionResult<ApiResponse>> GenerateZip(
         [FromQuery] DateTime startDate,
         [FromQuery] DateTime endDate,
-        [FromQuery] int page
+        [FromQuery] int page = 1
     )
     {
         if (startDate == null)
@@ -570,8 +570,7 @@ public class UserFormController : ApiBaseController
             return BadRequest(_response);
         }
 
-        // Validación para el parámetro page: debe ser un número entero positivo
-        if (page == null) // Validamos que 'page' no sea null y que sea mayor que 0
+        if (page == null)
         {
             _response.AddError(
                 "El número de página debe ser un valor mayor que cero.",
@@ -644,29 +643,6 @@ public class UserFormController : ApiBaseController
                 }
 
                 var fileBytes = System.IO.File.ReadAllBytes(filePath);
-
-                try
-                {
-                    System.IO.File.Delete(filePath);
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    _response.AddError(
-                        "No se puede eliminar el archivo debido a restricciones de acceso.",
-                        HttpStatusCode.InternalServerError,
-                        false
-                    );
-                    return StatusCode(501, _response);
-                }
-                catch (IOException ex)
-                {
-                    _response.AddError(
-                        $"Error al intentar eliminar el archivo: {ex.Message}",
-                        HttpStatusCode.InternalServerError,
-                        false
-                    );
-                    return StatusCode(501, _response);
-                }
 
                 return File(fileBytes, "application/zip", Path.GetFileName(filePath));
             }

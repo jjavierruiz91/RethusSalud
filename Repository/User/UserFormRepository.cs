@@ -1516,8 +1516,7 @@ namespace rethus_backend.Repository
                     endDate,
                     dbContext
                 );
-                Console.WriteLine("cuentao");
-                Console.WriteLine(userFormsBatch.Count);
+
                 if (userFormsBatch == null || !userFormsBatch.Any())
                 {
                     _response.AddError(
