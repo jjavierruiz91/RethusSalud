@@ -130,18 +130,31 @@ namespace rethus_backend.Data
             // INDICE MODEL USERFORM
             modelBuilder
                 .Entity<UserForm>()
-                .HasIndex(u => u.UserFormId) // Índice en CreatedAt
+                .HasIndex(u => u.UserFormId)
                 .HasDatabaseName("IX_UserForm_UserFormId");
 
             modelBuilder
                 .Entity<UserForm>()
-                .HasIndex(u => u.CreatedAt) // Índice en CreatedAt
+                .HasIndex(u => u.CreatedAt)
                 .HasDatabaseName("IX_UserForm_CreatedAt");
 
             modelBuilder
                 .Entity<UserForm>()
                 .HasIndex(u => new { u.Status, u.CreatedAt }) // Índice compuesto en Status y CreatedAt
                 .HasDatabaseName("IX_UserForm_Status_CreatedAt");
+
+            modelBuilder
+                .Entity<UserForm>()
+                .HasIndex(
+                    u =>
+                        new
+                        {
+                            u.Status,
+                            u.StepForm,
+                            u.CreatedAt
+                        }
+                ) // Índice compuesto en Status y CreatedAt
+                .HasDatabaseName("IX_UserForm_Status_StepForm_CreatedAt");
 
             modelBuilder
                 .Entity<UserForm>()
@@ -156,7 +169,10 @@ namespace rethus_backend.Data
                             u.PersonalIdentification,
                             u.TypeProcedure,
                             u.StepForm,
-                            u.Consecutive
+                            u.Consecutive,
+                            u.Status,
+                            u.CreatedAt,
+                            u.UpdatedAt
                         }
                 );
 
