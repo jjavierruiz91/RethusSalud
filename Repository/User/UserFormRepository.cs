@@ -21,6 +21,7 @@ using rethus_backend.Models.Dto.Pagination;
 using rethus_backend.Utilities.Email.EmailService;
 using rethus_backend.Utilities.Constants.Email.EmailDto;
 using rethus_backend.Models.Dto.UserPublic;
+using System.Diagnostics;
 
 namespace rethus_backend.Repository
 {
@@ -1270,11 +1271,20 @@ namespace rethus_backend.Repository
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception("No se pudo guardar el archivo de Excel.", ex);
+                        EventLog.WriteEntry(
+                            "Application",
+                            $"No se pudo guardar el archivo de Excel:  {ex}",
+                            EventLogEntryType.Error
+                        );
                     }
                 }
                 catch (Exception ex)
                 {
+                    EventLog.WriteEntry(
+                        "Application",
+                        $"No se pudo guardar el archivo de Excel:  {ex}",
+                        EventLogEntryType.Error
+                    );
                     throw new Exception("No se pudo guardar el archivo de Excel.", ex);
                 }
             }
@@ -1332,9 +1342,9 @@ namespace rethus_backend.Repository
                         && x.Consecutive == null
                         && x.ConsecutiveDate == null
                 )
-                .OrderByDescending(x => x.CreatedAt) // Ordenar por fecha de creación, más reciente primero
-                .Skip((pageNumber - 1) * batchSize) // Paginación: saltar los formularios de páginas anteriores
-                .Take(batchSize) // Tomar solo la cantidad definida por batchSize
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((pageNumber - 1) * batchSize)
+                .Take(batchSize)
                 .ToListAsync();
         }
 
@@ -1349,12 +1359,10 @@ namespace rethus_backend.Repository
         {
             int pageNumber = 1;
             int totalForms = 0;
-            int parseConsecutiveStartint = 0;
             var newConsecutive = consecutiveStart;
 
             List<UserForm> userFormsBatch;
 
-            // Bucle para obtener y procesar cada lote de formularios
             totalForms = await dbContext.UserForm.CountAsync(
                 x =>
                     x.Status == UserFormStatus.approved
@@ -1429,12 +1437,10 @@ namespace rethus_backend.Repository
                     tasks.Add(task);
                 }
 
-                // Esperar a que todas las tareas del lote terminen
                 await Task.WhenAll(tasks);
 
-                // Pasar a la siguiente página
                 pageNumber++;
-            } while (userFormsBatch.Count == batchSize); // Continuar si el tamaño del lote es igual al batchSize
+            } while (userFormsBatch.Count == batchSize);
         }
 
         public bool IsTypeProgramIsPsicologia(string FormId)
@@ -1576,7 +1582,11 @@ namespace rethus_backend.Repository
             }
             catch (Exception ex)
             {
-                // Manejo de errores generales
+                EventLog.WriteEntry(
+                    "Application",
+                    $"Error al generar archivo zip para los pdf:  {ex}",
+                    EventLogEntryType.Error
+                );
                 _response.AddError(
                     $"Error general al generar ZIP: {ex.Message}",
                     HttpStatusCode.InternalServerError,
@@ -1585,7 +1595,6 @@ namespace rethus_backend.Repository
             }
             finally
             {
-                // Liberar el semáforo
                 semaphore.Dispose();
             }
 

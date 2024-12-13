@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.IO.Compression;
+using System.Diagnostics;
 
 namespace rethus_backend.Utilities.FileHelper
 {
@@ -233,55 +234,6 @@ namespace rethus_backend.Utilities.FileHelper
             }
         }
 
-        public static async Task AddPdfToZip(string pdfFilePath, string zipFilePath)
-        {
-            try
-            {
-                // Verificar si el archivo ZIP existe
-                if (!File.Exists(zipFilePath))
-                {
-                    // Si no existe, crear un nuevo archivo ZIP
-                    using (var zip = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
-                    {
-                        // Obtener el nombre del archivo PDF (solo el nombre, no la ruta completa)
-                        string fileName = Path.GetFileName(pdfFilePath);
-
-                        // Agregar el archivo PDF al ZIP
-                        await Task.Run(() => zip.CreateEntryFromFile(pdfFilePath, fileName));
-
-                        Console.WriteLine($"Created and added PDF {fileName} to ZIP.");
-                    }
-                }
-                else
-                {
-                    // Si el archivo ZIP ya existe, actualizarlo
-                    using (var zip = ZipFile.Open(zipFilePath, ZipArchiveMode.Update))
-                    {
-                        // Obtener el nombre del archivo PDF (solo el nombre, no la ruta completa)
-                        string fileName = Path.GetFileName(pdfFilePath);
-
-                        // Verificar si el archivo ya existe en el ZIP
-                        var existingEntry = zip.GetEntry(fileName);
-                        if (existingEntry == null)
-                        {
-                            // Agregar el archivo PDF al ZIP
-                            await Task.Run(() => zip.CreateEntryFromFile(pdfFilePath, fileName));
-                            Console.WriteLine($"Added PDF {fileName} to ZIP.");
-                            Task.Delay(2000);
-                        }
-                        else
-                        {
-                            Console.WriteLine($"File {fileName} already exists in the ZIP.");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error adding file to ZIP: {ex.Message}");
-            }
-        }
-
         public static string GenerateUniqueZipName()
         {
             // Obtener la fecha y hora actual
@@ -305,31 +257,29 @@ namespace rethus_backend.Utilities.FileHelper
         {
             try
             {
-                // Abrir el archivo ZIP en modo de actualización
                 using (var zip = ZipFile.Open(zipFilePath, ZipArchiveMode.Update))
                 {
                     foreach (var pdfFilePath in pdfFilePaths)
                     {
                         string fileName = Path.GetFileName(pdfFilePath);
 
-                        // Verificar si el archivo ya existe en el ZIP
                         var existingEntry = zip.GetEntry(fileName);
                         if (existingEntry != null)
                         {
-                            // Eliminar la entrada existente si es necesario
                             existingEntry.Delete();
-                            Console.WriteLine($"Deleted existing entry {fileName} in ZIP.");
                         }
 
-                        // Agregar el archivo PDF al ZIP
                         zip.CreateEntryFromFile(pdfFilePath, fileName);
-                        Console.WriteLine($"Added PDF {fileName} to ZIP.");
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error adding files to ZIP: {ex.Message}");
+                EventLog.WriteEntry(
+                    "Application",
+                    $"Error adding files to ZIP::  {ex}",
+                    EventLogEntryType.Error
+                );
             }
         }
     }
