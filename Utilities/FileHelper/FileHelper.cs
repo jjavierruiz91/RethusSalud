@@ -300,5 +300,37 @@ namespace rethus_backend.Utilities.FileHelper
         {
             return $"resources/zip/generate_zip_{uuid}.zip";
         }
+
+        public static async Task AddPdfsToZipAsync(List<string> pdfFilePaths, string zipFilePath)
+        {
+            try
+            {
+                // Abrir el archivo ZIP en modo de actualización
+                using (var zip = ZipFile.Open(zipFilePath, ZipArchiveMode.Update))
+                {
+                    foreach (var pdfFilePath in pdfFilePaths)
+                    {
+                        string fileName = Path.GetFileName(pdfFilePath);
+
+                        // Verificar si el archivo ya existe en el ZIP
+                        var existingEntry = zip.GetEntry(fileName);
+                        if (existingEntry != null)
+                        {
+                            // Eliminar la entrada existente si es necesario
+                            existingEntry.Delete();
+                            Console.WriteLine($"Deleted existing entry {fileName} in ZIP.");
+                        }
+
+                        // Agregar el archivo PDF al ZIP
+                        zip.CreateEntryFromFile(pdfFilePath, fileName);
+                        Console.WriteLine($"Added PDF {fileName} to ZIP.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding files to ZIP: {ex.Message}");
+            }
+        }
     }
 }

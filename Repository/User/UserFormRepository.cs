@@ -1508,6 +1508,8 @@ namespace rethus_backend.Repository
             _response.Messages.Add("Ocurrio un error en el sistema generando el archivo!");
             try
             {
+                List<string> certificatePaths = new List<string>();
+
                 do
                 {
                     userFormsBatch = await GetFormByBatch(
@@ -1541,7 +1543,7 @@ namespace rethus_backend.Repository
                                 if (File.Exists(certificatePath))
                                 {
                                     _response.IsSuccess = true;
-                                    await FileHelper.AddPdfToZip(certificatePath, filePathZip);
+                                    certificatePaths.Add(certificatePath);
                                 }
                             }
                             catch (Exception ex)
@@ -1565,6 +1567,11 @@ namespace rethus_backend.Repository
 
                     pageNumber++;
                 } while (userFormsBatch.Count == batchSize);
+
+                if (certificatePaths.Any())
+                {
+                    await FileHelper.AddPdfsToZipAsync(certificatePaths, filePathZip);
+                }
 
                 if (!_response.IsSuccess)
                 {
