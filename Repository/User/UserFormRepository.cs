@@ -1464,7 +1464,6 @@ namespace rethus_backend.Repository
                         && x.CreatedAt >= startDate
                         && x.CreatedAt <= endDate
                 )
-                .Include(u => u.User)
                 .OrderByDescending(x => x.CreatedAt)
                 .Skip((pageNumber - 1) * batchSize)
                 .Take(batchSize)
@@ -1503,14 +1502,10 @@ namespace rethus_backend.Repository
             List<IFormGenerateData> userFormsBatch;
             var semaphore = new SemaphoreSlim(800);
 
-            var emails = await dbContext.Users
-                .Where(u => u.roles.Contains(UserRoles.Inventory.ToString()))
-                .Select(u => u.email)
-                .ToListAsync();
-
             string fileUniqueName = FileHelper.GenerateUniqueZipName();
             string filePathZip = FileHelper.GetPathZip(fileUniqueName);
-
+            _response.IsSuccess = false;
+            _response.Messages.Add("Ocurrio un error en el sistema generando el archivo!");
             try
             {
                 do
@@ -1545,6 +1540,7 @@ namespace rethus_backend.Repository
 
                                 if (File.Exists(certificatePath))
                                 {
+                                    _response.IsSuccess = true;
                                     await FileHelper.AddPdfToZip(certificatePath, filePathZip);
                                 }
                             }
@@ -1555,7 +1551,7 @@ namespace rethus_backend.Repository
                                     HttpStatusCode.PartialContent,
                                     false
                                 );
-                                _response.IsSuccess = false;
+                                _response.IsSuccess = true;
                             }
                             finally
                             {
@@ -1565,17 +1561,16 @@ namespace rethus_backend.Repository
 
                         tasks.Add(task);
                     }
-
-                    // Esperar a que todas las tareas del lote terminen
                     await Task.WhenAll(tasks);
 
-                    // Pasar a la siguiente página
                     pageNumber++;
                 } while (userFormsBatch.Count == batchSize);
 
-                // Si no hubo errores graves, establece el archivo zip como resultado exitoso
-                _response.Result = filePathZip;
-                _response.IsSuccess = true;
+                if (!_response.IsSuccess)
+                {
+                    _response.Result = filePathZip;
+                }
+                return _response;
             }
             catch (Exception ex)
             {
