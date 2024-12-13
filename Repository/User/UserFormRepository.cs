@@ -1572,8 +1572,8 @@ namespace rethus_backend.Repository
                 {
                     await FileHelper.AddPdfsToZipAsync(certificatePaths, filePathZip);
                 }
-
-                if (!_response.IsSuccess)
+                await Task.Delay(4000);
+                if (_response.IsSuccess)
                 {
                     _response.Result = filePathZip;
                 }
