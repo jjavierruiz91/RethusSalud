@@ -1509,62 +1509,59 @@ namespace rethus_backend.Repository
             {
                 List<string> certificatePaths = new List<string>();
 
-                do
+                userFormsBatch = await GetFormByBatch(
+                    batchSize,
+                    pageNumber,
+                    startDate,
+                    endDate,
+                    dbContext
+                );
+                Console.WriteLine("cuentao");
+                Console.WriteLine(userFormsBatch);
+                if (userFormsBatch == null || !userFormsBatch.Any())
                 {
-                    userFormsBatch = await GetFormByBatch(
-                        batchSize,
-                        pageNumber,
-                        startDate,
-                        endDate,
-                        dbContext
+                    _response.AddError(
+                        "No se encontro informacion para generar archivo",
+                        HttpStatusCode.PartialContent,
+                        false
                     );
-                    Console.WriteLine("cuentao");
-                    Console.WriteLine(userFormsBatch);
-                    if (userFormsBatch == null || !userFormsBatch.Any())
+                    _response.IsSuccess = false;
+                }
+
+                foreach (var userForm in userFormsBatch)
+                {
+                    await semaphore.WaitAsync();
+
+                    var task = Task.Run(async () =>
                     {
-                        break;
-                    }
-
-                    var tasks = new List<Task>();
-
-                    foreach (var userForm in userFormsBatch)
-                    {
-                        await semaphore.WaitAsync();
-
-                        var task = Task.Run(async () =>
+                        try
                         {
-                            try
-                            {
-                                string certificatePath = BuildCertificatePath(
-                                    userForm.UserFormId,
-                                    userForm.PersonalIdentification
-                                );
+                            string certificatePath = BuildCertificatePath(
+                                userForm.UserFormId,
+                                userForm.PersonalIdentification
+                            );
 
-                                if (File.Exists(certificatePath))
-                                {
-                                    _response.IsSuccess = true;
-                                    certificatePaths.Add(certificatePath);
-                                }
-                            }
-                            catch (Exception ex)
+                            if (File.Exists(certificatePath))
                             {
-                                _response.AddError(
-                                    $"Error procesando UserFormId {userForm.UserFormId}: {ex.Message}",
-                                    HttpStatusCode.PartialContent,
-                                    false
-                                );
                                 _response.IsSuccess = true;
+                                certificatePaths.Add(certificatePath);
                             }
-                            finally
-                            {
-                                semaphore.Release();
-                            }
-                        });
-
-                        tasks.Add(task);
-                    }
-                    await Task.WhenAll(tasks);
-                } while (userFormsBatch.Count == batchSize);
+                        }
+                        catch (Exception ex)
+                        {
+                            _response.AddError(
+                                $"Error procesando UserFormId {userForm.UserFormId}: {ex.Message}",
+                                HttpStatusCode.PartialContent,
+                                false
+                            );
+                            _response.IsSuccess = false;
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+                }
 
                 if (certificatePaths.Any())
                 {
