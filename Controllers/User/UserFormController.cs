@@ -611,6 +611,7 @@ public class UserFormController : ApiBaseController
                         scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
                     var zipResponse = await _unitOfWork.UserForm.ProcessGenerateZipPdf(
+                        page,
                         10,
                         startDate,
                         endDate,

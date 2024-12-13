@@ -87,6 +87,7 @@ namespace rethus_backend.Repository.IRepository
         public bool IsTypeProgramIsPsicologia(string FormId);
 
         Task<ApiResponse> ProcessGenerateZipPdf(
+            int pageNumber,
             int batchSize,
             DateTime startDate,
             DateTime endDate,

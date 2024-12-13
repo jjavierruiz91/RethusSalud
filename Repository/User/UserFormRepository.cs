@@ -1479,6 +1479,7 @@ namespace rethus_backend.Repository
         }
 
         public async Task<ApiResponse> ProcessGenerateZipPdf(
+            int pageNumber,
             int batchSize,
             DateTime startDate,
             DateTime endDate,
@@ -1497,7 +1498,6 @@ namespace rethus_backend.Repository
                 return _response;
             }
 
-            int pageNumber = 1;
             List<IFormGenerateData> userFormsBatch;
             var semaphore = new SemaphoreSlim(800);
 
