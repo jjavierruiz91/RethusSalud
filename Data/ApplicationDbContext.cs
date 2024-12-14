@@ -130,17 +130,18 @@ namespace rethus_backend.Data
             // INDICE MODEL USERFORM
             modelBuilder
                 .Entity<UserForm>()
-                .HasIndex(u => u.UserFormId)
+                .HasIndex(u => u.UserFormId) // Índice en CreatedAt
                 .HasDatabaseName("IX_UserForm_UserFormId");
 
             modelBuilder
                 .Entity<UserForm>()
                 .HasIndex(u => u.CreatedAt)
+                .IsDescending()
                 .HasDatabaseName("IX_UserForm_CreatedAt");
 
             modelBuilder
                 .Entity<UserForm>()
-                .HasIndex(u => new { u.Status, u.CreatedAt }) // Índice compuesto en Status y CreatedAt
+                .HasIndex(u => new { u.Status, u.CreatedAt })
                 .HasDatabaseName("IX_UserForm_Status_CreatedAt");
 
             modelBuilder
@@ -153,13 +154,9 @@ namespace rethus_backend.Data
                             u.StepForm,
                             u.CreatedAt
                         }
-                ) // Índice compuesto en Status y CreatedAt
-                .HasDatabaseName("IX_UserForm_Status_StepForm_CreatedAt");
-
-            modelBuilder
-                .Entity<UserForm>()
-                .HasIndex(u => new { u.Status, u.CreatedAt }) // Claves del índice
-                .HasDatabaseName("IX_UserForm_Coverage")
+                )
+                .IsDescending()
+                .HasDatabaseName("IX_UserForm_status_stepForm_createdAt_Include_properties")
                 .IncludeProperties(
                     u =>
                         new
@@ -168,10 +165,7 @@ namespace rethus_backend.Data
                             u.PersonalFirstName,
                             u.PersonalIdentification,
                             u.TypeProcedure,
-                            u.StepForm,
                             u.Consecutive,
-                            u.Status,
-                            u.CreatedAt,
                             u.UpdatedAt
                         }
                 );
