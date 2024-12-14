@@ -500,7 +500,7 @@ public class UserFormController : ApiBaseController
     }
 
     [HttpGet("download-excel")]
-    // [Authorize(Roles = Policies.FuncionarioEtapa1)]
+    [Authorize(Roles = Policies.FuncionarioEtapa1)]
     public IActionResult DownloadExcel()
     {
         lock (_lock)
@@ -543,6 +543,7 @@ public class UserFormController : ApiBaseController
     }
 
     [HttpGet("generate-zip")]
+    [Authorize(Roles = Policies.Inventory)]
     public async Task<ActionResult<ApiResponse>> GenerateZip(
         [FromQuery] DateTime startDate,
         [FromQuery] DateTime endDate,
