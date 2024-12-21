@@ -231,6 +231,21 @@ public class UserFormController : ApiBaseController
         UserFormConsecutiveDto payload
     )
     {
+        bool existFormWhitConsecutive = _unitOfWork.UserForm.ExistFormWithConsecutive(
+            payload.consecutive
+        );
+
+        if (existFormWhitConsecutive)
+        {
+            _response.AddError(
+                "Ya existe un formulario con este consecutivo",
+                HttpStatusCode.Conflict,
+                false
+            );
+            _response.IsSuccess = false;
+            return Conflict(_response);
+        }
+
         ApiResponse response = await _unitOfWork.UserForm.AddConsecutive(formId, payload);
         if (!response.IsSuccess)
         {

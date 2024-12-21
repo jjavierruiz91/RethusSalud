@@ -87,6 +87,7 @@ public class ConvertPdfService
                     "No se pudo iniciar el proceso de wkhtmltopdf.",
                     EventLogEntryType.Error
                 );
+                throw new Exception("No se pudo iniciar el proceso de wkhtmltopdf");
             }
 
             // Elimina el archivo temporal
@@ -105,6 +106,7 @@ public class ConvertPdfService
                 $"Excepción: {ex.Message}\nStack Trace: {ex.StackTrace}",
                 EventLogEntryType.Error
             );
+            throw new Exception("Excepción manejada en ConvertHtmlToPdf");
         }
     }
 }
