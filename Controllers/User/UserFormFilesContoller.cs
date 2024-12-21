@@ -175,6 +175,18 @@ public class UserFormFilesController : ApiBaseController
             _response.Messages.Add("ConsecutiveDate no puede estar vacío.");
         }
 
+        bool existsConsecutive = _unitOfWork.UserForm.ExistFormWithRangeConsecutive(
+            configs.ConsecutiveStart,
+            configs.ConsecutiveEnd
+        );
+
+        if (existsConsecutive)
+        {
+            _response.StatusCode = HttpStatusCode.Conflict;
+            _response.IsSuccess = false;
+            _response.Messages.Add("Existe un formulario en este rango de consecutivo");
+        }
+
         if (!_response.IsSuccess)
         {
             return BadRequest(_response);
@@ -188,7 +200,7 @@ public class UserFormFilesController : ApiBaseController
 
                 await _unitOfWork.UserForm.ProcessUserFormCertificatesByBatch(
                     300,
-                    100,
+                    1,
                     configs.ConsecutiveStart,
                     configs.ConsecutiveEnd,
                     configs.ConsecutiveDate,

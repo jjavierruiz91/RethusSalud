@@ -1360,22 +1360,32 @@ namespace rethus_backend.Repository
             int pageNumber = 1;
             int totalForms = 0;
             var newConsecutive = consecutiveStart;
-
             List<UserForm> userFormsBatch;
 
+            // Crear un SemaphoreSlim para controlar el acceso concurrente
+            var semaphore = new SemaphoreSlim(maxDegreeOfParallelism); // Limitar el número de tareas concurrentes
+
+            bool isGenerate = true; // Variable para controlar si sigue generando
+
+            // Obtener el número total de formularios pendientes
             totalForms = await dbContext.UserForm.CountAsync(
                 x =>
-                    x.Status == UserFormStatus.approved
-                    && x.Consecutive != null
-                    && x.ConsecutiveDate != null
+                    x.Status == UserFormStatus.pending
+                    && x.StepForm == ReviewStepForm.success
+                    && x.Consecutive == null
+                    && x.ConsecutiveDate == null
             );
 
+            // Bucle que procesa formularios hasta que se alcance el límite de consecutivo o no haya más formularios
             do
             {
+                // Obtener el lote de formularios
                 userFormsBatch = await GetUserFormsByBatch(batchSize, pageNumber, dbContext);
 
+                // Si no hay más formularios, salir del bucle
                 if (userFormsBatch == null || !userFormsBatch.Any())
                 {
+                    Console.WriteLine("No hay más formularios para procesar.");
                     break;
                 }
 
@@ -1383,16 +1393,30 @@ namespace rethus_backend.Repository
 
                 foreach (var userForm in userFormsBatch)
                 {
+                    // Si ya no se debe generar más consecutivos, salir del bucle de tareas
+                    if (!isGenerate)
+                    {
+                        break; // Salir del bucle de tareas
+                    }
+
+                    // Adquirir el semáforo para limitar la concurrencia
+                    await semaphore.WaitAsync();
+
                     var task = Task.Run(async () =>
                     {
-                        lock (dbContext)
+                        try
                         {
+                            if (!isGenerate)
+                            {
+                                return;
+                            }
+
                             userForm.Consecutive = newConsecutive;
                             userForm.ConsecutiveDate = consecutiveDate;
                             userForm.Status = UserFormStatus.approved;
+                            userForm.UpdatedAt = DateTime.Now;
 
                             dbContext.UserForm.Update(userForm);
-                            _ = dbContext.SaveChanges();
 
                             var userConfiguration = dbContext.Configurations.FirstOrDefault(
                                 c => c.UserId == userForm.UserId
@@ -1407,9 +1431,8 @@ namespace rethus_backend.Repository
 
                             userConfiguration.State = ConfigurationsState.completed;
                             userConfiguration.Step = ConfigurationStep.success;
-
+                            userConfiguration.UpdatedAt = DateTime.Now;
                             dbContext.Configurations.Update(userConfiguration);
-                            dbContext.SaveChanges();
 
                             if (userForm.TypeProcedure == ConfigurationTypeProcedure.RETHUS)
                             {
@@ -1419,18 +1442,33 @@ namespace rethus_backend.Repository
                             {
                                 CreateCertificateSso(userForm);
                             }
+                            await dbContext.SaveChangesAsync();
 
-                            newConsecutive = UserFormConstants.GetNextConsecutive(
+                            // Intentar obtener el siguiente consecutivo
+                            var nextConsecutive = UserFormConstants.GetNextConsecutive(
                                 newConsecutive,
                                 consecutiveEnd
                             );
 
-                            if (string.IsNullOrEmpty(newConsecutive))
+                            // Si no hay un siguiente consecutivo válido (por ejemplo, se ha alcanzado el final)
+                            if (string.IsNullOrEmpty(nextConsecutive))
                             {
-                                throw new InvalidOperationException(
-                                    $"No se encontró la configuración para el UserId {userForm.UserId}"
-                                );
+                                isGenerate = false; // Detener el proceso de generación de más consecutivos
+                                return;
                             }
+                            else
+                            {
+                                newConsecutive = nextConsecutive;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error en la tarea: {ex.Message}");
+                        }
+                        finally
+                        {
+                            // Liberar el semáforo después de completar la tarea
+                            semaphore.Release();
                         }
                     });
 
@@ -1440,7 +1478,7 @@ namespace rethus_backend.Repository
                 await Task.WhenAll(tasks);
 
                 pageNumber++;
-            } while (userFormsBatch.Count == batchSize);
+            } while (userFormsBatch.Count == totalForms && isGenerate);
         }
 
         public bool IsTypeProgramIsPsicologia(string FormId)
@@ -1635,6 +1673,15 @@ namespace rethus_backend.Repository
                 .CountAsync();
 
             return count;
+        }
+
+        public bool ExistFormWithRangeConsecutive(string consecutiveStart, string consecutiveEnd)
+        {
+            return _context.UserForm.Any(
+                uf =>
+                    string.Compare(uf.Consecutive, consecutiveStart) >= 0
+                    && string.Compare(uf.Consecutive, consecutiveEnd) <= 0
+            );
         }
     }
 }

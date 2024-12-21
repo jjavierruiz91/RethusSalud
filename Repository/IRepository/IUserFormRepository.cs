@@ -22,6 +22,7 @@ namespace rethus_backend.Repository.IRepository
         DetailsProcessUserDto GetDetailProcess(UserFormProcessDto payload);
 
         bool ExistFormWithConsecutive(string Consecutive);
+        bool ExistFormWithRangeConsecutive(string consecutiveStart, string consecutiveEnd);
 
         UserForm GetFormUserId(string userFormId);
         UserForm IsDownloadCertificate(string userId);
