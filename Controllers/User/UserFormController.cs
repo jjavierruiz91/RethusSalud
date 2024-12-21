@@ -627,7 +627,7 @@ public class UserFormController : ApiBaseController
 
                     var zipResponse = await _unitOfWork.UserForm.ProcessGenerateZipPdf(
                         page,
-                        10,
+                        15,
                         startDate,
                         endDate,
                         dbContext
