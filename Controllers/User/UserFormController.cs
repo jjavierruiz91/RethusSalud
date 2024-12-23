@@ -562,7 +562,8 @@ public class UserFormController : ApiBaseController
     public async Task<ActionResult<ApiResponse>> GenerateZip(
         [FromQuery] DateTime startDate,
         [FromQuery] DateTime endDate,
-        [FromQuery] int page = 1
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 15
     )
     {
         if (startDate == null)
@@ -601,7 +602,7 @@ public class UserFormController : ApiBaseController
 
         var totalForms = await _unitOfWork.UserForm.GetCountFormReadyForGenerate(
             page,
-            10,
+            pageSize,
             startDate,
             endDate
         );
@@ -627,7 +628,7 @@ public class UserFormController : ApiBaseController
 
                     var zipResponse = await _unitOfWork.UserForm.ProcessGenerateZipPdf(
                         page,
-                        15,
+                        pageSize,
                         startDate,
                         endDate,
                         dbContext
