@@ -25,10 +25,14 @@ namespace rethus_backend.Repository
 
             UserConfiguration = new UserConfigurationRepository(_db);
 
-            var paginationService = new PaginationService<User, UserQueryParametersDto, UserDto>(
-                _db
+            var paginationUserRepositoryV2 = new RepositoryPaginationV2<User>(_db);
+
+            User = new UserRepository(
+                _db,
+                _configuration,
+                UserConfiguration,
+                paginationUserRepositoryV2
             );
-            User = new UserRepository(_db, _configuration, UserConfiguration, paginationService);
             Auth = new AuthRepository(_db, _configuration);
 
             var paginationRepositoryV2 = new RepositoryPaginationV2<UserForm>(_db);

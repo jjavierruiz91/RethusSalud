@@ -7,6 +7,7 @@ using System.Net;
 using rethus_backend.Utilities.Constants.UserConstants;
 using rethus_backend.Utilities.Constants.PaginatioConstants;
 using rethus_backend.Utilities.Constants.User.UserConfiguration;
+using rethus_backend.Models.Dto.Pagination;
 
 namespace rethus_backend.Controllers;
 
@@ -205,28 +206,39 @@ public class UserController : ApiBaseController
 
     [HttpGet("administrative")]
     [Authorize(Roles = Policies.SuperAdmin)]
-    public PaginationResultDto<UserDto> GetAllPaginado(
+    public async Task<ActionResult<PaginationResultDto<UserDto>>> GetAllPaginado(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10
     )
     {
+        var queryParameters = new FilterQueryParametersDto { };
+
+        var paginationRequest = new PaginationRequestDto<FilterQueryParametersDto>
+        {
+            Page = page,
+            PageSize = pageSize,
+            QueryParameters = queryParameters
+        };
+
         var request = new PaginationRequestDto<UserQueryParametersDto>
         {
             Page = page,
             PageSize = pageSize,
         };
 
-        Func<User, UserDto> mapper = user =>
-            new UserDto
-            {
-                UserId = user.UserId,
-                name = user.name,
-                email = user.email,
-                Status = user.Status,
-                Roles = user.roles,
-                CreatedAt = user.CreatedAt
-            };
-        var result = _unitOfWork.User.GetPagination(request, mapper);
+        var result = await _unitOfWork.User.GetPagedData(
+            paginationRequest,
+            user =>
+                new UserDto
+                {
+                    UserId = user.UserId,
+                    name = user.name,
+                    email = user.email,
+                    Status = user.Status,
+                    Roles = user.roles,
+                    CreatedAt = user.CreatedAt
+                }
+        );
 
         return result;
     }

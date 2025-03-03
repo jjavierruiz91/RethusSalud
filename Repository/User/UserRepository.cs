@@ -1,8 +1,10 @@
 using rethus_backend.Data;
 using rethus_backend.Models;
+using rethus_backend.Models.Dto.Pagination;
 using rethus_backend.Models.Dto.User;
 using rethus_backend.Models.Dto.UserPublic;
 using rethus_backend.Repository.IRepository;
+using rethus_backend.RepositoryV2;
 using rethus_backend.Utilities.Constants.Email.EmailDto;
 using rethus_backend.Utilities.Constants.PaginatioConstants;
 using rethus_backend.Utilities.Constants.UserConstants;
@@ -24,20 +26,21 @@ namespace rethus_backend.Repository
             UserQueryParametersDto,
             UserDto
         > _paginationService;
-        private IUserConfigurationRepository userConfiguration;
+
+        private readonly IPaginationRepositoryV2<User> _repositoryPaginationV2;
 
         public UserRepository(
             ApplicationDbContext db,
             IConfiguration config,
             IUserConfigurationRepository configuration,
-            PaginationService<User, UserQueryParametersDto, UserDto> paginationService
+            IPaginationRepositoryV2<User> repositoryPaginationV2
         )
             : base(db)
         {
             _context = db;
             _config = config;
             _configuration = configuration;
-            _paginationService = paginationService;
+            _repositoryPaginationV2 = repositoryPaginationV2;
         }
 
         public PaginationResultDto<UserDto> GetPagination(
@@ -314,6 +317,14 @@ namespace rethus_backend.Repository
             {
                 return false;
             }
+        }
+
+        public async Task<PaginationResultDto<TResult>> GetPagedData<TResult>(
+            PaginationRequestDto<FilterQueryParametersDto> request,
+            Func<User, TResult> selector
+        )
+        {
+            return await _repositoryPaginationV2.GetPagedAsync(request, selector);
         }
     }
 }
