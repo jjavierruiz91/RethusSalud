@@ -187,6 +187,19 @@ public class UserFormController : ApiBaseController
         [FromBody] UserReviewRolDto payload
     )
     {
+        var user = HttpContext.Items["User"] as User;
+
+        var userSignature = await _unitOfWork.UserDigitalSignature.GetByUserIdAsync(user.UserId);
+        if (userSignature == null)
+        {
+            _response.IsSuccess = false;
+            _response.StatusCode = HttpStatusCode.Conflict;
+            _response.Messages.Add(
+                "Este usuario no tiene firma asignada contactese con el administrator"
+            );
+            return BadRequest(_response);
+        }
+
         ApiResponse approvedForm = _unitOfWork.UserForm.ApprovedForm(formId, payload.userRol);
 
         if (!approvedForm.IsSuccess)
@@ -218,8 +231,21 @@ public class UserFormController : ApiBaseController
             + ","
             + Policies.Inventory
     )]
-    public ActionResult<ApiResponse> RejectForm(string formId)
+    public async Task<ActionResult<ApiResponse>> RejectForm(string formId)
     {
+        var user = HttpContext.Items["User"] as User;
+        Console.WriteLine(user.UserId);
+        var userSignature = await _unitOfWork.UserDigitalSignature.GetByUserIdAsync(user.UserId);
+        if (userSignature == null)
+        {
+            _response.IsSuccess = false;
+            _response.StatusCode = HttpStatusCode.Conflict;
+            _response.Messages.Add(
+                "Este usuario no tiene firma asignada contactese con el administrator"
+            );
+            return BadRequest(_response);
+        }
+
         ApiResponse rejectForm = _unitOfWork.UserForm.RejectForm(formId);
         return rejectForm;
     }
@@ -231,6 +257,19 @@ public class UserFormController : ApiBaseController
         UserFormConsecutiveDto payload
     )
     {
+        bool signatureActives =
+            await _unitOfWork.UserDigitalSignature.IsUserSignatureActiveForTypesAsync();
+        if (!signatureActives)
+        {
+            _response.AddError(
+                "Las firmas no están configuradas para todos los tipos de firma. Por favor, contacte con el administrador.",
+                HttpStatusCode.Conflict,
+                false
+            );
+            _response.IsSuccess = false;
+            return Conflict(_response);
+        }
+
         bool existFormWhitConsecutive = _unitOfWork.UserForm.ExistFormWithConsecutive(
             payload.consecutive
         );
@@ -269,6 +308,19 @@ public class UserFormController : ApiBaseController
         UserFormConsecutiveDto payload
     )
     {
+        bool signatureActives =
+            await _unitOfWork.UserDigitalSignature.IsUserSignatureActiveForTypesAsync();
+        if (!signatureActives)
+        {
+            _response.AddError(
+                "Las firmas no están configuradas para todos los tipos de firma. Por favor, contacte con el administrador.",
+                HttpStatusCode.Conflict,
+                false
+            );
+            _response.IsSuccess = false;
+            return Conflict(_response);
+        }
+
         ApiResponse response = await _unitOfWork.UserForm.UpdateConsecutive(formId, payload);
         if (!response.IsSuccess)
         {

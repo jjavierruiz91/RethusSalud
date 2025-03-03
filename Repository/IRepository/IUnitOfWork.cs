@@ -14,6 +14,7 @@ namespace rethus_backend.Repository.IRepository
         IDepartmentRepository Department { get; }
         ICityRepository City { get; }
         IConfigurationSettingRepository ConfigurationSetting { get; }
+        IUserDigitalSignatureRepository UserDigitalSignature { get; }
         void Save();
     }
 }

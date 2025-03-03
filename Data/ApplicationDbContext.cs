@@ -23,6 +23,7 @@ namespace rethus_backend.Data
         public DbSet<Department> Departments { get; set; }
         public DbSet<City> City { get; set; }
         public DbSet<ConfigurationSetting> ConfigurationSetting { get; set; }
+        public DbSet<UserDigitalSignature> UserDigitalSignature { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -125,6 +126,13 @@ namespace rethus_backend.Data
                 .HasOne(u => u.Configurations) // Un usuario tiene un formulario
                 .WithOne(uf => uf.User) // Un formulario pertenece a un solo usuario
                 .HasForeignKey<Configurations>(uf => uf.UserId) // UserId es la clave foránea en UserForm
+                .OnDelete(DeleteBehavior.Cascade); // Opcional: comportamiento de eliminación
+
+            modelBuilder
+                .Entity<User>()
+                .HasOne(u => u.DigitalSignature) // Un usuario tiene una firma
+                .WithOne(uf => uf.User) // Una firma pertenece a un solo usuario
+                .HasForeignKey<UserDigitalSignature>(uf => uf.UserId) // UserId es la clave foránea en UserDigitalSignature
                 .OnDelete(DeleteBehavior.Cascade); // Opcional: comportamiento de eliminación
 
             // INDICE MODEL USERFORM

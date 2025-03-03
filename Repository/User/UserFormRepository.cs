@@ -34,11 +34,14 @@ namespace rethus_backend.Repository
 
         private readonly IUserConfigurationRepository _userConfiguration;
 
+        private readonly IUserDigitalSignatureRepository _userDigitalSignatureRepository;
+
         public UserFormRepository(
             ApplicationDbContext db,
             IConfiguration config,
             IUserConfigurationRepository userConfiguration,
-            IPaginationRepositoryV2<UserForm> repositoryPaginationV2
+            IPaginationRepositoryV2<UserForm> repositoryPaginationV2,
+            IUserDigitalSignatureRepository userDigitalSignatureRepository
         )
             : base(db)
         {
@@ -46,6 +49,7 @@ namespace rethus_backend.Repository
             _config = config;
             _userConfiguration = userConfiguration;
             _repositoryPaginationV2 = repositoryPaginationV2;
+            _userDigitalSignatureRepository = userDigitalSignatureRepository;
         }
 
         public PaginationResult<UserForm> GetAll(int? page)
@@ -686,9 +690,12 @@ namespace rethus_backend.Repository
                 return;
             }
 
+            var signatures = await _userDigitalSignatureRepository.GetAllActiveAsync();
+            var signaturesList = signatures.ToList();
+
             if (formFile.TypeProcedure == ConfigurationTypeProcedure.RETHUS)
             {
-                await Task.Run(async () => CreateCertificateRethus(formFile));
+                await Task.Run(async () => CreateCertificateRethus(formFile, signaturesList));
             }
             else
             {
@@ -696,7 +703,10 @@ namespace rethus_backend.Repository
             }
         }
 
-        public async void CreateCertificateRethus(UserForm form)
+        public async void CreateCertificateRethus(
+            UserForm form,
+            List<UserDigitalSignature> signatures
+        )
         {
             var outputPath =
                 _config.GetSection("routeFileProcedures").Value
@@ -722,8 +732,6 @@ namespace rethus_backend.Repository
                 }
             }
 
-            string certificateRethus = "";
-
             var rethusDto = new TemplateRethusDto
             {
                 CONSECUTIVO = form.Consecutive,
@@ -739,25 +747,43 @@ namespace rethus_backend.Repository
                     .ToUpper()
             };
 
-            string jsonContent = await File.ReadAllTextAsync(
-                "./resources/templates/certificate/data_config_users.json"
-            );
-
-            ConfigTemplate config = JsonSerializer.Deserialize<ConfigTemplate>(jsonContent);
-
-            if (config != null)
+            foreach (var item in signatures)
             {
-                rethusDto.FIRMA_PRINCIPAL = config.FIRMA_PRINCIPAL;
-                rethusDto.NOMBRE_FIRMANTE = config.NOMBRE_FIRMANTE.ToUpper();
-                rethusDto.TIPO_TRABAJO = config.TIPO_TRABAJO.ToUpper();
-                rethusDto.FIRMA_PROYECTO = config.FIRMA_PROYECTO.ToUpper();
-                rethusDto.FIRMA_1 = config.FIRMA_1;
-                rethusDto.FIRMA_REVISION = config.FIRMA_REVISION.ToUpper();
-                rethusDto.FIRMA_2 = config.FIRMA_2;
-                rethusDto.FIRMA_APROBO = config.FIRMA_APROBO.ToUpper();
-                rethusDto.FIRMA_3 = config.FIRMA_3;
+                if (item.SignatureType == SignatureType.Secretary)
+                {
+                    rethusDto.NOMBRE_FIRMANTE = item.SignatureName;
+                    rethusDto.FIRMA_PRINCIPAL = FileHelper.ConvertImageToBase64(
+                        await FileHelper.GetImageAsync(item.SignatureImagePath)
+                    );
+                    rethusDto.TIPO_TRABAJO = "Secretario(E) de Salud Departamental del Cesar";
+                }
+
+                if (item.SignatureType == SignatureType.Project)
+                {
+                    rethusDto.FIRMA_PROYECTO = item.SignatureName;
+                    rethusDto.FIRMA_1 = FileHelper.ConvertImageToBase64(
+                        await FileHelper.GetImageAsync(item.SignatureImagePath)
+                    );
+                }
+
+                if (item.SignatureType == SignatureType.Review)
+                {
+                    rethusDto.FIRMA_REVISION = item.SignatureName;
+                    rethusDto.FIRMA_2 = FileHelper.ConvertImageToBase64(
+                        await FileHelper.GetImageAsync(item.SignatureImagePath)
+                    );
+                }
+
+                if (item.SignatureType == SignatureType.Approve)
+                {
+                    rethusDto.FIRMA_APROBO = item.SignatureName;
+                    rethusDto.FIRMA_3 = FileHelper.ConvertImageToBase64(
+                        await FileHelper.GetImageAsync(item.SignatureImagePath)
+                    );
+                }
             }
-            certificateRethus = await DownloadCertificateRethus(rethusDto);
+
+            string certificateRethus = await DownloadCertificateRethus(rethusDto);
             var file = new ConvertPdfService();
             await file.ConvertHtmlToPdf(certificateRethus, outputPath);
         }
@@ -1434,9 +1460,14 @@ namespace rethus_backend.Repository
                             userConfiguration.UpdatedAt = DateTime.Now;
                             dbContext.Configurations.Update(userConfiguration);
 
+                            var signatures = await dbContext.UserDigitalSignature
+                                .Where(s => s.Status == SignatureStatus.Active)
+                                .ToListAsync();
+                            var signaturesList = signatures.ToList();
+
                             if (userForm.TypeProcedure == ConfigurationTypeProcedure.RETHUS)
                             {
-                                CreateCertificateRethus(userForm);
+                                CreateCertificateRethus(userForm, signaturesList);
                             }
                             else
                             {

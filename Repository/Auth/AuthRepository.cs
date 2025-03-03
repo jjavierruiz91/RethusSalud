@@ -65,6 +65,7 @@ namespace rethus_backend.Repository
             {
                 new Claim(JwtRegisteredClaimNames.Sub, _user.name),
                 new Claim("role", _user.roles),
+                new Claim("userId", _user.UserId),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 

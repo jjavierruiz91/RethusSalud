@@ -151,6 +151,18 @@ public class UserFormFilesController : ApiBaseController
         [FromBody] ConfigGenerateCerticateDto configs
     )
     {
+        bool signatureActives =
+            await _unitOfWork.UserDigitalSignature.IsUserSignatureActiveForTypesAsync();
+        if (!signatureActives)
+        {
+            _response.AddError(
+                "Las firmas no están configuradas para todos los tipos de firma. Por favor, contacte con el administrador.",
+                HttpStatusCode.Conflict,
+                false
+            );
+            _response.IsSuccess = false;
+            return Conflict(_response);
+        }
         _response.StatusCode = HttpStatusCode.OK;
         _response.IsSuccess = true;
 

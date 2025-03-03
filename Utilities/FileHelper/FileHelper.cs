@@ -282,5 +282,36 @@ namespace rethus_backend.Utilities.FileHelper
                 );
             }
         }
+
+        public static async Task<byte[]> GetImageAsync(string imagePath)
+        {
+            byte[] imageBytes;
+            try
+            {
+                imageBytes = await File.ReadAllBytesAsync(imagePath);
+                return imageBytes;
+            }
+            catch (Exception ex)
+            {
+                // Manejo de excepciones, e.g., registrar el error
+                Console.WriteLine($"Error al leer el archivo de imagen {imagePath}: {ex.Message}");
+                return null;
+            }
+        }
+
+        public static string ConvertImageToBase64(byte[] imageBytes)
+        {
+            try
+            {
+                // Convierte el arreglo de bytes de la imagen en una cadena Base64
+                return Convert.ToBase64String(imageBytes);
+            }
+            catch (Exception ex)
+            {
+                // Manejo de excepciones
+                Console.WriteLine($"Error al convertir la imagen a Base64: {ex.Message}");
+                return null;
+            }
+        }
     }
 }

@@ -35,5 +35,7 @@ namespace rethus_backend.Models
         public Configurations Configurations { get; set; }
 
         public UserForm UserForm { get; set; }
+
+        public virtual UserDigitalSignature? DigitalSignature { get; set; }
     }
 }

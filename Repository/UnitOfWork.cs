@@ -37,11 +37,14 @@ namespace rethus_backend.Repository
 
             var paginationRepositoryV2 = new RepositoryPaginationV2<UserForm>(_db);
 
+            UserDigitalSignature = new UserDigitalSignatureRepository(_db);
+
             UserForm = new UserFormRepository(
                 _db,
                 _configuration,
                 UserConfiguration,
-                paginationRepositoryV2
+                paginationRepositoryV2,
+                UserDigitalSignature
             );
 
             UserFormFiles = new UserFormFilesRepository(_db, _configuration, UserConfiguration);
@@ -76,6 +79,7 @@ namespace rethus_backend.Repository
         public IDepartmentRepository Department { get; private set; }
         public ICityRepository City { get; private set; }
         public IConfigurationSettingRepository ConfigurationSetting { get; private set; }
+        public IUserDigitalSignatureRepository UserDigitalSignature { get; private set; }
 
         public void Dispose() => _db.Dispose();
 
