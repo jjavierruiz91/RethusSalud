@@ -13,5 +13,6 @@ namespace rethus_backend.Repository.IRepository
         Task<bool> IsSignatureInUseAsync(SignatureType signatureType, SignatureStatus status);
         Task<bool> IsSignatureInUseByUserIdAsync(string userId, string userDigitalSignatureId);
         Task<bool> IsUserSignatureActiveForTypesAsync();
+        Task<bool> IsUserSignatureActiveAsync(string userId, SignatureStatus status);
     }
 }

@@ -189,13 +189,17 @@ public class UserFormController : ApiBaseController
     {
         var user = HttpContext.Items["User"] as User;
 
-        var userSignature = await _unitOfWork.UserDigitalSignature.GetByUserIdAsync(user.UserId);
-        if (userSignature == null)
+        var isSignatureInUseByUser =
+            await _unitOfWork.UserDigitalSignature.IsUserSignatureActiveAsync(
+                user.UserId,
+                SignatureStatus.Active
+            );
+        if (!isSignatureInUseByUser)
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.Conflict;
             _response.Messages.Add(
-                "Este usuario no tiene firma asignada contactese con el administrator"
+                "No puede aprobar este tramite si no tiene una firma asignada, contacte a administrador"
             );
             return BadRequest(_response);
         }
@@ -234,14 +238,18 @@ public class UserFormController : ApiBaseController
     public async Task<ActionResult<ApiResponse>> RejectForm(string formId)
     {
         var user = HttpContext.Items["User"] as User;
-        Console.WriteLine(user.UserId);
-        var userSignature = await _unitOfWork.UserDigitalSignature.GetByUserIdAsync(user.UserId);
-        if (userSignature == null)
+
+        var isSignatureInUseByUser =
+            await _unitOfWork.UserDigitalSignature.IsUserSignatureActiveAsync(
+                user.UserId,
+                SignatureStatus.Active
+            );
+        if (!isSignatureInUseByUser)
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.Conflict;
             _response.Messages.Add(
-                "Este usuario no tiene firma asignada contactese con el administrator"
+                "No puede rechazar este tramite si no tiene una firma asignada, contacte a administrador"
             );
             return BadRequest(_response);
         }

@@ -95,5 +95,12 @@ namespace rethus_backend.Repository
             // Comprobamos si todos los tipos requeridos están en la lista de tipos activos
             return requiredSignatureTypes.All(type => activeSignatureTypes.Contains(type));
         }
+
+        public async Task<bool> IsUserSignatureActiveAsync(string userId, SignatureStatus status)
+        {
+            return await _context.UserDigitalSignature.AnyAsync(
+                s => s.UserId == userId && s.Status == status
+            );
+        }
     }
 }
