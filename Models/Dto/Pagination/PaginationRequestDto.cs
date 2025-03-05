@@ -1,15 +1,16 @@
 using rethus_backend.Utilities.Constants.User.CommentsConstants;
 using rethus_backend.Utilities.Constants.User.UserFormConstants;
+using rethus_backend.Utilities.Constants.UserConstants;
 
 namespace rethus_backend.Models.Dto.Pagination
 {
-
-     public enum GenericStatus
+    public enum GenericStatus
     {
         pending,
         approved,
         rejected
     }
+
     public class FilterQueryParametersDto
     {
         public string? UserFormId { get; set; }
@@ -20,5 +21,7 @@ namespace rethus_backend.Models.Dto.Pagination
         public string? endDate { get; set; }
         public ReviewStepForm? Step { get; set; }
         public string? Type { get; set; }
+        public string? name { get; set; }
+        public UserRoles? roles { get; set; }
     }
 }

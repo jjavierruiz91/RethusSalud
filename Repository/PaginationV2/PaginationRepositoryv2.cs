@@ -6,6 +6,7 @@ using rethus_backend.Models.Dto.Pagination;
 using rethus_backend.RepositoryV2;
 using rethus_backend.Utilities.Constants.PaginatioConstants;
 using rethus_backend.Utilities.Constants.User.UserFormConstants;
+using rethus_backend.Utilities.Constants.UserConstants;
 
 public class RepositoryPaginationV2<T> : IPaginationRepositoryV2<T>
     where T : class
@@ -33,25 +34,21 @@ public class RepositoryPaginationV2<T> : IPaginationRepositoryV2<T>
         }
 
         if (!string.IsNullOrEmpty(request.QueryParameters.Status))
-        {   
-           var statusPropertyType = typeof(T).GetProperty("Status")?.PropertyType;
+        {
+            var statusPropertyType = typeof(T).GetProperty("Status")?.PropertyType;
 
-           var statusValue = Enum.Parse(statusPropertyType, request.QueryParameters.Status);
-
+            var statusValue = Enum.Parse(statusPropertyType, request.QueryParameters.Status);
 
             query = query.Where(x => EF.Property<object>(x, "Status").Equals(statusValue));
-       
         }
 
         if (!string.IsNullOrEmpty(request.QueryParameters.Type))
-        {   
-           var statusPropertyType = typeof(T).GetProperty("Type")?.PropertyType;
+        {
+            var statusPropertyType = typeof(T).GetProperty("Type")?.PropertyType;
 
-           var statusValue = Enum.Parse(statusPropertyType, request.QueryParameters.Type);
-
+            var statusValue = Enum.Parse(statusPropertyType, request.QueryParameters.Type);
 
             query = query.Where(x => EF.Property<object>(x, "Type").Equals(statusValue));
-       
         }
 
         if (!string.IsNullOrEmpty(request.QueryParameters.PersonalIdentification))
@@ -76,6 +73,20 @@ public class RepositoryPaginationV2<T> : IPaginationRepositoryV2<T>
         {
             query = query.Where(
                 x => EF.Property<ReviewStepForm>(x, "StepForm") == request.QueryParameters.Step
+            );
+        }
+
+        if (request.QueryParameters.roles.HasValue)
+        {
+            query = query.Where(
+                x => EF.Property<UserRoles>(x, "roles") == request.QueryParameters.roles
+            );
+        }
+
+        if (!string.IsNullOrEmpty(request.QueryParameters.name))
+        {
+            query = query.Where(
+                x => EF.Property<string>(x, "name") == request.QueryParameters.name
             );
         }
 

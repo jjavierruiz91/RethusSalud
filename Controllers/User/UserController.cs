@@ -207,11 +207,16 @@ public class UserController : ApiBaseController
     [HttpGet("administrative")]
     [Authorize(Roles = Policies.SuperAdmin)]
     public async Task<ActionResult<PaginationResultDto<UserDto>>> GetAllPaginado(
+        [FromQuery] FilterQueryParametersDto filters,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10
     )
     {
-        var queryParameters = new FilterQueryParametersDto { };
+        var queryParameters = new FilterQueryParametersDto
+        {
+            name = filters.name,
+            roles = filters.roles
+        };
 
         var paginationRequest = new PaginationRequestDto<FilterQueryParametersDto>
         {
