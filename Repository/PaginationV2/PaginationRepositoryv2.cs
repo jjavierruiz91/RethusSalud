@@ -86,7 +86,11 @@ public class RepositoryPaginationV2<T> : IPaginationRepositoryV2<T>
         if (!string.IsNullOrEmpty(request.QueryParameters.name))
         {
             query = query.Where(
-                x => EF.Property<string>(x, "name") == request.QueryParameters.name
+                x =>
+                    EF.Functions.Like(
+                        EF.Property<string>(x, "name"),
+                        "%" + request.QueryParameters.name + "%"
+                    )
             );
         }
 
