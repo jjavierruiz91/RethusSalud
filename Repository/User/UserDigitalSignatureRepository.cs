@@ -22,9 +22,10 @@ namespace rethus_backend.Repository
             return await _context.UserDigitalSignature.FirstOrDefaultAsync(s => s.UserId == userId);
         }
 
-        public async Task<IEnumerable<UserDigitalSignature>> GetAllActiveAsync()
+        public async Task<List<UserDigitalSignature>> GetAllActiveAsync()
         {
             return await _context.UserDigitalSignature
+                .AsNoTracking()
                 .Where(s => s.Status == SignatureStatus.Active)
                 .ToListAsync();
         }

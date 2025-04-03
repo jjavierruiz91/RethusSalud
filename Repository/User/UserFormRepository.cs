@@ -673,7 +673,7 @@ namespace rethus_backend.Repository
 
         public async Task ValidateCertificateUserForm(string userFormId)
         {
-            UserForm formFile = _context.UserForm.FirstOrDefault(x => x.UserFormId == userFormId);
+            UserForm formFile = GetFormUserId(userFormId);
 
             if (formFile == null)
             {
@@ -691,11 +691,12 @@ namespace rethus_backend.Repository
             }
 
             var signatures = await _userDigitalSignatureRepository.GetAllActiveAsync();
-            var signaturesList = signatures.ToList();
+            Console.WriteLine("____");
+            Console.WriteLine(signatures);
 
             if (formFile.TypeProcedure == ConfigurationTypeProcedure.RETHUS)
             {
-                await Task.Run(async () => CreateCertificateRethus(formFile, signaturesList));
+                await Task.Run(async () => CreateCertificateRethus(formFile, signatures));
             }
             else
             {
@@ -746,7 +747,7 @@ namespace rethus_backend.Repository
                     .GetIdentificationTypeInSpanish(form.PersonalTypeIdentification)
                     .ToUpper()
             };
-
+            Console.WriteLine("llego");
             foreach (var item in signatures)
             {
                 if (item.SignatureType == SignatureType.Secretary)

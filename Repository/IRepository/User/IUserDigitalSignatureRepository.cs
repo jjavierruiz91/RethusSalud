@@ -6,7 +6,7 @@ namespace rethus_backend.Repository.IRepository
     {
         Task<UserDigitalSignature?> GetByUserIdAsync(string userId);
         Task<UserDigitalSignature?> GetByIdAsync(string Id);
-        Task<IEnumerable<UserDigitalSignature>> GetAllActiveAsync();
+        Task<List<UserDigitalSignature>> GetAllActiveAsync();
         Task AddAsync(UserDigitalSignature signature);
         Task UpdateAsync(UserDigitalSignature signature);
         Task DeleteAsync(string userId);

@@ -299,11 +299,11 @@ public class UserFormController : ApiBaseController
             return BadRequest(response);
         }
 
-        await Task.Run(() =>
+        await Task.Run(async () =>
         {
             string userId = _unitOfWork.UserForm.GetUserByUserFormId(formId);
             _unitOfWork.UserConfiguration.UpdateStateComplateConfiguration(userId);
-            _unitOfWork.UserForm.ValidateCertificateUserForm(formId);
+            await _unitOfWork.UserForm.ValidateCertificateUserForm(formId);
         });
 
         return response;
