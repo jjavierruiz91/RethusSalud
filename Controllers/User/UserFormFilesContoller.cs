@@ -106,6 +106,8 @@ public class UserFormFilesController : ApiBaseController
     {
         var user = await _unitOfWork.UserFormFiles.GetFilesByUserFormId(id);
 
+        Response.Headers["Cache-Control"] = "public,max-age=300";
+
         return user;
     }
 
@@ -144,6 +146,8 @@ public class UserFormFilesController : ApiBaseController
         var user = _unitOfWork.UserFormFiles.GetUserFormId(id);
         if (user == null)
             return NotFound();
+
+        Response.Headers["Cache-Control"] = "public,max-age=300";
 
         return Ok(user);
     }
