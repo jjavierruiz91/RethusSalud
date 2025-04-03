@@ -691,8 +691,6 @@ namespace rethus_backend.Repository
             }
 
             var signatures = await _userDigitalSignatureRepository.GetAllActiveAsync();
-            Console.WriteLine("____");
-            Console.WriteLine(signatures);
 
             if (formFile.TypeProcedure == ConfigurationTypeProcedure.RETHUS)
             {
@@ -747,7 +745,6 @@ namespace rethus_backend.Repository
                     .GetIdentificationTypeInSpanish(form.PersonalTypeIdentification)
                     .ToUpper()
             };
-            Console.WriteLine("llego");
             foreach (var item in signatures)
             {
                 if (item.SignatureType == SignatureType.Secretary)
