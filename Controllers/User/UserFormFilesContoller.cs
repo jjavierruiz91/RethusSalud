@@ -84,6 +84,9 @@ public class UserFormFilesController : ApiBaseController
     public ActionResult<List<UserForm>> GetAll()
     {
         var users = _unitOfWork.UserFormFiles.GetAll();
+
+        Response.Headers["Cache-Control"] = "public,max-age=300";
+
         return Ok(users);
     }
 
