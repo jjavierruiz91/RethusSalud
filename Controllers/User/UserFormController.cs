@@ -113,6 +113,9 @@ public class UserFormController : ApiBaseController
         _response.IsSuccess = true;
         _response.StatusCode = HttpStatusCode.OK;
         _response.Result = user;
+
+         Response.Headers["Cache-Control"] = "public,max-age=300";
+         
         return Ok(_response);
     }
 
@@ -173,6 +176,9 @@ public class UserFormController : ApiBaseController
         _response.IsSuccess = true;
         _response.StatusCode = HttpStatusCode.OK;
         _response.Result = user;
+
+         Response.Headers["Cache-Control"] = "public,max-age=300";
+
         return Ok(_response);
     }
 
