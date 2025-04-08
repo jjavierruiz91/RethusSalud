@@ -46,7 +46,7 @@ namespace rethus_backend.Repository
             var countries = _context.Country
                 .AsNoTracking()
                 .Select(c => new CountryResponseDto { Id = c.CountryId, Name = c.Name })
-                .OrderBy(c => c.Name)
+                .OrderByDescending(c => c.Name)
                 .ToListAsync();
             return countries;
         }
@@ -67,6 +67,7 @@ namespace rethus_backend.Repository
                     .OrderBy(c => c.CountryId)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
+                    .OrderByDescending(c => c.Name)
                     .ToListAsync();
 
                 var cacheDuration = TimeSpan.FromDays(7);

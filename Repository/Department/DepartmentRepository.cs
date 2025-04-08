@@ -33,7 +33,7 @@ namespace rethus_backend.Repository
                     .AsNoTracking()
                     .OrderBy(c => c.CountryId)
                     .Where(d => d.CountryId == countryId)
-                    .OrderBy(c => c.Name)
+                    .OrderByDescending(c => c.Name)
                     .ToListAsync();
 
                 var cacheDuration = TimeSpan.FromDays(7);

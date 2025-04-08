@@ -257,17 +257,35 @@ namespace rethus_backend.Data
                 .HasIndex(c => new { c.CountryId })
                 .HasDatabaseName("IX_Country_CountryId");
 
-            // INDICE MODEL DEPARMENTS
+            modelBuilder
+                .Entity<Country>()
+                .HasIndex(c => c.Name)
+                .IsDescending()
+                .HasDatabaseName("IX_Country_Name");
+
+            // INDICE MODEL DEPARTMENTS
             modelBuilder
                 .Entity<Department>()
                 .HasIndex(c => new { c.CountryId })
                 .HasDatabaseName("IX_Department_CountryId");
+
+            modelBuilder
+                .Entity<Department>()
+                .HasIndex(c => c.Name)
+                .IsDescending()
+                .HasDatabaseName("IX_Department_Name");
 
             // INDICE MODEL CITY
             modelBuilder
                 .Entity<City>()
                 .HasIndex(c => new { c.DepartmentId })
                 .HasDatabaseName("IX_Department_DepartmentId");
+
+            modelBuilder
+                .Entity<City>()
+                .HasIndex(c => c.Name)
+                .IsDescending()
+                .HasDatabaseName("IX_City_Name");
         }
     }
 }
