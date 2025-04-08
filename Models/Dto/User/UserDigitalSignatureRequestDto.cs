@@ -17,6 +17,9 @@ namespace rethus_backend.Models.Dto.User
         public SignatureType SignatureType { get; set; }
 
         [Required]
+        public string SignaturePositionType { get; set; }
+
+        [Required]
         public IFormFile SignatureImage { get; set; }
     }
 
@@ -36,6 +39,9 @@ namespace rethus_backend.Models.Dto.User
         [Required]
         [EnumDataType(typeof(SignatureStatus), ErrorMessage = "El tipo de status no es válido.")]
         public SignatureStatus SignatureStatus { get; set; }
+
+        [Required]
+        public string SignaturePositionType { get; set; }
 
         public IFormFile? SignatureImage { get; set; }
     }

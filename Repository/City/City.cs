@@ -35,6 +35,7 @@ namespace rethus_backend.Repository
                     .AsNoTracking()
                     .OrderBy(c => c.CityId)
                     .Where(c => c.DepartmentId == departmentId)
+                    .OrderBy(c => c.Name)
                     .ToListAsync();
 
                 // Establecer la lista de ciudades en caché por un tiempo específico

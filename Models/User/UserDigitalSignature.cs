@@ -24,6 +24,10 @@ namespace rethus_backend.Models
         [MaxLength(50)]
         public SignatureType SignatureType { get; set; }
 
+        [Required]
+        [MaxLength(100)]
+        public string SignaturePositionType { get; set; } = string.Empty; // Nuevo campo agregado con "Signature" alante
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 

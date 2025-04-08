@@ -753,12 +753,13 @@ namespace rethus_backend.Repository
                     rethusDto.FIRMA_PRINCIPAL = FileHelper.ConvertImageToBase64(
                         await FileHelper.GetImageAsync(item.SignatureImagePath)
                     );
-                    rethusDto.TIPO_TRABAJO = "Secretario(E) de Salud Departamental del Cesar";
+                    rethusDto.TIPO_TRABAJO = item.SignaturePositionType;
                 }
 
                 if (item.SignatureType == SignatureType.Project)
                 {
-                    rethusDto.FIRMA_PROYECTO = item.SignatureName;
+                    rethusDto.FIRMA_PROYECTO =
+                        item.SignatureName + " " + item.SignaturePositionType;
                     rethusDto.FIRMA_1 = FileHelper.ConvertImageToBase64(
                         await FileHelper.GetImageAsync(item.SignatureImagePath)
                     );
@@ -766,7 +767,8 @@ namespace rethus_backend.Repository
 
                 if (item.SignatureType == SignatureType.Review)
                 {
-                    rethusDto.FIRMA_REVISION = item.SignatureName;
+                    rethusDto.FIRMA_REVISION =
+                        item.SignatureName + " " + item.SignaturePositionType;
                     rethusDto.FIRMA_2 = FileHelper.ConvertImageToBase64(
                         await FileHelper.GetImageAsync(item.SignatureImagePath)
                     );
@@ -774,7 +776,7 @@ namespace rethus_backend.Repository
 
                 if (item.SignatureType == SignatureType.Approve)
                 {
-                    rethusDto.FIRMA_APROBO = item.SignatureName;
+                    rethusDto.FIRMA_APROBO = item.SignatureName + " " + item.SignaturePositionType;
                     rethusDto.FIRMA_3 = FileHelper.ConvertImageToBase64(
                         await FileHelper.GetImageAsync(item.SignatureImagePath)
                     );

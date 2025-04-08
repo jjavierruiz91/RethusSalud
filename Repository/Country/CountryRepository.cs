@@ -46,6 +46,7 @@ namespace rethus_backend.Repository
             var countries = _context.Country
                 .AsNoTracking()
                 .Select(c => new CountryResponseDto { Id = c.CountryId, Name = c.Name })
+                .OrderBy(c => c.Name)
                 .ToListAsync();
             return countries;
         }
