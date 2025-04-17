@@ -332,9 +332,9 @@ namespace rethus_backend.Repository
                 await UpdateSingleFileAsync(item, rutaFile);
             }
 
-            // await UpdateConfigurationStatusInPogress(userForm.UserId);
-
-            response.Messages.Add("El sistema esta procesando tu archivo!");
+            response.Messages.Add(
+                "El proceso de actualización de archivos se realizó correctamente."
+            );
             response.IsSuccess = true;
             return response;
         }

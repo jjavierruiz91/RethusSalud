@@ -3,6 +3,7 @@ using rethus_backend.Data;
 using rethus_backend.Repository.IRepository;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
+using System.IO;
 
 public class JwtExpirationValidationMiddleware
 {
@@ -45,7 +46,6 @@ public class JwtExpirationValidationMiddleware
 
                     if (string.IsNullOrEmpty(userId))
                     {
-                        // Si no se encuentra el userId en el token, retornar un error 400
                         context.Response.StatusCode = StatusCodes.Status400BadRequest;
                         await context.Response.WriteAsync("Token no contiene el userId.");
                         return;
@@ -58,7 +58,6 @@ public class JwtExpirationValidationMiddleware
 
                     if (expirationDate < DateTime.UtcNow)
                     {
-                        // Si el token ha expirado, retornar un error 401
                         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                         await context.Response.WriteAsync(
                             "El token ha expirado. Debes iniciar sesión nuevamente."
@@ -68,18 +67,47 @@ public class JwtExpirationValidationMiddleware
 
                     // Almacenar la información del usuario en HttpContext
                     context.Items["User"] = userInfo;
+
+                    // Registrar la actividad del usuario con información adicional
+                    var clientIp = context.Connection.RemoteIpAddress?.ToString();
+                    var userAgent = context.Request.Headers["User-Agent"].FirstOrDefault();
+                    var startTime = DateTime.UtcNow;
+
+                    // Procesar la solicitud
+                    await _next(context);
+
+                    var duration = DateTime.UtcNow - startTime;
+                    var responseStatusCode = context.Response.StatusCode;
+
+                    var logEntry =
+                        $"{TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "America/Bogota"):yyyy-MM-dd HH:mm:ss} | UserId: {userId} | Role: {userInfo?.roles} | IP: {clientIp} | User-Agent: {userAgent} | Request: {context.Request.Method} {context.Request.Path} | Status: {responseStatusCode} | Duration: {duration.TotalMilliseconds}ms";
+
+                    // Crear la carpeta de logs agrupada por año
+                    var logsDirectory = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "logs",
+                        DateTime.UtcNow.Year.ToString()
+                    );
+                    Directory.CreateDirectory(logsDirectory);
+
+                    // Ruta del archivo de log
+                    var logFilePath = Path.Combine(logsDirectory, "UserActivityLog.txt");
+
+                    // Guardar el log en el archivo
+                    await File.AppendAllTextAsync(logFilePath, logEntry + Environment.NewLine);
                 }
                 catch (Exception ex)
                 {
-                    // Si el token no es válido, también retornar un error 401
                     context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     await context.Response.WriteAsync("Token inválido o mal formado.");
                     return;
                 }
             }
         }
-
-        // Si está autenticado, pasar al siguiente middleware
-        await _next(context);
+        else
+        {
+            // Si no está autenticado, pasar al siguiente middleware
+            await _next(context);
+        }
     }
 }

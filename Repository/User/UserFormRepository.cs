@@ -1714,5 +1714,33 @@ namespace rethus_backend.Repository
                     && string.Compare(uf.Consecutive, consecutiveEnd) <= 0
             );
         }
+
+        // funcion que cambie el status de un formulario a "necesita revision"
+        public async Task<ApiResponse> ChangeStatusToNeedsReview(string userFormId)
+        {
+            ApiResponse response = new ApiResponse();
+
+            var form = await _context.UserForm.FindAsync(userFormId);
+
+            if (form == null)
+            {
+                response.AddError(
+                    "No se encontro el formulario del usuario",
+                    HttpStatusCode.NotFound,
+                    false
+                );
+                return response;
+            }
+
+            form.Status = UserFormStatus.needsReview;
+            form.StepForm = ReviewStepForm.FuncionarioEtapa1;
+            form.UpdatedAt = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            response.IsSuccess = true;
+            response.Messages.Add("Se cambio el estado del formulario a necesita revision");
+            return response;
+        }
     }
 }

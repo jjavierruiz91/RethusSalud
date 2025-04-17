@@ -137,23 +137,51 @@ app.UseExceptionHandler(errorApp =>
 {
     errorApp.Run(async context =>
     {
-        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         context.Response.ContentType = "application/json";
 
         var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
         var exception = exceptionHandlerPathFeature?.Error;
 
-        var result = new
+        // Determinar el código de estado según el tipo de excepción
+        var statusCode = exception switch
         {
-            Error = "Ha ocurrido un error interno en el servidor.",
-            Details = exception?.Message,
-            StatusCode = HttpStatusCode.InternalServerError
+            BadHttpRequestException => (int)HttpStatusCode.BadRequest,
+            KeyNotFoundException => (int)HttpStatusCode.NotFound,
+            UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
+            _ => (int)HttpStatusCode.InternalServerError
         };
 
-        // Registrar el error
+        context.Response.StatusCode = statusCode;
+
+        // Crear el objeto de respuesta
+        var result = new
+        {
+            Error = statusCode == (int)HttpStatusCode.InternalServerError
+                ? "Ha ocurrido un error interno en el servidor."
+                : exception?.Message,
+            StatusCode = statusCode
+        };
+
+        // Registrar el error en el archivo de logs
+        var logsDirectory = Path.Combine(
+            Directory.GetCurrentDirectory(),
+            "logs",
+            DateTime.UtcNow.Year.ToString()
+        );
+        Directory.CreateDirectory(logsDirectory);
+
+        var logFilePath = Path.Combine(logsDirectory, "UserActivityLog.txt");
+
+        var logEntry =
+            $"{TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "America/Bogota"):yyyy-MM-dd HH:mm:ss} | ERROR | StatusCode: {statusCode} | Path: {exceptionHandlerPathFeature?.Path} | Message: {exception?.Message} | StackTrace: {exception?.StackTrace}";
+
+        await File.AppendAllTextAsync(logFilePath, logEntry + Environment.NewLine);
+
+        // Registrar el error en el logger
         var logger = app.Services.GetRequiredService<ILogger<Program>>();
         logger.LogError(exception, "Error procesando la solicitud.");
 
+        // Enviar la respuesta al cliente
         await context.Response.WriteAsJsonAsync(result);
     });
 });

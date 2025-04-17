@@ -66,6 +66,23 @@ public class UserFormFilesController : ApiBaseController
         [FromForm] UserFormFilesUpdateDto _files
     )
     {
+        if (string.IsNullOrEmpty(userFormId))
+        {
+            _response.Messages.Add("Form ID is required");
+            _response.IsSuccess = false;
+            return BadRequest(_response);
+        }
+
+        bool isHaveComments = _unitOfWork.Comments.CountPendingCommentsExternalForm(userFormId);
+        if (isHaveComments)
+        {
+            _response.Messages.Add(
+                "Te recomendamos revisar y aprobar los comentarios antes de proceder con la actualización de la información."
+            );
+            _response.IsSuccess = false;
+            return BadRequest(_response);
+        }
+
         ApiResponse response = await _unitOfWork.UserFormFiles.UpdateUserFormFileAsync(
             userFormId,
             _files
@@ -75,6 +92,13 @@ public class UserFormFilesController : ApiBaseController
         {
             return BadRequest(response);
         }
+
+        await Task.Run(async () =>
+        {
+            string userId = _unitOfWork.UserForm.GetUserByUserFormId(userFormId);
+            _unitOfWork.UserConfiguration.UpdateStateUpdateConfiguration(userId);
+            await _unitOfWork.UserForm.ChangeStatusToNeedsReview(userFormId);
+        });
 
         return Ok(response);
     }

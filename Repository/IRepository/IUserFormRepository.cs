@@ -101,5 +101,6 @@ namespace rethus_backend.Repository.IRepository
             DateTime startDate,
             DateTime endDate
         );
+        Task<ApiResponse> ChangeStatusToNeedsReview(string userFormId);
     }
 }
