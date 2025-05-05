@@ -22,6 +22,7 @@ using rethus_backend.Utilities.Email.EmailService;
 using rethus_backend.Utilities.Constants.Email.EmailDto;
 using rethus_backend.Models.Dto.UserPublic;
 using System.Diagnostics;
+using rethus_backend.Utilities.Email.DateService;
 
 namespace rethus_backend.Repository
 {
@@ -745,6 +746,27 @@ namespace rethus_backend.Repository
                     .GetIdentificationTypeInSpanish(form.PersonalTypeIdentification)
                     .ToUpper()
             };
+
+            if (
+                form.AcademicsOriginTitle == "extranjero"
+                && form.AcademicsDateConvalidation != null
+                && form.AcademicsNumberConvalidation != null
+            )
+            {
+                string formatAcademicsDateConvalidation = DateService.FormatLongDate(
+                    form.AcademicsDateConvalidation.Value
+                );
+
+                rethusDto.TEXTO_EXTRANJERO =
+                    $@"<div style=""text-align:justify;padding-top:.6rem""><p>Que {form.PersonalFirstName.ToUpper() + " " + form.PersonalLastName.ToUpper()},  convalido en Colombia el título de
+                    {form.AcademicsProgramName.ToUpper()}, otorgado el {formatAcademicsDateConvalidation}, por la {form.AcademicsNameInstitution.ToUpper()} mediante la Resolución número 023409 del 01 de DICIEMBRE del 2023, 
+                    proferido por el MINISTERIO DE EDUCACIÓN NACIONAL de la REPUBLICA DE COLOMBIA.</p></div>";
+            }
+            else
+            {
+                rethusDto.TEXTO_EXTRANJERO = "";
+            }
+
             foreach (var item in signatures)
             {
                 if (item.SignatureType == SignatureType.Secretary)

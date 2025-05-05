@@ -19,6 +19,7 @@ namespace rethus_backend.Utilities.Templates.dto
         public string FIRMA_2 { get; set; }
         public string FIRMA_APROBO { get; set; }
         public string FIRMA_3 { get; set; }
+        public string TEXTO_EXTRANJERO { get; set; }
     }
 
     public class TemplateSSODto
