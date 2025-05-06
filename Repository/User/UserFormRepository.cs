@@ -758,8 +758,8 @@ namespace rethus_backend.Repository
                 );
 
                 rethusDto.TEXTO_EXTRANJERO =
-                    $@"<div style=""text-align:justify;padding-top:.6rem""><p>Que {form.PersonalFirstName.ToUpper() + " " + form.PersonalLastName.ToUpper()},  convalido en Colombia el título de
-                    {form.AcademicsProgramName.ToUpper()}, otorgado el {formatAcademicsDateConvalidation}, por la {form.AcademicsNameInstitution.ToUpper()} mediante la Resolución número 023409 del 01 de DICIEMBRE del 2023, 
+                    $@"<div style=""text-align:justify;padding-top:.6rem""><p>Que <b>{form.PersonalFirstName.ToUpper() + " " + form.PersonalLastName.ToUpper()}</b>,  convalido en Colombia el título de
+                    <strong> {form.AcademicsProgramName.ToUpper()} </strong>, otorgado el <strong> {formatAcademicsDateConvalidation}  </strong>, por la <strong>{form.AcademicsNameInstitution.ToUpper()}</strong> mediante la Resolución número 023409 del 01 de DICIEMBRE del 2023, 
                     proferido por el MINISTERIO DE EDUCACIÓN NACIONAL de la REPUBLICA DE COLOMBIA.</p></div>";
             }
             else
