@@ -47,6 +47,7 @@ namespace rethus_backend.Utilities.Templates
             templateContent = templateContent.Replace("${FIRMA_APROBO}", dto.FIRMA_APROBO);
             templateContent = templateContent.Replace("${FIRMA_REVISION}", dto.FIRMA_REVISION);
             templateContent = templateContent.Replace("${FIRMA_3}", dto.FIRMA_3);
+            templateContent = templateContent.Replace("${TEXTO_EXTRANJERO}", dto.TEXTO_EXTRANJERO);
             return templateContent;
         }
 
