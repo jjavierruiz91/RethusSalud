@@ -135,6 +135,8 @@ namespace rethus_backend.Data
                 .HasForeignKey<UserDigitalSignature>(uf => uf.UserId) // UserId es la clave foránea en UserDigitalSignature
                 .OnDelete(DeleteBehavior.Cascade); // Opcional: comportamiento de eliminación
 
+            modelBuilder.Entity<User>().HasIndex(u => u.Identification).IsUnique();
+
             // INDICE MODEL USERFORM
             modelBuilder
                 .Entity<UserForm>()

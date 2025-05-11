@@ -11,10 +11,11 @@ namespace rethus_backend.Repository.IRepository
     public interface IUserRepository : IRepository<User>
     {
         bool IsUniqueUser(string email);
+        bool IsExistIdentification(string identification);
         bool IsExistUser(string email);
         bool IsExistUserId(string userId);
         bool isExistUserCount(string email);
-        bool IsUserActive(string email);
+        bool IsUserActive(string identification);
         User GetUserByEmail(string email);
         User GetUserByToken(string token);
         IEnumerable<User> GetAll();

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using rethus_backend.Utilities.Constants.UserConstants;
 
 namespace rethus_backend.Models
@@ -10,8 +11,10 @@ namespace rethus_backend.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string UserId { get; set; }
 
+        public string? email { get; set; }
+
         [Required]
-        public required string email { get; set; }
+        public required string Identification { get; set; }
 
         [Required]
         public required string name { get; set; }

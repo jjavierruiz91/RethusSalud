@@ -35,9 +35,11 @@ namespace rethus_backend.Repository
             throw new NotImplementedException();
         }
 
-        public void Register(string email)
+        public void Register(string identification)
         {
-            var user = this._context.Users.FirstOrDefault(user => user.email == email);
+            var user = this._context.Users.FirstOrDefault(
+                user => user.Identification == identification
+            );
 
             Configurations newConfiguration =
                 new()
@@ -373,6 +375,13 @@ namespace rethus_backend.Repository
 
             response.Messages.Add("Se completo el proceso del usuario");
             return response;
+        }
+
+        public bool IdentificationNumberMismatch(string userId, string identificationNumber)
+        {
+            return _context.Users.Any(
+                user => user.UserId == userId && user.Identification == identificationNumber
+            );
         }
     }
 }

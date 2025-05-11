@@ -22,7 +22,7 @@ public class UserController : ApiBaseController
     [HttpPost]
     public async Task<ActionResult<ApiResponse>> PostAsync([FromBody] CreateRequestDto _user)
     {
-        bool user = _unitOfWork.User.IsUniqueUser(_user.email);
+        bool user = _unitOfWork.User.IsExistIdentification(_user.identification);
 
         if (!user)
         {
@@ -63,9 +63,9 @@ public class UserController : ApiBaseController
             return BadRequest(_response);
         }
 
-        bool user = _unitOfWork.User.IsUniqueUser(_user.email);
+        bool user = _unitOfWork.User.IsExistIdentification(_user.identification);
 
-        if (!user)
+        if (user)
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;
@@ -238,7 +238,8 @@ public class UserController : ApiBaseController
                 {
                     UserId = user.UserId,
                     name = user.name,
-                    email = user.email,
+                    email = user.email ?? string.Empty,
+                    identification = user.Identification,
                     Status = user.Status,
                     Roles = user.roles,
                     CreatedAt = user.CreatedAt

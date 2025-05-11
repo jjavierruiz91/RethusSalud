@@ -32,6 +32,28 @@ public class UserFormController : ApiBaseController
     [Authorize(Roles = Policies.User)]
     public async Task<ActionResult<ApiResponse>> PostAsync([FromBody] UserFormCreateDto userForm)
     {
+        if (string.IsNullOrEmpty(userForm.userId))
+        {
+            _response.Messages.Add("User ID is required");
+            _response.IsSuccess = false;
+            return BadRequest(_response);
+        }
+
+        bool identificationNotMatchRegistered =
+            _unitOfWork.UserConfiguration.IdentificationNumberMismatch(
+                userForm.userId,
+                userForm.PersonalIdentification
+            );
+
+        if (!identificationNotMatchRegistered)
+        {
+            _response.Messages.Add(
+                "El número de identificación no coincide con el usuario registrado."
+            );
+            _response.IsSuccess = false;
+            return BadRequest(_response);
+        }
+
         var configuration = _unitOfWork.UserConfiguration.ValidateStepConfiguration(
             userForm.userId,
             ConfigurationStep.load_user_form

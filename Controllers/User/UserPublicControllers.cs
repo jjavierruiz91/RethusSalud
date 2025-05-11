@@ -5,6 +5,7 @@ using rethus_backend.Models.Dto.User;
 using rethus_backend.Models.Dto.Configuration;
 using System.Net;
 using rethus_backend.Models.Dto.UserPublic;
+using rethus_backend.Utilities.Security.Hashing;
 
 namespace rethus_backend.Controllers;
 
@@ -20,9 +21,27 @@ public class UserPublicController : ApiBaseController
     [HttpPost]
     public async Task<ActionResult<ApiResponse>> PostAsync([FromBody] CreateRequestDto _user)
     {
-        bool user = _unitOfWork.User.IsUniqueUser(_user.email);
+        if (_user == null)
+        {
+            _response.IsSuccess = false;
+            _response.StatusCode = HttpStatusCode.BadRequest;
+            _response.Messages.Add("El usuario no puede ser nulo");
+            return BadRequest(_response);
+        }
 
-        if (!user)
+        bool isValid = Password.ValidatePassword(_user.password, _user.confirmPassword);
+
+        if (!isValid)
+        {
+            _response.IsSuccess = false;
+            _response.StatusCode = HttpStatusCode.BadRequest;
+            _response.Messages.Add("La contraseña no cumple con los requisitos de seguridad");
+            return BadRequest(_response);
+        }
+
+        bool IsExistIdentification = _unitOfWork.User.IsExistIdentification(_user.identification);
+
+        if (IsExistIdentification)
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;

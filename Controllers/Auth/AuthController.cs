@@ -17,7 +17,7 @@ public class LoginController : ApiBaseController
     [HttpPost]
     public async Task<ActionResult<AuthResponseDto>> Authenticate([FromBody] AuthRequestDto _user)
     {
-        bool user = _unitOfWork.User.IsExistUser(_user.email);
+        bool user = _unitOfWork.User.IsExistIdentification(_user.Identification);
 
         if (!user)
         {
@@ -29,13 +29,15 @@ public class LoginController : ApiBaseController
             return BadRequest(_response);
         }
 
-        bool userActive = _unitOfWork.User.IsUserActive(_user.email);
+        bool userActive = _unitOfWork.User.IsUserActive(_user.Identification);
 
         if (!userActive)
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;
-            _response.Messages.Add("El usuario no esta activo, comuniquese con el administrador");
+            _response.Messages.Add(
+                "El usuario no está activo. Por favor, contacte al administrador del sistema."
+            );
             return BadRequest(_response);
         }
 

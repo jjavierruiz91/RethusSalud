@@ -27,6 +27,13 @@ public class UserFormFilesController : ApiBaseController
         [FromForm] UserFormFilesCreateDto _files
     )
     {
+        if (string.IsNullOrEmpty(userId))
+        {
+            _response.Messages.Add("User ID is required");
+            _response.IsSuccess = false;
+            return BadRequest(_response);
+        }
+
         var configuration = _unitOfWork.UserConfiguration.ValidateStepConfiguration(
             userId,
             ConfigurationStep.load_user_files

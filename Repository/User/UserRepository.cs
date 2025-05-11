@@ -110,6 +110,7 @@ namespace rethus_backend.Repository
                 {
                     name = createRequestDto.name,
                     email = createRequestDto.email,
+                    Identification = createRequestDto.identification,
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt,
                     roles = "User",
@@ -122,7 +123,7 @@ namespace rethus_backend.Repository
             var createRegister = _context.Users.Add(newUser);
             _context.SaveChanges();
 
-            this._configuration.Register(createRequestDto.email);
+            this._configuration.Register(createRequestDto.identification);
 
             return newUser;
         }
@@ -163,7 +164,8 @@ namespace rethus_backend.Repository
                 new()
                 {
                     name = createRequestDto.name,
-                    email = createRequestDto.email,
+                    email = createRequestDto.email ?? "",
+                    Identification = createRequestDto.identification,
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt,
                     roles = createRequestDto.type,
@@ -176,7 +178,7 @@ namespace rethus_backend.Repository
             var createRegister = _context.Users.Add(newUser);
             _context.SaveChanges();
 
-            this._configuration.Register(createRequestDto.email);
+            this._configuration.Register(createRequestDto.identification);
 
             return newUser;
         }
@@ -230,10 +232,10 @@ namespace rethus_backend.Repository
             throw new NotImplementedException();
         }
 
-        public bool IsUserActive(string email)
+        public bool IsUserActive(string identification)
         {
             var userActive = _context.Users.Count(
-                user => user.email == email && user.Status == UserStatus.active
+                user => user.Identification == identification && user.Status == UserStatus.active
             );
 
             return userActive > 0;
@@ -325,6 +327,11 @@ namespace rethus_backend.Repository
         )
         {
             return await _repositoryPaginationV2.GetPagedAsync(request, selector);
+        }
+
+        public bool IsExistIdentification(string identification)
+        {
+            return _context.Users.Any(x => x.Identification == identification);
         }
     }
 }

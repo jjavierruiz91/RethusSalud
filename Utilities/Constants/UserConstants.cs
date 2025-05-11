@@ -73,6 +73,7 @@ namespace rethus_backend.Utilities.Constants.UserConstants
         public UserStatus? Status { get; set; }
         public string Roles { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string identification { get; set; }
     }
 
     public class UserConstants

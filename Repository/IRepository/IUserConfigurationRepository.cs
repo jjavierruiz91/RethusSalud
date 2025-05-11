@@ -20,7 +20,7 @@ namespace rethus_backend.Repository.IRepository
         ApiResponse updateTermConditionsConfiguration(string id, bool term);
         ApiResponse updateAutomaticStepConfiguration(string id);
         ApiResponse updateAutomaticStateConfiguration(string id);
-        void Register(string email);
+        void Register(string identification);
         public ApiResponse updateStateRejectConfiguration(string userId);
         public ApiResponse updateStateInPogressConfiguration(string userId);
         public ApiResponse updateStateInitialConfiguration(string userId);
@@ -28,5 +28,6 @@ namespace rethus_backend.Repository.IRepository
         Task<ApiResponse> UpdateFormIdConfiguration(string configurationsId, string userFormId);
         ApiResponse UpdateStateUpdateConfiguration(string userId);
         ApiResponse UpdateStateComplateConfiguration(string userId);
+        bool IdentificationNumberMismatch(string userId, string identificationNumber);
     }
 }
