@@ -113,7 +113,18 @@ builder.Services.AddCors(options =>
         "Open",
         policy =>
         {
-            policy.WithOrigins();
+            if (builder.Environment.IsDevelopment())
+            {
+                policy
+                    .WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            }
+            else
+            {
+                 policy.WithOrigins();
+            }
         }
     );
 });

@@ -738,7 +738,7 @@ namespace rethus_backend.Repository
                 CONSECUTIVO_FECHA = form.ConsecutiveDate,
                 NOMBRE_PROFESIONAL =
                     form.PersonalFirstName.ToUpper() + " " + form.PersonalLastName.ToUpper(),
-                EXPEDIDA_PROFESIONAL = form.PersonalPlaceOfIssue,
+                EXPEDIDA_PROFESIONAL = form.AcademicsGradeDate.ToString("dd/MM/yyyy"),
                 PROFESION_PROFESIONAL = form.AcademicsProgramName.ToUpper(),
                 UNIVERSIDAD_PROFESIONAL = form.AcademicsNameInstitution.ToUpper(),
                 CEDULA_PROFESIONAL = form.PersonalIdentification,
