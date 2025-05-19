@@ -47,7 +47,7 @@ namespace rethus_backend.Utilities.Email.EmailService
             {
                 Console.WriteLine("Error al enviar el correo: " + ex);
                 Console.WriteLine("Error al enviar el correo: " + ex.Message);
-                return true;
+                return false;
             }
         }
 

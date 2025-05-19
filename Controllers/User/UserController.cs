@@ -63,6 +63,18 @@ public class UserController : ApiBaseController
             return BadRequest(_response);
         }
 
+        bool existEmail = _unitOfWork.User.IsExistUser(_user.email);
+
+        if (existEmail)
+        {
+            _response.IsSuccess = false;
+            _response.StatusCode = HttpStatusCode.BadRequest;
+            _response.Messages.Add(
+                "El correo electrónico ingresado ya está registrado. Por favor, utiliza otro o intenta recuperar tu cuenta."
+            );
+            return BadRequest(_response);
+        }
+
         bool user = _unitOfWork.User.IsExistIdentification(_user.identification);
 
         if (user)
@@ -70,7 +82,7 @@ public class UserController : ApiBaseController
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;
             _response.Messages.Add(
-                "Algo salió mal. Por favor, verifica tus credenciales e inténtalo de nuevo."
+                "La identificacion ingresado ya está registrado. Por favor, utiliza otro o intenta recuperar tu cuenta."
             );
             return BadRequest(_response);
         }

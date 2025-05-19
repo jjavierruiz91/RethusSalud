@@ -25,7 +25,9 @@ public class UserPublicController : ApiBaseController
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;
-            _response.Messages.Add("El usuario no puede ser nulo");
+            _response.Messages.Add(
+                "Algo salió mal. Por favor, verifica tus credenciales e inténtalo de nuevo. Si el problema persiste, contacta al soporte técnico."
+            );
             return BadRequest(_response);
         }
 
@@ -39,6 +41,18 @@ public class UserPublicController : ApiBaseController
             return BadRequest(_response);
         }
 
+        bool existEmail = _unitOfWork.User.IsExistUser(_user.email);
+
+        if (existEmail)
+        {
+            _response.IsSuccess = false;
+            _response.StatusCode = HttpStatusCode.BadRequest;
+            _response.Messages.Add(
+                "Algo salió mal. Por favor, verifica tus credenciales e inténtalo de nuevo. Si el problema persiste, contacta al soporte técnico."
+            );
+            return BadRequest(_response);
+        }
+
         bool IsExistIdentification = _unitOfWork.User.IsExistIdentification(_user.identification);
 
         if (IsExistIdentification)
@@ -46,7 +60,7 @@ public class UserPublicController : ApiBaseController
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;
             _response.Messages.Add(
-                "Algo salió mal. Por favor, verifica tus credenciales e inténtalo de nuevo."
+                "Algo salió mal. Por favor, verifica tus credenciales e inténtalo de nuevo. Si el problema persiste, contacta al soporte técnico.."
             );
             return BadRequest(_response);
         }
@@ -56,7 +70,9 @@ public class UserPublicController : ApiBaseController
         {
             _response.IsSuccess = false;
             _response.StatusCode = HttpStatusCode.BadRequest;
-            _response.Messages.Add("Algo salió mal. Por favor, el proceso de guardado fallo!");
+            _response.Messages.Add(
+                "Algo salió mal. Por favor, verifica tus credenciales e inténtalo de nuevo. Si el problema persiste, contacta al soporte técnico."
+            );
             return BadRequest(_response);
         }
 

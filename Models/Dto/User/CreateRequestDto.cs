@@ -14,11 +14,11 @@ namespace rethus_backend.Models.Dto.User
 
     public class CreateUserAdministrativeRequestDto
     {
-        public string? email { get; set; }
-        public string name { get; set; }
-        public string type { get; set; }
-        public string password { get; set; }
-        public string identification { get; set; }
+        public required string email { get; set; }
+        public required string name { get; set; }
+        public required string type { get; set; }
+        public required string password { get; set; }
+        public required string identification { get; set; }
     }
 
     public class UpdateUserAdministrativeRequestDto
