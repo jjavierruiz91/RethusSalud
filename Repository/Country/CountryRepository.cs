@@ -67,7 +67,6 @@ namespace rethus_backend.Repository
                     .OrderBy(c => c.CountryId)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
-                    .OrderByDescending(c => c.Name)
                     .ToListAsync();
 
                 var cacheDuration = TimeSpan.FromDays(7);

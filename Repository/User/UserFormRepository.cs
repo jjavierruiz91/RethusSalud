@@ -744,7 +744,8 @@ namespace rethus_backend.Repository
                 CEDULA_PROFESIONAL = form.PersonalIdentification,
                 TYPE_IDENTIFICATION = UserConstants
                     .GetIdentificationTypeInSpanish(form.PersonalTypeIdentification)
-                    .ToUpper()
+                    .ToUpper(),
+                FECHA_EXPEDICION = form.PersonalPlaceOfIssue.ToUpper()
             };
 
             if (
@@ -831,7 +832,8 @@ namespace rethus_backend.Repository
                 CODIGO_PLAZA = form.Consecutive,
                 TYPE_IDENTIFICATION = UserConstants
                     .GetIdentificationTypeInSpanish(form.PersonalTypeIdentification)
-                    .ToUpper()
+                    .ToUpper(),
+                FECHA_EXPEDICION = form.PersonalPlaceOfIssue.ToUpper()
             };
 
             string jsonContent = await File.ReadAllTextAsync(

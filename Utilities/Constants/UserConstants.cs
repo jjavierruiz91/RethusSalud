@@ -136,7 +136,7 @@ namespace rethus_backend.Utilities.Constants.UserConstants
                 case TypeIdentification.CE:
                     return "Cédula de extranjería";
                 case TypeIdentification.TP:
-                    return "Protección personal";
+                    return "Permiso por proteccion temporal";
                 default:
                     return "Tipo de identificación desconocido";
             }

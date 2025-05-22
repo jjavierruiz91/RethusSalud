@@ -6,6 +6,7 @@ namespace rethus_backend.Utilities.Templates.dto
         public string CONSECUTIVO_FECHA { get; set; }
         public string NOMBRE_PROFESIONAL { get; set; }
         public string EXPEDIDA_PROFESIONAL { get; set; }
+        public string FECHA_EXPEDICION { get; set; }
         public string PROFESION_PROFESIONAL { get; set; }
         public string UNIVERSIDAD_PROFESIONAL { get; set; }
         public string CEDULA_PROFESIONAL { get; set; }
@@ -29,6 +30,7 @@ namespace rethus_backend.Utilities.Templates.dto
         public string TYPE_IDENTIFICATION { get; set; }
         public string EXPEDICION_PROFESIONAL { get; set; }
         public string PROFESION_PROFESIONAL { get; set; }
+        public string FECHA_EXPEDICION { get; set; }
         public string CODIGO_PLAZA { get; set; }
         public string MODALIDAD { get; set; }
         public string NOMBRE_INSTITUCION { get; set; }

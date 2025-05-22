@@ -30,6 +30,7 @@ namespace rethus_backend.Utilities.Templates
                 "${EXPEDIDA_PROFESIONAL}",
                 dto.EXPEDIDA_PROFESIONAL
             );
+            templateContent = templateContent.Replace("${FECHA_EXPEDICION}", dto.FECHA_EXPEDICION);
             templateContent = templateContent.Replace(
                 "${PROFESION_PROFESIONAL}",
                 dto.PROFESION_PROFESIONAL
@@ -73,6 +74,7 @@ namespace rethus_backend.Utilities.Templates
             templateContent = templateContent.Replace("${FIRMA_1}", dto.FIRMA_1);
             templateContent = templateContent.Replace("${FIRMA_APROBO}", dto.FIRMA_APROBO);
             templateContent = templateContent.Replace("${FIRMA_3}", dto.FIRMA_3);
+            templateContent = templateContent.Replace("${FECHA_EXPEDICION}", dto.FECHA_EXPEDICION);
 
             return templateContent;
         }
