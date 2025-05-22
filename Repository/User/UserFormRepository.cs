@@ -738,14 +738,14 @@ namespace rethus_backend.Repository
                 CONSECUTIVO_FECHA = form.ConsecutiveDate,
                 NOMBRE_PROFESIONAL =
                     form.PersonalFirstName.ToUpper() + " " + form.PersonalLastName.ToUpper(),
-                EXPEDIDA_PROFESIONAL = form.AcademicsGradeDate.ToString("dd/MM/yyyy"),
+                EXPEDIDA_PROFESIONAL = form.PersonalPlaceOfIssue.ToUpper(),
                 PROFESION_PROFESIONAL = form.AcademicsProgramName.ToUpper(),
                 UNIVERSIDAD_PROFESIONAL = form.AcademicsNameInstitution.ToUpper(),
                 CEDULA_PROFESIONAL = form.PersonalIdentification,
                 TYPE_IDENTIFICATION = UserConstants
                     .GetIdentificationTypeInSpanish(form.PersonalTypeIdentification)
                     .ToUpper(),
-                FECHA_EXPEDICION = form.PersonalPlaceOfIssue.ToUpper()
+                FECHA_EXPEDICION = form.AcademicsGradeDate.ToString("dd/MM/yyyy")
             };
 
             if (
@@ -833,7 +833,7 @@ namespace rethus_backend.Repository
                 TYPE_IDENTIFICATION = UserConstants
                     .GetIdentificationTypeInSpanish(form.PersonalTypeIdentification)
                     .ToUpper(),
-                FECHA_EXPEDICION = form.PersonalPlaceOfIssue.ToUpper()
+                FECHA_EXPEDICION = form.AcademicsGradeDate.ToString("dd/MM/yyyy")
             };
 
             string jsonContent = await File.ReadAllTextAsync(
