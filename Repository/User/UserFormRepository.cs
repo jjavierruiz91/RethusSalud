@@ -770,7 +770,10 @@ namespace rethus_backend.Repository
 
             foreach (var item in signatures)
             {
-                if (item.SignatureType == SignatureType.Secretary)
+                if (
+                    item.SignatureType == SignatureType.Secretary
+                    && item.ContractStatus == ContractStatus.Contracted
+                )
                 {
                     rethusDto.NOMBRE_FIRMANTE = item.SignatureName;
                     rethusDto.FIRMA_PRINCIPAL = FileHelper.ConvertImageToBase64(
@@ -779,7 +782,10 @@ namespace rethus_backend.Repository
                     rethusDto.TIPO_TRABAJO = item.SignaturePositionType;
                 }
 
-                if (item.SignatureType == SignatureType.Project)
+                if (
+                    item.SignatureType == SignatureType.Project
+                    && item.ContractStatus == ContractStatus.Contracted
+                )
                 {
                     rethusDto.FIRMA_PROYECTO =
                         item.SignatureName + " " + item.SignaturePositionType;
@@ -788,7 +794,10 @@ namespace rethus_backend.Repository
                     );
                 }
 
-                if (item.SignatureType == SignatureType.Review)
+                if (
+                    item.SignatureType == SignatureType.Review
+                    && item.ContractStatus == ContractStatus.Contracted
+                )
                 {
                     rethusDto.FIRMA_REVISION =
                         item.SignatureName + " " + item.SignaturePositionType;
@@ -797,7 +806,10 @@ namespace rethus_backend.Repository
                     );
                 }
 
-                if (item.SignatureType == SignatureType.Approve)
+                if (
+                    item.SignatureType == SignatureType.Approve
+                    && item.ContractStatus == ContractStatus.Contracted
+                )
                 {
                     rethusDto.FIRMA_APROBO = item.SignatureName + " " + item.SignaturePositionType;
                     rethusDto.FIRMA_3 = FileHelper.ConvertImageToBase64(

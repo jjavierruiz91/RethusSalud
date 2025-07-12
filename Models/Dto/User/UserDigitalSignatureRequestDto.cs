@@ -21,6 +21,10 @@ namespace rethus_backend.Models.Dto.User
 
         [Required]
         public IFormFile SignatureImage { get; set; }
+
+        [Required]
+        [EnumDataType(typeof(ContractStatus), ErrorMessage = "El estado de contrato no es válido.")]
+        public ContractStatus ContractStatus { get; set; }
     }
 
     public class UpdateUserDigitalSignatureDto
@@ -44,5 +48,9 @@ namespace rethus_backend.Models.Dto.User
         public string SignaturePositionType { get; set; }
 
         public IFormFile? SignatureImage { get; set; }
+
+        [Required]
+        [EnumDataType(typeof(ContractStatus), ErrorMessage = "El estado de contrato no es válido.")]
+        public ContractStatus ContractStatus { get; set; }
     }
 }

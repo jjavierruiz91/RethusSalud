@@ -26,7 +26,10 @@ namespace rethus_backend.Models
 
         [Required]
         [MaxLength(100)]
-        public string SignaturePositionType { get; set; } = string.Empty; // Nuevo campo agregado con "Signature" alante
+        public string SignaturePositionType { get; set; } = string.Empty;
+
+        [Required]
+        public ContractStatus ContractStatus { get; set; } = ContractStatus.NotContracted;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
@@ -47,5 +50,11 @@ namespace rethus_backend.Models
     {
         Active, // Puede firmar
         Inactive // No puede firmar
+    }
+
+    public enum ContractStatus
+    {
+        Contracted, // Usuario actualmente contratado
+        NotContracted // Usuario no contratado
     }
 }

@@ -42,6 +42,7 @@ public class UserDigitalSignatureController : ApiBaseController
             SignatureType = signature.SignatureType,
             Status = signature.Status,
             SignaturePositionType = signature.SignaturePositionType,
+            ContractStatus = signature.ContractStatus,
         };
 
         _response.Result = mapperSignature;
@@ -124,6 +125,7 @@ public class UserDigitalSignatureController : ApiBaseController
             SignatureType = payload.SignatureType,
             SignatureImagePath = baseUrlFile,
             SignaturePositionType = payload.SignaturePositionType,
+            ContractStatus = payload.ContractStatus,
         };
 
         await _unitOfWork.UserDigitalSignature.AddAsync(signature);
@@ -254,6 +256,7 @@ public class UserDigitalSignatureController : ApiBaseController
         userSignature.SignatureType = payload.SignatureType;
         userSignature.Status = payload.SignatureStatus;
         userSignature.SignaturePositionType = payload.SignaturePositionType;
+        userSignature.ContractStatus = payload.ContractStatus;
 
         await _unitOfWork.UserDigitalSignature.UpdateAsync(userSignature);
 
