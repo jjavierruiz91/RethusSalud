@@ -47,7 +47,8 @@ public class ConvertPdfService
             }
 
             // Crear un archivo temporal para el contenido HTML
-            string tempHtmlPath = Path.GetTempFileName() + ".html"; // Asegúrate de tener una extensión HTML
+            string tempHtmlPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".html");
+            Console.WriteLine(tempHtmlPath);
             File.WriteAllText(tempHtmlPath, htmlContent); // Escribir el contenido en el archivo
 
             // Prepara los argumentos de línea de comando para wkhtmltopdf
