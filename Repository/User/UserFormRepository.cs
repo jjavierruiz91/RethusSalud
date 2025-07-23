@@ -767,7 +767,7 @@ namespace rethus_backend.Repository
             {
                 rethusDto.TEXTO_EXTRANJERO = "";
             }
-
+            var baseImgUrl = "data:image/png;base64,";
             foreach (var item in signatures)
             {
                 if (
@@ -776,7 +776,7 @@ namespace rethus_backend.Repository
                 )
                 {
                     rethusDto.NOMBRE_FIRMANTE = item.SignatureName;
-                    rethusDto.FIRMA_PRINCIPAL = FileHelper.ConvertImageToBase64(
+                    rethusDto.FIRMA_PRINCIPAL = baseImgUrl + FileHelper.ConvertImageToBase64(
                         await FileHelper.GetImageAsync(item.SignatureImagePath)
                     );
                     rethusDto.TIPO_TRABAJO = item.SignaturePositionType;
@@ -789,7 +789,7 @@ namespace rethus_backend.Repository
                 {
                     rethusDto.FIRMA_PROYECTO =
                         item.SignatureName + " " + item.SignaturePositionType;
-                    rethusDto.FIRMA_1 = FileHelper.ConvertImageToBase64(
+                    rethusDto.FIRMA_1 = baseImgUrl + FileHelper.ConvertImageToBase64(
                         await FileHelper.GetImageAsync(item.SignatureImagePath)
                     );
                 }
@@ -801,7 +801,7 @@ namespace rethus_backend.Repository
                 {
                     rethusDto.FIRMA_REVISION =
                         item.SignatureName + " " + item.SignaturePositionType;
-                    rethusDto.FIRMA_2 = FileHelper.ConvertImageToBase64(
+                    rethusDto.FIRMA_2 = baseImgUrl + FileHelper.ConvertImageToBase64(
                         await FileHelper.GetImageAsync(item.SignatureImagePath)
                     );
                 }
@@ -812,7 +812,7 @@ namespace rethus_backend.Repository
                 )
                 {
                     rethusDto.FIRMA_APROBO = item.SignatureName + " " + item.SignaturePositionType;
-                    rethusDto.FIRMA_3 = FileHelper.ConvertImageToBase64(
+                    rethusDto.FIRMA_3 = baseImgUrl + FileHelper.ConvertImageToBase64(
                         await FileHelper.GetImageAsync(item.SignatureImagePath)
                     );
                 }
