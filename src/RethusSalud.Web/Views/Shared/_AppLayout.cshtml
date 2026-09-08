@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Rethus</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/RethusSalud.Web.styles.css" asp-append-version="true" />
+</head>
+<body class="app-body">
+    @{
+        var navItems = new List<(string Icon, string Label, string Controller, string Action)>();
+        var isCiudadano = User.IsInRole(RethusSalud.Domain.Constants.Roles.Ciudadano);
+        var isSuperAdmin = User.IsInRole(RethusSalud.Domain.Constants.Roles.SuperAdmin);
+        var isFuncionario = User.IsInRole(RethusSalud.Domain.Constants.Roles.FuncionarioEtapa1)
+            || User.IsInRole(RethusSalud.Domain.Constants.Roles.FuncionarioEtapa2)
+            || User.IsInRole(RethusSalud.Domain.Constants.Roles.FuncionarioEtapa3)
+            || User.IsInRole(RethusSalud.Domain.Constants.Roles.Inventario);
+
+        if (isCiudadano)
+        {
+            navItems.Add(("home", "Inicio", "Home", "Index"));
+            navItems.Add(("document", "Mi trámite", "Tramite", "Dashboard"));
+        }
+        else if (isSuperAdmin)
+        {
+            navItems.Add(("users", "Usuarios", "Admin", "Usuarios"));
+        }
+        else if (isFuncionario)
+        {
+            navItems.Add(("inbox", "Bandeja de revisión", "Revision", "Bandeja"));
+        }
+        else
+        {
+            navItems.Add(("home", "Inicio", "Home", "Index"));
+        }
+
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        var userName = User.Identity?.Name ?? string.Empty;
+        var userInitial = userName.Length > 0 ? userName[0].ToString().ToUpperInvariant() : "?";
+        var roleLabel = isSuperAdmin ? "Administrador"
+            : isFuncionario ? "Funcionario"
+            : isCiudadano ? "Ciudadano"
+            : "Usuario";
+    }
+
+    <div class="app-shell" id="appShell">
+        <div class="app-sidebar-backdrop" id="appSidebarBackdrop"></div>
+        <aside class="app-sidebar" id="appSidebar">
+            <a class="app-sidebar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <span class="site-navbar-mark">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m8.5 12 2.3 2.3L15.5 9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span>Rethus</span>
+            </a>
+
+            <div class="app-sidebar-institucional">
+                <img src="~/img/institucional/escudo_cesar_2024.png" alt="Escudo de la Gobernación del Cesar" class="app-sidebar-escudo" />
+                <span class="app-sidebar-institucional-label">Gobernación del Cesar</span>
+            </div>
+
+            <nav class="app-sidebar-nav">
+                @foreach (var item in navItems)
+                {
+                    var isActive = currentController == item.Controller;
+                    <a class="app-nav-link @(isActive ? "active" : "")" asp-area="" asp-controller="@item.Controller" asp-action="@item.Action">
+                        <span class="app-nav-icon">@Html.Raw(AppIcon(item.Icon))</span>
+                        <span>@item.Label</span>
+                    </a>
+                }
+            </nav>
+
+            <div class="app-sidebar-footer">
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit" class="app-nav-link app-nav-link-btn">
+                        <span class="app-nav-icon">@Html.Raw(AppIcon("logout"))</span>
+                        <span>Cerrar sesión</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <div class="app-main">
+            <header class="app-topbar">
+                <div class="app-topbar-left">
+                    <button type="button" class="app-sidebar-toggle" id="appSidebarToggle" aria-label="Abrir menu">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                    </button>
+                    <span class="app-topbar-title">@ViewData["Title"]</span>
+                </div>
+                <div class="app-topbar-user">
+                    <span class="app-avatar">@userInitial</span>
+                    <span class="app-topbar-user-info">
+                        <strong>@userName</strong>
+                        <small>@roleLabel</small>
+                    </span>
+                </div>
+            </header>
+
+            <main class="app-content">
+                @if (TempData["Mensaje"] is string mensajeGlobal)
+                {
+                    <div class="alert alert-success">@mensajeGlobal</div>
+                }
+                @if (TempData["Error"] is string errorGlobal)
+                {
+                    <div class="alert alert-danger">@errorGlobal</div>
+                }
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+@functions {
+    string AppIcon(string name) => name switch
+    {
+        "home" =>
+            "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M4 11.5 12 4l8 7.5\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M6 10v9h12v-9\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>",
+        "document" =>
+            "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M7 3h7l4 4v14H7z\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\"/><path d=\"M14 3v4h4\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\"/></svg>",
+        "users" =>
+            "<svg viewBox=\"0 0 24 24\" fill=\"none\"><circle cx=\"9\" cy=\"8\" r=\"3\" stroke=\"currentColor\" stroke-width=\"1.8\"/><path d=\"M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><path d=\"M15 8.2c1.2.4 2 1.5 2 2.8s-.8 2.4-2 2.8M17.5 20c0-2.4-1.4-4.5-3.5-5.5\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"/></svg>",
+        "inbox" =>
+            "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M4 12h4l2 3h4l2-3h4\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\"/><path d=\"M4 12 5.5 5h13L20 12v7H4z\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\"/></svg>",
+        "logout" =>
+            "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M16 8l4 4-4 4M20 12H9\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>",
+        _ => ""
+    };
+}

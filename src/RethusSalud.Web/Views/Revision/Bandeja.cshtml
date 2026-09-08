@@ -2,19 +2,29 @@
 @using RethusSalud.Domain.Enums
 @{
     ViewData["Title"] = "Bandeja de revision";
+    Layout = "_AppLayout";
+    var totalEnProceso = Model.Solicitudes.Count(s => s.Estado == EstadoSolicitud.EnProceso);
+    var totalAprobadas = Model.Solicitudes.Count(s => s.Estado == EstadoSolicitud.Aprobado);
 }
 
-<h1 class="h4">Usuarios - @Model.Etapa</h1>
+<h1>Bandeja de revisión &mdash; @Model.Etapa</h1>
 
-@if (TempData["Mensaje"] is string mensaje)
-{
-    <div class="alert alert-success">@mensaje</div>
-}
-@if (TempData["Error"] is string error)
-{
-    <div class="alert alert-danger">@error</div>
-}
+<div class="app-stat-row">
+    <div class="app-stat-card">
+        <span class="app-stat-card-value">@Model.Solicitudes.Count</span>
+        <span class="app-stat-card-label">Total en bandeja</span>
+    </div>
+    <div class="app-stat-card">
+        <span class="app-stat-card-value">@totalEnProceso</span>
+        <span class="app-stat-card-label">En proceso</span>
+    </div>
+    <div class="app-stat-card">
+        <span class="app-stat-card-value">@totalAprobadas</span>
+        <span class="app-stat-card-label">Aprobadas</span>
+    </div>
+</div>
 
+<div class="app-panel">
 <form method="get" class="row g-2 mb-3">
     <div class="col-auto">
         <input type="text" name="NumeroIdentificacion" class="form-control" placeholder="Identificacion" value="@Model.Filtro.NumeroIdentificacion" />
@@ -70,38 +80,48 @@
     </div>
 </form>
 
-<table class="table table-bordered bg-white">
-    <thead>
-        <tr>
-            <th>Identificacion</th>
-            <th>Nombre</th>
-            <th>Tipo de tramite</th>
-            <th>Estado</th>
-            <th>Etapa actual</th>
-            <th>Fecha de creacion</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var solicitud in Model.Solicitudes)
-        {
+<div class="table-responsive">
+    <table class="table">
+        <thead>
             <tr>
-                <td>@solicitud.Solicitante.NumeroIdentificacion</td>
-                <td>@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</td>
-                <td>@solicitud.TipoTramite</td>
-                <td>@solicitud.Estado</td>
-                <td>@solicitud.EtapaActual</td>
-                <td>@solicitud.FechaCreacion.ToLocalTime().ToString("dd MMM yy, HH:mm")</td>
-                <td>
-                    <a class="btn btn-sm btn-outline-primary" asp-action="Detalle" asp-route-id="@solicitud.Id">Revisar</a>
-                </td>
+                <th>Identificacion</th>
+                <th>Nombre</th>
+                <th>Tipo de tramite</th>
+                <th>Estado</th>
+                <th>Etapa actual</th>
+                <th>Fecha de creacion</th>
+                <th></th>
             </tr>
-        }
-        @if (!Model.Solicitudes.Any())
-        {
-            <tr>
-                <td colspan="7" class="text-center text-muted">Sin resultados. No hay informacion disponible que coincida con tu busqueda.</td>
-            </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var solicitud in Model.Solicitudes)
+            {
+                var badgeClass = solicitud.Estado switch
+                {
+                    EstadoSolicitud.Aprobado => "app-badge-success",
+                    EstadoSolicitud.Rechazado => "app-badge-danger",
+                    EstadoSolicitud.EnProceso => "app-badge-warning",
+                    _ => "app-badge-muted"
+                };
+                <tr>
+                    <td>@solicitud.Solicitante.NumeroIdentificacion</td>
+                    <td>@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</td>
+                    <td>@solicitud.TipoTramite</td>
+                    <td><span class="app-badge @badgeClass">@solicitud.Estado</span></td>
+                    <td>@solicitud.EtapaActual</td>
+                    <td>@solicitud.FechaCreacion.ToLocalTime().ToString("dd MMM yy, HH:mm")</td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary" asp-action="Detalle" asp-route-id="@solicitud.Id">Revisar</a>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Solicitudes.Any())
+            {
+                <tr>
+                    <td colspan="7" class="text-center text-muted">Sin resultados. No hay informacion disponible que coincida con tu busqueda.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+</div>

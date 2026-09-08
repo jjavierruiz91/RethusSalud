@@ -4,9 +4,11 @@
     ViewData["Title"] = "Datos academicos";
 }
 
-<h1 class="h4">Diligenciar informacion</h1>
-<p class="text-muted">Paso 2 de 2: Datos academicos</p>
+@await Html.PartialAsync("_TramiteSteps", 3)
 
+<h1 class="text-center">Datos académicos</h1>
+
+<div class="app-panel mx-auto" style="max-width: 900px">
 <form asp-action="DatosAcademicos" method="post">
     <input type="hidden" asp-for="SolicitudId" />
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
@@ -26,7 +28,7 @@
         </div>
     </div>
 
-    <h2 class="h6 mt-4">Institucion educativa</h2>
+    <h2 class="wizard-subheading">Institucion educativa</h2>
     <div class="row">
         <div class="col-md-4 mb-3">
             <label asp-for="PaisInstitucionId" class="form-label"></label>
@@ -57,7 +59,7 @@
         </div>
     </div>
 
-    <h2 class="h6 mt-4">Convalidacion (si aplica)</h2>
+    <h2 class="wizard-subheading">Convalidacion (si aplica)</h2>
     <div class="row">
         <div class="col-md-4 mb-3">
             <label asp-for="NumeroConvalidacion" class="form-label"></label>
@@ -73,8 +75,9 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Guardar informacion</button>
+    <button type="submit" class="btn auth-submit-btn">Guardar y continuar</button>
 </form>
+</div>
 
 @section Scripts {
     <script>

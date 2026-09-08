@@ -4,9 +4,11 @@
     ViewData["Title"] = "Datos personales";
 }
 
-<h1 class="h4">Diligenciar informacion</h1>
-<p class="text-muted">Paso 1 de 2: Datos personales</p>
+@await Html.PartialAsync("_TramiteSteps", 2)
 
+<h1 class="text-center">Datos personales</h1>
+
+<div class="app-panel mx-auto" style="max-width: 900px">
 <form asp-action="DatosPersonales" method="post">
     <input type="hidden" asp-for="SolicitudId" />
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
@@ -41,7 +43,7 @@
         </div>
     </div>
 
-    <h2 class="h6 mt-4">Nacimiento</h2>
+    <h2 class="wizard-subheading">Nacimiento</h2>
     <div class="row">
         <div class="col-md-4 mb-3">
             <label asp-for="PaisNacimientoId" class="form-label"></label>
@@ -63,7 +65,7 @@
         </div>
     </div>
 
-    <h2 class="h6 mt-4">Residencia</h2>
+    <h2 class="wizard-subheading">Residencia</h2>
     <div class="row">
         <div class="col-md-4 mb-3">
             <label asp-for="PaisResidenciaId" class="form-label"></label>
@@ -105,8 +107,9 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Siguiente</button>
+    <button type="submit" class="btn auth-submit-btn">Siguiente</button>
 </form>
+</div>
 
 @section Scripts {
     <script>

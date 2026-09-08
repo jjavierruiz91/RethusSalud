@@ -1,45 +1,75 @@
 @model RethusSalud.Web.Models.Account.RegisterViewModel
 @{
     ViewData["Title"] = "Registrarse";
+    Layout = "_AuthLayout";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <h1 class="h3 mb-3">Registrarse</h1>
-        <p class="text-muted">Bienvenido al sistema de tramite ReTHUS</p>
+<div class="auth-shell">
+    <div class="auth-card-wrapper">
+        @await Html.PartialAsync("_AuthAside")
 
-        <form asp-action="Register" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-            <div class="mb-3">
-                <label asp-for="Nombre" class="form-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
+        <div class="auth-form-panel">
+            <div class="auth-form-inner">
+                <span class="hero-eyebrow auth-eyebrow-dark">Nuevo registro</span>
+                <h2 class="auth-form-title">Crea tu cuenta</h2>
+                <p class="auth-form-subtitle">Regístrate para iniciar tu trámite ReTHUS.</p>
+
+                <form asp-action="Register" method="post">
+                    <div asp-validation-summary="ModelOnly" class="auth-validation-summary"></div>
+
+                    <div class="auth-field">
+                        <label asp-for="Nombre" class="auth-label"></label>
+                        <input asp-for="Nombre" class="form-control auth-input" placeholder="Tu nombre completo" />
+                        <span asp-validation-for="Nombre" class="auth-field-error"></span>
+                    </div>
+
+                    <div class="auth-field">
+                        <label asp-for="CorreoElectronico" class="auth-label"></label>
+                        <input asp-for="CorreoElectronico" class="form-control auth-input" autocomplete="username" placeholder="nombre@ejemplo.com" />
+                        <span asp-validation-for="CorreoElectronico" class="auth-field-error"></span>
+                    </div>
+
+                    <div class="auth-field">
+                        <label asp-for="NumeroIdentificacion" class="auth-label"></label>
+                        <input asp-for="NumeroIdentificacion" class="form-control auth-input" placeholder="Numero de identificacion" />
+                        <span asp-validation-for="NumeroIdentificacion" class="auth-field-error"></span>
+                    </div>
+
+                    <div class="auth-field">
+                        <label asp-for="Password" class="auth-label"></label>
+                        <div class="auth-password-wrapper">
+                            <input asp-for="Password" class="form-control auth-input" autocomplete="new-password" placeholder="Minimo 8 caracteres" id="registerPassword" />
+                            <button type="button" class="auth-password-toggle" data-toggle-password="registerPassword" aria-label="Mostrar contraseña">
+                                <svg viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
+                            </button>
+                        </div>
+                        <span asp-validation-for="Password" class="auth-field-error"></span>
+                    </div>
+
+                    <div class="auth-field">
+                        <label asp-for="ConfirmarPassword" class="auth-label"></label>
+                        <div class="auth-password-wrapper">
+                            <input asp-for="ConfirmarPassword" class="form-control auth-input" autocomplete="new-password" placeholder="Repite tu contraseña" id="confirmPassword" />
+                            <button type="button" class="auth-password-toggle" data-toggle-password="confirmPassword" aria-label="Mostrar contraseña">
+                                <svg viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
+                            </button>
+                        </div>
+                        <span asp-validation-for="ConfirmarPassword" class="auth-field-error"></span>
+                    </div>
+
+                    <button type="submit" class="btn auth-submit-btn w-100">Registrarse</button>
+                </form>
+
+                <p class="auth-switch-text">
+                    ¿Ya tienes cuenta? <a asp-controller="Account" asp-action="Login">Iniciar sesión</a>
+                </p>
             </div>
-            <div class="mb-3">
-                <label asp-for="CorreoElectronico" class="form-label"></label>
-                <input asp-for="CorreoElectronico" class="form-control" autocomplete="username" />
-                <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
+
+            <div class="auth-form-footer">
+                &copy; 2026 Secretaría de Salud Departamental del Cesar &mdash; Rethus.
+                <a asp-controller="Home" asp-action="Privacy">Política de privacidad</a>
             </div>
-            <div class="mb-3">
-                <label asp-for="NumeroIdentificacion" class="form-label"></label>
-                <input asp-for="NumeroIdentificacion" class="form-control" />
-                <span asp-validation-for="NumeroIdentificacion" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" class="form-control" autocomplete="new-password" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="ConfirmarPassword" class="form-label"></label>
-                <input asp-for="ConfirmarPassword" class="form-control" autocomplete="new-password" />
-                <span asp-validation-for="ConfirmarPassword" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Registrarse</button>
-        </form>
-        <p class="mt-3">
-            <a asp-controller="Account" asp-action="Login">Ya tengo una cuenta, iniciar sesion</a>
-        </p>
+        </div>
     </div>
 </div>
 

@@ -1,39 +1,38 @@
 @model RethusSalud.Web.Models.Admin.CrearUsuarioInternoViewModel
 @{
     ViewData["Title"] = "Creacion de usuario";
+    Layout = "_AppLayout";
     var roles = (List<string>)ViewBag.Roles;
 }
 
-<h1 class="h4">Creacion de usuario</h1>
+<h1>Crear usuario</h1>
 
-<div class="card" style="max-width: 500px">
-    <div class="card-body">
-        <form asp-action="Crear" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-            <div class="mb-3">
-                <label asp-for="Nombre" class="form-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-            </div>
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" />
-            </div>
-            <div class="mb-3">
-                <label asp-for="Rol" class="form-label"></label>
-                <select asp-for="Rol" class="form-select">
-                    <option value="">Seleccionar</option>
-                    @foreach (var r in roles)
-                    {
-                        <option value="@r">@r</option>
-                    }
-                </select>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" class="form-control" />
-            </div>
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <a asp-action="Usuarios" class="btn btn-outline-secondary">Cancelar</a>
-        </form>
-    </div>
+<div class="app-panel" style="max-width: 500px">
+    <form asp-action="Crear" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <div class="mb-3">
+            <label asp-for="Nombre" class="form-label"></label>
+            <input asp-for="Nombre" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Rol" class="form-label"></label>
+            <select asp-for="Rol" class="form-select">
+                <option value="">Seleccionar</option>
+                @foreach (var r in roles)
+                {
+                    <option value="@r">@r</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control" />
+        </div>
+        <button type="submit" class="btn auth-submit-btn">Guardar</button>
+        <a asp-action="Usuarios" class="btn btn-outline-secondary">Cancelar</a>
+    </form>
 </div>

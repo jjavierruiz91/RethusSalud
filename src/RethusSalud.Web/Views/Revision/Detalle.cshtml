@@ -2,6 +2,7 @@
 @using RethusSalud.Domain.Enums
 @{
     ViewData["Title"] = "Informacion del usuario";
+    Layout = "_AppLayout";
     var etiquetas = new Dictionary<TipoDocumentoAdjunto, string>
     {
         [TipoDocumentoAdjunto.CedulaAmpliada] = "Cedula ampliada al 150%",
@@ -11,12 +12,7 @@
     };
 }
 
-<h1 class="h4">Informacion del usuario</h1>
-
-@if (TempData["Error"] is string error)
-{
-    <div class="alert alert-danger">@error</div>
-}
+<h1>Información del usuario</h1>
 
 <div class="row">
     <div class="col-md-8">

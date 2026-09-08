@@ -11,4 +11,7 @@ public class LoginViewModel
     [Required(ErrorMessage = "Ingresa tu contrasena")]
     [DataType(DataType.Password)]
     public string Password { get; set; } = string.Empty;
+
+    [Display(Name = "Mantener sesion iniciada en este dispositivo")]
+    public bool RememberMe { get; set; }
 }

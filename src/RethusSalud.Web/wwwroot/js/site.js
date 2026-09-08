@@ -72,3 +72,71 @@ function initCascadaUbicacion(options) {
         cargarDepartamentos(paisSelect.value, options.departamentoSeleccionado, options.municipioSeleccionado);
     }
 }
+
+(function initPasswordToggles() {
+    document.querySelectorAll('[data-toggle-password]').forEach(function (button) {
+        var input = document.getElementById(button.getAttribute('data-toggle-password'));
+        if (!input) {
+            return;
+        }
+
+        button.addEventListener('click', function () {
+            var isHidden = input.type === 'password';
+            input.type = isHidden ? 'text' : 'password';
+            button.classList.toggle('is-visible', isHidden);
+        });
+    });
+})();
+
+(function initAppSidebarToggle() {
+    var shell = document.getElementById('appShell');
+    var toggle = document.getElementById('appSidebarToggle');
+    var backdrop = document.getElementById('appSidebarBackdrop');
+    if (!shell || !toggle) {
+        return;
+    }
+
+    function close() {
+        shell.classList.remove('app-sidebar-open');
+    }
+
+    toggle.addEventListener('click', function () {
+        shell.classList.toggle('app-sidebar-open');
+    });
+
+    if (backdrop) {
+        backdrop.addEventListener('click', close);
+    }
+})();
+
+(function initHomeSubnavScrollSpy() {
+    var subnav = document.querySelector('.home-subnav');
+    if (!subnav) {
+        return;
+    }
+
+    var links = subnav.querySelectorAll('a[href^="#"]');
+    var sections = [];
+    links.forEach(function (link) {
+        var section = document.querySelector(link.getAttribute('href'));
+        if (section) {
+            sections.push({ link: link, section: section });
+        }
+    });
+
+    if (!sections.length) {
+        return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            var match = sections.find(function (s) { return s.section === entry.target; });
+            if (entry.isIntersecting && match) {
+                links.forEach(function (link) { link.classList.remove('active'); });
+                match.link.classList.add('active');
+            }
+        });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+
+    sections.forEach(function (s) { observer.observe(s.section); });
+})();

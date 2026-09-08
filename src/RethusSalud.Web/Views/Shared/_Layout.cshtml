@@ -9,29 +9,58 @@
     <link rel="stylesheet" href="~/RethusSalud.Web.styles.css" asp-append-version="true" />
 </head>
 <body>
+    @{
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        var brandController = "Home";
+        var brandAction = "Index";
+        if (User.Identity?.IsAuthenticated == true && !User.IsInRole(RethusSalud.Domain.Constants.Roles.Ciudadano))
+        {
+            if (User.IsInRole(RethusSalud.Domain.Constants.Roles.SuperAdmin))
+            {
+                brandController = "Admin";
+                brandAction = "Usuarios";
+            }
+            else if (User.IsInRole(RethusSalud.Domain.Constants.Roles.FuncionarioEtapa1)
+                || User.IsInRole(RethusSalud.Domain.Constants.Roles.FuncionarioEtapa2)
+                || User.IsInRole(RethusSalud.Domain.Constants.Roles.FuncionarioEtapa3)
+                || User.IsInRole(RethusSalud.Domain.Constants.Roles.Inventario))
+            {
+                brandController = "Revision";
+                brandAction = "Bandeja";
+            }
+        }
+    }
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white sticky-top site-navbar">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Rethus</a>
+                <a class="navbar-brand site-navbar-brand" asp-area="" asp-controller="@brandController" asp-action="@brandAction">
+                    <span class="site-navbar-mark">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m8.5 12 2.3 2.3L15.5 9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                    <span>Rethus</span>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
-                        </li>
+                        @if (User.Identity?.IsAuthenticated != true || User.IsInRole(RethusSalud.Domain.Constants.Roles.Ciudadano))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(currentController == "Home" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                            </li>
+                        }
                         @if (User.IsInRole(RethusSalud.Domain.Constants.Roles.SuperAdmin))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Usuarios">Administrar usuarios</a>
+                                <a class="nav-link @(currentController == "Admin" ? "active" : "")" asp-area="" asp-controller="Admin" asp-action="Usuarios">Administrar usuarios</a>
                             </li>
                         }
                         else if (User.IsInRole(RethusSalud.Domain.Constants.Roles.Ciudadano))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Tramite" asp-action="Dashboard">Mi tramite</a>
+                                <a class="nav-link @(currentController == "Tramite" ? "active" : "")" asp-area="" asp-controller="Tramite" asp-action="Dashboard">Mi tramite</a>
                             </li>
                         }
                         else if (User.IsInRole(RethusSalud.Domain.Constants.Roles.FuncionarioEtapa1)
@@ -40,32 +69,32 @@
                             || User.IsInRole(RethusSalud.Domain.Constants.Roles.Inventario))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Revision" asp-action="Bandeja">Bandeja de revision</a>
+                                <a class="nav-link @(currentController == "Revision" ? "active" : "")" asp-area="" asp-controller="Revision" asp-action="Bandeja">Bandeja de revision</a>
                             </li>
                         }
                         else if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Panel">Mi panel</a>
+                                <a class="nav-link @(currentController == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Panel" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Panel">Mi panel</a>
                             </li>
                         }
                     </ul>
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav align-items-sm-center">
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item d-flex align-items-center me-3">
-                                <span class="text-dark">@User.Identity!.Name</span>
+                                <span class="site-navbar-user">@User.Identity!.Name</span>
                             </li>
                             <li class="nav-item">
                                 <form asp-controller="Account" asp-action="Logout" method="post">
-                                    <button type="submit" class="btn btn-link nav-link text-dark">Cerrar sesion</button>
+                                    <button type="submit" class="btn btn-link nav-link site-navbar-logout">Cerrar sesion</button>
                                 </form>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Iniciar sesion</a>
+                                <a class="btn-navbar-outline" asp-controller="Account" asp-action="Login">Iniciar sesión</a>
                             </li>
                         }
                     </ul>
@@ -79,9 +108,49 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="site-footer">
         <div class="container">
-            &copy; 2026 - Secretaria de salud departamental del cesar - Rethus
+            <div class="row g-4 site-footer-top">
+                <div class="col-lg-4">
+                    <a class="site-footer-brand" asp-area="" asp-controller="Home" asp-action="Index">Rethus</a>
+                    <p class="site-footer-text">
+                        Registro Único Nacional del Talento Humano en Salud. Un servicio de la Secretaría de
+                        Salud Departamental del Cesar para el trámite y consulta del certificado ReTHUS.
+                    </p>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <h3 class="site-footer-heading">Enlaces útiles</h3>
+                    <ul class="site-footer-links">
+                        <li><a asp-controller="Home" asp-action="Index">Inicio</a></li>
+                        <li><a asp-controller="Home" asp-action="Index" asp-fragment="sobre-nosotros">Sobre nosotros</a></li>
+                        <li><a asp-controller="Home" asp-action="Index" asp-fragment="proceso">Nuestro proceso</a></li>
+                        <li><a asp-controller="Home" asp-action="Index" asp-fragment="preguntas-frecuentes">Preguntas frecuentes</a></li>
+                        <li><a asp-controller="Consulta" asp-action="Index">Consultar trámite</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <h3 class="site-footer-heading">Contacto</h3>
+                    <ul class="site-footer-contact">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="9" r="2.5" stroke="currentColor" stroke-width="1.8"/></svg>
+                            <span>Calle 16 # 12-120, Edificio Alfonso López Michelsen</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M4 5c0-.6.4-1 1-1h3l2 5-2 1.5a10 10 0 0 0 5 5L14.5 14l5 2v3c0 .6-.4 1-1 1C10.6 20 4 13.4 4 5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                            <a href="tel:+576055885602">605 5885602</a>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="m4 6.5 8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <a href="mailto:contactenos@cesar.gov.co">contactenos@cesar.gov.co</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="site-footer-bottom">
+            <div class="container">
+                &copy; 2026 Secretaría de Salud Departamental del Cesar &mdash; Rethus. Todos los derechos reservados.
+            </div>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

@@ -1,0 +1,19 @@
+@model int
+@{
+    var pasos = new[] { "Términos", "Selección", "Datos personales", "Datos académicos", "Documentos" };
+}
+
+<div class="wizard-steps">
+    @for (var i = 0; i < pasos.Length; i++)
+    {
+        var estado = i < Model ? "done" : i == Model ? "current" : "upcoming";
+        <div class="wizard-step @estado">
+            <span class="wizard-step-number">@(i < Model ? "✓" : (i + 1).ToString())</span>
+            <span class="wizard-step-label">@pasos[i]</span>
+        </div>
+        if (i < pasos.Length - 1)
+        {
+            <span class="wizard-step-connector @(i < Model ? "done" : "")"></span>
+        }
+    }
+</div>

@@ -111,7 +111,7 @@ public class AccountController : Controller
             return View(model);
         }
 
-        var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: true);
+        var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: model.RememberMe, lockoutOnFailure: true);
 
         if (result.Succeeded)
         {
@@ -121,9 +121,25 @@ public class AccountController : Controller
             }
 
             var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user is not null && await _userManager.IsInRoleAsync(user, Roles.Ciudadano))
+            if (user is not null)
             {
-                return RedirectToAction("Dashboard", "Tramite");
+                if (await _userManager.IsInRoleAsync(user, Roles.Ciudadano))
+                {
+                    return RedirectToAction("Dashboard", "Tramite");
+                }
+
+                if (await _userManager.IsInRoleAsync(user, Roles.SuperAdmin))
+                {
+                    return RedirectToAction("Usuarios", "Admin");
+                }
+
+                if (await _userManager.IsInRoleAsync(user, Roles.FuncionarioEtapa1)
+                    || await _userManager.IsInRoleAsync(user, Roles.FuncionarioEtapa2)
+                    || await _userManager.IsInRoleAsync(user, Roles.FuncionarioEtapa3)
+                    || await _userManager.IsInRoleAsync(user, Roles.Inventario))
+                {
+                    return RedirectToAction("Bandeja", "Revision");
+                }
             }
 
             return RedirectToAction("Index", "Home");

@@ -3,15 +3,11 @@
 @using RethusSalud.Domain.Enums
 @{
     ViewData["Title"] = "Mi tramite";
+    Layout = "_AppLayout";
     var solicitante = (Solicitante)ViewBag.Solicitante;
 }
 
-<h1 class="h4">Bienvenido al dashboard</h1>
-
-@if (TempData["Mensaje"] is string mensaje)
-{
-    <div class="alert alert-info">@mensaje</div>
-}
+<h1>Bienvenido, @solicitante.Nombres</h1>
 
 <div class="card">
     <div class="card-body">
