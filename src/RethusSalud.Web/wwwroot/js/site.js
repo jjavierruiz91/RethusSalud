@@ -108,6 +108,16 @@ function initCascadaUbicacion(options) {
     });
 })();
 
+(function initAutoCloseModals() {
+    document.querySelectorAll('[data-autoclose]').forEach(function (el) {
+        var delay = parseInt(el.getAttribute('data-autoclose'), 10) || 5000;
+        var modal = bootstrap.Modal.getOrCreateInstance(el);
+        modal.show();
+        var timer = setTimeout(function () { modal.hide(); }, delay);
+        el.addEventListener('hidden.bs.modal', function () { clearTimeout(timer); }, { once: true });
+    });
+})();
+
 (function initAppSidebarToggle() {
     var shell = document.getElementById('appShell');
     var toggle = document.getElementById('appSidebarToggle');

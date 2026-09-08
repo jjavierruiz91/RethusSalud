@@ -96,12 +96,21 @@
                                 <button type="button" class="icon-btn icon-btn-secondary" data-bs-toggle="modal" data-bs-target="#passwordModal-@usuario.Id" title="Cambiar contraseña">
                                     @Html.Raw(RowIcon("key"))
                                 </button>
-                                <form asp-action="ToggleActivo" method="post" class="d-inline">
-                                    <input type="hidden" name="id" value="@usuario.Id" />
-                                    <button type="submit" class="icon-btn @(usuario.Activo ? "icon-btn-danger" : "icon-btn-success")" title="@(usuario.Activo ? "Desactivar usuario" : "Activar usuario")">
+                                @if (usuario.Activo)
+                                {
+                                    <button type="button" class="icon-btn icon-btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeactivate-@usuario.Id" title="Desactivar usuario">
                                         @Html.Raw(RowIcon("power"))
                                     </button>
-                                </form>
+                                }
+                                else
+                                {
+                                    <form asp-action="ToggleActivo" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@usuario.Id" />
+                                        <button type="submit" class="icon-btn icon-btn-success" title="Activar usuario">
+                                            @Html.Raw(RowIcon("power"))
+                                        </button>
+                                    </form>
+                                }
                             </div>
                         </td>
                     </tr>
@@ -257,6 +266,27 @@
                         <button type="submit" class="btn auth-submit-btn">Actualizar contraseña</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmDeactivate-@usuario.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center pt-4">
+                    <div class="confirm-modal-icon confirm-modal-icon-danger">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M10.3 3.9 2.5 17.5A1.5 1.5 0 0 0 3.8 20h16.4a1.5 1.5 0 0 0 1.3-2.5L13.7 3.9a1.5 1.5 0 0 0-2.4 0z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                    </div>
+                    <h5 class="modal-title mb-2">¿Desactivar a @usuario.Nombre?</h5>
+                    <p class="text-muted mb-0">Esta persona no podrá iniciar sesión hasta que la actives de nuevo.</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form asp-action="ToggleActivo" method="post" class="m-0">
+                        <input type="hidden" name="id" value="@usuario.Id" />
+                        <button type="submit" class="btn btn-danger">Sí, desactivar</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

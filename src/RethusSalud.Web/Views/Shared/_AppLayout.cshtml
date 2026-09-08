@@ -53,15 +53,9 @@
     <div class="app-shell" id="appShell">
         <div class="app-sidebar-backdrop" id="appSidebarBackdrop"></div>
         <aside class="app-sidebar" id="appSidebar">
-            <a class="app-sidebar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                <span class="site-navbar-mark">
-                    <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m8.5 12 2.3 2.3L15.5 9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </span>
-                <span>Rethus</span>
-            </a>
-
-            <div class="app-sidebar-institucional">
+            <div class="app-sidebar-brand">
                 <img src="~/img/institucional/escudo_cesar_2024.png" alt="Escudo de la Gobernación del Cesar" class="app-sidebar-escudo" />
+                <span class="app-sidebar-brand-text">Rethus</span>
                 <span class="app-sidebar-institucional-label">Gobernación del Cesar</span>
             </div>
 
@@ -94,30 +88,54 @@
                     </button>
                     <span class="app-topbar-title">@ViewData["Title"]</span>
                 </div>
-                <div class="app-topbar-user">
-                    @if (!string.IsNullOrEmpty(miFotoUrl))
-                    {
-                        <img src="@miFotoUrl" alt="" class="app-avatar app-avatar-img" />
-                    }
-                    else
-                    {
-                        <span class="app-avatar">@userInitial</span>
-                    }
-                    <span class="app-topbar-user-info">
-                        <strong>@userName</strong>
-                        <small>@roleLabel</small>
-                    </span>
-                    <button type="button" class="icon-btn icon-btn-secondary" data-bs-toggle="modal" data-bs-target="#miPasswordModal" title="Cambiar mi contraseña" aria-label="Cambiar mi contraseña">
-                        <svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="15" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M11 12l9-9M17 6l3 3M14 9l2.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="dropdown app-user-menu">
+                    <button type="button" class="app-topbar-user" data-bs-toggle="dropdown" aria-expanded="false">
+                        @if (!string.IsNullOrEmpty(miFotoUrl))
+                        {
+                            <img src="@miFotoUrl" alt="" class="app-avatar app-avatar-img" />
+                        }
+                        else
+                        {
+                            <span class="app-avatar">@userInitial</span>
+                        }
+                        <span class="app-topbar-user-info">
+                            <strong>@userName</strong>
+                            <small>@roleLabel</small>
+                        </span>
+                        <svg viewBox="0 0 24 24" fill="none" class="app-user-menu-chevron"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </button>
+                    <div class="dropdown-menu dropdown-menu-end app-user-dropdown">
+                        <div class="app-user-dropdown-header">
+                            @if (!string.IsNullOrEmpty(miFotoUrl))
+                            {
+                                <img src="@miFotoUrl" alt="" class="app-avatar app-avatar-img" style="width:64px;height:64px" />
+                            }
+                            else
+                            {
+                                <span class="app-avatar" style="width:64px;height:64px;font-size:1.5rem">@userInitial</span>
+                            }
+                            <strong>@userName</strong>
+                            <span class="app-badge app-badge-muted">@roleLabel</span>
+                        </div>
+                        <button type="button" class="app-user-dropdown-item" data-bs-toggle="modal" data-bs-target="#miPasswordModal">
+                            <svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="15" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M11 12l9-9M17 6l3 3M14 9l2.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Cambiar contraseña
+                        </button>
+                        <a class="app-user-dropdown-item" asp-controller="Home" asp-action="Panel">
+                            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M4 20c0-3.9 3.6-7 8-7s8 3.1 8 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                            Mi perfil
+                        </a>
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                            <button type="submit" class="app-user-dropdown-item app-user-dropdown-item-danger">
+                                <svg viewBox="0 0 24 24" fill="none"><path d="M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 8l4 4-4 4M20 12H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                Cerrar sesión
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </header>
 
             <main class="app-content">
-                @if (TempData["Mensaje"] is string mensajeGlobal)
-                {
-                    <div class="alert alert-success">@mensajeGlobal</div>
-                }
                 @if (TempData["Error"] is string errorGlobal)
                 {
                     <div class="alert alert-danger">@errorGlobal</div>
@@ -126,6 +144,23 @@
             </main>
         </div>
     </div>
+
+    @if (TempData["Mensaje"] is string mensajeGlobal)
+    {
+        <div class="modal fade" id="successFeedbackModal" tabindex="-1" aria-hidden="true" data-autoclose="5000">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-center py-4">
+                        <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        <div class="confirm-modal-icon confirm-modal-icon-success">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                        <p class="mb-0 fw-semibold">@mensajeGlobal</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 
     <div class="modal fade" id="miPasswordModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">

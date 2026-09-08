@@ -75,7 +75,7 @@
                         else if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
-                                <a class="nav-link @(currentController == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Panel" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Panel">Mi panel</a>
+                                <a class="nav-link @(currentController == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Panel" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Panel">Mi perfil</a>
                             </li>
                         }
                     </ul>

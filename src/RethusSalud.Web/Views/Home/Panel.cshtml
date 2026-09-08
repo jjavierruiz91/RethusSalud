@@ -1,10 +1,45 @@
+@model RethusSalud.Infrastructure.Identity.ApplicationUser
 @{
-    ViewData["Title"] = "Mi panel";
+    ViewData["Title"] = "Mi perfil";
     Layout = "_AppLayout";
+    var roleLabel = string.Join(", ", ((System.Security.Claims.ClaimsPrincipal)User).Claims
+        .Where(c => c.Type == System.Security.Claims.ClaimTypes.Role)
+        .Select(c => c.Value));
+    var inicial = Model.NombreCompleto.Length > 0 ? Model.NombreCompleto[0].ToString().ToUpperInvariant() : "?";
 }
 
-<h1>Bienvenido al panel</h1>
-<div class="app-panel">
-    <p class="text-muted">Sesion iniciada como <strong>@User.Identity?.Name</strong>.</p>
-    <p class="mb-0">Roles: @string.Join(", ", ((System.Security.Claims.ClaimsPrincipal)User).Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value))</p>
+<h1>Mi perfil</h1>
+
+<div class="app-panel" style="max-width: 560px">
+    <div class="profile-card-header">
+        @if (!string.IsNullOrEmpty(Model.FotoUrl))
+        {
+            <img src="@Model.FotoUrl" alt="" class="app-avatar app-avatar-img" style="width:80px;height:80px" />
+        }
+        else
+        {
+            <span class="app-avatar" style="width:80px;height:80px;font-size:1.8rem">@inicial</span>
+        }
+        <div>
+            <h2 class="profile-card-name">@Model.NombreCompleto</h2>
+            <span class="app-badge app-badge-muted">@roleLabel</span>
+        </div>
+    </div>
+
+    <dl class="profile-card-details">
+        <div>
+            <dt>Correo electrónico</dt>
+            <dd>@Model.Email</dd>
+        </div>
+        <div>
+            <dt>Estado de la cuenta</dt>
+            <dd>
+                <span class="app-badge @(Model.Activo ? "app-badge-success" : "app-badge-muted")">
+                    @(Model.Activo ? "Activo" : "Inactivo")
+                </span>
+            </dd>
+        </div>
+    </dl>
+
+    <button type="button" class="btn auth-submit-btn" data-bs-toggle="modal" data-bs-target="#miPasswordModal">Cambiar contraseña</button>
 </div>

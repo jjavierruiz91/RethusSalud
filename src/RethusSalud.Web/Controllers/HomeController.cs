@@ -1,8 +1,10 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RethusSalud.Application.Services;
 using RethusSalud.Domain.Enums;
+using RethusSalud.Infrastructure.Identity;
 using RethusSalud.Web.Models;
 
 namespace RethusSalud.Web.Controllers;
@@ -11,11 +13,13 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly CatalogoService _catalogos;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public HomeController(ILogger<HomeController> logger, CatalogoService catalogos)
+    public HomeController(ILogger<HomeController> logger, CatalogoService catalogos, UserManager<ApplicationUser> userManager)
     {
         _logger = logger;
         _catalogos = catalogos;
+        _userManager = userManager;
     }
 
     public async Task<IActionResult> Index()
@@ -25,9 +29,15 @@ public class HomeController : Controller
     }
 
     [Authorize]
-    public IActionResult Panel()
+    public async Task<IActionResult> Panel()
     {
-        return View();
+        var usuario = await _userManager.GetUserAsync(User);
+        if (usuario is null)
+        {
+            return Challenge();
+        }
+
+        return View(usuario);
     }
 
     public IActionResult Privacy()
