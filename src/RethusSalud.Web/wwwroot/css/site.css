@@ -1308,6 +1308,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.65rem;
+  padding: 0.3rem 0.5rem;
 }
 
 .app-avatar {
@@ -1322,6 +1323,89 @@ body {
   color: #fff;
   font-weight: 700;
   font-size: 0.95rem;
+  overflow: hidden;
+}
+
+.app-avatar-lg {
+  width: 46px;
+  height: 46px;
+  font-size: 1.05rem;
+}
+
+/* ---- Symmetric icon action buttons (tables, topbar) ---- */
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  padding: 0;
+  border-radius: 0.55rem;
+  border: 1.5px solid var(--rethus-border);
+  background: #fff;
+  color: var(--rethus-muted);
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.icon-btn-primary {
+  color: var(--rethus-blue);
+  border-color: rgba(15, 95, 166, 0.35);
+}
+
+.icon-btn-primary:hover {
+  background: var(--rethus-blue);
+  color: #fff;
+  border-color: var(--rethus-blue);
+}
+
+.icon-btn-secondary {
+  color: var(--rethus-muted);
+}
+
+.icon-btn-secondary:hover {
+  background: var(--rethus-bg-soft);
+  color: var(--rethus-blue-deep);
+  border-color: var(--rethus-border);
+}
+
+.icon-btn-success {
+  color: #1e8449;
+  border-color: rgba(30, 132, 73, 0.35);
+}
+
+.icon-btn-success:hover {
+  background: #1e8449;
+  color: #fff;
+  border-color: #1e8449;
+}
+
+.icon-btn-danger {
+  color: #c0392b;
+  border-color: rgba(192, 57, 43, 0.35);
+}
+
+.icon-btn-danger:hover {
+  background: #c0392b;
+  color: #fff;
+  border-color: #c0392b;
+}
+
+.app-avatar-img {
+  object-fit: cover;
+  width: 38px;
+  height: 38px;
+}
+
+.app-avatar-img.app-avatar-lg {
+  width: 46px;
+  height: 46px;
 }
 
 .app-topbar-user-info {
@@ -1663,4 +1747,8 @@ body {
 .profesion-item span {
   font-weight: 500;
   color: var(--rethus-ink);
+}
+
+.filter-role-select {
+  min-width: 220px;
 }

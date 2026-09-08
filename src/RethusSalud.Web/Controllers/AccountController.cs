@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -155,6 +156,42 @@ public class AccountController : Controller
         }
 
         return View(model);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CambiarMiPassword(CambiarMiPasswordViewModel model, string? returnUrl)
+    {
+        var referer = Request.Headers.Referer.ToString();
+        var volverA = !string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)
+            ? returnUrl
+            : !string.IsNullOrEmpty(referer) && Url.IsLocalUrl(referer)
+                ? referer
+                : Url.Action("Index", "Home")!;
+
+        if (!ModelState.IsValid)
+        {
+            TempData["Error"] = "Revisa los datos de la contrasena e intenta nuevamente.";
+            return Redirect(volverA);
+        }
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null)
+        {
+            return Redirect(volverA);
+        }
+
+        var resultado = await _userManager.ChangePasswordAsync(user, model.PasswordActual, model.NuevaPassword);
+        if (!resultado.Succeeded)
+        {
+            TempData["Error"] = string.Join(" ", resultado.Errors.Select(e => e.Description));
+            return Redirect(volverA);
+        }
+
+        await _signInManager.RefreshSignInAsync(user);
+        TempData["Mensaje"] = "Tu contrasena fue actualizada correctamente.";
+        return Redirect(volverA);
     }
 
     [HttpPost]

@@ -1,3 +1,6 @@
+@using Microsoft.AspNetCore.Identity
+@using RethusSalud.Infrastructure.Identity
+@inject UserManager<ApplicationUser> AppLayoutUserManager
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -43,6 +46,8 @@
             : isFuncionario ? "Funcionario"
             : isCiudadano ? "Ciudadano"
             : "Usuario";
+        var currentAppUser = await AppLayoutUserManager.GetUserAsync(User);
+        var miFotoUrl = currentAppUser?.FotoUrl;
     }
 
     <div class="app-shell" id="appShell">
@@ -90,11 +95,21 @@
                     <span class="app-topbar-title">@ViewData["Title"]</span>
                 </div>
                 <div class="app-topbar-user">
-                    <span class="app-avatar">@userInitial</span>
+                    @if (!string.IsNullOrEmpty(miFotoUrl))
+                    {
+                        <img src="@miFotoUrl" alt="" class="app-avatar app-avatar-img" />
+                    }
+                    else
+                    {
+                        <span class="app-avatar">@userInitial</span>
+                    }
                     <span class="app-topbar-user-info">
                         <strong>@userName</strong>
                         <small>@roleLabel</small>
                     </span>
+                    <button type="button" class="icon-btn icon-btn-secondary" data-bs-toggle="modal" data-bs-target="#miPasswordModal" title="Cambiar mi contraseña" aria-label="Cambiar mi contraseña">
+                        <svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="15" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M11 12l9-9M17 6l3 3M14 9l2.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
                 </div>
             </header>
 
@@ -109,6 +124,53 @@
                 }
                 @RenderBody()
             </main>
+        </div>
+    </div>
+
+    <div class="modal fade" id="miPasswordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form asp-controller="Account" asp-action="CambiarMiPassword" method="post">
+                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                    <div class="modal-header">
+                        <h5 class="modal-title">Cambiar mi contraseña</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Contraseña actual</label>
+                            <div class="auth-password-wrapper">
+                                <input name="PasswordActual" type="password" id="miPasswordActual" class="form-control auth-input" required />
+                                <button type="button" class="auth-password-toggle" data-toggle-password="miPasswordActual" aria-label="Mostrar contraseña">
+                                    <svg viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nueva contraseña</label>
+                            <div class="auth-password-wrapper">
+                                <input name="NuevaPassword" type="password" id="miPasswordNueva" class="form-control auth-input" minlength="8" required />
+                                <button type="button" class="auth-password-toggle" data-toggle-password="miPasswordNueva" aria-label="Mostrar contraseña">
+                                    <svg viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Confirmar nueva contraseña</label>
+                            <div class="auth-password-wrapper">
+                                <input name="ConfirmarPassword" type="password" id="miPasswordConfirmar" class="form-control auth-input" minlength="8" required data-match-password="miPasswordNueva" />
+                                <button type="button" class="auth-password-toggle" data-toggle-password="miPasswordConfirmar" aria-label="Mostrar contraseña">
+                                    <svg viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn auth-submit-btn">Actualizar contraseña</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 

@@ -88,6 +88,26 @@ function initCascadaUbicacion(options) {
     });
 })();
 
+(function initPasswordMatchValidation() {
+    document.querySelectorAll('[data-match-password]').forEach(function (confirmInput) {
+        var newInput = document.getElementById(confirmInput.getAttribute('data-match-password'));
+        if (!newInput) {
+            return;
+        }
+
+        function validar() {
+            if (confirmInput.value && confirmInput.value !== newInput.value) {
+                confirmInput.setCustomValidity('Las contrasenas no coinciden');
+            } else {
+                confirmInput.setCustomValidity('');
+            }
+        }
+
+        confirmInput.addEventListener('input', validar);
+        newInput.addEventListener('input', validar);
+    });
+})();
+
 (function initAppSidebarToggle() {
     var shell = document.getElementById('appShell');
     var toggle = document.getElementById('appSidebarToggle');

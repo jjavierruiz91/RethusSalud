@@ -31,7 +31,7 @@
                 <input type="text" name="nombre" class="form-control" placeholder="Digite el nombre" value="@ViewBag.Nombre" />
             </div>
             <div class="col-auto">
-                <select name="rol" class="form-select">
+                <select name="rol" class="form-select filter-role-select" onchange="this.form.submit()">
                     <option value="">Roles</option>
                     @foreach (var r in roles)
                     {
@@ -51,13 +51,14 @@
                 <a asp-action="Usuarios" class="btn btn-outline-secondary">Limpiar</a>
             </div>
         </form>
-        <a class="btn auth-submit-btn" asp-action="Crear">+ Crear usuario</a>
+        <button type="button" class="btn auth-submit-btn" data-bs-toggle="modal" data-bs-target="#createUserModal">+ Crear usuario</button>
     </div>
 
     <div class="table-responsive">
         <table class="table">
             <thead>
                 <tr>
+                    <th></th>
                     <th>Nombre</th>
                     <th>Identificación</th>
                     <th>Rol</th>
@@ -69,6 +70,16 @@
                 @foreach (var usuario in Model)
                 {
                     <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(usuario.FotoUrl))
+                            {
+                                <img src="@usuario.FotoUrl" alt="Foto de @usuario.Nombre" class="app-avatar app-avatar-img app-avatar-lg" />
+                            }
+                            else
+                            {
+                                <span class="app-avatar app-avatar-lg">@(usuario.Nombre.Length > 0 ? usuario.Nombre[0].ToString().ToUpperInvariant() : "?")</span>
+                            }
+                        </td>
                         <td>@usuario.Nombre</td>
                         <td>@usuario.Email</td>
                         <td>@usuario.Rol</td>
@@ -77,23 +88,192 @@
                                 @(usuario.Activo ? "Activo" : "Inactivo")
                             </span>
                         </td>
-                        <td>
-                            <form asp-action="ToggleActivo" method="post" class="d-inline">
-                                <input type="hidden" name="id" value="@usuario.Id" />
-                                <button type="submit" class="btn btn-sm @(usuario.Activo ? "btn-outline-danger" : "btn-outline-success")">
-                                    @(usuario.Activo ? "Desactivar" : "Activar")
+                        <td class="text-end">
+                            <div class="d-inline-flex gap-1">
+                                <button type="button" class="icon-btn icon-btn-primary" data-bs-toggle="modal" data-bs-target="#editModal-@usuario.Id" title="Editar usuario">
+                                    @Html.Raw(RowIcon("edit"))
                                 </button>
-                            </form>
+                                <button type="button" class="icon-btn icon-btn-secondary" data-bs-toggle="modal" data-bs-target="#passwordModal-@usuario.Id" title="Cambiar contraseña">
+                                    @Html.Raw(RowIcon("key"))
+                                </button>
+                                <form asp-action="ToggleActivo" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@usuario.Id" />
+                                    <button type="submit" class="icon-btn @(usuario.Activo ? "icon-btn-danger" : "icon-btn-success")" title="@(usuario.Activo ? "Desactivar usuario" : "Activar usuario")">
+                                        @Html.Raw(RowIcon("power"))
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 }
                 @if (!Model.Any())
                 {
                     <tr>
-                        <td colspan="5" class="text-center text-muted">Sin resultados.</td>
+                        <td colspan="6" class="text-center text-muted">Sin resultados.</td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
 </div>
+
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="Crear" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Crear usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input name="Nombre" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Correo electrónico</label>
+                        <input name="Email" type="email" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Rol</label>
+                        <select name="Rol" class="form-select" required>
+                            <option value="">Seleccionar</option>
+                            @foreach (var r in roles)
+                            {
+                                <option value="@r">@r</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contraseña</label>
+                        <div class="auth-password-wrapper">
+                            <input name="Password" type="password" id="createPassword" class="form-control auth-input" minlength="8" required />
+                            <button type="button" class="auth-password-toggle" data-toggle-password="createPassword" aria-label="Mostrar contraseña">
+                                @Html.Raw(EyeIcon())
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn auth-submit-btn">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@foreach (var usuario in Model)
+{
+    <div class="modal fade" id="editModal-@usuario.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form asp-action="Editar" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="Id" value="@usuario.Id" />
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            @if (!string.IsNullOrEmpty(usuario.FotoUrl))
+                            {
+                                <img src="@usuario.FotoUrl" alt="" class="app-avatar app-avatar-img" style="width:56px;height:56px" />
+                            }
+                            else
+                            {
+                                <span class="app-avatar" style="width:56px;height:56px;font-size:1.2rem">@(usuario.Nombre.Length > 0 ? usuario.Nombre[0].ToString().ToUpperInvariant() : "?")</span>
+                            }
+                            <div class="flex-grow-1">
+                                <label class="form-label mb-1">Foto (JPG o PNG)</label>
+                                <input name="Foto" type="file" accept="image/jpeg,image/png" class="form-control form-control-sm" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input name="Nombre" class="form-control" value="@usuario.Nombre" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Correo electrónico</label>
+                            <input name="Email" type="email" class="form-control" value="@usuario.Email" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Rol</label>
+                            <select name="Rol" class="form-select" required>
+                                @foreach (var r in roles)
+                                {
+                                    @if (usuario.Rol == r)
+                                    {
+                                        <option value="@r" selected>@r</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@r">@r</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn auth-submit-btn">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="passwordModal-@usuario.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form asp-action="CambiarPassword" method="post">
+                    <input type="hidden" name="Id" value="@usuario.Id" />
+                    <div class="modal-header">
+                        <h5 class="modal-title">Cambiar contraseña &mdash; @usuario.Nombre</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Nueva contraseña</label>
+                            <div class="auth-password-wrapper">
+                                <input name="NuevaPassword" type="password" id="nuevaPass-@usuario.Id" class="form-control auth-input" minlength="8" required />
+                                <button type="button" class="auth-password-toggle" data-toggle-password="nuevaPass-@usuario.Id" aria-label="Mostrar contraseña">
+                                    @Html.Raw(EyeIcon())
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Confirmar contraseña</label>
+                            <div class="auth-password-wrapper">
+                                <input name="ConfirmarPassword" type="password" id="confirmarPass-@usuario.Id" class="form-control auth-input" minlength="8" required data-match-password="nuevaPass-@usuario.Id" />
+                                <button type="button" class="auth-password-toggle" data-toggle-password="confirmarPass-@usuario.Id" aria-label="Mostrar contraseña">
+                                    @Html.Raw(EyeIcon())
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn auth-submit-btn">Actualizar contraseña</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@functions {
+    string EyeIcon() =>
+        "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z\" stroke=\"currentColor\" stroke-width=\"1.6\"/><circle cx=\"12\" cy=\"12\" r=\"3\" stroke=\"currentColor\" stroke-width=\"1.6\"/></svg>";
+
+    string RowIcon(string name) => name switch
+    {
+        "edit" =>
+            "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M12 20h9\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><path d=\"M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\"/></svg>",
+        "key" =>
+            "<svg viewBox=\"0 0 24 24\" fill=\"none\"><circle cx=\"8\" cy=\"15\" r=\"4\" stroke=\"currentColor\" stroke-width=\"1.8\"/><path d=\"M11 12l9-9M17 6l3 3M14 9l2.5 2.5\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>",
+        "power" =>
+            "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M12 3v8\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><path d=\"M6.5 6.5a8 8 0 1 0 11 0\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"/></svg>",
+        _ => ""
+    };
+}
