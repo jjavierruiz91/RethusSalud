@@ -1,0 +1,91 @@
+@model RethusSalud.Web.Models.Tramite.DatosAcademicosViewModel
+@using RethusSalud.Domain.Enums
+@{
+    ViewData["Title"] = "Datos academicos";
+}
+
+<h1 class="h4">Diligenciar informacion</h1>
+<p class="text-muted">Paso 2 de 2: Datos academicos</p>
+
+<form asp-action="DatosAcademicos" method="post">
+    <input type="hidden" asp-for="SolicitudId" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="OrigenTitulo" class="form-label"></label>
+            <select asp-for="OrigenTitulo" class="form-select" asp-items="Html.GetEnumSelectList<OrigenTitulo>()"></select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="TipoInstitucion" class="form-label"></label>
+            <select asp-for="TipoInstitucion" class="form-select" asp-items="Html.GetEnumSelectList<TipoInstitucion>()"></select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="TipoPrograma" class="form-label"></label>
+            <input asp-for="TipoPrograma" class="form-control" placeholder="Universitario" />
+        </div>
+    </div>
+
+    <h2 class="h6 mt-4">Institucion educativa</h2>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="PaisInstitucionId" class="form-label"></label>
+            <select asp-for="PaisInstitucionId" id="paisInstitucion" class="form-select" asp-items="ViewBag.Paises"></select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="DepartamentoInstitucionId" class="form-label"></label>
+            <select asp-for="DepartamentoInstitucionId" id="departamentoInstitucion" class="form-select"></select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="MunicipioInstitucionId" class="form-label"></label>
+            <select asp-for="MunicipioInstitucionId" id="municipioInstitucion" class="form-select"></select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="NombreInstitucion" class="form-label"></label>
+            <input asp-for="NombreInstitucion" class="form-control" />
+        </div>
+        <div class="col-md-3 mb-3">
+            <label asp-for="NombrePrograma" class="form-label"></label>
+            <input asp-for="NombrePrograma" class="form-control" />
+        </div>
+        <div class="col-md-3 mb-3">
+            <label asp-for="FechaGrado" class="form-label"></label>
+            <input asp-for="FechaGrado" class="form-control" />
+        </div>
+    </div>
+
+    <h2 class="h6 mt-4">Convalidacion (si aplica)</h2>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="NumeroConvalidacion" class="form-label"></label>
+            <input asp-for="NumeroConvalidacion" class="form-control" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="FechaConvalidacion" class="form-label"></label>
+            <input asp-for="FechaConvalidacion" class="form-control" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="TituloEquivalente" class="form-label"></label>
+            <input asp-for="TituloEquivalente" class="form-control" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar informacion</button>
+</form>
+
+@section Scripts {
+    <script>
+        initCascadaUbicacion({
+            paisId: 'paisInstitucion',
+            departamentoId: 'departamentoInstitucion',
+            municipioId: 'municipioInstitucion',
+            departamentosUrl: '@Url.Action("Departamentos")',
+            municipiosUrl: '@Url.Action("Municipios")',
+            departamentoSeleccionado: '@Model.DepartamentoInstitucionId',
+            municipioSeleccionado: '@Model.MunicipioInstitucionId'
+        });
+    </script>
+}

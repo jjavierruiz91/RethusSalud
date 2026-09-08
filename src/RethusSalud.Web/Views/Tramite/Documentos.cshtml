@@ -1,0 +1,49 @@
+@model RethusSalud.Domain.Entities.Solicitud
+@using RethusSalud.Domain.Enums
+@{
+    ViewData["Title"] = "Carga de archivos";
+    var requeridos = (List<TipoDocumentoAdjunto>)ViewBag.DocumentosRequeridos;
+    var etiquetas = new Dictionary<TipoDocumentoAdjunto, string>
+    {
+        [TipoDocumentoAdjunto.CedulaAmpliada] = "Cedula ampliada al 150%",
+        [TipoDocumentoAdjunto.DiplomaGrado] = "Diploma de grado",
+        [TipoDocumentoAdjunto.ActaGrado] = "Acta de grado",
+        [TipoDocumentoAdjunto.TarjetaProfesional] = "Tarjeta profesional"
+    };
+}
+
+<h1 class="h4">Carga de archivos</h1>
+
+@if (TempData["Error"] is string error)
+{
+    <div class="alert alert-danger">@error</div>
+}
+
+@foreach (var tipo in requeridos)
+{
+    var cargado = Model.Archivos.FirstOrDefault(a => a.TipoDocumento == tipo);
+    <div class="card mb-3">
+        <div class="card-body">
+            <h2 class="h6">@etiquetas[tipo]</h2>
+            @if (cargado is not null)
+            {
+                <p class="text-success mb-2">Cargado: @cargado.NombreArchivo</p>
+            }
+            else
+            {
+                <p class="text-muted mb-2">Pendiente de cargar</p>
+            }
+            <form asp-action="CargarDocumento" method="post" enctype="multipart/form-data" class="d-flex gap-2">
+                <input type="hidden" name="solicitudId" value="@Model.Id" />
+                <input type="hidden" name="tipoDocumento" value="@tipo" />
+                <input type="file" name="archivo" class="form-control" accept=".pdf,.jpg,.jpeg,.png" />
+                <button type="submit" class="btn btn-outline-primary text-nowrap">Seleccionar archivo</button>
+            </form>
+        </div>
+    </div>
+}
+
+<form asp-action="Enviar" method="post" class="mt-4">
+    <input type="hidden" name="solicitudId" value="@Model.Id" />
+    <button type="submit" class="btn btn-primary">Enviar solicitud</button>
+</form>

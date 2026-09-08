@@ -1,0 +1,77 @@
+@model List<RethusSalud.Web.Models.Admin.UsuarioInternoViewModel>
+@{
+    ViewData["Title"] = "Administracion de usuarios";
+    var roles = (List<string>)ViewBag.Roles;
+}
+
+<h1 class="h4">Administracion de usuarios</h1>
+
+@if (TempData["Mensaje"] is string mensaje)
+{
+    <div class="alert alert-success">@mensaje</div>
+}
+
+<a class="btn btn-primary mb-3" asp-action="Crear">Create User</a>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <input type="text" name="nombre" class="form-control" placeholder="Digite el nombre" value="@ViewBag.Nombre" />
+    </div>
+    <div class="col-auto">
+        <select name="rol" class="form-select">
+            <option value="">Roles</option>
+            @foreach (var r in roles)
+            {
+                @if ((string?)ViewBag.Rol == r)
+                {
+                    <option value="@r" selected>@r</option>
+                }
+                else
+                {
+                    <option value="@r">@r</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-primary">Buscar</button>
+        <a asp-action="Usuarios" class="btn btn-outline-secondary">Limpiar</a>
+    </div>
+</form>
+
+<table class="table table-bordered bg-white">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Identificacion</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var usuario in Model)
+        {
+            <tr>
+                <td>@usuario.Nombre</td>
+                <td>@usuario.Email</td>
+                <td>@usuario.Rol</td>
+                <td>@(usuario.Activo ? "Activo" : "Inactivo")</td>
+                <td>
+                    <form asp-action="ToggleActivo" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@usuario.Id" />
+                        <button type="submit" class="btn btn-sm @(usuario.Activo ? "btn-outline-danger" : "btn-outline-success")">
+                            @(usuario.Activo ? "Desactivar" : "Activar")
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="5" class="text-center text-muted">Sin resultados.</td>
+            </tr>
+        }
+    </tbody>
+</table>

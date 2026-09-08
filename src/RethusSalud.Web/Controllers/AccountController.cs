@@ -1,0 +1,157 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using RethusSalud.Application.Common;
+using RethusSalud.Application.Services;
+using RethusSalud.Domain.Constants;
+using RethusSalud.Infrastructure.Identity;
+using RethusSalud.Web.Models;
+using RethusSalud.Web.Models.Account;
+
+namespace RethusSalud.Web.Controllers;
+
+public class AccountController : Controller
+{
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SolicitanteService _solicitanteService;
+
+    public AccountController(
+        SignInManager<ApplicationUser> signInManager,
+        UserManager<ApplicationUser> userManager,
+        SolicitanteService solicitanteService)
+    {
+        _signInManager = signInManager;
+        _userManager = userManager;
+        _solicitanteService = solicitanteService;
+    }
+
+    [HttpGet]
+    public IActionResult Register()
+    {
+        return View(new RegisterViewModel());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var existente = await _userManager.FindByEmailAsync(model.CorreoElectronico);
+        if (existente is not null)
+        {
+            ModelState.AddModelError(string.Empty, "Ya existe una cuenta registrada con este correo.");
+            return View(model);
+        }
+
+        var user = new ApplicationUser
+        {
+            UserName = model.CorreoElectronico,
+            Email = model.CorreoElectronico,
+            NombreCompleto = model.Nombre
+        };
+
+        var resultado = await _userManager.CreateAsync(user, model.Password);
+        if (!resultado.Succeeded)
+        {
+            foreach (var error in resultado.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(model);
+        }
+
+        await _userManager.AddToRoleAsync(user, Roles.Ciudadano);
+
+        try
+        {
+            await _solicitanteService.RegistrarAsync(user.Id, model.Nombre, model.CorreoElectronico, model.NumeroIdentificacion);
+        }
+        catch (AppValidationException ex)
+        {
+            await _userManager.DeleteAsync(user);
+            foreach (var error in ex.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
+
+            return View(model);
+        }
+        catch
+        {
+            await _userManager.DeleteAsync(user);
+            throw;
+        }
+
+        await _signInManager.SignInAsync(user, isPersistent: false);
+        return RedirectToAction("Dashboard", "Tramite");
+    }
+
+    [HttpGet]
+    public IActionResult Login(string? returnUrl = null)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+        return View(new LoginViewModel());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [EnableRateLimiting("auth")]
+    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: true);
+
+        if (result.Succeeded)
+        {
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user is not null && await _userManager.IsInRoleAsync(user, Roles.Ciudadano))
+            {
+                return RedirectToAction("Dashboard", "Tramite");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        if (result.IsLockedOut)
+        {
+            ModelState.AddModelError(string.Empty, "Tu cuenta esta bloqueada temporalmente por intentos fallidos.");
+        }
+        else
+        {
+            ModelState.AddModelError(string.Empty, "Correo o contrasena incorrectos.");
+        }
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return RedirectToAction("Index", "Home");
+    }
+
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
+        return View();
+    }
+}

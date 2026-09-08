@@ -1,0 +1,28 @@
+@model RethusSalud.Web.Models.ConsultaEstadoViewModel
+@{
+    ViewData["Title"] = "Consultar estado del tramite";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <h1 class="h4 mb-3">Consultar estado del tramite</h1>
+
+        <form asp-action="Index" method="post">
+            <div class="mb-3">
+                <label asp-for="NumeroIdentificacion" class="form-label"></label>
+                <input asp-for="NumeroIdentificacion" class="form-control" />
+                <span asp-validation-for="NumeroIdentificacion" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Consultar proceso</button>
+        </form>
+
+        @if (Model.Resultado is not null)
+        {
+            <div class="alert alert-info mt-3">@Model.Resultado</div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

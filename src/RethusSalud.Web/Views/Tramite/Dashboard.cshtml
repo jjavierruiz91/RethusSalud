@@ -1,0 +1,57 @@
+@model RethusSalud.Domain.Entities.Solicitud?
+@using RethusSalud.Domain.Entities
+@using RethusSalud.Domain.Enums
+@{
+    ViewData["Title"] = "Mi tramite";
+    var solicitante = (Solicitante)ViewBag.Solicitante;
+}
+
+<h1 class="h4">Bienvenido al dashboard</h1>
+
+@if (TempData["Mensaje"] is string mensaje)
+{
+    <div class="alert alert-info">@mensaje</div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <p><strong>Nombres:</strong><br />@solicitante.Nombres @solicitante.Apellidos</p>
+        <p><strong>Correo electronico:</strong><br />@solicitante.CorreoElectronico</p>
+        <p><strong>Tipo de tramite:</strong><br />@(Model is null ? "No se ha seleccionado un tipo de tramite" : Model.TipoTramite.ToString())</p>
+        <p><strong>Estado de solicitud:</strong><br />
+            @if (Model is null)
+            {
+                <span>Aun no has iniciado tu tramite.</span>
+            }
+            else if (Model.Estado == EstadoSolicitud.Borrador)
+            {
+                <span>Complete su proceso de tramite para ser enviados a los funcionarios para su revision y validacion.</span>
+            }
+            else if (Model.Estado == EstadoSolicitud.EnProceso)
+            {
+                <span>En proceso - Etapa actual: @Model.EtapaActual</span>
+            }
+            else
+            {
+                <span>@Model.Estado</span>
+            }
+        </p>
+
+        @if (Model is null)
+        {
+            <a class="btn btn-primary" asp-controller="Tramite" asp-action="Terminos">Comenzar tramite</a>
+        }
+        else if (Model.Estado == EstadoSolicitud.Borrador && Model.DatosAcademicos is not null)
+        {
+            <a class="btn btn-primary" asp-controller="Tramite" asp-action="Documentos" asp-route-solicitudId="@Model.Id">Continuar proceso de tramite</a>
+        }
+        else if (Model.Estado == EstadoSolicitud.Borrador)
+        {
+            <a class="btn btn-primary" asp-controller="Tramite" asp-action="DatosPersonales" asp-route-solicitudId="@Model.Id">Continuar proceso de tramite</a>
+        }
+        else if (Model.Estado == EstadoSolicitud.Aprobado)
+        {
+            <a class="btn btn-success" asp-controller="Tramite" asp-action="DescargarCertificado" asp-route-solicitudId="@Model.Id">Descargar certificado</a>
+        }
+    </div>
+</div>

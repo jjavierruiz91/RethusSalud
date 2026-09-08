@@ -1,0 +1,25 @@
+@model RethusSalud.Web.Models.Tramite.SeleccionarTramiteViewModel
+@using RethusSalud.Domain.Enums
+@{
+    ViewData["Title"] = "Seleccionar tramite";
+}
+
+<h1 class="h4">Seleccionar tipo de tramite</h1>
+
+<div class="btn-group mb-3" role="group">
+    <a class="btn @(Model.TipoTramite == TipoTramite.SSO ? "btn-primary" : "btn-outline-primary")"
+       asp-action="SeleccionarTramite" asp-route-tipoTramite="SSO">Certificado SSO</a>
+    <a class="btn @(Model.TipoTramite == TipoTramite.ReTHUS ? "btn-primary" : "btn-outline-primary")"
+       asp-action="SeleccionarTramite" asp-route-tipoTramite="ReTHUS">Registro ReTHUS</a>
+</div>
+
+<div class="list-group">
+    @foreach (var profesion in Model.Profesiones)
+    {
+        <form asp-action="SeleccionarTramite" method="post" class="list-group-item d-flex justify-content-between align-items-center">
+            <span>@profesion.Nombre</span>
+            <input type="hidden" name="profesionId" value="@profesion.Id" />
+            <button type="submit" class="btn btn-sm btn-outline-primary">Realizar tramite</button>
+        </form>
+    }
+</div>

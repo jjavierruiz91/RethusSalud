@@ -1,0 +1,132 @@
+@model RethusSalud.Web.Models.Tramite.DatosPersonalesViewModel
+@using RethusSalud.Domain.Enums
+@{
+    ViewData["Title"] = "Datos personales";
+}
+
+<h1 class="h4">Diligenciar informacion</h1>
+<p class="text-muted">Paso 1 de 2: Datos personales</p>
+
+<form asp-action="DatosPersonales" method="post">
+    <input type="hidden" asp-for="SolicitudId" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="TipoIdentificacion" class="form-label"></label>
+            <select asp-for="TipoIdentificacion" class="form-select" asp-items="Html.GetEnumSelectList<TipoIdentificacion>()"></select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="NumeroIdentificacion" class="form-label"></label>
+            <input asp-for="NumeroIdentificacion" class="form-control" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="LugarExpedicion" class="form-label"></label>
+            <input asp-for="LugarExpedicion" class="form-control" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="Genero" class="form-label"></label>
+            <select asp-for="Genero" class="form-select" asp-items="Html.GetEnumSelectList<Genero>()"></select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="Nombres" class="form-label"></label>
+            <input asp-for="Nombres" class="form-control" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="Apellidos" class="form-label"></label>
+            <input asp-for="Apellidos" class="form-control" />
+        </div>
+    </div>
+
+    <h2 class="h6 mt-4">Nacimiento</h2>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="PaisNacimientoId" class="form-label"></label>
+            <select asp-for="PaisNacimientoId" id="paisNacimiento" class="form-select" asp-items="ViewBag.Paises"></select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="DepartamentoNacimientoId" class="form-label"></label>
+            <select asp-for="DepartamentoNacimientoId" id="departamentoNacimiento" class="form-select"></select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="MunicipioNacimientoId" class="form-label"></label>
+            <select asp-for="MunicipioNacimientoId" id="municipioNacimiento" class="form-select"></select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="FechaNacimiento" class="form-label"></label>
+            <input asp-for="FechaNacimiento" class="form-control" />
+        </div>
+    </div>
+
+    <h2 class="h6 mt-4">Residencia</h2>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="PaisResidenciaId" class="form-label"></label>
+            <select asp-for="PaisResidenciaId" id="paisResidencia" class="form-select" asp-items="ViewBag.Paises"></select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="DepartamentoResidenciaId" class="form-label"></label>
+            <select asp-for="DepartamentoResidenciaId" id="departamentoResidencia" class="form-select"></select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="MunicipioResidenciaId" class="form-label"></label>
+            <select asp-for="MunicipioResidenciaId" id="municipioResidencia" class="form-select"></select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="DireccionDomicilio" class="form-label"></label>
+            <input asp-for="DireccionDomicilio" class="form-control" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="TelefonoFijo" class="form-label"></label>
+            <input asp-for="TelefonoFijo" class="form-control" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="Celular" class="form-label"></label>
+            <input asp-for="Celular" class="form-control" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="CorreoElectronico" class="form-label"></label>
+            <input asp-for="CorreoElectronico" class="form-control" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="GrupoEtnico" class="form-label"></label>
+            <select asp-for="GrupoEtnico" class="form-select" asp-items="Html.GetEnumSelectList<GrupoEtnico>()"></select>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Siguiente</button>
+</form>
+
+@section Scripts {
+    <script>
+        initCascadaUbicacion({
+            paisId: 'paisNacimiento',
+            departamentoId: 'departamentoNacimiento',
+            municipioId: 'municipioNacimiento',
+            departamentosUrl: '@Url.Action("Departamentos")',
+            municipiosUrl: '@Url.Action("Municipios")',
+            departamentoSeleccionado: '@Model.DepartamentoNacimientoId',
+            municipioSeleccionado: '@Model.MunicipioNacimientoId'
+        });
+        initCascadaUbicacion({
+            paisId: 'paisResidencia',
+            departamentoId: 'departamentoResidencia',
+            municipioId: 'municipioResidencia',
+            departamentosUrl: '@Url.Action("Departamentos")',
+            municipiosUrl: '@Url.Action("Municipios")',
+            departamentoSeleccionado: '@Model.DepartamentoResidenciaId',
+            municipioSeleccionado: '@Model.MunicipioResidenciaId'
+        });
+    </script>
+}

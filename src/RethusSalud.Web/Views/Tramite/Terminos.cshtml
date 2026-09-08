@@ -1,0 +1,30 @@
+@{
+    ViewData["Title"] = "Terminos y condiciones";
+}
+
+<h1 class="h4">Terminos y condiciones</h1>
+
+<div class="card">
+    <div class="card-body">
+        <p>
+            La Gobernacion del Cesar, en cumplimiento de la normativa nacional y en coordinacion con el Ministerio de
+            Salud y Proteccion Social, gestiona el ReTHUS (Registro Unico Nacional del Talento Humano en Salud) para
+            garantizar el adecuado control y registro del personal de salud en la region.
+        </p>
+        <p>
+            A traves de este sistema, la Gobernacion verifica la idoneidad y habilitacion del talento humano en
+            salud, asegurando que quienes ejercen profesiones u ocupaciones en este campo cuenten con la debida
+            autorizacion y cumplan con los estandares legales establecidos.
+        </p>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <form asp-action="Terminos" method="post">
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="acepto" id="acepto" value="true" />
+                <label class="form-check-label" for="acepto">Acepto terminos y condiciones</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Aceptar</button>
+        </form>
+    </div>
+</div>

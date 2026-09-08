@@ -1,0 +1,17 @@
+using RethusSalud.Application.Dtos;
+using RethusSalud.Domain.Entities;
+using RethusSalud.Domain.Enums;
+
+namespace RethusSalud.Application.Interfaces;
+
+public interface ISolicitudRepository
+{
+    Task AddAsync(Solicitud solicitud);
+    Task<Solicitud?> GetByIdAsync(int id);
+    Task<Solicitud?> GetBorradorActivoAsync(int solicitanteId);
+    Task<Solicitud?> GetUltimaBySolicitanteIdAsync(int solicitanteId);
+    Task<List<Solicitud>> GetPorEtapaAsync(EtapaSolicitud etapa, BandejaFiltroDto filtro);
+    Task<Solicitud?> GetByConsecutivoAsync(string numero);
+    Task<ArchivoAdjunto?> GetArchivoByIdAsync(int archivoId);
+    Task SaveChangesAsync();
+}

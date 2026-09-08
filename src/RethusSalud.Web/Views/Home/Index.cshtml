@@ -1,0 +1,316 @@
+@using RethusSalud.Application.Dtos
+@{
+    ViewData["Title"] = "Inicio";
+    var profesionesRethus = (List<ProfesionDto>)ViewBag.ProfesionesRethus;
+    var esCiudadanoAutenticado = User.Identity?.IsAuthenticated == true;
+}
+
+@{
+    var slides = new (string Eyebrow, string Titulo, string Texto, string Icono)[]
+    {
+        ("Registro oficial", "Registro Único Nacional del Talento Humano en Salud", "Gestiona en línea tu certificado ReTHUS con el respaldo de la Secretaría de Salud Departamental del Cesar.", "certificado"),
+        ("Marco legal", "Ejerce tu profesión con respaldo legal", "El ReTHUS certifica que cumples los requisitos de la Ley 1164 de 2007 para ejercer tu profesión u ocupación del área de la salud.", "escudo"),
+        ("Trámite digital", "Un trámite ágil, claro y en línea", "Diligencia tu solicitud, carga tus documentos y radica tu trámite sin filas ni desplazamientos.", "documento"),
+        ("Seguimiento", "Seguimiento en tiempo real de tu trámite", "Consulta el estado de tu proceso en cualquier momento, desde la radicación hasta la expedición del certificado.", "busqueda"),
+        ("Acompañamiento", "Acompañamiento de principio a fin", "Nuestro equipo revisa cada etapa de tu proceso para garantizar la calidad del talento humano en salud del Cesar.", "equipo"),
+    };
+}
+
+<section class="hero-carousel-wrapper">
+    <div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel" data-bs-interval="6000">
+        <div class="carousel-indicators">
+            @for (var i = 0; i < slides.Length; i++)
+            {
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Diapositiva @(i + 1)"></button>
+            }
+        </div>
+        <div class="carousel-inner">
+            @for (var i = 0; i < slides.Length; i++)
+            {
+                var s = slides[i];
+                <div class="carousel-item @(i == 0 ? "active" : "")">
+                    <div class="hero-slide hero-slide-@(i + 1)">
+                        <div class="hero-slide-watermark">@Html.Raw(HeroIcon(s.Icono))</div>
+                        <div class="hero-slide-content">
+                            <span class="hero-eyebrow">@s.Eyebrow</span>
+                            <h1 class="hero-title">@s.Titulo</h1>
+                            <p class="hero-text">@s.Texto</p>
+                            <div class="hero-actions">
+                                @if (esCiudadanoAutenticado)
+                                {
+                                    <a class="btn btn-hero-primary" asp-controller="Tramite" asp-action="Dashboard">Ir a mi trámite</a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-hero-primary" asp-controller="Account" asp-action="Register">Comenzar trámite</a>
+                                }
+                                <a class="btn btn-hero-outline" asp-controller="Consulta" asp-action="Index">Consultar proceso de trámite</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+        </button>
+    </div>
+</section>
+
+<nav class="home-subnav">
+    <a href="#sobre-nosotros">Sobre nosotros</a>
+    <a href="#preguntas-frecuentes">Preguntas frecuentes</a>
+</nav>
+
+<section id="sobre-nosotros" class="home-section">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-7">
+            <span class="section-eyebrow">Sobre nosotros</span>
+            <h2 class="section-title">Registro Único Nacional del Talento Humano en Salud (ReTHUS)</h2>
+            <p class="section-lead">
+                Es la inscripción, en el sistema de información definido por el Ministerio de Salud y Protección
+                Social, del talento humano en salud que cumple con los requisitos establecidos en la
+                Ley 1164 de 2007, proceso con el cual se entiende que dicho personal se encuentra autorizado
+                para el ejercicio de una profesión u ocupación del área de la salud.
+            </p>
+            <ul class="checklist">
+                <li><span class="checklist-icon">@Html.Raw(CheckIcon())</span> Inscripción oficial ante el Ministerio de Salud y Protección Social.</li>
+                <li><span class="checklist-icon">@Html.Raw(CheckIcon())</span> Habilita el ejercicio legal de tu profesión u ocupación en salud.</li>
+                <li><span class="checklist-icon">@Html.Raw(CheckIcon())</span> Trámite adelantado con el respaldo de la Secretaría de Salud Departamental del Cesar.</li>
+            </ul>
+        </div>
+        <div class="col-lg-5">
+            <div class="law-card">
+                <span class="law-card-label">Marco normativo</span>
+                <span class="law-card-value">Ley 1164<small>de 2007</small></span>
+                <p class="law-card-text">Regula el talento humano en salud y establece los requisitos para el ejercicio de las profesiones y ocupaciones del sector en Colombia.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 feature-row">
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-icon">@Html.Raw(HeroIcon("escudo"))</div>
+                <h3>Respaldo legal</h3>
+                <p>Fundamentado en la Ley 1164 de 2007 y en la normatividad vigente del sector salud.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-icon">@Html.Raw(HeroIcon("documento"))</div>
+                <h3>Trámite en línea</h3>
+                <p>Radica tu solicitud y adjunta tus documentos desde cualquier lugar, sin desplazamientos.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-icon">@Html.Raw(HeroIcon("busqueda"))</div>
+                <h3>Seguimiento transparente</h3>
+                <p>Consulta el estado de tu proceso en tiempo real, desde la radicación hasta su expedición.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="preguntas-frecuentes" class="home-section home-section-alt">
+    <div class="text-center mb-5">
+        <span class="section-eyebrow">Ayuda</span>
+        <h2 class="section-title">Preguntas frecuentes</h2>
+        <p class="section-lead mx-auto" style="max-width:680px">
+            Resolvemos las dudas más comunes sobre la inscripción y el ejercicio profesional en el ReTHUS.
+        </p>
+    </div>
+
+    <div class="accordion faq-accordion" id="faqAccordion">
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                    ¿Quiénes deben inscribirse al ReTHUS?
+                </button>
+            </h3>
+            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    <p>
+                        En el marco de lo señalado en la Ley 1164 de 2007, deberán inscribirse en el ReTHUS todas
+                        las personas que pretendan ejercer alguna de las siguientes profesiones u ocupaciones del
+                        área de la salud:
+                    </p>
+                    @if (profesionesRethus != null && profesionesRethus.Count > 0)
+                    {
+                        <div class="faq-badges">
+                            @foreach (var p in profesionesRethus)
+                            {
+                                <span class="faq-badge">@p.Nombre</span>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                    Si una persona cumple los requisitos para ejercer su profesión u ocupación antes de la entrada en operación del ReTHUS
+                </button>
+            </h3>
+            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    <p>
+                        De acuerdo con lo señalado en la Ley 1164 de 2007 y en el artículo 2.7.2.1.2.3 del
+                        Decreto 780 de 2016, quienes conforme a las normas vigentes hayan obtenido autorización
+                        para el ejercicio de su profesión u ocupación antes de la fecha en la cual el Colegio
+                        Profesional correspondiente asumió las funciones públicas de inscripción, continúan
+                        habilitados para el ejercicio de su profesión u ocupación.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                    Si una persona no se encuentra inscrita en el ReTHUS o su información presenta alguna inconsistencia, ¿cuál es el procedimiento que debe seguir?
+                </button>
+            </h3>
+            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    <p>
+                        Los auxiliares o técnicos laborales, técnicos profesionales y tecnólogos deben solicitar
+                        su inscripción ante la entidad que le autorizó el ejercicio; es decir, ante las
+                        Direcciones Departamentales de Salud, la Secretaría Distrital de Salud de Bogotá D.C. o
+                        el Ministerio de Salud y Protección Social, según corresponda.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                    ¿Dónde se puede consultar la información del talento humano en salud inscrito en el ReTHUS?
+                </button>
+            </h3>
+            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    <p>
+                        En línea, a través del sitio <a href="http://web.sispro.gov.co" target="_blank" rel="noopener">web.sispro.gov.co</a>,
+                        en el apartado denominado ReTHUS. De igual forma, a través de las Secretarías
+                        Departamentales de Salud, la Secretaría de Salud de Bogotá D.C. y los Colegios
+                        Profesionales del área de la salud con funciones públicas delegadas.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                    ¿Cuáles son los requisitos para ejercer una profesión u ocupación del área de la salud en Colombia?
+                </button>
+            </h3>
+            <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    <p>
+                        De acuerdo con lo establecido en la Ley 1164 de 2007, para el ejercicio de las profesiones
+                        y ocupaciones del área de la salud se requiere acreditar la formación académica
+                        correspondiente, la autorización de la entidad o Colegio Profesional competente y la
+                        inscripción en el Registro Único Nacional del Talento Humano en Salud (ReTHUS).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                    ¿Qué entidad expide la tarjeta de identificación única del talento humano en salud?
+                </button>
+            </h3>
+            <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    <p>
+                        Los Colegios Profesionales del área de la salud, además de realizar la inscripción en el
+                        ReTHUS, expiden la tarjeta de identificación única para los profesionales de cada área de
+                        conocimiento.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+                    ¿Puede solicitarse la Tarjeta de Identificación Única si la autorización se obtuvo antes de la entrada en operación del ReTHUS?
+                </button>
+            </h3>
+            <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    <p>
+                        Sí. La solicitud de expedición de la Tarjeta de Identificación Única del Talento Humano
+                        en Salud se puede presentar de forma voluntaria ante el Colegio Profesional respectivo.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq8">
+                    ¿Se debe solicitar la inscripción en un departamento diferente para trabajar allí?
+                </button>
+            </h3>
+            <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    <p>
+                        No. El ReTHUS es único y de carácter nacional, sin perjuicio de lo establecido en las
+                        leyes que señalan aspectos específicos relacionados con el ejercicio de algunas
+                        disciplinas (por ejemplo, psicología, y seguridad y salud en el trabajo).
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="closing-cta">
+    <h2>¿Listo para iniciar tu trámite ReTHUS?</h2>
+    <p>Atención brindada por la Secretaría de Salud Departamental del Cesar.</p>
+    <div class="hero-actions justify-content-center">
+        @if (esCiudadanoAutenticado)
+        {
+            <a class="btn btn-hero-primary" asp-controller="Tramite" asp-action="Dashboard">Ir a mi trámite</a>
+        }
+        else
+        {
+            <a class="btn btn-hero-primary" asp-controller="Account" asp-action="Register">Comenzar trámite</a>
+        }
+        <a class="btn btn-hero-outline" asp-controller="Consulta" asp-action="Index">Consultar proceso de trámite</a>
+    </div>
+</section>
+
+@functions {
+    string CheckIcon() =>
+        "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M5 13l4 4L19 7\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>";
+
+    string HeroIcon(string name) => name switch
+    {
+        "certificado" =>
+            "<svg viewBox=\"0 0 64 64\" fill=\"none\"><circle cx=\"32\" cy=\"24\" r=\"14\" stroke=\"currentColor\" stroke-width=\"2.5\"/><path d=\"M23 36 19 55l13-6 13 6-4-19\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/><path d=\"M25 24l5 5 9-10\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>",
+        "escudo" =>
+            "<svg viewBox=\"0 0 64 64\" fill=\"none\"><path d=\"M32 6l20 7v15c0 14-9 23-20 30C21 51 12 42 12 28V13l20-7z\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/><path d=\"M23 31l7 7 12-14\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>",
+        "documento" =>
+            "<svg viewBox=\"0 0 64 64\" fill=\"none\"><path d=\"M18 6h20l10 10v42H18z\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/><path d=\"M38 6v10h10\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/><path d=\"M32 48V32M25 39l7-7 7 7\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>",
+        "busqueda" =>
+            "<svg viewBox=\"0 0 64 64\" fill=\"none\"><circle cx=\"27\" cy=\"27\" r=\"15\" stroke=\"currentColor\" stroke-width=\"2.5\"/><path d=\"M38 38l14 14\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/><path d=\"M20 27l5 5 9-10\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>",
+        "equipo" =>
+            "<svg viewBox=\"0 0 64 64\" fill=\"none\"><circle cx=\"22\" cy=\"20\" r=\"7\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"42\" cy=\"20\" r=\"7\" stroke=\"currentColor\" stroke-width=\"2.5\"/><path d=\"M8 52c1-9 7-15 14-15s13 6 14 15M28 52c1-9 7-15 14-15s13 6 14 15\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/></svg>",
+        _ => ""
+    };
+}

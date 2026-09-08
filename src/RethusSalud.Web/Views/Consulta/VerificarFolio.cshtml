@@ -1,0 +1,28 @@
+@model RethusSalud.Application.Dtos.VerificacionFolioDto?
+@{
+    ViewData["Title"] = "Verificar folio";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h1 class="h4 mb-3">Verificacion de autenticidad del certificado</h1>
+
+        @if (Model is null)
+        {
+            <div class="alert alert-danger">
+                El folio consultado no corresponde a un certificado valido emitido por la Secretaria de salud departamental del cesar.
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-success">
+                <p class="mb-1"><strong>Folio:</strong> @Model.Numero</p>
+                <p class="mb-1"><strong>Nombre:</strong> @Model.NombreCompleto</p>
+                <p class="mb-1"><strong>Profesion:</strong> @Model.Profesion</p>
+                <p class="mb-1"><strong>Tramite:</strong> @Model.TipoTramite</p>
+                <p class="mb-0"><strong>Fecha de aprobacion:</strong> @Model.FechaAprobacion.ToLocalTime().ToString("dd/MM/yyyy")</p>
+            </div>
+            <p class="text-muted">Este certificado fue verificado como autentico y vigente en el sistema Rethus.</p>
+        }
+    </div>
+</div>

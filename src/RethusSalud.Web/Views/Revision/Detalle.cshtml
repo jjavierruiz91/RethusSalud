@@ -1,0 +1,138 @@
+@model RethusSalud.Domain.Entities.Solicitud
+@using RethusSalud.Domain.Enums
+@{
+    ViewData["Title"] = "Informacion del usuario";
+    var etiquetas = new Dictionary<TipoDocumentoAdjunto, string>
+    {
+        [TipoDocumentoAdjunto.CedulaAmpliada] = "Cedula ampliada al 150%",
+        [TipoDocumentoAdjunto.DiplomaGrado] = "Diploma de grado",
+        [TipoDocumentoAdjunto.ActaGrado] = "Acta de grado",
+        [TipoDocumentoAdjunto.TarjetaProfesional] = "Tarjeta profesional"
+    };
+}
+
+<h1 class="h4">Informacion del usuario</h1>
+
+@if (TempData["Error"] is string error)
+{
+    <div class="alert alert-danger">@error</div>
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-header">Datos personales</div>
+            <div class="card-body">
+                <p><strong>Nombre:</strong> @Model.Solicitante.Nombres @Model.Solicitante.Apellidos</p>
+                <p><strong>Identificacion:</strong> @Model.Solicitante.TipoIdentificacion - @Model.Solicitante.NumeroIdentificacion</p>
+                <p><strong>Correo:</strong> @Model.Solicitante.CorreoElectronico</p>
+                <p><strong>Celular:</strong> @Model.Solicitante.Celular</p>
+                <p><strong>Grupo etnico:</strong> @Model.Solicitante.GrupoEtnico</p>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">Datos academicos</div>
+            <div class="card-body">
+                @if (Model.DatosAcademicos is not null)
+                {
+                    <p><strong>Institucion:</strong> @Model.DatosAcademicos.NombreInstitucion</p>
+                    <p><strong>Programa:</strong> @Model.DatosAcademicos.NombrePrograma</p>
+                    <p><strong>Fecha de grado:</strong> @Model.DatosAcademicos.FechaGrado</p>
+                }
+                else
+                {
+                    <p class="text-muted">Sin datos academicos.</p>
+                }
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">Archivos</div>
+            <div class="card-body">
+                @foreach (var archivo in Model.Archivos)
+                {
+                    <p>
+                        @etiquetas.GetValueOrDefault(archivo.TipoDocumento, archivo.TipoDocumento.ToString()):
+                        <a asp-action="DescargarArchivo" asp-route-archivoId="@archivo.Id">@archivo.NombreArchivo</a>
+                    </p>
+                }
+                @if (!Model.Archivos.Any())
+                {
+                    <p class="text-muted">Sin archivos cargados.</p>
+                }
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">Comentarios</div>
+            <div class="card-body">
+                @foreach (var comentario in Model.Comentarios.OrderByDescending(c => c.FechaCreacion))
+                {
+                    <p class="border-bottom pb-2">@comentario.Texto <br /><small class="text-muted">@comentario.FechaCreacion.ToLocalTime()</small></p>
+                }
+                <form asp-action="AgregarComentario" method="post" class="d-flex gap-2 mt-2">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <input type="text" name="texto" class="form-control" placeholder="Agregar comentario" required />
+                    <button type="submit" class="btn btn-outline-secondary text-nowrap">Agregar comentario</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        @if (Model.EtapaActual == EtapaSolicitud.Inventario && Model.Consecutivo is null)
+        {
+            <div class="card mb-3">
+                <div class="card-header">Agregar consecutivo</div>
+                <div class="card-body">
+                    <form asp-action="AsignarConsecutivoAutomatico" method="post" class="mb-2">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-outline-primary w-100">Generar automaticamente</button>
+                    </form>
+                    <form asp-action="AsignarConsecutivoManual" method="post" class="d-flex gap-2">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <input type="text" name="numero" class="form-control" placeholder="Consecutivo manual" required />
+                        <button type="submit" class="btn btn-outline-secondary text-nowrap">Agregar</button>
+                    </form>
+                </div>
+            </div>
+        }
+        else if (Model.Consecutivo is not null)
+        {
+            <div class="card mb-3">
+                <div class="card-header">Consecutivo</div>
+                <div class="card-body">
+                    <p class="mb-1"><strong>@Model.Consecutivo.Numero</strong></p>
+                    <p class="text-muted mb-0">Asignado @Model.Consecutivo.Modo el @Model.Consecutivo.Fecha</p>
+                </div>
+            </div>
+        }
+
+        @if (Model.Estado == EstadoSolicitud.Aprobado)
+        {
+            <div class="card mb-3">
+                <div class="card-body">
+                    <a class="btn btn-success w-100" asp-action="DescargarCertificado" asp-route-id="@Model.Id">Descargar certificado</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="card">
+                <div class="card-header">Decision</div>
+                <div class="card-body">
+                    <form asp-action="Aprobar" method="post" class="mb-3">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-primary w-100">Aprobar revision</button>
+                    </form>
+                    <form asp-action="Rechazar" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <textarea name="motivo" class="form-control mb-2" placeholder="Motivo del rechazo" required></textarea>
+                        <button type="submit" class="btn btn-danger w-100">Rechazar revision</button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</div>
