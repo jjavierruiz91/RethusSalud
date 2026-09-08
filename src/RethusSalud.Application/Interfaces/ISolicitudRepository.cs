@@ -11,6 +11,7 @@ public interface ISolicitudRepository
     Task<Solicitud?> GetBorradorActivoAsync(int solicitanteId);
     Task<Solicitud?> GetUltimaBySolicitanteIdAsync(int solicitanteId);
     Task<List<Solicitud>> GetPorEtapaAsync(EtapaSolicitud etapa, BandejaFiltroDto filtro);
+    Task<List<Solicitud>> GetTodasAsync(BandejaFiltroDto filtro);
     Task<Solicitud?> GetByConsecutivoAsync(string numero);
     Task<ArchivoAdjunto?> GetArchivoByIdAsync(int archivoId);
     Task SaveChangesAsync();

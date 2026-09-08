@@ -1,0 +1,157 @@
+@model RethusSalud.Web.Models.Admin.SeguimientoBandejaViewModel
+@using RethusSalud.Domain.Enums
+@{
+    ViewData["Title"] = "Seguimiento a bandeja de revisiones";
+    Layout = "_AppLayout";
+    var totalEnProceso = Model.Solicitudes.Count(s => s.Estado == EstadoSolicitud.EnProceso);
+    var totalAprobadas = Model.Solicitudes.Count(s => s.Estado == EstadoSolicitud.Aprobado);
+    var totalRechazadas = Model.Solicitudes.Count(s => s.Estado == EstadoSolicitud.Rechazado);
+}
+
+<h1>Seguimiento a bandeja de revisiones</h1>
+
+<div class="app-stat-row">
+    <div class="app-stat-card">
+        <span class="app-stat-card-value">@Model.Solicitudes.Count</span>
+        <span class="app-stat-card-label">Total</span>
+    </div>
+    <div class="app-stat-card">
+        <span class="app-stat-card-value">@totalEnProceso</span>
+        <span class="app-stat-card-label">En proceso</span>
+    </div>
+    <div class="app-stat-card">
+        <span class="app-stat-card-value">@totalAprobadas</span>
+        <span class="app-stat-card-label">Aprobadas</span>
+    </div>
+    <div class="app-stat-card">
+        <span class="app-stat-card-value">@totalRechazadas</span>
+        <span class="app-stat-card-label">Rechazadas</span>
+    </div>
+</div>
+
+<div class="app-panel">
+<form method="get" class="row g-3 mb-4 align-items-end">
+    <div class="col-12 col-sm-6 col-lg-2">
+        <label class="form-label small text-muted mb-1">Identificación</label>
+        <input type="text" name="NumeroIdentificacion" class="form-control" placeholder="Número de identificación" value="@Model.Filtro.NumeroIdentificacion" />
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+        <label class="form-label small text-muted mb-1">Tipo de trámite</label>
+        <select name="TipoTramite" class="form-select" onchange="this.form.submit()">
+            <option value="">Todos</option>
+            @foreach (var tipo in Enum.GetValues<TipoTramite>())
+            {
+                @if (Model.Filtro.TipoTramite == tipo)
+                {
+                    <option value="@tipo" selected>@tipo</option>
+                }
+                else
+                {
+                    <option value="@tipo">@tipo</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+        <label class="form-label small text-muted mb-1">Etapa</label>
+        <select name="Etapa" class="form-select" onchange="this.form.submit()">
+            <option value="">Todas</option>
+            @foreach (var etapa in Enum.GetValues<EtapaSolicitud>())
+            {
+                @if (Model.Filtro.Etapa == etapa)
+                {
+                    <option value="@etapa" selected>@etapa</option>
+                }
+                else
+                {
+                    <option value="@etapa">@etapa</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+        <label class="form-label small text-muted mb-1">Estado</label>
+        <select name="Estado" class="form-select" onchange="this.form.submit()">
+            <option value="">Todos</option>
+            @foreach (var estado in Enum.GetValues<EstadoSolicitud>())
+            {
+                @if (Model.Filtro.Estado == estado)
+                {
+                    <option value="@estado" selected>@estado</option>
+                }
+                else
+                {
+                    <option value="@estado">@estado</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-6 col-sm-6 col-lg-2">
+        <label class="form-label small text-muted mb-1">Desde</label>
+        <input type="date" name="Desde" class="form-control" value="@Model.Filtro.Desde?.ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="col-6 col-sm-6 col-lg-2">
+        <label class="form-label small text-muted mb-1">Hasta</label>
+        <input type="date" name="Hasta" class="form-control" value="@Model.Filtro.Hasta?.ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="col-12 d-flex flex-wrap gap-2">
+        <button type="submit" class="btn btn-outline-primary">Buscar</button>
+        <a asp-action="SeguimientoBandeja" class="btn btn-outline-secondary">Limpiar</a>
+        <a asp-action="ExportarSeguimientoExcel"
+           asp-route-NumeroIdentificacion="@Model.Filtro.NumeroIdentificacion"
+           asp-route-TipoTramite="@Model.Filtro.TipoTramite"
+           asp-route-Etapa="@Model.Filtro.Etapa"
+           asp-route-Estado="@Model.Filtro.Estado"
+           asp-route-Desde="@Model.Filtro.Desde?.ToString("yyyy-MM-dd")"
+           asp-route-Hasta="@Model.Filtro.Hasta?.ToString("yyyy-MM-dd")"
+           class="btn btn-outline-success">Generar excel</a>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Identificacion</th>
+                <th>Nombre</th>
+                <th>Tipo de tramite</th>
+                <th>Estado</th>
+                <th>Etapa actual</th>
+                <th>Fecha de radicacion</th>
+                <th>Ultima actualizacion</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var solicitud in Model.Solicitudes)
+            {
+                var badgeClass = solicitud.Estado switch
+                {
+                    EstadoSolicitud.Aprobado => "app-badge-success",
+                    EstadoSolicitud.Rechazado => "app-badge-danger",
+                    EstadoSolicitud.EnProceso => "app-badge-warning",
+                    _ => "app-badge-muted"
+                };
+                <tr>
+                    <td>@solicitud.Solicitante.NumeroIdentificacion</td>
+                    <td>@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</td>
+                    <td>@solicitud.TipoTramite</td>
+                    <td><span class="app-badge @badgeClass">@solicitud.Estado</span></td>
+                    <td>@(solicitud.EtapaActual?.ToString() ?? "-")</td>
+                    <td>@(solicitud.FechaRadicacion?.ToLocalTime().ToString("dd MMM yy, HH:mm") ?? "-")</td>
+                    <td>@solicitud.FechaActualizacion.ToLocalTime().ToString("dd MMM yy, HH:mm")</td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary" asp-action="SeguimientoDetalle" asp-route-id="@solicitud.Id">Ver seguimiento</a>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Solicitudes.Any())
+            {
+                <tr>
+                    <td colspan="8" class="text-center text-muted">Sin resultados. No hay informacion disponible que coincida con tu busqueda.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+</div>

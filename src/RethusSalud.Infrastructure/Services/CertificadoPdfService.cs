@@ -32,9 +32,7 @@ public class CertificadoPdfService : ICertificadoPdfService
         using var qrData = qrGenerator.CreateQrCode(urlVerificacion, QRCodeGenerator.ECCLevel.Q);
         var qrPng = new PngByteQRCode(qrData).GetGraphic(10);
 
-        var tituloTramite = solicitud.TipoTramite == TipoTramite.SSO
-            ? "Certificado de servicio social obligatorio"
-            : "Registro unico nacional de talento humano en salud";
+        const string tituloTramite = "Registro unico nacional de talento humano en salud";
 
         return Document.Create(container =>
         {

@@ -31,8 +31,7 @@ public class SqlConsecutivoGenerator : IConsecutivoGenerator
             var resultado = await command.ExecuteScalarAsync();
             var siguiente = Convert.ToInt32(resultado);
 
-            var prefijo = tipoTramite == TipoTramite.SSO ? "SSO" : "RTH";
-            return $"{prefijo}-{DateTime.UtcNow.Year}-{siguiente:D6}";
+            return $"RTH-{DateTime.UtcNow.Year}-{siguiente:D6}";
         }
         finally
         {

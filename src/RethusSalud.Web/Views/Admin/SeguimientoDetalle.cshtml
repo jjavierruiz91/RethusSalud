@@ -1,0 +1,116 @@
+@model RethusSalud.Domain.Entities.Solicitud
+@using RethusSalud.Domain.Enums
+@{
+    ViewData["Title"] = "Seguimiento de la solicitud";
+    Layout = "_AppLayout";
+    var etiquetas = new Dictionary<TipoDocumentoAdjunto, string>
+    {
+        [TipoDocumentoAdjunto.CedulaAmpliada] = "Cedula ampliada al 150%",
+        [TipoDocumentoAdjunto.DiplomaGrado] = "Diploma de grado",
+        [TipoDocumentoAdjunto.ActaGrado] = "Acta de grado",
+        [TipoDocumentoAdjunto.TarjetaProfesional] = "Tarjeta profesional"
+    };
+    var badgeClass = Model.Estado switch
+    {
+        EstadoSolicitud.Aprobado => "app-badge-success",
+        EstadoSolicitud.Rechazado => "app-badge-danger",
+        EstadoSolicitud.EnProceso => "app-badge-warning",
+        _ => "app-badge-muted"
+    };
+}
+
+<h1>Seguimiento de la solicitud</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-header">Datos personales</div>
+            <div class="card-body">
+                <p><strong>Nombre:</strong> @Model.Solicitante.Nombres @Model.Solicitante.Apellidos</p>
+                <p><strong>Identificacion:</strong> @Model.Solicitante.TipoIdentificacion - @Model.Solicitante.NumeroIdentificacion</p>
+                <p><strong>Correo:</strong> @Model.Solicitante.CorreoElectronico</p>
+                <p><strong>Celular:</strong> @Model.Solicitante.Celular</p>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">Linea de tiempo del proceso</div>
+            <div class="card-body">
+                @foreach (var evento in Model.Historial.OrderByDescending(h => h.Fecha))
+                {
+                    <p class="border-bottom pb-2">
+                        <span class="app-badge app-badge-muted">
+                            @evento.EstadoResultante@(evento.EtapaResultante is not null ? $" · {evento.EtapaResultante}" : "")
+                        </span>
+                        <br />
+                        @if (!string.IsNullOrWhiteSpace(evento.Motivo))
+                        {
+                            @evento.Motivo
+                            <br />
+                        }
+                        <small class="text-muted">@evento.Fecha.ToLocalTime().ToString("dd MMM yy, HH:mm")</small>
+                    </p>
+                }
+                @if (!Model.Historial.Any())
+                {
+                    <p class="text-muted">Aun no hay movimientos registrados para esta solicitud.</p>
+                }
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">Archivos</div>
+            <div class="card-body">
+                @foreach (var archivo in Model.Archivos)
+                {
+                    <p>
+                        @etiquetas.GetValueOrDefault(archivo.TipoDocumento, archivo.TipoDocumento.ToString()):
+                        <a asp-action="DescargarArchivoSeguimiento" asp-route-archivoId="@archivo.Id">@archivo.NombreArchivo</a>
+                    </p>
+                }
+                @if (!Model.Archivos.Any())
+                {
+                    <p class="text-muted">Sin archivos cargados.</p>
+                }
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">Comentarios</div>
+            <div class="card-body">
+                @foreach (var comentario in Model.Comentarios.OrderByDescending(c => c.FechaCreacion))
+                {
+                    <p class="border-bottom pb-2">@comentario.Texto <br /><small class="text-muted">@comentario.FechaCreacion.ToLocalTime()</small></p>
+                }
+                @if (!Model.Comentarios.Any())
+                {
+                    <p class="text-muted">Sin comentarios.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-header">Estado actual</div>
+            <div class="card-body">
+                <p><span class="app-badge @badgeClass">@Model.Estado</span></p>
+                <p class="mb-1"><strong>Etapa:</strong> @(Model.EtapaActual?.ToString() ?? "-")</p>
+                <p class="mb-1"><strong>Tipo de tramite:</strong> @Model.TipoTramite</p>
+                <p class="mb-1"><strong>Radicada:</strong> @(Model.FechaRadicacion?.ToLocalTime().ToString("dd MMM yy, HH:mm") ?? "-")</p>
+                <p class="mb-0"><strong>Ultima actualizacion:</strong> @Model.FechaActualizacion.ToLocalTime().ToString("dd MMM yy, HH:mm")</p>
+            </div>
+        </div>
+
+        @if (Model.Consecutivo is not null)
+        {
+            <div class="card">
+                <div class="card-header">Consecutivo</div>
+                <div class="card-body">
+                    <p class="mb-1"><strong>@Model.Consecutivo.Numero</strong></p>
+                    <p class="text-muted mb-0">Asignado @Model.Consecutivo.Modo el @Model.Consecutivo.Fecha</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>

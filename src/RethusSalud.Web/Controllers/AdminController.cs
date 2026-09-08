@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using RethusSalud.Application.Dtos;
+using RethusSalud.Application.Interfaces;
+using RethusSalud.Application.Services;
 using RethusSalud.Domain.Constants;
 using RethusSalud.Infrastructure.Identity;
 using RethusSalud.Web.Models.Admin;
@@ -15,11 +18,60 @@ public class AdminController : Controller
 
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IWebHostEnvironment _environment;
+    private readonly SolicitudService _solicitudes;
+    private readonly DocumentoService _documentos;
+    private readonly IReporteExcelService _reportes;
 
-    public AdminController(UserManager<ApplicationUser> userManager, IWebHostEnvironment environment)
+    public AdminController(
+        UserManager<ApplicationUser> userManager,
+        IWebHostEnvironment environment,
+        SolicitudService solicitudes,
+        DocumentoService documentos,
+        IReporteExcelService reportes)
     {
         _userManager = userManager;
         _environment = environment;
+        _solicitudes = solicitudes;
+        _documentos = documentos;
+        _reportes = reportes;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> SeguimientoBandeja(SeguimientoFiltroViewModel filtro)
+    {
+        var filtroDto = new BandejaFiltroDto(filtro.NumeroIdentificacion, filtro.TipoTramite, filtro.Estado, filtro.Desde, filtro.Hasta, filtro.Etapa);
+        var solicitudes = await _solicitudes.ObtenerSeguimientoAsync(filtroDto);
+
+        return View(new SeguimientoBandejaViewModel { Filtro = filtro, Solicitudes = solicitudes });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ExportarSeguimientoExcel(SeguimientoFiltroViewModel filtro)
+    {
+        var filtroDto = new BandejaFiltroDto(filtro.NumeroIdentificacion, filtro.TipoTramite, filtro.Estado, filtro.Desde, filtro.Hasta, filtro.Etapa);
+        var solicitudes = await _solicitudes.ObtenerSeguimientoAsync(filtroDto);
+
+        var excel = _reportes.GenerarReporteBandeja(solicitudes);
+        return File(excel, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "seguimiento-revisiones.xlsx");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> SeguimientoDetalle(int id)
+    {
+        var solicitud = await _solicitudes.ObtenerPorIdAsync(id);
+        if (solicitud is null)
+        {
+            return NotFound();
+        }
+
+        return View(solicitud);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> DescargarArchivoSeguimiento(int archivoId)
+    {
+        var (archivo, contenido) = await _documentos.AbrirArchivoAsync(archivoId);
+        return File(contenido, archivo.ContentType, archivo.NombreArchivo);
     }
 
     [HttpGet]

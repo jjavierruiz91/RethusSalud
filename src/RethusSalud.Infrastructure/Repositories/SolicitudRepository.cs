@@ -80,6 +80,43 @@ public class SolicitudRepository : ISolicitudRepository
         return await query.OrderByDescending(s => s.FechaCreacion).ToListAsync();
     }
 
+    public async Task<List<Solicitud>> GetTodasAsync(BandejaFiltroDto filtro)
+    {
+        var query = ConCargasCompletas().Where(s => s.Estado != EstadoSolicitud.Borrador);
+
+        if (filtro.Estado.HasValue)
+        {
+            query = query.Where(s => s.Estado == filtro.Estado.Value);
+        }
+
+        if (filtro.Etapa.HasValue)
+        {
+            query = query.Where(s => s.EtapaActual == filtro.Etapa.Value);
+        }
+
+        if (!string.IsNullOrWhiteSpace(filtro.NumeroIdentificacion))
+        {
+            query = query.Where(s => s.Solicitante.NumeroIdentificacion.Contains(filtro.NumeroIdentificacion));
+        }
+
+        if (filtro.TipoTramite.HasValue)
+        {
+            query = query.Where(s => s.TipoTramite == filtro.TipoTramite.Value);
+        }
+
+        if (filtro.Desde.HasValue)
+        {
+            query = query.Where(s => s.FechaCreacion >= filtro.Desde.Value);
+        }
+
+        if (filtro.Hasta.HasValue)
+        {
+            query = query.Where(s => s.FechaCreacion <= filtro.Hasta.Value);
+        }
+
+        return await query.OrderByDescending(s => s.FechaCreacion).ToListAsync();
+    }
+
     public Task<ArchivoAdjunto?> GetArchivoByIdAsync(int archivoId) =>
         _context.ArchivosAdjuntos.FirstOrDefaultAsync(a => a.Id == archivoId);
 

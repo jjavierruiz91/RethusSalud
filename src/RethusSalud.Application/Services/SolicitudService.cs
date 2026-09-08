@@ -58,6 +58,9 @@ public class SolicitudService
     public Task<List<Solicitud>> ObtenerBandejaAsync(EtapaSolicitud etapa, BandejaFiltroDto filtro) =>
         _solicitudes.GetPorEtapaAsync(etapa, filtro);
 
+    public Task<List<Solicitud>> ObtenerSeguimientoAsync(BandejaFiltroDto filtro) =>
+        _solicitudes.GetTodasAsync(filtro);
+
     public async Task AprobarAsync(int solicitudId, string usuarioId)
     {
         var solicitud = await _solicitudes.GetByIdAsync(solicitudId)

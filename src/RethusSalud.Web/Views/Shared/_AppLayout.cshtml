@@ -29,6 +29,7 @@
         else if (isSuperAdmin)
         {
             navItems.Add(("users", "Usuarios", "Admin", "Usuarios"));
+            navItems.Add(("inbox", "Seguimiento de revisiones", "Admin", "SeguimientoBandeja"));
         }
         else if (isFuncionario)
         {
@@ -40,6 +41,7 @@
         }
 
         var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
         var userName = User.Identity?.Name ?? string.Empty;
         var userInitial = userName.Length > 0 ? userName[0].ToString().ToUpperInvariant() : "?";
         var roleLabel = isSuperAdmin ? "Administrador"
@@ -62,7 +64,9 @@
             <nav class="app-sidebar-nav">
                 @foreach (var item in navItems)
                 {
-                    var isActive = currentController == item.Controller;
+                    var isActive = currentController == item.Controller && (
+                        currentAction == item.Action ||
+                        (item.Action == "SeguimientoBandeja" && (currentAction == "ExportarSeguimientoExcel" || currentAction == "SeguimientoDetalle" || currentAction == "DescargarArchivoSeguimiento")));
                     <a class="app-nav-link @(isActive ? "active" : "")" asp-area="" asp-controller="@item.Controller" asp-action="@item.Action">
                         <span class="app-nav-icon">@Html.Raw(AppIcon(item.Icon))</span>
                         <span>@item.Label</span>

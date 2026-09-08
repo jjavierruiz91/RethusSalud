@@ -7,4 +7,5 @@ public record BandejaFiltroDto(
     TipoTramite? TipoTramite = null,
     EstadoSolicitud? Estado = null,
     DateTime? Desde = null,
-    DateTime? Hasta = null);
+    DateTime? Hasta = null,
+    EtapaSolicitud? Etapa = null);

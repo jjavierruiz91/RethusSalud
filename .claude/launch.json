@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "rethussalud-web",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": ["run", "--project", "src/RethusSalud.Web", "--launch-profile", "http"],
+      "port": 5121
+    }
+  ]
+}

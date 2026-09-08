@@ -94,11 +94,6 @@ public static class CatalogoSeeder
 
         var profesiones = new List<Profesion>
         {
-            new() { Nombre = "Medicos", TipoTramite = TipoTramite.SSO, NivelFormacion = NivelFormacion.Profesional },
-            new() { Nombre = "Odontologos", TipoTramite = TipoTramite.SSO, NivelFormacion = NivelFormacion.Profesional },
-            new() { Nombre = "Enfermeros", TipoTramite = TipoTramite.SSO, NivelFormacion = NivelFormacion.Profesional },
-            new() { Nombre = "Bacteriologos", TipoTramite = TipoTramite.SSO, NivelFormacion = NivelFormacion.Profesional },
-
             new() { Nombre = "Auxiliar administrativo en salud", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Auxiliar },
             new() { Nombre = "Auxiliar en enfermeria", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Auxiliar },
             new() { Nombre = "Auxiliar en salud oral", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Auxiliar },
