@@ -1,8 +1,11 @@
 @model RethusSalud.Domain.Entities.Solicitud
 @using RethusSalud.Domain.Enums
 @using RethusSalud.Web.Helpers
+@{
+    var puedeGestionar = (bool)(ViewBag.PuedeGestionar ?? true);
+}
 
-@if (Model.EtapaActual == EtapaSolicitud.Inventario && Model.Consecutivo is null && Model.Estado == EstadoSolicitud.EnProceso)
+@if (Model.EtapaActual == EtapaSolicitud.Inventario && Model.Consecutivo is null && Model.Estado == EstadoSolicitud.EnProceso && puedeGestionar)
 {
     <div class="revision-card">
         <div class="revision-card-title mb-2">
@@ -51,6 +54,16 @@ else if (Model.Consecutivo is not null)
     {
         <p class="text-muted mb-0">Esta solicitud ya fue rechazada.</p>
     }
+    else if (Model.EtapaActual == EtapaSolicitud.Inventario)
+    {
+        <p class="text-muted mb-0">En Inventario no se realiza una revisión: al asignar el consecutivo, la solicitud queda aprobada automáticamente.</p>
+    }
+    else if (!puedeGestionar)
+    {
+        <div class="alert alert-warning mb-0">
+            Esta solicitud está actualmente en <strong>@Model.EtapaActual</strong> — no puedes aprobarla ni rechazarla desde aquí. Puedes dejarle una nota al funcionario encargado en los comentarios.
+        </div>
+    }
     else
     {
         <form id="formAprobar" asp-controller="Revision" asp-action="Aprobar" method="post" class="d-none">
@@ -93,7 +106,7 @@ else if (Model.Consecutivo is not null)
     }
 </div>
 
-@if (Model.Estado == EstadoSolicitud.EnProceso)
+@if (Model.Estado == EstadoSolicitud.EnProceso && puedeGestionar && Model.EtapaActual != EtapaSolicitud.Inventario)
 {
     <script>
         (function () {

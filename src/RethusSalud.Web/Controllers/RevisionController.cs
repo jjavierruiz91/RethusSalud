@@ -96,6 +96,15 @@ public class RevisionController : Controller
         return File(excel, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"bandeja-{etapa}.xlsx");
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Buscar(BuscarFiltroViewModel filtro)
+    {
+        var filtroDto = new BandejaFiltroDto(filtro.NumeroIdentificacion, filtro.TipoTramite, filtro.Estado, filtro.Desde, filtro.Hasta, filtro.Etapa);
+        var solicitudes = await _solicitudes.ObtenerSeguimientoAsync(filtroDto);
+
+        return View(new BuscarViewModel { Filtro = filtro, Solicitudes = solicitudes });
+    }
+
     private static readonly HashSet<string> PasosDeRevision = new()
     {
         nameof(Detalle), nameof(DetalleAcademicos), nameof(DetalleDocumentos)
@@ -105,7 +114,15 @@ public class RevisionController : Controller
     {
         ViewBag.VolverA = paso;
         var solicitud = await _solicitudes.ObtenerPorIdAsync(id);
-        return solicitud is null ? NotFound() : View(solicitud);
+        if (solicitud is null)
+        {
+            return NotFound();
+        }
+
+        var etapaUsuario = await ObtenerEtapaDelUsuarioAsync();
+        ViewBag.PuedeGestionar = solicitud.Estado == EstadoSolicitud.EnProceso && solicitud.EtapaActual == etapaUsuario;
+
+        return View(solicitud);
     }
 
     private IActionResult RedirigirAPaso(string? volverA, int id)
@@ -201,7 +218,8 @@ public class RevisionController : Controller
 
         try
         {
-            await _solicitudes.AsignarConsecutivoAutomaticoAsync(id);
+            await _solicitudes.AsignarConsecutivoAutomaticoAsync(id, UserId);
+            TempData["Mensaje"] = "Consecutivo asignado y solicitud aprobada.";
         }
         catch (AppValidationException ex)
         {
@@ -222,7 +240,8 @@ public class RevisionController : Controller
 
         try
         {
-            await _solicitudes.AsignarConsecutivoManualAsync(id, numero);
+            await _solicitudes.AsignarConsecutivoManualAsync(id, numero, UserId);
+            TempData["Mensaje"] = "Consecutivo asignado y solicitud aprobada.";
         }
         catch (AppValidationException ex)
         {
@@ -230,6 +249,29 @@ public class RevisionController : Controller
         }
 
         return RedirigirAPaso(volverA, id);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AsignarConsecutivoRango(int[] ids, string consecutivoInicial)
+    {
+        var etapa = await ObtenerEtapaDelUsuarioAsync();
+        if (etapa != EtapaSolicitud.Inventario)
+        {
+            return Forbid();
+        }
+
+        try
+        {
+            await _solicitudes.AsignarConsecutivoRangoAsync(ids, consecutivoInicial, UserId);
+            TempData["Mensaje"] = $"Se asigno consecutivo y se aprobaron {ids.Length} solicitud(es).";
+        }
+        catch (AppValidationException ex)
+        {
+            TempData["Error"] = string.Join(" ", ex.Errors);
+        }
+
+        return RedirectToAction(nameof(Bandeja));
     }
 
     [HttpGet]

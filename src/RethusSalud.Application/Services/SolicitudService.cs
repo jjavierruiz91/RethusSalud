@@ -128,7 +128,7 @@ public class SolicitudService
         await _solicitudes.SaveChangesAsync();
     }
 
-    public async Task AsignarConsecutivoAutomaticoAsync(int solicitudId)
+    public async Task AsignarConsecutivoAutomaticoAsync(int solicitudId, string usuarioId)
     {
         var solicitud = await _solicitudes.GetByIdAsync(solicitudId)
             ?? throw new InvalidOperationException("Solicitud no encontrada.");
@@ -145,9 +145,10 @@ public class SolicitudService
         }
 
         await _solicitudes.SaveChangesAsync();
+        await AprobarAsync(solicitudId, usuarioId);
     }
 
-    public async Task AsignarConsecutivoManualAsync(int solicitudId, string numero)
+    public async Task AsignarConsecutivoManualAsync(int solicitudId, string numero, string usuarioId)
     {
         var solicitud = await _solicitudes.GetByIdAsync(solicitudId)
             ?? throw new InvalidOperationException("Solicitud no encontrada.");
@@ -162,6 +163,48 @@ public class SolicitudService
         }
 
         await _solicitudes.SaveChangesAsync();
+        await AprobarAsync(solicitudId, usuarioId);
+    }
+
+    public async Task AsignarConsecutivoRangoAsync(int[] solicitudIds, string consecutivoInicial, string usuarioId)
+    {
+        if (solicitudIds.Length == 0)
+        {
+            throw new AppValidationException(new[] { "Selecciona al menos una solicitud." });
+        }
+
+        if (!long.TryParse(consecutivoInicial, out var inicio) || inicio < 0)
+        {
+            throw new AppValidationException(new[] { "El consecutivo inicial debe ser un numero." });
+        }
+
+        var solicitudes = new List<Solicitud>();
+        foreach (var id in solicitudIds)
+        {
+            var solicitud = await _solicitudes.GetByIdAsync(id)
+                ?? throw new AppValidationException(new[] { $"La solicitud {id} no existe." });
+
+            if (solicitud.Estado != EstadoSolicitud.EnProceso || solicitud.EtapaActual != EtapaSolicitud.Inventario)
+            {
+                throw new AppValidationException(new[] { $"La solicitud de {solicitud.Solicitante.NumeroIdentificacion} no esta pendiente en Inventario." });
+            }
+
+            if (solicitud.Consecutivo is not null)
+            {
+                throw new AppValidationException(new[] { $"La solicitud de {solicitud.Solicitante.NumeroIdentificacion} ya tiene consecutivo asignado." });
+            }
+
+            solicitudes.Add(solicitud);
+        }
+
+        var ancho = consecutivoInicial.Length;
+        var ordenadas = solicitudes.OrderBy(s => s.FechaCreacion).ToList();
+
+        for (var i = 0; i < ordenadas.Count; i++)
+        {
+            var numero = (inicio + i).ToString().PadLeft(ancho, '0');
+            await AsignarConsecutivoManualAsync(ordenadas[i].Id, numero, usuarioId);
+        }
     }
 
     public Task<Solicitud?> ObtenerPorConsecutivoAsync(string numero) =>

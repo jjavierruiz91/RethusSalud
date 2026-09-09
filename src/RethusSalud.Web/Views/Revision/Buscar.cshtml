@@ -1,0 +1,136 @@
+@model RethusSalud.Web.Models.Revision.BuscarViewModel
+@using RethusSalud.Domain.Enums
+@using RethusSalud.Web.Helpers
+@{
+    ViewData["Title"] = "Buscar solicitud";
+    Layout = "_AppLayout";
+
+    string BadgeEstado(EstadoSolicitud e) => e switch
+    {
+        EstadoSolicitud.Aprobado => "app-badge-success",
+        EstadoSolicitud.Rechazado => "app-badge-danger",
+        EstadoSolicitud.EnProceso => "app-badge-warning",
+        _ => "app-badge-muted"
+    };
+
+    string Iniciales(RethusSalud.Domain.Entities.Solicitante s)
+    {
+        var n = s.Nombres.Length > 0 ? s.Nombres[0].ToString() : "";
+        var a = s.Apellidos.Length > 0 ? s.Apellidos[0].ToString() : "";
+        return (n + a).ToUpperInvariant();
+    }
+
+    (string Texto, bool Alerta) TiempoEspera(RethusSalud.Domain.Entities.Solicitud s)
+    {
+        if (s.Estado != EstadoSolicitud.EnProceso)
+        {
+            return ("", false);
+        }
+
+        var dias = (DateTime.UtcNow - s.FechaCreacion).TotalDays;
+        if (dias < 1)
+        {
+            return ("Hoy", false);
+        }
+
+        var enteros = (int)dias;
+        var texto = $"{enteros} día{(enteros == 1 ? "" : "s")} esperando";
+        return (texto, dias > 2);
+    }
+}
+
+<nav class="revision-breadcrumb">
+    <span class="current">Inicio</span>
+    <span>&rsaquo;</span>
+    <span class="current">Buscar solicitud</span>
+</nav>
+
+<h1>Buscar solicitud</h1>
+<p class="text-muted mb-3">Consulta en qué etapa se encuentra cualquier solicitud, sin importar quién la esté revisando.</p>
+
+<div class="app-panel">
+<form method="get" class="row g-3 mb-3 align-items-end">
+    <div class="col-12 col-sm-6 col-lg-3">
+        <label class="form-label small text-muted mb-1">Identificación</label>
+        <input type="text" name="NumeroIdentificacion" class="form-control" placeholder="Número de identificación" value="@Model.Filtro.NumeroIdentificacion" />
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+        <label class="form-label small text-muted mb-1">Tipo de trámite</label>
+        <select name="TipoTramite" class="form-select" onchange="this.form.submit()">
+            <option value="">Todos</option>
+            @foreach (var tipo in Enum.GetValues<TipoTramite>())
+            {
+                @if (Model.Filtro.TipoTramite == tipo)
+                {
+                    <option value="@tipo" selected>@tipo</option>
+                }
+                else
+                {
+                    <option value="@tipo">@tipo</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+        <label class="form-label small text-muted mb-1">Etapa</label>
+        <select name="Etapa" class="form-select" onchange="this.form.submit()">
+            <option value="">Todas</option>
+            @foreach (var etapa in Enum.GetValues<EtapaSolicitud>())
+            {
+                @if (Model.Filtro.Etapa == etapa)
+                {
+                    <option value="@etapa" selected>@etapa</option>
+                }
+                else
+                {
+                    <option value="@etapa">@etapa</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+        <label class="form-label small text-muted mb-1">Estado</label>
+        <select name="Estado" class="form-select" onchange="this.form.submit()">
+            <option value="">Todos</option>
+            @foreach (var estado in EstadoDisplay.FiltrablesPorFuncionario)
+            {
+                @if (Model.Filtro.Estado == estado)
+                {
+                    <option value="@estado" selected>@EstadoDisplay.Texto(estado)</option>
+                }
+                else
+                {
+                    <option value="@estado">@EstadoDisplay.Texto(estado)</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-6 col-sm-6 col-lg-3">
+        <label class="form-label small text-muted mb-1">&nbsp;</label>
+        <button type="submit" class="btn btn-outline-primary w-100">Buscar</button>
+    </div>
+</form>
+
+@foreach (var solicitud in Model.Solicitudes)
+{
+    var espera = TiempoEspera(solicitud);
+    <div class="revision-list-item @(espera.Alerta ? "alerta" : "")">
+        <span class="revision-list-avatar">@Iniciales(solicitud.Solicitante)</span>
+        <div class="revision-list-main">
+            <div class="revision-list-name">@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</div>
+            <div class="revision-list-sub">@solicitud.Solicitante.TipoIdentificacion @solicitud.Solicitante.NumeroIdentificacion &middot; @solicitud.TipoTramite</div>
+        </div>
+        <span class="app-badge app-badge-muted">@(solicitud.EtapaActual?.ToString() ?? "-")</span>
+        <span class="app-badge @BadgeEstado(solicitud.Estado)">@EstadoDisplay.Texto(solicitud.Estado)</span>
+        @if (!string.IsNullOrEmpty(espera.Texto))
+        {
+            <span class="revision-wait-badge @(espera.Alerta ? "alerta" : "")">@espera.Texto</span>
+        }
+        <a class="btn btn-sm btn-primary" asp-action="Detalle" asp-route-id="@solicitud.Id">Ver seguimiento</a>
+    </div>
+}
+@if (!Model.Solicitudes.Any())
+{
+    <p class="text-center text-muted mb-0">Sin resultados. No hay solicitudes que coincidan con tu busqueda.</p>
+}
+</div>

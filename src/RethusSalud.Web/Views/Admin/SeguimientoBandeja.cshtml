@@ -1,5 +1,6 @@
 @model RethusSalud.Web.Models.Admin.SeguimientoBandejaViewModel
 @using RethusSalud.Domain.Enums
+@using RethusSalud.Web.Helpers
 @{
     ViewData["Title"] = "Seguimiento a bandeja de revisiones";
     Layout = "_AppLayout";
@@ -73,15 +74,15 @@
         <label class="form-label small text-muted mb-1">Estado</label>
         <select name="Estado" class="form-select" onchange="this.form.submit()">
             <option value="">Todos</option>
-            @foreach (var estado in Enum.GetValues<EstadoSolicitud>())
+            @foreach (var estado in EstadoDisplay.FiltrablesPorFuncionario)
             {
                 @if (Model.Filtro.Estado == estado)
                 {
-                    <option value="@estado" selected>@estado</option>
+                    <option value="@estado" selected>@EstadoDisplay.Texto(estado)</option>
                 }
                 else
                 {
-                    <option value="@estado">@estado</option>
+                    <option value="@estado">@EstadoDisplay.Texto(estado)</option>
                 }
             }
         </select>
@@ -136,7 +137,7 @@
                     <td>@solicitud.Solicitante.NumeroIdentificacion</td>
                     <td>@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</td>
                     <td>@solicitud.TipoTramite</td>
-                    <td><span class="app-badge @badgeClass">@solicitud.Estado</span></td>
+                    <td><span class="app-badge @badgeClass">@EstadoDisplay.Texto(solicitud.Estado)</span></td>
                     <td>@(solicitud.EtapaActual?.ToString() ?? "-")</td>
                     <td>@(solicitud.FechaRadicacion?.ToLocalTime().ToString("dd MMM yy, HH:mm") ?? "-")</td>
                     <td>@solicitud.FechaActualizacion.ToLocalTime().ToString("dd MMM yy, HH:mm")</td>

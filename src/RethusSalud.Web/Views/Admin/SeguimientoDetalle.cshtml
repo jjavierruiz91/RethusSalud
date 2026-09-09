@@ -1,5 +1,6 @@
 @model RethusSalud.Domain.Entities.Solicitud
 @using RethusSalud.Domain.Enums
+@using RethusSalud.Web.Helpers
 @{
     ViewData["Title"] = "Seguimiento de la solicitud";
     Layout = "_AppLayout";
@@ -40,7 +41,7 @@
                 {
                     <p class="border-bottom pb-2">
                         <span class="app-badge app-badge-muted">
-                            @evento.EstadoResultante@(evento.EtapaResultante is not null ? $" · {evento.EtapaResultante}" : "")
+                            @EstadoDisplay.Texto(evento.EstadoResultante)@(evento.EtapaResultante is not null ? $" · {evento.EtapaResultante}" : "")
                         </span>
                         <br />
                         @if (!string.IsNullOrWhiteSpace(evento.Motivo))
@@ -94,7 +95,7 @@
         <div class="card mb-3">
             <div class="card-header">Estado actual</div>
             <div class="card-body">
-                <p><span class="app-badge @badgeClass">@Model.Estado</span></p>
+                <p><span class="app-badge @badgeClass">@EstadoDisplay.Texto(Model.Estado)</span></p>
                 <p class="mb-1"><strong>Etapa:</strong> @(Model.EtapaActual?.ToString() ?? "-")</p>
                 <p class="mb-1"><strong>Tipo de tramite:</strong> @Model.TipoTramite</p>
                 <p class="mb-1"><strong>Radicada:</strong> @(Model.FechaRadicacion?.ToLocalTime().ToString("dd MMM yy, HH:mm") ?? "-")</p>

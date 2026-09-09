@@ -1,6 +1,7 @@
 @model RethusSalud.Domain.Entities.Solicitud?
 @using RethusSalud.Domain.Entities
 @using RethusSalud.Domain.Enums
+@using RethusSalud.Web.Helpers
 @{
     ViewData["Title"] = "Mi tramite";
     Layout = "_AppLayout";
@@ -43,7 +44,7 @@
             }
             else
             {
-                <span>@Model.Estado</span>
+                <span>@EstadoDisplay.Texto(Model.Estado)</span>
             }
         </p>
 

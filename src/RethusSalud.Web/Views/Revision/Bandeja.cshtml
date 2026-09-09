@@ -1,5 +1,6 @@
 @model RethusSalud.Web.Models.Revision.BandejaViewModel
 @using RethusSalud.Domain.Enums
+@using RethusSalud.Web.Helpers
 @{
     ViewData["Title"] = "Bandeja de revision";
     Layout = "_AppLayout";
@@ -97,15 +98,15 @@
         <label class="form-label small text-muted mb-1">Estado</label>
         <select name="Estado" class="form-select" onchange="this.form.submit()">
             <option value="">Todos</option>
-            @foreach (var estado in Enum.GetValues<EstadoSolicitud>())
+            @foreach (var estado in EstadoDisplay.FiltrablesPorFuncionario)
             {
                 @if (Model.Filtro.Estado == estado)
                 {
-                    <option value="@estado" selected>@estado</option>
+                    <option value="@estado" selected>@EstadoDisplay.Texto(estado)</option>
                 }
                 else
                 {
-                    <option value="@estado">@estado</option>
+                    <option value="@estado">@EstadoDisplay.Texto(estado)</option>
                 }
             }
         </select>
@@ -131,25 +132,62 @@
     </div>
 </form>
 
-@foreach (var solicitud in Model.Solicitudes)
-{
-    var espera = TiempoEspera(solicitud);
-    <div class="revision-list-item @(espera.Alerta ? "alerta" : "")">
-        <span class="revision-list-avatar">@Iniciales(solicitud.Solicitante)</span>
-        <div class="revision-list-main">
-            <div class="revision-list-name">@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</div>
-            <div class="revision-list-sub">@solicitud.Solicitante.TipoIdentificacion @solicitud.Solicitante.NumeroIdentificacion &middot; @solicitud.TipoTramite</div>
+<form id="formLote" asp-action="AsignarConsecutivoRango" method="post">
+    @if (Model.Etapa == EtapaSolicitud.Inventario)
+    {
+        <div class="revision-card d-none" id="barraLote">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <strong><span id="contadorSeleccion">0</span> seleccionada(s)</strong>
+                <input type="text" name="consecutivoInicial" class="form-control" style="max-width:220px" placeholder="Consecutivo inicial (ej. 2001)" pattern="[0-9]+" required />
+                <button type="submit" class="btn btn-primary">Asignar rango y aprobar</button>
+            </div>
         </div>
-        <span class="app-badge @BadgeEstado(solicitud.Estado)">@solicitud.Estado</span>
-        @if (!string.IsNullOrEmpty(espera.Texto))
-        {
-            <span class="revision-wait-badge @(espera.Alerta ? "alerta" : "")">@espera.Texto</span>
-        }
-        <a class="btn btn-sm btn-primary" asp-action="Detalle" asp-route-id="@solicitud.Id">Revisar</a>
-    </div>
-}
-@if (!Model.Solicitudes.Any())
-{
-    <p class="text-center text-muted mb-0">Sin resultados. No hay informacion disponible que coincida con tu busqueda.</p>
-}
+    }
+
+    @foreach (var solicitud in Model.Solicitudes)
+    {
+        var espera = TiempoEspera(solicitud);
+        var puedeSeleccionar = Model.Etapa == EtapaSolicitud.Inventario && solicitud.Estado == EstadoSolicitud.EnProceso && solicitud.Consecutivo is null;
+        <div class="revision-list-item @(espera.Alerta ? "alerta" : "")">
+            @if (puedeSeleccionar)
+            {
+                <input type="checkbox" class="form-check-input seleccion-item" name="ids" value="@solicitud.Id" />
+            }
+            <span class="revision-list-avatar">@Iniciales(solicitud.Solicitante)</span>
+            <div class="revision-list-main">
+                <div class="revision-list-name">@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</div>
+                <div class="revision-list-sub">@solicitud.Solicitante.TipoIdentificacion @solicitud.Solicitante.NumeroIdentificacion &middot; @solicitud.TipoTramite</div>
+            </div>
+            <span class="app-badge @BadgeEstado(solicitud.Estado)">@EstadoDisplay.Texto(solicitud.Estado)</span>
+            @if (!string.IsNullOrEmpty(espera.Texto))
+            {
+                <span class="revision-wait-badge @(espera.Alerta ? "alerta" : "")">@espera.Texto</span>
+            }
+            <a class="btn btn-sm btn-primary" asp-action="Detalle" asp-route-id="@solicitud.Id">Revisar</a>
+        </div>
+    }
+    @if (!Model.Solicitudes.Any())
+    {
+        <p class="text-center text-muted mb-0">Sin resultados. No hay informacion disponible que coincida con tu busqueda.</p>
+    }
+</form>
 </div>
+
+@if (Model.Etapa == EtapaSolicitud.Inventario)
+{
+    <script>
+        (function () {
+            var checkboxes = document.querySelectorAll('.seleccion-item');
+            var barra = document.getElementById('barraLote');
+            var contador = document.getElementById('contadorSeleccion');
+
+            function actualizar() {
+                var marcados = document.querySelectorAll('.seleccion-item:checked').length;
+                contador.textContent = marcados;
+                barra.classList.toggle('d-none', marcados === 0);
+            }
+
+            checkboxes.forEach(function (cb) { cb.addEventListener('change', actualizar); });
+        })();
+    </script>
+}
