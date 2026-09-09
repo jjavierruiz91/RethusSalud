@@ -152,7 +152,7 @@ public class Solicitud : Entity
         });
     }
 
-    public void AsignarConsecutivo(string numero, ModoConsecutivo modo)
+    public void AsignarConsecutivo(string numero, DateOnly fecha, ModoConsecutivo modo)
     {
         AsegurarEnProceso();
         if (EtapaActual != EtapaSolicitud.Inventario)
@@ -170,11 +170,16 @@ public class Solicitud : Entity
             throw new DomainException("El numero de consecutivo es obligatorio.");
         }
 
+        if (fecha == default)
+        {
+            throw new DomainException("La fecha del consecutivo es obligatoria.");
+        }
+
         Consecutivo = new Consecutivo
         {
             SolicitudId = Id,
             Numero = numero,
-            Fecha = DateOnly.FromDateTime(DateTime.UtcNow),
+            Fecha = fecha,
             Modo = modo
         };
         FechaActualizacion = DateTime.UtcNow;

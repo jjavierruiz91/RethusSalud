@@ -56,7 +56,7 @@ public class CertificadoPdfServiceTests
         solicitud.Aprobar("f1");
         solicitud.Aprobar("f2");
         solicitud.Aprobar("f3");
-        solicitud.AsignarConsecutivo("RTH-2026-000001", ModoConsecutivo.Manual);
+        solicitud.AsignarConsecutivo("RTH-2026-000001", DateOnly.FromDateTime(DateTime.UtcNow), ModoConsecutivo.Manual);
         solicitud.Aprobar("inventario");
 
         return solicitud;

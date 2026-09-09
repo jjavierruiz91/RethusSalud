@@ -225,7 +225,7 @@ public class RevisionController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AsignarConsecutivoAutomatico(int id, string? volverA)
+    public async Task<IActionResult> AsignarConsecutivoManual(int id, string numero, DateOnly fecha, string? volverA)
     {
         if (!await PuedeGestionarAsync(id))
         {
@@ -234,7 +234,7 @@ public class RevisionController : Controller
 
         try
         {
-            await _solicitudes.AsignarConsecutivoAutomaticoAsync(id, UserId);
+            await _solicitudes.AsignarConsecutivoManualAsync(id, numero, fecha, UserId);
             TempData["Mensaje"] = "Consecutivo asignado y solicitud aprobada.";
         }
         catch (AppValidationException ex)
@@ -247,29 +247,7 @@ public class RevisionController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AsignarConsecutivoManual(int id, string numero, string? volverA)
-    {
-        if (!await PuedeGestionarAsync(id))
-        {
-            return Forbid();
-        }
-
-        try
-        {
-            await _solicitudes.AsignarConsecutivoManualAsync(id, numero, UserId);
-            TempData["Mensaje"] = "Consecutivo asignado y solicitud aprobada.";
-        }
-        catch (AppValidationException ex)
-        {
-            TempData["Error"] = string.Join(" ", ex.Errors);
-        }
-
-        return RedirigirAPaso(volverA, id);
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AsignarConsecutivoRango(int[] ids, string consecutivoInicial)
+    public async Task<IActionResult> AsignarConsecutivoRango(int[] ids, string consecutivoInicial, string consecutivoFinal, DateOnly fecha)
     {
         var etapa = await ObtenerEtapaDelUsuarioAsync();
         if (etapa != EtapaSolicitud.Inventario)
@@ -279,7 +257,7 @@ public class RevisionController : Controller
 
         try
         {
-            await _solicitudes.AsignarConsecutivoRangoAsync(ids, consecutivoInicial, UserId);
+            await _solicitudes.AsignarConsecutivoRangoAsync(ids, consecutivoInicial, consecutivoFinal, fecha, UserId);
             TempData["Mensaje"] = $"Se asigno consecutivo y se aprobaron {ids.Length} solicitud(es).";
         }
         catch (AppValidationException ex)

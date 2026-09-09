@@ -21,20 +21,4 @@ public static class TiempoDisplay
 
         return $"{minutos} min";
     }
-
-    public static string ClaseFila(DateTime desde)
-    {
-        var dias = (DateTime.UtcNow - desde).TotalDays;
-        if (dias >= 5)
-        {
-            return "fila-roja";
-        }
-
-        if (dias >= 2)
-        {
-            return "fila-amarilla";
-        }
-
-        return "fila-verde";
-    }
 }

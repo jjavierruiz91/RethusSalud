@@ -12,20 +12,17 @@ public class SolicitudService
 {
     private readonly ISolicitudRepository _solicitudes;
     private readonly ICatalogoRepository _catalogos;
-    private readonly IConsecutivoGenerator _consecutivos;
     private readonly IEmailSender _emailSender;
     private readonly IValidator<DatosAcademicosDto> _datosAcademicosValidator;
 
     public SolicitudService(
         ISolicitudRepository solicitudes,
         ICatalogoRepository catalogos,
-        IConsecutivoGenerator consecutivos,
         IEmailSender emailSender,
         IValidator<DatosAcademicosDto> datosAcademicosValidator)
     {
         _solicitudes = solicitudes;
         _catalogos = catalogos;
-        _consecutivos = consecutivos;
         _emailSender = emailSender;
         _datosAcademicosValidator = datosAcademicosValidator;
     }
@@ -137,16 +134,14 @@ public class SolicitudService
         await _solicitudes.SaveChangesAsync();
     }
 
-    public async Task AsignarConsecutivoAutomaticoAsync(int solicitudId, string usuarioId)
+    public async Task AsignarConsecutivoManualAsync(int solicitudId, string numero, DateOnly fecha, string usuarioId)
     {
         var solicitud = await _solicitudes.GetByIdAsync(solicitudId)
             ?? throw new InvalidOperationException("Solicitud no encontrada.");
 
-        var numero = await _consecutivos.GenerarSiguienteAsync(solicitud.TipoTramite);
-
         try
         {
-            solicitud.AsignarConsecutivo(numero, ModoConsecutivo.Automatico);
+            solicitud.AsignarConsecutivo(numero, fecha, ModoConsecutivo.Manual);
         }
         catch (DomainException ex)
         {
@@ -157,25 +152,7 @@ public class SolicitudService
         await AprobarAsync(solicitudId, usuarioId);
     }
 
-    public async Task AsignarConsecutivoManualAsync(int solicitudId, string numero, string usuarioId)
-    {
-        var solicitud = await _solicitudes.GetByIdAsync(solicitudId)
-            ?? throw new InvalidOperationException("Solicitud no encontrada.");
-
-        try
-        {
-            solicitud.AsignarConsecutivo(numero, ModoConsecutivo.Manual);
-        }
-        catch (DomainException ex)
-        {
-            throw new AppValidationException(new[] { ex.Message });
-        }
-
-        await _solicitudes.SaveChangesAsync();
-        await AprobarAsync(solicitudId, usuarioId);
-    }
-
-    public async Task AsignarConsecutivoRangoAsync(int[] solicitudIds, string consecutivoInicial, string usuarioId)
+    public async Task AsignarConsecutivoRangoAsync(int[] solicitudIds, string consecutivoInicial, string consecutivoFinal, DateOnly fecha, string usuarioId)
     {
         if (solicitudIds.Length == 0)
         {
@@ -185,6 +162,25 @@ public class SolicitudService
         if (!long.TryParse(consecutivoInicial, out var inicio) || inicio < 0)
         {
             throw new AppValidationException(new[] { "El consecutivo inicial debe ser un numero." });
+        }
+
+        if (!long.TryParse(consecutivoFinal, out var fin) || fin < inicio)
+        {
+            throw new AppValidationException(new[] { "El consecutivo final debe ser un numero mayor o igual al inicial." });
+        }
+
+        if (fecha == default)
+        {
+            throw new AppValidationException(new[] { "La fecha del consecutivo es obligatoria." });
+        }
+
+        var cantidadEsperada = fin - inicio + 1;
+        if (cantidadEsperada != solicitudIds.Length)
+        {
+            throw new AppValidationException(new[]
+            {
+                $"El rango {consecutivoInicial}-{consecutivoFinal} tiene {cantidadEsperada} numero(s), pero seleccionaste {solicitudIds.Length} solicitud(es). Deben coincidir."
+            });
         }
 
         var solicitudes = new List<Solicitud>();
@@ -212,7 +208,7 @@ public class SolicitudService
         for (var i = 0; i < ordenadas.Count; i++)
         {
             var numero = (inicio + i).ToString().PadLeft(ancho, '0');
-            await AsignarConsecutivoManualAsync(ordenadas[i].Id, numero, usuarioId);
+            await AsignarConsecutivoManualAsync(ordenadas[i].Id, numero, fecha, usuarioId);
         }
     }
 

@@ -114,7 +114,7 @@
         <tbody>
             @foreach (var solicitud in Model.Pagina.Items)
             {
-                <tr class="@TiempoDisplay.ClaseFila(solicitud.FechaCreacion)">
+                <tr>
                     <td>@solicitud.Solicitante.NumeroIdentificacion</td>
                     <td>@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</td>
                     <td>@solicitud.TipoTramite</td>

@@ -106,7 +106,7 @@ public class SolicitudTests
         solicitud.Aprobar("f2");
         solicitud.Aprobar("f3");
 
-        solicitud.AsignarConsecutivo("RTH-2026-000001", ModoConsecutivo.Manual);
+        solicitud.AsignarConsecutivo("RTH-2026-000001", DateOnly.FromDateTime(DateTime.UtcNow), ModoConsecutivo.Manual);
         solicitud.Aprobar("inventario");
 
         Assert.Equal(EstadoSolicitud.Aprobado, solicitud.Estado);
@@ -117,7 +117,7 @@ public class SolicitudTests
     {
         var solicitud = CrearSolicitudRadicada();
 
-        Assert.Throws<DomainException>(() => solicitud.AsignarConsecutivo("RTH-2026-000001", ModoConsecutivo.Manual));
+        Assert.Throws<DomainException>(() => solicitud.AsignarConsecutivo("RTH-2026-000001", DateOnly.FromDateTime(DateTime.UtcNow), ModoConsecutivo.Manual));
     }
 
     [Fact]
@@ -127,9 +127,20 @@ public class SolicitudTests
         solicitud.Aprobar("f1");
         solicitud.Aprobar("f2");
         solicitud.Aprobar("f3");
-        solicitud.AsignarConsecutivo("RTH-2026-000001", ModoConsecutivo.Manual);
+        solicitud.AsignarConsecutivo("RTH-2026-000001", DateOnly.FromDateTime(DateTime.UtcNow), ModoConsecutivo.Manual);
 
-        Assert.Throws<DomainException>(() => solicitud.AsignarConsecutivo("RTH-2026-000002", ModoConsecutivo.Manual));
+        Assert.Throws<DomainException>(() => solicitud.AsignarConsecutivo("RTH-2026-000002", DateOnly.FromDateTime(DateTime.UtcNow), ModoConsecutivo.Manual));
+    }
+
+    [Fact]
+    public void No_se_puede_asignar_consecutivo_sin_fecha()
+    {
+        var solicitud = CrearSolicitudRadicada();
+        solicitud.Aprobar("f1");
+        solicitud.Aprobar("f2");
+        solicitud.Aprobar("f3");
+
+        Assert.Throws<DomainException>(() => solicitud.AsignarConsecutivo("RTH-2026-000001", default, ModoConsecutivo.Manual));
     }
 
     [Fact]

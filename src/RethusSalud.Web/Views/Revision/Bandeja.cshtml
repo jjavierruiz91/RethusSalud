@@ -118,10 +118,23 @@
     @if (Model.Etapa == EtapaSolicitud.Inventario)
     {
         <div class="revision-card d-none" id="barraLote">
-            <div class="d-flex align-items-center gap-3 flex-wrap">
-                <strong><span id="contadorSeleccion">0</span> seleccionada(s)</strong>
-                <input type="text" name="consecutivoInicial" class="form-control" style="max-width:220px" placeholder="Consecutivo inicial (ej. 2001)" pattern="[0-9]+" required />
-                <button type="submit" class="btn btn-primary">Asignar rango y aprobar</button>
+            <div class="d-flex align-items-end gap-3 flex-wrap">
+                <div>
+                    <strong><span id="contadorSeleccion">0</span> seleccionada(s)</strong>
+                </div>
+                <div>
+                    <label class="form-label small text-muted mb-1">Rango inicio</label>
+                    <input type="text" name="consecutivoInicial" class="form-control" style="max-width:160px" placeholder="Ej. 2001" pattern="[0-9]+" required />
+                </div>
+                <div>
+                    <label class="form-label small text-muted mb-1">Rango fin</label>
+                    <input type="text" name="consecutivoFinal" class="form-control" style="max-width:160px" placeholder="Ej. 2005" pattern="[0-9]+" required />
+                </div>
+                <div>
+                    <label class="form-label small text-muted mb-1">Fecha del consecutivo</label>
+                    <input type="date" name="fecha" class="form-control" style="max-width:180px" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Generar</button>
             </div>
         </div>
     }
@@ -150,7 +163,7 @@
                 @foreach (var solicitud in Model.Pagina.Items)
                 {
                     var puedeSeleccionar = Model.Etapa == EtapaSolicitud.Inventario && solicitud.Estado == EstadoSolicitud.EnProceso && solicitud.Consecutivo is null;
-                    <tr class="@TiempoDisplay.ClaseFila(solicitud.FechaCreacion)">
+                    <tr>
                         @if (Model.Etapa == EtapaSolicitud.Inventario)
                         {
                             <td>

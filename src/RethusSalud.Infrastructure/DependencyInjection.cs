@@ -40,7 +40,6 @@ public static class DependencyInjection
         services.AddScoped<ICatalogoRepository, CatalogoRepository>();
         services.AddScoped<IConfiguracionInstitucionalRepository, ConfiguracionInstitucionalRepository>();
         services.AddSingleton<IFileStorageService, LocalFileStorageService>();
-        services.AddScoped<IConsecutivoGenerator, SqlConsecutivoGenerator>();
         services.AddScoped<ICertificadoPdfService, CertificadoPdfService>();
         services.AddScoped<IEmailSender, SmtpEmailSender>();
         services.AddScoped<IReporteExcelService, ClosedXmlReporteService>();

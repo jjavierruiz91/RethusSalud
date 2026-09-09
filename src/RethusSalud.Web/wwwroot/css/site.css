@@ -1667,8 +1667,6 @@ body {
 .app-badge-muted { background: var(--rethus-bg-soft); color: var(--rethus-muted); }
 
 .app-content .table tr.fila-verde > td { background-color: #e3f7ea; }
-.app-content .table tr.fila-amarilla > td { background-color: #fef4e0; }
-.app-content .table tr.fila-roja > td { background-color: #fdecea; }
 .app-content .table tr.fila-inactiva > td { background-color: var(--rethus-bg-soft); }
 
 /* ---- Global form polish (wizard, admin filters, etc.) ---- */

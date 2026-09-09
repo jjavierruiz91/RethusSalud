@@ -12,15 +12,11 @@
             @RevisionIcons.Icon("hash")
             <h2>Agregar consecutivo</h2>
         </div>
-        <form asp-controller="Revision" asp-action="AsignarConsecutivoAutomatico" method="post" class="mb-2">
+        <form asp-controller="Revision" asp-action="AsignarConsecutivoManual" method="post" class="d-flex flex-wrap gap-2">
             <input type="hidden" name="id" value="@Model.Id" />
             <input type="hidden" name="volverA" value="@ViewBag.VolverA" />
-            <button type="submit" class="btn btn-outline-primary w-100">Generar automaticamente</button>
-        </form>
-        <form asp-controller="Revision" asp-action="AsignarConsecutivoManual" method="post" class="d-flex gap-2">
-            <input type="hidden" name="id" value="@Model.Id" />
-            <input type="hidden" name="volverA" value="@ViewBag.VolverA" />
-            <input type="text" name="numero" class="form-control" placeholder="Consecutivo manual" required />
+            <input type="text" name="numero" class="form-control" style="max-width:180px" placeholder="Numero de consecutivo" required />
+            <input type="date" name="fecha" class="form-control" style="max-width:180px" value="@DateTime.Now.ToString("yyyy-MM-dd")" required title="Fecha de generación del consecutivo" />
             <button type="submit" class="btn btn-outline-secondary text-nowrap">Agregar</button>
         </form>
     </div>
@@ -33,7 +29,7 @@ else if (Model.Consecutivo is not null)
             <h2>Consecutivo</h2>
         </div>
         <p class="mb-1"><strong>@Model.Consecutivo.Numero</strong></p>
-        <p class="text-muted mb-0">Asignado @Model.Consecutivo.Modo el @Model.Consecutivo.Fecha</p>
+        <p class="text-muted mb-0">Asignado manualmente el @Model.Consecutivo.Fecha</p>
     </div>
 }
 
