@@ -1,0 +1,141 @@
+@model RethusSalud.Domain.Entities.Solicitud
+@using RethusSalud.Web.Helpers
+@{
+    ViewData["Title"] = "Revision de usuario";
+    Layout = "_AppLayout";
+    ViewBag.PasoActual = 1;
+    ViewBag.NombrePaso = "Información académica";
+
+    string Clase(string? v) => string.IsNullOrWhiteSpace(v) ? "text-danger" : "";
+    string Valor(string? v) => string.IsNullOrWhiteSpace(v) ? "Sin diligenciar" : v;
+    string ClaseFecha(DateOnly f) => f == default ? "text-danger" : "";
+    string ValorFecha(DateOnly f) => f == default ? "Sin diligenciar" : f.ToString("dd/MM/yyyy");
+}
+
+@await Html.PartialAsync("_RevisionHeader", Model)
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="revision-card">
+            <div class="revision-card-header">
+                <div class="revision-card-title">
+                    @RevisionIcons.Icon("cap")
+                    <div>
+                        <h2>Información académica</h2>
+                        <p>Formación y titulación del usuario</p>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.DatosAcademicos is not null)
+            {
+                var d = Model.DatosAcademicos;
+                <div class="revision-section-label">Titulación</div>
+                <div class="revision-field-grid">
+                    <div class="revision-field">
+                        <span class="revision-field-icon">@RevisionIcons.Icon("globe")</span>
+                        <span>
+                            <span class="revision-field-label">Origen del título</span>
+                            <span class="revision-field-value">@d.OrigenTitulo</span>
+                        </span>
+                    </div>
+                    <div class="revision-field">
+                        <span class="revision-field-icon">@RevisionIcons.Icon("cap")</span>
+                        <span>
+                            <span class="revision-field-label">Tipo de institución</span>
+                            <span class="revision-field-value">@d.TipoInstitucion</span>
+                        </span>
+                    </div>
+                    <div class="revision-field">
+                        <span class="revision-field-icon">@RevisionIcons.Icon("id")</span>
+                        <span>
+                            <span class="revision-field-label">Tipo de programa</span>
+                            <span class="revision-field-value @Clase(d.TipoPrograma)">@Valor(d.TipoPrograma)</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="revision-section-label">Institución educativa</div>
+                <div class="revision-field-grid">
+                    <div class="revision-field">
+                        <span class="revision-field-icon">@RevisionIcons.Icon("cap")</span>
+                        <span>
+                            <span class="revision-field-label">Nombre de institución</span>
+                            <span class="revision-field-value @Clase(d.NombreInstitucion)">@Valor(d.NombreInstitucion)</span>
+                        </span>
+                    </div>
+                    <div class="revision-field">
+                        <span class="revision-field-icon">@RevisionIcons.Icon("id")</span>
+                        <span>
+                            <span class="revision-field-label">Nombre del programa</span>
+                            <span class="revision-field-value @Clase(d.NombrePrograma)">@Valor(d.NombrePrograma)</span>
+                        </span>
+                    </div>
+                    <div class="revision-field">
+                        <span class="revision-field-icon">@RevisionIcons.Icon("globe")</span>
+                        <span>
+                            <span class="revision-field-label">País de institución</span>
+                            <span class="revision-field-value @Clase(d.PaisInstitucion?.Nombre)">@Valor(d.PaisInstitucion?.Nombre)</span>
+                        </span>
+                    </div>
+                    <div class="revision-field">
+                        <span class="revision-field-icon">@RevisionIcons.Icon("pin")</span>
+                        <span>
+                            <span class="revision-field-label">Departamento de institución</span>
+                            <span class="revision-field-value @Clase(d.DepartamentoInstitucion?.Nombre)">@Valor(d.DepartamentoInstitucion?.Nombre)</span>
+                        </span>
+                    </div>
+                    <div class="revision-field">
+                        <span class="revision-field-icon">@RevisionIcons.Icon("pin")</span>
+                        <span>
+                            <span class="revision-field-label">Municipio de institución</span>
+                            <span class="revision-field-value @Clase(d.MunicipioInstitucion?.Nombre)">@Valor(d.MunicipioInstitucion?.Nombre)</span>
+                        </span>
+                    </div>
+                    <div class="revision-field">
+                        <span class="revision-field-icon">@RevisionIcons.Icon("calendar")</span>
+                        <span>
+                            <span class="revision-field-label">Fecha de grado</span>
+                            <span class="revision-field-value @ClaseFecha(d.FechaGrado)">@ValorFecha(d.FechaGrado)</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="revision-section-label">Convalidación (si aplica)</div>
+                <div class="revision-field-grid">
+                    <div class="revision-field">
+                        <span class="revision-field-icon">@RevisionIcons.Icon("hash")</span>
+                        <span>
+                            <span class="revision-field-label">Número de convalidación</span>
+                            <span class="revision-field-value">@(string.IsNullOrWhiteSpace(d.NumeroConvalidacion) ? "-" : d.NumeroConvalidacion)</span>
+                        </span>
+                    </div>
+                    <div class="revision-field">
+                        <span class="revision-field-icon">@RevisionIcons.Icon("calendar")</span>
+                        <span>
+                            <span class="revision-field-label">Fecha de convalidación</span>
+                            <span class="revision-field-value">@(d.FechaConvalidacion?.ToString("dd/MM/yyyy") ?? "-")</span>
+                        </span>
+                    </div>
+                    <div class="revision-field">
+                        <span class="revision-field-icon">@RevisionIcons.Icon("id")</span>
+                        <span>
+                            <span class="revision-field-label">Título equivalente</span>
+                            <span class="revision-field-value">@(string.IsNullOrWhiteSpace(d.TituloEquivalente) ? "-" : d.TituloEquivalente)</span>
+                        </span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted mb-0">Sin datos academicos.</p>
+            }
+        </div>
+
+        @await Html.PartialAsync("_RevisionComentarios", Model)
+    </div>
+
+    <div class="col-md-4">
+        @await Html.PartialAsync("_RevisionDecisionPanel", Model)
+    </div>
+</div>

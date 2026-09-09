@@ -1,0 +1,147 @@
+@model RethusSalud.Domain.Entities.Solicitud
+@using RethusSalud.Domain.Enums
+@using RethusSalud.Web.Helpers
+
+@if (Model.EtapaActual == EtapaSolicitud.Inventario && Model.Consecutivo is null && Model.Estado == EstadoSolicitud.EnProceso)
+{
+    <div class="revision-card">
+        <div class="revision-card-title mb-2">
+            @RevisionIcons.Icon("hash")
+            <h2>Agregar consecutivo</h2>
+        </div>
+        <form asp-controller="Revision" asp-action="AsignarConsecutivoAutomatico" method="post" class="mb-2">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <input type="hidden" name="volverA" value="@ViewBag.VolverA" />
+            <button type="submit" class="btn btn-outline-primary w-100">Generar automaticamente</button>
+        </form>
+        <form asp-controller="Revision" asp-action="AsignarConsecutivoManual" method="post" class="d-flex gap-2">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <input type="hidden" name="volverA" value="@ViewBag.VolverA" />
+            <input type="text" name="numero" class="form-control" placeholder="Consecutivo manual" required />
+            <button type="submit" class="btn btn-outline-secondary text-nowrap">Agregar</button>
+        </form>
+    </div>
+}
+else if (Model.Consecutivo is not null)
+{
+    <div class="revision-card">
+        <div class="revision-card-title mb-2">
+            @RevisionIcons.Icon("hash")
+            <h2>Consecutivo</h2>
+        </div>
+        <p class="mb-1"><strong>@Model.Consecutivo.Numero</strong></p>
+        <p class="text-muted mb-0">Asignado @Model.Consecutivo.Modo el @Model.Consecutivo.Fecha</p>
+    </div>
+}
+
+<div class="revision-card">
+    <div class="revision-card-title mb-3">
+        @RevisionIcons.Icon("shield")
+        <div>
+            <h2>Decisión de revisión</h2>
+            <p>¿Qué deseas hacer con esta solicitud?</p>
+        </div>
+    </div>
+
+    @if (Model.Estado == EstadoSolicitud.Aprobado)
+    {
+        <a class="btn btn-success w-100" asp-controller="Revision" asp-action="DescargarCertificado" asp-route-id="@Model.Id">Descargar certificado</a>
+    }
+    else if (Model.Estado == EstadoSolicitud.Rechazado)
+    {
+        <p class="text-muted mb-0">Esta solicitud ya fue rechazada.</p>
+    }
+    else
+    {
+        <form id="formAprobar" asp-controller="Revision" asp-action="Aprobar" method="post" class="d-none">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <input type="hidden" name="volverA" value="@ViewBag.VolverA" />
+            <input type="hidden" name="mensaje" id="mensajeOculto" />
+        </form>
+        <form id="formRechazar" asp-controller="Revision" asp-action="Rechazar" method="post" class="d-none">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <input type="hidden" name="volverA" value="@ViewBag.VolverA" />
+            <input type="hidden" name="motivo" id="motivoOculto" />
+        </form>
+
+        <label class="revision-decision-option success selected" id="opcionAprobar">
+            <input type="radio" name="decisionRevision" value="aprobar" checked />
+            <span class="icon">@RevisionIcons.Icon("check")</span>
+            <span>
+                <strong>Aprobar solicitud</strong>
+                <span>La información cumple con los requisitos.</span>
+            </span>
+        </label>
+        <label class="revision-decision-option danger" id="opcionRechazar">
+            <input type="radio" name="decisionRevision" value="rechazar" />
+            <span class="icon">@RevisionIcons.Icon("x")</span>
+            <span>
+                <strong>Rechazar solicitud</strong>
+                <span>Se solicitará indicar el motivo.</span>
+            </span>
+        </label>
+
+        <div class="mt-2 mb-3">
+            <label class="form-label small text-muted" id="motivoLabel">Mensaje (opcional)</label>
+            <textarea id="motivoTexto" class="form-control" rows="3" placeholder="Agrega una observación sobre la solicitud (opcional)."></textarea>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a class="btn btn-outline-secondary flex-fill" asp-controller="Revision" asp-action="Bandeja">Cancelar</a>
+            <button type="button" id="btnDecidir" class="btn btn-primary flex-fill">Aprobar revisión</button>
+        </div>
+    }
+</div>
+
+@if (Model.Estado == EstadoSolicitud.EnProceso)
+{
+    <script>
+        (function () {
+            var radios = document.querySelectorAll('input[name="decisionRevision"]');
+            var opcionAprobar = document.getElementById('opcionAprobar');
+            var opcionRechazar = document.getElementById('opcionRechazar');
+            var motivoLabel = document.getElementById('motivoLabel');
+            var motivoTexto = document.getElementById('motivoTexto');
+            var btn = document.getElementById('btnDecidir');
+
+            function actualizar() {
+                var seleccion = document.querySelector('input[name="decisionRevision"]:checked').value;
+                var esRechazo = seleccion === 'rechazar';
+                opcionAprobar.classList.toggle('selected', !esRechazo);
+                opcionRechazar.classList.toggle('selected', esRechazo);
+                if (esRechazo) {
+                    motivoLabel.textContent = 'Motivo del rechazo';
+                    motivoTexto.placeholder = 'Explique brevemente por qué la solicitud no cumple los requisitos.';
+                    btn.textContent = 'Rechazar revisión';
+                    btn.className = 'btn btn-danger flex-fill';
+                } else {
+                    motivoLabel.textContent = 'Mensaje (opcional)';
+                    motivoTexto.placeholder = 'Agrega una observación sobre la solicitud (opcional).';
+                    btn.textContent = 'Aprobar revisión';
+                    btn.className = 'btn btn-primary flex-fill';
+                }
+            }
+
+            radios.forEach(function (r) { r.addEventListener('change', actualizar); });
+
+            btn.addEventListener('click', function () {
+                var seleccion = document.querySelector('input[name="decisionRevision"]:checked').value;
+                var texto = motivoTexto.value.trim();
+
+                if (seleccion === 'aprobar') {
+                    document.getElementById('mensajeOculto').value = texto;
+                    document.getElementById('formAprobar').submit();
+                    return;
+                }
+
+                if (!texto) {
+                    alert('Debes indicar el motivo del rechazo.');
+                    return;
+                }
+
+                document.getElementById('motivoOculto').value = texto;
+                document.getElementById('formRechazar').submit();
+            });
+        })();
+    </script>
+}

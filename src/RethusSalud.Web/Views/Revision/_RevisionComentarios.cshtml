@@ -1,0 +1,34 @@
+@model RethusSalud.Domain.Entities.Solicitud
+@using RethusSalud.Web.Helpers
+
+<div class="revision-card">
+    <div class="revision-card-title mb-2">
+        @RevisionIcons.Icon("chat")
+        <h2>Historial de revisión</h2>
+    </div>
+
+    @foreach (var comentario in Model.Comentarios.OrderByDescending(c => c.FechaCreacion))
+    {
+        <div class="revision-historial-item">
+            <span class="revision-historial-avatar">F</span>
+            <div>
+                <div class="revision-historial-meta">
+                    @comentario.FechaCreacion.ToLocalTime().ToString("dd MMM yyyy · hh:mm tt")
+                    &middot; Funcionario
+                </div>
+                <p class="revision-historial-text">@comentario.Texto</p>
+            </div>
+        </div>
+    }
+    @if (!Model.Comentarios.Any())
+    {
+        <p class="text-muted mb-0">Aun no hay comentarios registrados.</p>
+    }
+
+    <form asp-controller="Revision" asp-action="AgregarComentario" method="post" class="revision-comment-form">
+        <input type="hidden" name="id" value="@Model.Id" />
+        <input type="hidden" name="volverA" value="@ViewBag.VolverA" />
+        <input type="text" name="texto" class="form-control" placeholder="Escribe un comentario..." required />
+        <button type="submit" class="btn btn-primary revision-comment-send">@RevisionIcons.Icon("send") Agregar comentario</button>
+    </form>
+</div>

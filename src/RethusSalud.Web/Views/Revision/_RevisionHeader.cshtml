@@ -1,0 +1,77 @@
+@model RethusSalud.Domain.Entities.Solicitud
+@using RethusSalud.Web.Helpers
+@using RethusSalud.Domain.Enums
+@{
+    var pasoActual = (int)(ViewBag.PasoActual ?? 0);
+    var nombrePaso = (string)(ViewBag.NombrePaso ?? "Información personal");
+
+    string EstadoTexto(EstadoSolicitud e) => e switch
+    {
+        EstadoSolicitud.EnProceso => "Pendiente de revisión",
+        EstadoSolicitud.Aprobado => "Aprobada",
+        EstadoSolicitud.Rechazado => "Rechazada",
+        _ => e.ToString()
+    };
+    string EstadoBadgeClase(EstadoSolicitud e) => e switch
+    {
+        EstadoSolicitud.EnProceso => "app-badge-warning",
+        EstadoSolicitud.Aprobado => "app-badge-success",
+        EstadoSolicitud.Rechazado => "app-badge-danger",
+        _ => "app-badge-muted"
+    };
+    string TipoIdCorto(TipoIdentificacion t) => t switch
+    {
+        TipoIdentificacion.CedulaCiudadania => "C.C.",
+        TipoIdentificacion.CedulaExtranjeria => "C.E.",
+        TipoIdentificacion.PasaporteExtranjero => "Pasaporte",
+        TipoIdentificacion.PermisoProteccionTemporal => "PPT",
+        _ => t.ToString()
+    };
+
+    var fecha = Model.FechaRadicacion ?? Model.FechaCreacion;
+    var ciudad = string.Join(", ", new[]
+    {
+        Model.Solicitante.MunicipioResidencia?.Nombre,
+        Model.Solicitante.DepartamentoResidencia?.Nombre
+    }.Where(s => !string.IsNullOrWhiteSpace(s)));
+}
+
+<nav class="revision-breadcrumb">
+    <a asp-controller="Revision" asp-action="Bandeja">@RevisionIcons.Icon("home") Inicio</a>
+    <span>@RevisionIcons.Icon("chevron")</span>
+    <a asp-controller="Revision" asp-action="Bandeja">Bandeja de revisión</a>
+    <span>@RevisionIcons.Icon("chevron")</span>
+    <span class="current">Usuario #@Model.Id</span>
+</nav>
+
+<div class="revision-header">
+    <a class="revision-back-btn" asp-controller="Revision" asp-action="Bandeja">@RevisionIcons.Icon("back")</a>
+    <div class="revision-header-title">
+        <h1>Revisión de usuario</h1>
+        <p>Usuario #@Model.Id &middot; Paso @(pasoActual + 1) de 3 &middot; @nombrePaso</p>
+    </div>
+</div>
+
+<div class="revision-info-card">
+    <span class="revision-avatar">@RevisionIcons.Icon("person")</span>
+    <div>
+        <span class="revision-info-name">@Model.Solicitante.Nombres @Model.Solicitante.Apellidos</span>
+        <span class="revision-info-sub">@TipoIdCorto(Model.Solicitante.TipoIdentificacion)@(string.IsNullOrWhiteSpace(ciudad) ? "" : $" · {ciudad}")</span>
+    </div>
+    <div class="revision-info-meta">
+        @RevisionIcons.Icon("shield")
+        <span>
+            <span class="revision-info-meta-label">Estado actual</span>
+            <span class="app-badge @EstadoBadgeClase(Model.Estado)">@EstadoTexto(Model.Estado)</span>
+        </span>
+    </div>
+    <div class="revision-info-meta">
+        @RevisionIcons.Icon("calendar")
+        <span>
+            <span class="revision-info-meta-label">Fecha de solicitud</span>
+            <span class="revision-info-meta-value">@fecha.ToLocalTime().ToString("dd/MM/yyyy · hh:mm tt")</span>
+        </span>
+    </div>
+</div>
+
+@await Html.PartialAsync("_RevisionSteps", new RethusSalud.Web.Models.Revision.RevisionStepsViewModel { PasoActual = pasoActual, SolicitudId = Model.Id })

@@ -61,14 +61,14 @@ public class SolicitudService
     public Task<List<Solicitud>> ObtenerSeguimientoAsync(BandejaFiltroDto filtro) =>
         _solicitudes.GetTodasAsync(filtro);
 
-    public async Task AprobarAsync(int solicitudId, string usuarioId)
+    public async Task AprobarAsync(int solicitudId, string usuarioId, string? mensaje = null)
     {
         var solicitud = await _solicitudes.GetByIdAsync(solicitudId)
             ?? throw new InvalidOperationException("Solicitud no encontrada.");
 
         try
         {
-            solicitud.Aprobar(usuarioId);
+            solicitud.Aprobar(usuarioId, mensaje);
         }
         catch (DomainException ex)
         {
@@ -77,16 +77,17 @@ public class SolicitudService
 
         await _solicitudes.SaveChangesAsync();
 
+        var notaFuncionario = string.IsNullOrWhiteSpace(mensaje) ? "" : $"<p><em>{mensaje}</em></p>";
         var correo = solicitud.Solicitante.CorreoElectronico;
         if (solicitud.Estado == EstadoSolicitud.Aprobado)
         {
             await _emailSender.EnviarAsync(correo, "Tu certificado esta listo",
-                $"<p>Hola {solicitud.Solicitante.Nombres},</p><p>Tu solicitud fue aprobada y tu certificado con folio <strong>{solicitud.Consecutivo?.Numero}</strong> ya esta disponible para descargar en el portal Rethus.</p>");
+                $"<p>Hola {solicitud.Solicitante.Nombres},</p><p>Tu solicitud fue aprobada y tu certificado con folio <strong>{solicitud.Consecutivo?.Numero}</strong> ya esta disponible para descargar en el portal Rethus.</p>{notaFuncionario}");
         }
         else
         {
             await _emailSender.EnviarAsync(correo, "Tu solicitud avanzo de etapa",
-                $"<p>Hola {solicitud.Solicitante.Nombres},</p><p>Tu solicitud fue aprobada en su etapa actual y ahora se encuentra en <strong>{solicitud.EtapaActual}</strong>.</p>");
+                $"<p>Hola {solicitud.Solicitante.Nombres},</p><p>Tu solicitud fue aprobada en su etapa actual y ahora se encuentra en <strong>{solicitud.EtapaActual}</strong>.</p>{notaFuncionario}");
         }
     }
 
@@ -108,6 +109,23 @@ public class SolicitudService
 
         await _emailSender.EnviarAsync(solicitud.Solicitante.CorreoElectronico, "Tu solicitud fue rechazada",
             $"<p>Hola {solicitud.Solicitante.Nombres},</p><p>Tu solicitud fue rechazada por el siguiente motivo:</p><p><em>{motivo}</em></p>");
+    }
+
+    public async Task CorregirAsync(int solicitudId, string usuarioId)
+    {
+        var solicitud = await _solicitudes.GetByIdAsync(solicitudId)
+            ?? throw new InvalidOperationException("Solicitud no encontrada.");
+
+        try
+        {
+            solicitud.Corregir(usuarioId);
+        }
+        catch (DomainException ex)
+        {
+            throw new AppValidationException(new[] { ex.Message });
+        }
+
+        await _solicitudes.SaveChangesAsync();
     }
 
     public async Task AsignarConsecutivoAutomaticoAsync(int solicitudId)

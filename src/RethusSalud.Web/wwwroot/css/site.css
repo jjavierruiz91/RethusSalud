@@ -1934,6 +1934,501 @@ body {
   color: #c0392b;
 }
 
+/* ---- Revision de funcionario ---- */
+
+.revision-icon {
+  width: 1.1em;
+  height: 1.1em;
+  min-width: 1.1em;
+  vertical-align: -0.15em;
+  flex: none;
+}
+
+.revision-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--rethus-muted);
+  margin-bottom: 1.25rem;
+}
+
+.revision-breadcrumb a {
+  display: flex;
+  align-items: center;
+  color: var(--rethus-muted);
+  text-decoration: none;
+}
+
+.revision-breadcrumb a:hover {
+  color: var(--rethus-blue);
+}
+
+.revision-breadcrumb svg {
+  width: 16px;
+  height: 16px;
+}
+
+.revision-breadcrumb .current {
+  color: var(--rethus-ink);
+  font-weight: 600;
+}
+
+.revision-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.revision-back-btn {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--rethus-border);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rethus-blue);
+  text-decoration: none;
+}
+
+.revision-back-btn:hover {
+  background: var(--rethus-bg-soft);
+}
+
+.revision-back-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.revision-header-title h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--rethus-ink);
+  margin: 0;
+}
+
+.revision-header-title p {
+  font-size: 0.85rem;
+  color: var(--rethus-muted);
+  margin: 0.15rem 0 0;
+}
+
+.revision-info-card {
+  background: #fff;
+  border: 1px solid var(--rethus-border);
+  border-radius: 1rem;
+  padding: 1.1rem 1.4rem;
+  box-shadow: 0 4px 16px rgba(11, 60, 102, 0.05);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.revision-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--rethus-bg-soft);
+  color: var(--rethus-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.revision-avatar svg {
+  width: 24px;
+  height: 24px;
+}
+
+.revision-info-name {
+  font-weight: 700;
+  color: var(--rethus-ink);
+}
+
+.revision-info-sub {
+  font-size: 0.8rem;
+  color: var(--rethus-muted);
+}
+
+.revision-info-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--rethus-muted);
+}
+
+.revision-info-meta svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+.revision-info-meta-label {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.revision-info-meta-value {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--rethus-ink);
+}
+
+.revision-steps {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.revision-step {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: none;
+}
+
+.revision-step-circle {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border: 2px solid var(--rethus-border);
+  color: var(--rethus-muted);
+  background: #fff;
+}
+
+.revision-step.done .revision-step-circle {
+  background: var(--rethus-teal);
+  border-color: var(--rethus-teal);
+  color: #fff;
+}
+
+.revision-step.current .revision-step-circle {
+  border-color: var(--rethus-blue);
+  color: var(--rethus-blue);
+}
+
+.revision-step-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--rethus-muted);
+  white-space: nowrap;
+}
+
+.revision-step.current .revision-step-label,
+.revision-step.done .revision-step-label {
+  color: var(--rethus-ink);
+}
+
+.revision-step-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+}
+
+.revision-step-connector {
+  flex: 1 1 40px;
+  height: 3px;
+  background: var(--rethus-border);
+  margin: 0 0.75rem;
+  border-radius: 2px;
+}
+
+.revision-step-connector.done {
+  background: var(--rethus-teal);
+}
+
+.revision-card {
+  background: #fff;
+  border: 1px solid var(--rethus-border);
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgba(11, 60, 102, 0.05);
+  padding: 1.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.revision-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.revision-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.revision-card-title svg {
+  width: 20px;
+  height: 20px;
+  color: var(--rethus-blue);
+}
+
+.revision-card-title h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--rethus-ink);
+  margin: 0;
+}
+
+.revision-card-title p {
+  font-size: 0.78rem;
+  color: var(--rethus-muted);
+  margin: 0;
+}
+
+.revision-section-label {
+  background: var(--rethus-bg-soft);
+  color: var(--rethus-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.5rem 0.9rem;
+  border-radius: 0.5rem;
+  margin: 1rem 0 0.75rem;
+}
+
+.revision-field-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem 1.5rem;
+}
+
+@media (max-width: 767.98px) {
+  .revision-field-grid { grid-template-columns: 1fr; }
+}
+
+.revision-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.revision-field-icon {
+  color: var(--rethus-muted);
+  margin-top: 0.15rem;
+  flex: none;
+}
+
+.revision-field-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.revision-field-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--rethus-muted);
+}
+
+.revision-field-value {
+  display: block;
+  font-weight: 600;
+  color: var(--rethus-ink);
+}
+
+.revision-field-value.text-danger {
+  color: #c0392b;
+}
+
+.revision-historial-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--rethus-border);
+}
+
+.revision-historial-item:last-of-type {
+  border-bottom: none;
+}
+
+.revision-historial-avatar {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: var(--rethus-blue-deep);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.revision-historial-meta {
+  font-size: 0.78rem;
+  color: var(--rethus-muted);
+}
+
+.revision-historial-text {
+  margin: 0.15rem 0 0;
+  color: var(--rethus-ink);
+}
+
+.revision-comment-form {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.revision-comment-send {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.revision-comment-send svg {
+  width: 16px;
+  height: 16px;
+}
+
+.revision-decision-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  border: 1.5px solid var(--rethus-border);
+  border-radius: 0.75rem;
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.revision-decision-option input[type="radio"] {
+  margin-top: 0.2rem;
+}
+
+.revision-decision-option .icon {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.revision-decision-option .icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.revision-decision-option.success .icon {
+  background: #e3f7ea;
+  color: #1e8449;
+}
+
+.revision-decision-option.success.selected {
+  border-color: #1e8449;
+  background: #f2fbf5;
+}
+
+.revision-decision-option.danger .icon {
+  background: #fdecea;
+  color: #c0392b;
+}
+
+.revision-decision-option.danger.selected {
+  border-color: #c0392b;
+  background: #fef6f5;
+}
+
+.revision-decision-option strong {
+  display: block;
+  color: var(--rethus-ink);
+  font-size: 0.92rem;
+}
+
+.revision-decision-option span {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--rethus-muted);
+}
+
+.revision-list-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #fff;
+  border: 1px solid var(--rethus-border);
+  border-radius: 0.85rem;
+  padding: 0.9rem 1.2rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.revision-list-item.alerta {
+  border-left: 3px solid #b9770e;
+}
+
+.revision-list-avatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  background: var(--rethus-bg-soft);
+  color: var(--rethus-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.revision-list-main {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.revision-list-name {
+  font-weight: 600;
+  color: var(--rethus-ink);
+  font-size: 0.92rem;
+}
+
+.revision-list-sub {
+  font-size: 0.78rem;
+  color: var(--rethus-muted);
+}
+
+.revision-wait-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.65rem;
+  border-radius: 50rem;
+  background: var(--rethus-bg-soft);
+  color: var(--rethus-muted);
+  white-space: nowrap;
+}
+
+.revision-wait-badge.alerta {
+  background: #fef4e0;
+  color: #b9770e;
+}
+
 .confirm-modal-icon-success {
   background: #e3f7ea;
   color: #1e8449;

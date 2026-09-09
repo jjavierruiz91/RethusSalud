@@ -66,6 +66,23 @@ public class TramiteController : Controller
         return File(pdf, "application/pdf", $"certificado-{solicitud.Consecutivo!.Numero}.pdf");
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Corregir(int solicitudId)
+    {
+        try
+        {
+            await _solicitudes.CorregirAsync(solicitudId, UserId);
+        }
+        catch (AppValidationException ex)
+        {
+            TempData["Error"] = string.Join(" ", ex.Errors);
+            return RedirectToAction(nameof(Dashboard));
+        }
+
+        return RedirectToAction(nameof(DatosPersonales), new { solicitudId });
+    }
+
     [HttpGet]
     public async Task<IActionResult> Terminos()
     {

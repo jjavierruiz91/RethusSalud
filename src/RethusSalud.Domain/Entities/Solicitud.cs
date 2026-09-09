@@ -75,7 +75,7 @@ public class Solicitud : Entity
         });
     }
 
-    public void Aprobar(string usuarioId)
+    public void Aprobar(string usuarioId, string? mensaje = null)
     {
         AsegurarEnProceso();
 
@@ -94,7 +94,7 @@ public class Solicitud : Entity
             EstadoResultante = Estado,
             EtapaResultante = EtapaActual,
             UsuarioId = usuarioId,
-            Motivo = "Aprobada",
+            Motivo = string.IsNullOrWhiteSpace(mensaje) ? "Aprobada" : mensaje,
             Fecha = FechaActualizacion
         });
     }
@@ -127,6 +127,27 @@ public class Solicitud : Entity
             EtapaResultante = EtapaActual,
             UsuarioId = usuarioId,
             Motivo = motivo,
+            Fecha = FechaActualizacion
+        });
+    }
+
+    public void Corregir(string usuarioId)
+    {
+        if (Estado != EstadoSolicitud.Rechazado)
+        {
+            throw new DomainException("Solo se puede corregir una solicitud que fue rechazada.");
+        }
+
+        Estado = EstadoSolicitud.Borrador;
+        EtapaActual = null;
+        FechaActualizacion = DateTime.UtcNow;
+
+        Historial.Add(new HistorialEstado
+        {
+            EstadoResultante = Estado,
+            EtapaResultante = EtapaActual,
+            UsuarioId = usuarioId,
+            Motivo = "El ciudadano corrigio la solicitud tras el rechazo",
             Fecha = FechaActualizacion
         });
     }

@@ -96,21 +96,36 @@ public class RevisionController : Controller
         return File(excel, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"bandeja-{etapa}.xlsx");
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Detalle(int id)
+    private static readonly HashSet<string> PasosDeRevision = new()
     {
-        var solicitud = await _solicitudes.ObtenerPorIdAsync(id);
-        if (solicitud is null)
-        {
-            return NotFound();
-        }
+        nameof(Detalle), nameof(DetalleAcademicos), nameof(DetalleDocumentos)
+    };
 
-        return View(solicitud);
+    private async Task<IActionResult> VerPasoAsync(int id, string paso)
+    {
+        ViewBag.VolverA = paso;
+        var solicitud = await _solicitudes.ObtenerPorIdAsync(id);
+        return solicitud is null ? NotFound() : View(solicitud);
     }
+
+    private IActionResult RedirigirAPaso(string? volverA, int id)
+    {
+        var accion = volverA is not null && PasosDeRevision.Contains(volverA) ? volverA : nameof(Detalle);
+        return RedirectToAction(accion, new { id });
+    }
+
+    [HttpGet]
+    public Task<IActionResult> Detalle(int id) => VerPasoAsync(id, nameof(Detalle));
+
+    [HttpGet]
+    public Task<IActionResult> DetalleAcademicos(int id) => VerPasoAsync(id, nameof(DetalleAcademicos));
+
+    [HttpGet]
+    public Task<IActionResult> DetalleDocumentos(int id) => VerPasoAsync(id, nameof(DetalleDocumentos));
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Aprobar(int id)
+    public async Task<IActionResult> Aprobar(int id, string? mensaje)
     {
         if (!await PuedeGestionarAsync(id))
         {
@@ -119,7 +134,7 @@ public class RevisionController : Controller
 
         try
         {
-            await _solicitudes.AprobarAsync(id, UserId);
+            await _solicitudes.AprobarAsync(id, UserId, mensaje);
             TempData["Mensaje"] = "Solicitud aprobada.";
         }
         catch (AppValidationException ex)
@@ -132,7 +147,7 @@ public class RevisionController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Rechazar(int id, string motivo)
+    public async Task<IActionResult> Rechazar(int id, string motivo, string? volverA)
     {
         if (!await PuedeGestionarAsync(id))
         {
@@ -148,13 +163,13 @@ public class RevisionController : Controller
         catch (AppValidationException ex)
         {
             TempData["Error"] = string.Join(" ", ex.Errors);
-            return RedirectToAction(nameof(Detalle), new { id });
+            return RedirigirAPaso(volverA, id);
         }
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AgregarComentario(int id, string texto)
+    public async Task<IActionResult> AgregarComentario(int id, string texto, string? volverA)
     {
         try
         {
@@ -165,7 +180,7 @@ public class RevisionController : Controller
             TempData["Error"] = string.Join(" ", ex.Errors);
         }
 
-        return RedirectToAction(nameof(Detalle), new { id });
+        return RedirigirAPaso(volverA, id);
     }
 
     [HttpGet]
@@ -177,7 +192,7 @@ public class RevisionController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AsignarConsecutivoAutomatico(int id)
+    public async Task<IActionResult> AsignarConsecutivoAutomatico(int id, string? volverA)
     {
         if (!await PuedeGestionarAsync(id))
         {
@@ -193,12 +208,12 @@ public class RevisionController : Controller
             TempData["Error"] = string.Join(" ", ex.Errors);
         }
 
-        return RedirectToAction(nameof(Detalle), new { id });
+        return RedirigirAPaso(volverA, id);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AsignarConsecutivoManual(int id, string numero)
+    public async Task<IActionResult> AsignarConsecutivoManual(int id, string numero, string? volverA)
     {
         if (!await PuedeGestionarAsync(id))
         {
@@ -214,7 +229,7 @@ public class RevisionController : Controller
             TempData["Error"] = string.Join(" ", ex.Errors);
         }
 
-        return RedirectToAction(nameof(Detalle), new { id });
+        return RedirigirAPaso(volverA, id);
     }
 
     [HttpGet]

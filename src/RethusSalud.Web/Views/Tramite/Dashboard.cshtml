@@ -27,6 +27,20 @@
             {
                 <span>En proceso - Etapa actual: @Model.EtapaActual</span>
             }
+            else if (Model.Estado == EstadoSolicitud.Rechazado)
+            {
+                <span>Rechazada</span>
+                var motivoRechazo = Model.Historial
+                    .Where(h => h.EstadoResultante == EstadoSolicitud.Rechazado)
+                    .OrderByDescending(h => h.Fecha)
+                    .FirstOrDefault()?.Motivo;
+                @if (!string.IsNullOrWhiteSpace(motivoRechazo))
+                {
+                    <div class="alert alert-danger mt-2 mb-0">
+                        <strong>Motivo del rechazo:</strong> @motivoRechazo
+                    </div>
+                }
+            }
             else
             {
                 <span>@Model.Estado</span>
@@ -44,6 +58,13 @@
         else if (Model.Estado == EstadoSolicitud.Borrador)
         {
             <a class="btn btn-primary" asp-controller="Tramite" asp-action="DatosPersonales" asp-route-solicitudId="@Model.Id">Continuar proceso de tramite</a>
+        }
+        else if (Model.Estado == EstadoSolicitud.Rechazado)
+        {
+            <form asp-controller="Tramite" asp-action="Corregir" method="post">
+                <input type="hidden" name="solicitudId" value="@Model.Id" />
+                <button type="submit" class="btn btn-warning">Corregir y reenviar solicitud</button>
+            </form>
         }
         else if (Model.Estado == EstadoSolicitud.Aprobado)
         {

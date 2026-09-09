@@ -1,0 +1,34 @@
+@using RethusSalud.Web.Helpers
+@model RethusSalud.Web.Models.Revision.RevisionStepsViewModel
+@{
+    var pasos = new[] { "Datos personales", "Datos académicos", "Documentos" };
+    var acciones = new[] { "Detalle", "DetalleAcademicos", "DetalleDocumentos" };
+}
+
+<div class="revision-card">
+    <div class="revision-steps">
+        @for (var i = 0; i < pasos.Length; i++)
+        {
+            var estado = i == Model.PasoActual ? "current" : i < Model.PasoActual ? "done" : "";
+            var numeroOCheck = i < Model.PasoActual ? RevisionIcons.Icon("check") : new Microsoft.AspNetCore.Html.HtmlString((i + 1).ToString());
+            <div class="revision-step @estado">
+                @if (i == Model.PasoActual)
+                {
+                    <span class="revision-step-circle">@numeroOCheck</span>
+                    <span class="revision-step-label">@pasos[i]</span>
+                }
+                else
+                {
+                    <a class="revision-step-link" asp-controller="Revision" asp-action="@acciones[i]" asp-route-id="@Model.SolicitudId">
+                        <span class="revision-step-circle">@numeroOCheck</span>
+                        <span class="revision-step-label">@pasos[i]</span>
+                    </a>
+                }
+            </div>
+            if (i < pasos.Length - 1)
+            {
+                <span class="revision-step-connector @(i < Model.PasoActual ? "done" : "")"></span>
+            }
+        }
+    </div>
+</div>

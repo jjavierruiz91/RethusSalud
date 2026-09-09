@@ -20,9 +20,16 @@ public class SolicitudRepository : ISolicitudRepository
 
     private IQueryable<Solicitud> ConCargasCompletas() =>
         _context.Solicitudes
-            .Include(s => s.Solicitante)
+            .Include(s => s.Solicitante).ThenInclude(s => s.PaisNacimiento)
+            .Include(s => s.Solicitante).ThenInclude(s => s.DepartamentoNacimiento)
+            .Include(s => s.Solicitante).ThenInclude(s => s.MunicipioNacimiento)
+            .Include(s => s.Solicitante).ThenInclude(s => s.PaisResidencia)
+            .Include(s => s.Solicitante).ThenInclude(s => s.DepartamentoResidencia)
+            .Include(s => s.Solicitante).ThenInclude(s => s.MunicipioResidencia)
             .Include(s => s.Profesion)
-            .Include(s => s.DatosAcademicos)
+            .Include(s => s.DatosAcademicos).ThenInclude(d => d!.PaisInstitucion)
+            .Include(s => s.DatosAcademicos).ThenInclude(d => d!.DepartamentoInstitucion)
+            .Include(s => s.DatosAcademicos).ThenInclude(d => d!.MunicipioInstitucion)
             .Include(s => s.Consecutivo)
             .Include(s => s.Archivos)
             .Include(s => s.Comentarios)

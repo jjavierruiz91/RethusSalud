@@ -5,9 +5,51 @@
     Layout = "_AppLayout";
     var totalEnProceso = Model.Solicitudes.Count(s => s.Estado == EstadoSolicitud.EnProceso);
     var totalAprobadas = Model.Solicitudes.Count(s => s.Estado == EstadoSolicitud.Aprobado);
+    var totalEsperandoLargo = Model.Solicitudes.Count(s =>
+        s.Estado == EstadoSolicitud.EnProceso && (DateTime.UtcNow - s.FechaCreacion).TotalDays > 2);
+
+    string BadgeEstado(EstadoSolicitud e) => e switch
+    {
+        EstadoSolicitud.Aprobado => "app-badge-success",
+        EstadoSolicitud.Rechazado => "app-badge-danger",
+        EstadoSolicitud.EnProceso => "app-badge-warning",
+        _ => "app-badge-muted"
+    };
+
+    string Iniciales(RethusSalud.Domain.Entities.Solicitante s)
+    {
+        var n = s.Nombres.Length > 0 ? s.Nombres[0].ToString() : "";
+        var a = s.Apellidos.Length > 0 ? s.Apellidos[0].ToString() : "";
+        return (n + a).ToUpperInvariant();
+    }
+
+    (string Texto, bool Alerta) TiempoEspera(RethusSalud.Domain.Entities.Solicitud s)
+    {
+        if (s.Estado != EstadoSolicitud.EnProceso)
+        {
+            return ("", false);
+        }
+
+        var dias = (DateTime.UtcNow - s.FechaCreacion).TotalDays;
+        if (dias < 1)
+        {
+            return ("Hoy", false);
+        }
+
+        var enteros = (int)dias;
+        var texto = $"{enteros} día{(enteros == 1 ? "" : "s")} esperando";
+        return (texto, dias > 2);
+    }
 }
 
-<h1>Bandeja de revisión &mdash; @Model.Etapa</h1>
+<nav class="revision-breadcrumb">
+    <span class="current">Inicio</span>
+    <span>&rsaquo;</span>
+    <span class="current">Bandeja de revisión</span>
+</nav>
+
+<h1>Bandeja de revisión</h1>
+<p class="text-muted mb-3">Etapa @Model.Etapa &middot; @Model.Solicitudes.Count solicitud(es) ReTHUS en tu bandeja</p>
 
 <div class="app-stat-row">
     <div class="app-stat-card">
@@ -19,19 +61,25 @@
         <span class="app-stat-card-label">En proceso</span>
     </div>
     <div class="app-stat-card">
+        <span class="app-stat-card-value" style="color:#b9770e">@totalEsperandoLargo</span>
+        <span class="app-stat-card-label">Esperando &gt; 2 días</span>
+    </div>
+    <div class="app-stat-card">
         <span class="app-stat-card-value">@totalAprobadas</span>
         <span class="app-stat-card-label">Aprobadas</span>
     </div>
 </div>
 
 <div class="app-panel">
-<form method="get" class="row g-2 mb-3">
-    <div class="col-auto">
-        <input type="text" name="NumeroIdentificacion" class="form-control" placeholder="Identificacion" value="@Model.Filtro.NumeroIdentificacion" />
+<form method="get" class="row g-3 mb-3 align-items-end">
+    <div class="col-12 col-sm-6 col-lg-3">
+        <label class="form-label small text-muted mb-1">Identificación</label>
+        <input type="text" name="NumeroIdentificacion" class="form-control" placeholder="Número de identificación" value="@Model.Filtro.NumeroIdentificacion" />
     </div>
-    <div class="col-auto">
-        <select name="TipoTramite" class="form-select">
-            <option value="">Tipo de tramite</option>
+    <div class="col-6 col-sm-4 col-lg-2">
+        <label class="form-label small text-muted mb-1">Tipo de trámite</label>
+        <select name="TipoTramite" class="form-select" onchange="this.form.submit()">
+            <option value="">Todos</option>
             @foreach (var tipo in Enum.GetValues<TipoTramite>())
             {
                 @if (Model.Filtro.TipoTramite == tipo)
@@ -45,9 +93,10 @@
             }
         </select>
     </div>
-    <div class="col-auto">
-        <select name="Estado" class="form-select">
-            <option value="">Estados</option>
+    <div class="col-6 col-sm-4 col-lg-2">
+        <label class="form-label small text-muted mb-1">Estado</label>
+        <select name="Estado" class="form-select" onchange="this.form.submit()">
+            <option value="">Todos</option>
             @foreach (var estado in Enum.GetValues<EstadoSolicitud>())
             {
                 @if (Model.Filtro.Estado == estado)
@@ -61,13 +110,15 @@
             }
         </select>
     </div>
-    <div class="col-auto">
+    <div class="col-6 col-sm-6 col-lg-2">
+        <label class="form-label small text-muted mb-1">Desde</label>
         <input type="date" name="Desde" class="form-control" value="@Model.Filtro.Desde?.ToString("yyyy-MM-dd")" />
     </div>
-    <div class="col-auto">
+    <div class="col-6 col-sm-6 col-lg-2">
+        <label class="form-label small text-muted mb-1">Hasta</label>
         <input type="date" name="Hasta" class="form-control" value="@Model.Filtro.Hasta?.ToString("yyyy-MM-dd")" />
     </div>
-    <div class="col-auto">
+    <div class="col-12 d-flex flex-wrap gap-2">
         <button type="submit" class="btn btn-outline-primary">Buscar</button>
         <a asp-action="Bandeja" class="btn btn-outline-secondary">Limpiar</a>
         <a asp-action="ExportarExcel"
@@ -76,52 +127,29 @@
            asp-route-Estado="@Model.Filtro.Estado"
            asp-route-Desde="@Model.Filtro.Desde?.ToString("yyyy-MM-dd")"
            asp-route-Hasta="@Model.Filtro.Hasta?.ToString("yyyy-MM-dd")"
-           class="btn btn-outline-success">Generar excel</a>
+           class="btn btn-outline-success">Exportar</a>
     </div>
 </form>
 
-<div class="table-responsive">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Identificacion</th>
-                <th>Nombre</th>
-                <th>Tipo de tramite</th>
-                <th>Estado</th>
-                <th>Etapa actual</th>
-                <th>Fecha de creacion</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var solicitud in Model.Solicitudes)
-            {
-                var badgeClass = solicitud.Estado switch
-                {
-                    EstadoSolicitud.Aprobado => "app-badge-success",
-                    EstadoSolicitud.Rechazado => "app-badge-danger",
-                    EstadoSolicitud.EnProceso => "app-badge-warning",
-                    _ => "app-badge-muted"
-                };
-                <tr>
-                    <td>@solicitud.Solicitante.NumeroIdentificacion</td>
-                    <td>@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</td>
-                    <td>@solicitud.TipoTramite</td>
-                    <td><span class="app-badge @badgeClass">@solicitud.Estado</span></td>
-                    <td>@solicitud.EtapaActual</td>
-                    <td>@solicitud.FechaCreacion.ToLocalTime().ToString("dd MMM yy, HH:mm")</td>
-                    <td>
-                        <a class="btn btn-sm btn-outline-primary" asp-action="Detalle" asp-route-id="@solicitud.Id">Revisar</a>
-                    </td>
-                </tr>
-            }
-            @if (!Model.Solicitudes.Any())
-            {
-                <tr>
-                    <td colspan="7" class="text-center text-muted">Sin resultados. No hay informacion disponible que coincida con tu busqueda.</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+@foreach (var solicitud in Model.Solicitudes)
+{
+    var espera = TiempoEspera(solicitud);
+    <div class="revision-list-item @(espera.Alerta ? "alerta" : "")">
+        <span class="revision-list-avatar">@Iniciales(solicitud.Solicitante)</span>
+        <div class="revision-list-main">
+            <div class="revision-list-name">@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</div>
+            <div class="revision-list-sub">@solicitud.Solicitante.TipoIdentificacion @solicitud.Solicitante.NumeroIdentificacion &middot; @solicitud.TipoTramite</div>
+        </div>
+        <span class="app-badge @BadgeEstado(solicitud.Estado)">@solicitud.Estado</span>
+        @if (!string.IsNullOrEmpty(espera.Texto))
+        {
+            <span class="revision-wait-badge @(espera.Alerta ? "alerta" : "")">@espera.Texto</span>
+        }
+        <a class="btn btn-sm btn-primary" asp-action="Detalle" asp-route-id="@solicitud.Id">Revisar</a>
+    </div>
+}
+@if (!Model.Solicitudes.Any())
+{
+    <p class="text-center text-muted mb-0">Sin resultados. No hay informacion disponible que coincida con tu busqueda.</p>
+}
 </div>

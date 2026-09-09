@@ -1,0 +1,66 @@
+@model RethusSalud.Domain.Entities.Solicitud
+@using RethusSalud.Domain.Enums
+@using RethusSalud.Web.Helpers
+@{
+    ViewData["Title"] = "Revision de usuario";
+    Layout = "_AppLayout";
+    ViewBag.PasoActual = 2;
+    ViewBag.NombrePaso = "Documentos";
+    var etiquetas = new Dictionary<TipoDocumentoAdjunto, string>
+    {
+        [TipoDocumentoAdjunto.CedulaAmpliada] = "Cedula ampliada al 150%",
+        [TipoDocumentoAdjunto.DiplomaGrado] = "Diploma de grado",
+        [TipoDocumentoAdjunto.ActaGrado] = "Acta de grado",
+        [TipoDocumentoAdjunto.TarjetaProfesional] = "Tarjeta profesional"
+    };
+}
+
+@await Html.PartialAsync("_RevisionHeader", Model)
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="revision-card">
+            <div class="revision-card-header">
+                <div class="revision-card-title">
+                    @RevisionIcons.Icon("file")
+                    <div>
+                        <h2>Documentos</h2>
+                        <p>Soportes cargados por el usuario</p>
+                    </div>
+                </div>
+            </div>
+
+            @foreach (var tipo in RethusSalud.Application.Services.DocumentoService.DocumentosRequeridos(Model.Profesion))
+            {
+                var archivo = Model.Archivos.FirstOrDefault(a => a.TipoDocumento == tipo);
+                <div class="wizard-doc-card mb-2">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+                        <h2>@etiquetas[tipo]</h2>
+                        @if (archivo is not null)
+                        {
+                            <span class="app-badge app-badge-success">Cargado</span>
+                        }
+                        else
+                        {
+                            <span class="app-badge app-badge-muted">Pendiente</span>
+                        }
+                    </div>
+                    @if (archivo is not null)
+                    {
+                        <p class="mb-0"><a asp-controller="Revision" asp-action="DescargarArchivo" asp-route-archivoId="@archivo.Id">@archivo.NombreArchivo</a></p>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">El ciudadano aun no ha cargado este documento.</p>
+                    }
+                </div>
+            }
+        </div>
+
+        @await Html.PartialAsync("_RevisionComentarios", Model)
+    </div>
+
+    <div class="col-md-4">
+        @await Html.PartialAsync("_RevisionDecisionPanel", Model)
+    </div>
+</div>
