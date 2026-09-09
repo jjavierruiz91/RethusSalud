@@ -35,6 +35,8 @@ public class RevisionController : Controller
         _userManager = userManager;
     }
 
+    private const int TamanoPagina = 15;
+
     private string UserId => _userManager.GetUserId(User)!;
 
     private async Task<EtapaSolicitud?> ObtenerEtapaDelUsuarioAsync()
@@ -75,9 +77,18 @@ public class RevisionController : Controller
         }
 
         var filtroDto = new BandejaFiltroDto(filtro.NumeroIdentificacion, filtro.TipoTramite, filtro.Estado, filtro.Desde, filtro.Hasta);
-        var solicitudes = await _solicitudes.ObtenerBandejaAsync(etapa.Value, filtroDto);
+        var pagina = Math.Max(filtro.Pagina, 1);
+        var resultado = await _solicitudes.ObtenerBandejaPaginadaAsync(etapa.Value, filtroDto, pagina, TamanoPagina);
 
-        return View(new BandejaViewModel { Etapa = etapa.Value, Filtro = filtro, Solicitudes = solicitudes });
+        return View(new BandejaViewModel
+        {
+            Etapa = etapa.Value,
+            Filtro = filtro,
+            Pagina = resultado.Pagina,
+            TotalEnProceso = resultado.TotalEnProceso,
+            TotalAprobadas = resultado.TotalAprobadas,
+            TotalEsperandoLargo = resultado.TotalEsperandoLargo
+        });
     }
 
     [HttpGet]
@@ -100,9 +111,10 @@ public class RevisionController : Controller
     public async Task<IActionResult> Buscar(BuscarFiltroViewModel filtro)
     {
         var filtroDto = new BandejaFiltroDto(filtro.NumeroIdentificacion, filtro.TipoTramite, filtro.Estado, filtro.Desde, filtro.Hasta, filtro.Etapa);
-        var solicitudes = await _solicitudes.ObtenerSeguimientoAsync(filtroDto);
+        var pagina = Math.Max(filtro.Pagina, 1);
+        var resultado = await _solicitudes.ObtenerSeguimientoPaginadoAsync(filtroDto, pagina, TamanoPagina);
 
-        return View(new BuscarViewModel { Filtro = filtro, Solicitudes = solicitudes });
+        return View(new BuscarViewModel { Filtro = filtro, Pagina = resultado });
     }
 
     private static readonly HashSet<string> PasosDeRevision = new()

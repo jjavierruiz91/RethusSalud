@@ -94,24 +94,24 @@ public static class CatalogoSeeder
 
         var profesiones = new List<Profesion>
         {
-            new() { Nombre = "Auxiliar administrativo en salud", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Auxiliar },
-            new() { Nombre = "Auxiliar en enfermeria", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Auxiliar },
-            new() { Nombre = "Auxiliar en salud oral", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Auxiliar },
-            new() { Nombre = "Auxiliar en salud publica", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Auxiliar },
-            new() { Nombre = "Auxiliar en servicios farmaceuticos", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Auxiliar },
+            new() { Nombre = "Auxiliar administrativo en salud", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Auxiliar },
+            new() { Nombre = "Auxiliar en enfermeria", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Auxiliar },
+            new() { Nombre = "Auxiliar en salud oral", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Auxiliar },
+            new() { Nombre = "Auxiliar en salud publica", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Auxiliar },
+            new() { Nombre = "Auxiliar en servicios farmaceuticos", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Auxiliar },
 
-            new() { Nombre = "Tecnico profesional en atencion prehospitalaria", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.TecnicoProfesional },
-            new() { Nombre = "Tecnico profesional en citologia", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.TecnicoProfesional },
+            new() { Nombre = "Tecnico profesional en atencion prehospitalaria", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.TecnicoProfesional },
+            new() { Nombre = "Tecnico profesional en citologia", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.TecnicoProfesional },
 
-            new() { Nombre = "Tecnologia en atencion prehospitalaria", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Tecnologo },
-            new() { Nombre = "Tecnologia en citohistologia", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Tecnologo },
-            new() { Nombre = "Tecnologia en regencia en farmacia", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Tecnologo },
-            new() { Nombre = "Tecnologia en manejo de fuentes abiertas de uso diagnostico y terapeutico", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Tecnologo },
-            new() { Nombre = "Tecnologia en radiodiagnostico y radioterapia", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Tecnologo },
-            new() { Nombre = "Tecnologia en radiologia e imagenes diagnosticas", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Tecnologo },
-            new() { Nombre = "Tecnologia en radioterapia", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Tecnologo },
+            new() { Nombre = "Tecnologia en atencion prehospitalaria", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Tecnologo },
+            new() { Nombre = "Tecnologia en citohistologia", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Tecnologo },
+            new() { Nombre = "Tecnologia en regencia en farmacia", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Tecnologo },
+            new() { Nombre = "Tecnologia en manejo de fuentes abiertas de uso diagnostico y terapeutico", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Tecnologo },
+            new() { Nombre = "Tecnologia en radiodiagnostico y radioterapia", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Tecnologo },
+            new() { Nombre = "Tecnologia en radiologia e imagenes diagnosticas", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Tecnologo },
+            new() { Nombre = "Tecnologia en radioterapia", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Tecnologo },
 
-            new() { Nombre = "Psicologia", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Profesional }
+            new() { Nombre = "Psicologia", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Profesional }
         };
 
         context.Profesiones.AddRange(profesiones);

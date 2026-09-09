@@ -14,7 +14,7 @@ public class DocumentoServiceTests
     {
         Id = 1,
         Nombre = nombre,
-        TipoTramite = TipoTramite.ReTHUS,
+        TipoTramite = TipoTramite.Rethus,
         NivelFormacion = NivelFormacion.Profesional
     };
 

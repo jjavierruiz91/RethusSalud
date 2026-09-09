@@ -110,7 +110,7 @@ public class TramiteController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> SeleccionarTramite(TipoTramite tipoTramite = TipoTramite.ReTHUS)
+    public async Task<IActionResult> SeleccionarTramite(TipoTramite tipoTramite = TipoTramite.Rethus)
     {
         var solicitante = await _solicitantes.ObtenerPorUsuarioAsync(UserId);
         if (solicitante.FechaAceptacionTerminos is null)

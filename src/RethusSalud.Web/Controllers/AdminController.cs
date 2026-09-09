@@ -36,13 +36,23 @@ public class AdminController : Controller
         _reportes = reportes;
     }
 
+    private const int TamanoPagina = 15;
+
     [HttpGet]
     public async Task<IActionResult> SeguimientoBandeja(SeguimientoFiltroViewModel filtro)
     {
         var filtroDto = new BandejaFiltroDto(filtro.NumeroIdentificacion, filtro.TipoTramite, filtro.Estado, filtro.Desde, filtro.Hasta, filtro.Etapa);
-        var solicitudes = await _solicitudes.ObtenerSeguimientoAsync(filtroDto);
+        var pagina = Math.Max(filtro.Pagina, 1);
+        var resultado = await _solicitudes.ObtenerSeguimientoConEstadisticasAsync(filtroDto, pagina, TamanoPagina);
 
-        return View(new SeguimientoBandejaViewModel { Filtro = filtro, Solicitudes = solicitudes });
+        return View(new SeguimientoBandejaViewModel
+        {
+            Filtro = filtro,
+            Pagina = resultado.Pagina,
+            TotalEnProceso = resultado.TotalEnProceso,
+            TotalAprobadas = resultado.TotalAprobadas,
+            TotalRechazadas = resultado.TotalRechazadas
+        });
     }
 
     [HttpGet]

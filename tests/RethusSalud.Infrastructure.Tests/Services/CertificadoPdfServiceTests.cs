@@ -26,7 +26,7 @@ public class CertificadoPdfServiceTests
             PaisNacimiento = pais,
             PaisResidencia = pais
         };
-        var profesion = new Profesion { Id = 1, Nombre = "Psicologia", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Profesional };
+        var profesion = new Profesion { Id = 1, Nombre = "Psicologia", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Profesional };
 
         var solicitud = Solicitud.IniciarBorrador(solicitante, profesion);
         solicitud.DatosAcademicos = new DatosAcademicos
@@ -62,7 +62,7 @@ public class CertificadoPdfServiceTests
     {
         var pais = new Pais { Id = 1, Nombre = "Colombia" };
         var solicitante = new Solicitante { Id = 1, Nombres = "Franco", Apellidos = "Ovalle", PaisNacimiento = pais, PaisResidencia = pais };
-        var profesion = new Profesion { Id = 1, Nombre = "Psicologia", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Profesional };
+        var profesion = new Profesion { Id = 1, Nombre = "Psicologia", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Profesional };
         var solicitud = Solicitud.IniciarBorrador(solicitante, profesion);
 
         var servicio = new CertificadoPdfService(CrearConfiguracion());

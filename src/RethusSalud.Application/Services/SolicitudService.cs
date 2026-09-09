@@ -61,6 +61,15 @@ public class SolicitudService
     public Task<List<Solicitud>> ObtenerSeguimientoAsync(BandejaFiltroDto filtro) =>
         _solicitudes.GetTodasAsync(filtro);
 
+    public Task<BandejaPagedResult> ObtenerBandejaPaginadaAsync(EtapaSolicitud etapa, BandejaFiltroDto filtro, int pagina, int tamanoPagina) =>
+        _solicitudes.GetPorEtapaPagedAsync(etapa, filtro, pagina, tamanoPagina);
+
+    public Task<PagedResult<Solicitud>> ObtenerSeguimientoPaginadoAsync(BandejaFiltroDto filtro, int pagina, int tamanoPagina) =>
+        _solicitudes.GetTodasPagedAsync(filtro, pagina, tamanoPagina);
+
+    public Task<SeguimientoPagedResult> ObtenerSeguimientoConEstadisticasAsync(BandejaFiltroDto filtro, int pagina, int tamanoPagina) =>
+        _solicitudes.GetSeguimientoPagedAsync(filtro, pagina, tamanoPagina);
+
     public async Task AprobarAsync(int solicitudId, string usuarioId, string? mensaje = null)
     {
         var solicitud = await _solicitudes.GetByIdAsync(solicitudId)

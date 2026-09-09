@@ -1,0 +1,55 @@
+@model RethusSalud.Web.Models.Shared.PaginacionViewModel
+@{
+    Dictionary<string, string?> RouteFor(int pagina)
+    {
+        var dict = new Dictionary<string, string?>(Model.RouteValues) { ["Pagina"] = pagina.ToString() };
+        return dict;
+    }
+
+    var actual = Model.PaginaActual;
+    var total = Model.TotalPaginas;
+}
+@if (total > 1)
+{
+    var inicio = Math.Max(1, actual - 2);
+    var fin = Math.Min(total, inicio + 4);
+    inicio = Math.Max(1, fin - 4);
+
+    <nav aria-label="Paginación" class="app-pagination d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
+        <span class="text-muted small">@Model.TotalRegistros resultado(s) &middot; página @actual de @total</span>
+        <ul class="pagination mb-0">
+            <li class="page-item @(actual <= 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="@Model.Accion" asp-all-route-data="RouteFor(actual - 1)" aria-label="Anterior">&laquo;</a>
+            </li>
+            @if (inicio > 1)
+            {
+                <li class="page-item"><a class="page-link" asp-action="@Model.Accion" asp-all-route-data="RouteFor(1)">1</a></li>
+                if (inicio > 2)
+                {
+                    <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                }
+            }
+            @for (var p = inicio; p <= fin; p++)
+            {
+                <li class="page-item @(p == actual ? "active" : "")">
+                    <a class="page-link" asp-action="@Model.Accion" asp-all-route-data="RouteFor(p)">@p</a>
+                </li>
+            }
+            @if (fin < total)
+            {
+                if (fin < total - 1)
+                {
+                    <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                }
+                <li class="page-item"><a class="page-link" asp-action="@Model.Accion" asp-all-route-data="RouteFor(total)">@total</a></li>
+            }
+            <li class="page-item @(actual >= total ? "disabled" : "")">
+                <a class="page-link" asp-action="@Model.Accion" asp-all-route-data="RouteFor(actual + 1)" aria-label="Siguiente">&raquo;</a>
+            </li>
+        </ul>
+    </nav>
+}
+else if (Model.TotalRegistros > 0)
+{
+    <p class="text-muted small mt-3 mb-0">@Model.TotalRegistros resultado(s)</p>
+}

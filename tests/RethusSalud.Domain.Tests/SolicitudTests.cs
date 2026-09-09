@@ -22,7 +22,7 @@ public class SolicitudTests
             PaisResidencia = pais,
             PaisResidenciaId = pais.Id
         };
-        var profesion = new Profesion { Id = 1, Nombre = "PSICOLOGIA", TipoTramite = TipoTramite.ReTHUS, NivelFormacion = NivelFormacion.Profesional };
+        var profesion = new Profesion { Id = 1, Nombre = "PSICOLOGIA", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Profesional };
 
         return Solicitud.IniciarBorrador(solicitante, profesion);
     }

@@ -1,6 +1,7 @@
 @model RethusSalud.Web.Models.Revision.BuscarViewModel
 @using RethusSalud.Domain.Enums
 @using RethusSalud.Web.Helpers
+@using RethusSalud.Web.Models.Shared
 @{
     ViewData["Title"] = "Buscar solicitud";
     Layout = "_AppLayout";
@@ -13,40 +14,23 @@
         _ => "app-badge-muted"
     };
 
-    string Iniciales(RethusSalud.Domain.Entities.Solicitante s)
+    var paginacion = new PaginacionViewModel
     {
-        var n = s.Nombres.Length > 0 ? s.Nombres[0].ToString() : "";
-        var a = s.Apellidos.Length > 0 ? s.Apellidos[0].ToString() : "";
-        return (n + a).ToUpperInvariant();
-    }
-
-    (string Texto, bool Alerta) TiempoEspera(RethusSalud.Domain.Entities.Solicitud s)
-    {
-        if (s.Estado != EstadoSolicitud.EnProceso)
+        PaginaActual = Model.Pagina.PageNumber,
+        TotalPaginas = Model.Pagina.TotalPages,
+        TotalRegistros = Model.Pagina.TotalCount,
+        Accion = "Buscar",
+        RouteValues = new Dictionary<string, string?>
         {
-            return ("", false);
+            ["NumeroIdentificacion"] = Model.Filtro.NumeroIdentificacion,
+            ["TipoTramite"] = Model.Filtro.TipoTramite?.ToString(),
+            ["Etapa"] = Model.Filtro.Etapa?.ToString(),
+            ["Estado"] = Model.Filtro.Estado?.ToString(),
+            ["Desde"] = Model.Filtro.Desde?.ToString("yyyy-MM-dd"),
+            ["Hasta"] = Model.Filtro.Hasta?.ToString("yyyy-MM-dd")
         }
-
-        var dias = (DateTime.UtcNow - s.FechaCreacion).TotalDays;
-        if (dias < 1)
-        {
-            return ("Hoy", false);
-        }
-
-        var enteros = (int)dias;
-        var texto = $"{enteros} día{(enteros == 1 ? "" : "s")} esperando";
-        return (texto, dias > 2);
-    }
+    };
 }
-
-<nav class="revision-breadcrumb">
-    <span class="current">Inicio</span>
-    <span>&rsaquo;</span>
-    <span class="current">Buscar solicitud</span>
-</nav>
-
-<h1>Buscar solicitud</h1>
-<p class="text-muted mb-3">Consulta en qué etapa se encuentra cualquier solicitud, sin importar quién la esté revisando.</p>
 
 <div class="app-panel">
 <form method="get" class="row g-3 mb-3 align-items-end">
@@ -111,26 +95,45 @@
     </div>
 </form>
 
-@foreach (var solicitud in Model.Solicitudes)
-{
-    var espera = TiempoEspera(solicitud);
-    <div class="revision-list-item @(espera.Alerta ? "alerta" : "")">
-        <span class="revision-list-avatar">@Iniciales(solicitud.Solicitante)</span>
-        <div class="revision-list-main">
-            <div class="revision-list-name">@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</div>
-            <div class="revision-list-sub">@solicitud.Solicitante.TipoIdentificacion @solicitud.Solicitante.NumeroIdentificacion &middot; @solicitud.TipoTramite</div>
-        </div>
-        <span class="app-badge app-badge-muted">@(solicitud.EtapaActual?.ToString() ?? "-")</span>
-        <span class="app-badge @BadgeEstado(solicitud.Estado)">@EstadoDisplay.Texto(solicitud.Estado)</span>
-        @if (!string.IsNullOrEmpty(espera.Texto))
-        {
-            <span class="revision-wait-badge @(espera.Alerta ? "alerta" : "")">@espera.Texto</span>
-        }
-        <a class="btn btn-sm btn-primary" asp-action="Detalle" asp-route-id="@solicitud.Id">Ver seguimiento</a>
-    </div>
-}
-@if (!Model.Solicitudes.Any())
-{
-    <p class="text-center text-muted mb-0">Sin resultados. No hay solicitudes que coincidan con tu busqueda.</p>
-}
+<div class="table-responsive">
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Identificación</th>
+                <th>Nombre</th>
+                <th>Tipo de trámite</th>
+                <th>Estado</th>
+                <th>Etapa actual</th>
+                <th>Consecutivo</th>
+                <th>Fecha de creación</th>
+                <th>Última actualización</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var solicitud in Model.Pagina.Items)
+            {
+                <tr>
+                    <td>@solicitud.Solicitante.NumeroIdentificacion</td>
+                    <td>@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</td>
+                    <td>@solicitud.TipoTramite</td>
+                    <td><span class="app-badge @BadgeEstado(solicitud.Estado)">@EstadoDisplay.Texto(solicitud.Estado)</span></td>
+                    <td>@(solicitud.EtapaActual?.ToString() ?? "-")</td>
+                    <td>@(solicitud.Consecutivo is not null ? solicitud.Consecutivo.Numero : "No asignado")</td>
+                    <td>@solicitud.FechaCreacion.ToLocalTime().ToString("dd MMM yy, HH:mm")</td>
+                    <td>@solicitud.FechaActualizacion.ToLocalTime().ToString("dd MMM yy, HH:mm")</td>
+                    <td class="text-end"><a class="btn btn-sm btn-primary" asp-action="Detalle" asp-route-id="@solicitud.Id">Ver seguimiento</a></td>
+                </tr>
+            }
+            @if (!Model.Pagina.Items.Any())
+            {
+                <tr>
+                    <td colspan="9" class="text-center text-muted">Sin resultados. No hay solicitudes que coincidan con tu busqueda.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<partial name="_Pagination" model="paginacion" />
 </div>

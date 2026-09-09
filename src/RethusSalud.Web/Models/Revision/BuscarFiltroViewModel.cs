@@ -10,4 +10,5 @@ public class BuscarFiltroViewModel
     public EstadoSolicitud? Estado { get; set; }
     public DateTime? Desde { get; set; }
     public DateTime? Hasta { get; set; }
+    public int Pagina { get; set; } = 1;
 }

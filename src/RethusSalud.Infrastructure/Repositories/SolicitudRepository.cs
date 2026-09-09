@@ -2,6 +2,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using RethusSalud.Application.Common;
 using RethusSalud.Application.Dtos;
+using PagedResult = RethusSalud.Application.Common.PagedResult<RethusSalud.Domain.Entities.Solicitud>;
 using RethusSalud.Application.Interfaces;
 using RethusSalud.Domain.Entities;
 using RethusSalud.Domain.Enums;
@@ -122,6 +123,120 @@ public class SolicitudRepository : ISolicitudRepository
         }
 
         return await query.OrderByDescending(s => s.FechaCreacion).ToListAsync();
+    }
+
+    private IQueryable<Solicitud> ParaListado() =>
+        _context.Solicitudes
+            .Include(s => s.Solicitante)
+            .Include(s => s.Consecutivo);
+
+    private static IQueryable<Solicitud> AplicarFiltrosComunes(IQueryable<Solicitud> query, BandejaFiltroDto filtro)
+    {
+        if (!string.IsNullOrWhiteSpace(filtro.NumeroIdentificacion))
+        {
+            query = query.Where(s => s.Solicitante.NumeroIdentificacion.Contains(filtro.NumeroIdentificacion));
+        }
+
+        if (filtro.TipoTramite.HasValue)
+        {
+            query = query.Where(s => s.TipoTramite == filtro.TipoTramite.Value);
+        }
+
+        if (filtro.Desde.HasValue)
+        {
+            query = query.Where(s => s.FechaCreacion >= filtro.Desde.Value);
+        }
+
+        if (filtro.Hasta.HasValue)
+        {
+            query = query.Where(s => s.FechaCreacion <= filtro.Hasta.Value);
+        }
+
+        return query;
+    }
+
+    public async Task<BandejaPagedResult> GetPorEtapaPagedAsync(EtapaSolicitud etapa, BandejaFiltroDto filtro, int pageNumber, int pageSize)
+    {
+        var query = ParaListado().Where(s => s.EtapaActual == etapa);
+        query = filtro.Estado.HasValue
+            ? query.Where(s => s.Estado == filtro.Estado.Value)
+            : query.Where(s => s.Estado == EstadoSolicitud.EnProceso);
+        query = AplicarFiltrosComunes(query, filtro);
+
+        var totalCount = await query.CountAsync();
+        var totalEnProceso = await query.CountAsync(s => s.Estado == EstadoSolicitud.EnProceso);
+        var totalAprobadas = await query.CountAsync(s => s.Estado == EstadoSolicitud.Aprobado);
+        var limiteEspera = DateTime.UtcNow.AddDays(-2);
+        var totalEsperandoLargo = await query.CountAsync(s => s.Estado == EstadoSolicitud.EnProceso && s.FechaCreacion <= limiteEspera);
+
+        var items = await query
+            .OrderByDescending(s => s.FechaCreacion)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new BandejaPagedResult
+        {
+            Pagina = new PagedResult { Items = items, PageNumber = pageNumber, PageSize = pageSize, TotalCount = totalCount },
+            TotalEnProceso = totalEnProceso,
+            TotalAprobadas = totalAprobadas,
+            TotalEsperandoLargo = totalEsperandoLargo
+        };
+    }
+
+    private IQueryable<Solicitud> ConstruirQueryTodas(BandejaFiltroDto filtro)
+    {
+        var query = ParaListado().Where(s => s.Estado != EstadoSolicitud.Borrador);
+
+        if (filtro.Estado.HasValue)
+        {
+            query = query.Where(s => s.Estado == filtro.Estado.Value);
+        }
+
+        if (filtro.Etapa.HasValue)
+        {
+            query = query.Where(s => s.EtapaActual == filtro.Etapa.Value);
+        }
+
+        return AplicarFiltrosComunes(query, filtro);
+    }
+
+    public async Task<PagedResult> GetTodasPagedAsync(BandejaFiltroDto filtro, int pageNumber, int pageSize)
+    {
+        var query = ConstruirQueryTodas(filtro);
+
+        var totalCount = await query.CountAsync();
+        var items = await query
+            .OrderByDescending(s => s.FechaCreacion)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new PagedResult { Items = items, PageNumber = pageNumber, PageSize = pageSize, TotalCount = totalCount };
+    }
+
+    public async Task<SeguimientoPagedResult> GetSeguimientoPagedAsync(BandejaFiltroDto filtro, int pageNumber, int pageSize)
+    {
+        var query = ConstruirQueryTodas(filtro);
+
+        var totalCount = await query.CountAsync();
+        var totalEnProceso = await query.CountAsync(s => s.Estado == EstadoSolicitud.EnProceso);
+        var totalAprobadas = await query.CountAsync(s => s.Estado == EstadoSolicitud.Aprobado);
+        var totalRechazadas = await query.CountAsync(s => s.Estado == EstadoSolicitud.Rechazado);
+
+        var items = await query
+            .OrderByDescending(s => s.FechaCreacion)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new SeguimientoPagedResult
+        {
+            Pagina = new PagedResult { Items = items, PageNumber = pageNumber, PageSize = pageSize, TotalCount = totalCount },
+            TotalEnProceso = totalEnProceso,
+            TotalAprobadas = totalAprobadas,
+            TotalRechazadas = totalRechazadas
+        };
     }
 
     public Task<ArchivoAdjunto?> GetArchivoByIdAsync(int archivoId) =>

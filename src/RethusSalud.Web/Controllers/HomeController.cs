@@ -24,7 +24,7 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        ViewBag.ProfesionesRethus = await _catalogos.ObtenerProfesionesAsync(TipoTramite.ReTHUS);
+        ViewBag.ProfesionesRethus = await _catalogos.ObtenerProfesionesAsync(TipoTramite.Rethus);
         return View();
     }
 
