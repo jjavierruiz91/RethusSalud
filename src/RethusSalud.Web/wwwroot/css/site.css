@@ -1735,6 +1735,24 @@ body {
   color: var(--rethus-blue-deep);
 }
 
+.wizard-step-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.wizard-step-link:hover .wizard-step-number {
+  box-shadow: 0 0 0 4px rgba(15, 95, 166, 0.12);
+}
+
+.wizard-step-link:hover .wizard-step-label {
+  color: var(--rethus-blue-deep);
+  text-decoration: underline;
+}
+
 .wizard-step-connector {
   width: 40px;
   height: 2px;
@@ -1782,6 +1800,23 @@ body {
   font-weight: 700;
   color: var(--rethus-ink);
   margin-bottom: 0.5rem;
+}
+
+.wizard-doc-replace-toggle {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--rethus-blue);
+  cursor: pointer;
+  list-style: none;
+}
+
+.wizard-doc-replace-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.wizard-doc-replace-toggle:hover {
+  text-decoration: underline;
 }
 
 .tramite-type-toggle {

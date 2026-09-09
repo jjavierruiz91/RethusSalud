@@ -1,19 +1,33 @@
-@model int
+@model RethusSalud.Web.Models.Tramite.TramiteStepsViewModel
 @{
     var pasos = new[] { "Términos", "Selección", "Datos personales", "Datos académicos", "Documentos" };
+    var acciones = new[] { "Terminos", "SeleccionarTramite", "DatosPersonales", "DatosAcademicos", "Documentos" };
+    var requiereSolicitudId = new[] { false, false, true, true, true };
+    var pasoMaximo = Math.Max(Model.PasoActual, Model.PasoMaximo);
 }
 
 <div class="wizard-steps">
     @for (var i = 0; i < pasos.Length; i++)
     {
-        var estado = i < Model ? "done" : i == Model ? "current" : "upcoming";
+        var estado = i == Model.PasoActual ? "current" : i <= pasoMaximo ? "done" : "upcoming";
+        var puedeNavegar = i != Model.PasoActual && i <= pasoMaximo && (!requiereSolicitudId[i] || Model.SolicitudId.HasValue);
         <div class="wizard-step @estado">
-            <span class="wizard-step-number">@(i < Model ? "✓" : (i + 1).ToString())</span>
-            <span class="wizard-step-label">@pasos[i]</span>
+            @if (puedeNavegar)
+            {
+                <a class="wizard-step-link" asp-controller="Tramite" asp-action="@acciones[i]" asp-route-solicitudId="@(requiereSolicitudId[i] ? Model.SolicitudId : null)">
+                    <span class="wizard-step-number">@(i <= pasoMaximo && i != Model.PasoActual ? "✓" : (i + 1).ToString())</span>
+                    <span class="wizard-step-label">@pasos[i]</span>
+                </a>
+            }
+            else
+            {
+                <span class="wizard-step-number">@(i <= pasoMaximo && i != Model.PasoActual ? "✓" : (i + 1).ToString())</span>
+                <span class="wizard-step-label">@pasos[i]</span>
+            }
         </div>
         if (i < pasos.Length - 1)
         {
-            <span class="wizard-step-connector @(i < Model ? "done" : "")"></span>
+            <span class="wizard-step-connector @(i < pasoMaximo ? "done" : "")"></span>
         }
     }
 </div>

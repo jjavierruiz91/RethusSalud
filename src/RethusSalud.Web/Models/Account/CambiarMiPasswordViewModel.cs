@@ -10,7 +10,7 @@ public class CambiarMiPasswordViewModel
 
     [Required(ErrorMessage = "Ingresa la nueva contrasena")]
     [DataType(DataType.Password)]
-    [MinLength(8, ErrorMessage = "La contrasena debe tener al menos 8 caracteres")]
+    [MinLength(4, ErrorMessage = "La contrasena debe tener al menos 4 caracteres")]
     public string NuevaPassword { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Confirma la nueva contrasena")]

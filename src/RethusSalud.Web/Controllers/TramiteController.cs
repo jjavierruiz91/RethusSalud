@@ -102,6 +102,11 @@ public class TramiteController : Controller
         }
 
         var profesiones = await _catalogos.ObtenerProfesionesAsync(tipoTramite);
+
+        var borrador = await _solicitudes.ObtenerBorradorActivoAsync(solicitante.Id);
+        ViewBag.SolicitudId = borrador?.Id;
+        ViewBag.PasoMaximo = borrador is null ? 1 : borrador.DatosAcademicos is not null ? 4 : 3;
+
         return View(new SeleccionarTramiteViewModel { TipoTramite = tipoTramite, Profesiones = profesiones });
     }
 
@@ -142,6 +147,9 @@ public class TramiteController : Controller
             GrupoEtnico = solicitante.GrupoEtnico
         };
 
+        var solicitud = await _solicitudes.ObtenerPorIdAsync(solicitudId);
+        ViewBag.PasoMaximo = solicitud?.DatosAcademicos is not null ? 4 : 3;
+
         await CargarPaisesAsync();
         return View(vm);
     }
@@ -152,6 +160,8 @@ public class TramiteController : Controller
     {
         if (!ModelState.IsValid)
         {
+            var solicitudEnCurso = await _solicitudes.ObtenerPorIdAsync(vm.SolicitudId);
+            ViewBag.PasoMaximo = solicitudEnCurso?.DatosAcademicos is not null ? 4 : 3;
             await CargarPaisesAsync();
             return View(vm);
         }
@@ -189,6 +199,8 @@ public class TramiteController : Controller
                 ModelState.AddModelError(string.Empty, error);
             }
 
+            var solicitudEnCurso = await _solicitudes.ObtenerPorIdAsync(vm.SolicitudId);
+            ViewBag.PasoMaximo = solicitudEnCurso?.DatosAcademicos is not null ? 4 : 3;
             await CargarPaisesAsync();
             return View(vm);
         }
@@ -221,6 +233,8 @@ public class TramiteController : Controller
             vm.TituloEquivalente = d.TituloEquivalente;
         }
 
+        ViewBag.PasoMaximo = solicitud?.Id == solicitudId && solicitud.DatosAcademicos is not null ? 4 : 3;
+
         await CargarPaisesAsync();
         return View(vm);
     }
@@ -231,6 +245,8 @@ public class TramiteController : Controller
     {
         if (!ModelState.IsValid)
         {
+            var solicitudEnCurso = await _solicitudes.ObtenerPorIdAsync(vm.SolicitudId);
+            ViewBag.PasoMaximo = solicitudEnCurso?.DatosAcademicos is not null ? 4 : 3;
             await CargarPaisesAsync();
             return View(vm);
         }
@@ -262,6 +278,8 @@ public class TramiteController : Controller
                 ModelState.AddModelError(string.Empty, error);
             }
 
+            var solicitudEnCurso = await _solicitudes.ObtenerPorIdAsync(vm.SolicitudId);
+            ViewBag.PasoMaximo = solicitudEnCurso?.DatosAcademicos is not null ? 4 : 3;
             await CargarPaisesAsync();
             return View(vm);
         }

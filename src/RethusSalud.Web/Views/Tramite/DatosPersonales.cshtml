@@ -4,11 +4,11 @@
     ViewData["Title"] = "Datos personales";
 }
 
-@await Html.PartialAsync("_TramiteSteps", 2)
+@await Html.PartialAsync("_TramiteSteps", new RethusSalud.Web.Models.Tramite.TramiteStepsViewModel { PasoActual = 2, PasoMaximo = (int)(ViewBag.PasoMaximo ?? 2), SolicitudId = Model.SolicitudId })
 
 <h1 class="text-center">Datos personales</h1>
 
-<div class="app-panel mx-auto" style="max-width: 900px">
+<div class="app-panel mx-auto" style="max-width: 960px">
 <form asp-action="DatosPersonales" method="post">
     <input type="hidden" asp-for="SolicitudId" />
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>

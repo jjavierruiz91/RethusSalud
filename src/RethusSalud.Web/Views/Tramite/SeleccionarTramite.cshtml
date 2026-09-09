@@ -3,11 +3,11 @@
     ViewData["Title"] = "Seleccionar tramite";
 }
 
-@await Html.PartialAsync("_TramiteSteps", 1)
+@await Html.PartialAsync("_TramiteSteps", new RethusSalud.Web.Models.Tramite.TramiteStepsViewModel { PasoActual = 1, PasoMaximo = (int)(ViewBag.PasoMaximo ?? 1), SolicitudId = (int?)ViewBag.SolicitudId })
 
 <h1 class="text-center">Selecciona tu profesión u ocupación</h1>
 
-<div class="app-panel mx-auto" style="max-width: 720px">
+<div class="app-panel mx-auto" style="max-width: 960px">
     <div class="text-center">
         <span class="hero-eyebrow auth-eyebrow-dark">Registro ReTHUS</span>
     </div>

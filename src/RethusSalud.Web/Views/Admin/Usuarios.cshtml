@@ -156,7 +156,7 @@
                     <div class="mb-3">
                         <label class="form-label">Contraseña</label>
                         <div class="auth-password-wrapper">
-                            <input name="Password" type="password" id="createPassword" class="form-control auth-input" minlength="8" required />
+                            <input name="Password" type="password" id="createPassword" class="form-control auth-input" minlength="4" required />
                             <button type="button" class="auth-password-toggle" data-toggle-password="createPassword" aria-label="Mostrar contraseña">
                                 @Html.Raw(EyeIcon())
                             </button>
@@ -245,7 +245,7 @@
                         <div class="mb-3">
                             <label class="form-label">Nueva contraseña</label>
                             <div class="auth-password-wrapper">
-                                <input name="NuevaPassword" type="password" id="nuevaPass-@usuario.Id" class="form-control auth-input" minlength="8" required />
+                                <input name="NuevaPassword" type="password" id="nuevaPass-@usuario.Id" class="form-control auth-input" minlength="4" required />
                                 <button type="button" class="auth-password-toggle" data-toggle-password="nuevaPass-@usuario.Id" aria-label="Mostrar contraseña">
                                     @Html.Raw(EyeIcon())
                                 </button>
@@ -254,7 +254,7 @@
                         <div class="mb-3">
                             <label class="form-label">Confirmar contraseña</label>
                             <div class="auth-password-wrapper">
-                                <input name="ConfirmarPassword" type="password" id="confirmarPass-@usuario.Id" class="form-control auth-input" minlength="8" required data-match-password="nuevaPass-@usuario.Id" />
+                                <input name="ConfirmarPassword" type="password" id="confirmarPass-@usuario.Id" class="form-control auth-input" minlength="4" required data-match-password="nuevaPass-@usuario.Id" />
                                 <button type="button" class="auth-password-toggle" data-toggle-password="confirmarPass-@usuario.Id" aria-label="Mostrar contraseña">
                                     @Html.Raw(EyeIcon())
                                 </button>

@@ -12,11 +12,11 @@
     };
 }
 
-@await Html.PartialAsync("_TramiteSteps", 4)
+@await Html.PartialAsync("_TramiteSteps", new RethusSalud.Web.Models.Tramite.TramiteStepsViewModel { PasoActual = 4, PasoMaximo = 4, SolicitudId = Model.Id })
 
 <h1 class="text-center">Carga de documentos</h1>
 
-<div class="mx-auto" style="max-width: 720px">
+<div class="mx-auto" style="max-width: 960px">
     @if (TempData["Error"] is string error)
     {
         <div class="alert alert-danger">@error</div>
@@ -39,13 +39,25 @@
             @if (cargado is not null)
             {
                 <p class="text-muted mb-2">@cargado.NombreArchivo</p>
+                <details>
+                    <summary class="wizard-doc-replace-toggle">Reemplazar archivo</summary>
+                    <form asp-action="CargarDocumento" method="post" enctype="multipart/form-data" class="d-flex gap-2 mt-2">
+                        <input type="hidden" name="solicitudId" value="@Model.Id" />
+                        <input type="hidden" name="tipoDocumento" value="@tipo" />
+                        <input type="file" name="archivo" class="form-control" accept=".pdf,.jpg,.jpeg,.png" onchange="this.form.submit()" />
+                        <button type="submit" class="btn btn-outline-secondary text-nowrap">Reemplazar documento</button>
+                    </form>
+                </details>
             }
-            <form asp-action="CargarDocumento" method="post" enctype="multipart/form-data" class="d-flex gap-2">
-                <input type="hidden" name="solicitudId" value="@Model.Id" />
-                <input type="hidden" name="tipoDocumento" value="@tipo" />
-                <input type="file" name="archivo" class="form-control" accept=".pdf,.jpg,.jpeg,.png" />
-                <button type="submit" class="btn btn-outline-primary text-nowrap">Seleccionar archivo</button>
-            </form>
+            else
+            {
+                <form asp-action="CargarDocumento" method="post" enctype="multipart/form-data" class="d-flex gap-2">
+                    <input type="hidden" name="solicitudId" value="@Model.Id" />
+                    <input type="hidden" name="tipoDocumento" value="@tipo" />
+                    <input type="file" name="archivo" class="form-control" accept=".pdf,.jpg,.jpeg,.png" onchange="this.form.submit()" />
+                    <button type="submit" class="btn btn-outline-primary text-nowrap">Cargar documento</button>
+                </form>
+            }
         </div>
     }
 

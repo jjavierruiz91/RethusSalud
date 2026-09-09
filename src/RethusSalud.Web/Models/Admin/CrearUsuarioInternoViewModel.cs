@@ -16,6 +16,6 @@ public class CrearUsuarioInternoViewModel
 
     [Required(ErrorMessage = "Ingresa una contrasena")]
     [DataType(DataType.Password)]
-    [MinLength(8, ErrorMessage = "La contrasena debe tener al menos 8 caracteres")]
+    [MinLength(4, ErrorMessage = "La contrasena debe tener al menos 4 caracteres")]
     public string Password { get; set; } = string.Empty;
 }
