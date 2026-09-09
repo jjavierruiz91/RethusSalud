@@ -9,20 +9,38 @@
 
         @if (Model is null)
         {
-            <div class="alert alert-danger">
-                El folio consultado no corresponde a un certificado valido emitido por la Secretaria de salud departamental del cesar.
+            <div class="app-alert app-alert-danger" role="alert">
+                <span class="app-alert-icon">
+                    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </span>
+                <div class="app-alert-body">
+                    <strong class="app-alert-title">Folio no válido</strong>
+                    <p class="app-alert-message mb-0">El folio consultado no corresponde a un certificado válido emitido por la Secretaría de Salud Departamental del Cesar.</p>
+                </div>
+                <button type="button" class="app-alert-close" data-dismiss-alert aria-label="Cerrar">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
             </div>
         }
         else
         {
-            <div class="alert alert-success">
-                <p class="mb-1"><strong>Folio:</strong> @Model.Numero</p>
-                <p class="mb-1"><strong>Nombre:</strong> @Model.NombreCompleto</p>
-                <p class="mb-1"><strong>Profesion:</strong> @Model.Profesion</p>
-                <p class="mb-1"><strong>Tramite:</strong> @Model.TipoTramite</p>
-                <p class="mb-0"><strong>Fecha de aprobacion:</strong> @Model.FechaAprobacion.ToLocalTime().ToString("dd/MM/yyyy")</p>
+            <div class="app-alert app-alert-success" role="alert">
+                <span class="app-alert-icon">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <div class="app-alert-body">
+                    <strong class="app-alert-title">Certificado verificado</strong>
+                    <p class="mb-1"><strong>Folio:</strong> @Model.Numero</p>
+                    <p class="mb-1"><strong>Nombre:</strong> @Model.NombreCompleto</p>
+                    <p class="mb-1"><strong>Profesión:</strong> @Model.Profesion</p>
+                    <p class="mb-1"><strong>Trámite:</strong> @Model.TipoTramite</p>
+                    <p class="mb-0"><strong>Fecha de aprobación:</strong> @Model.FechaAprobacion.ToLocalTime().ToString("dd/MM/yyyy")</p>
+                </div>
+                <button type="button" class="app-alert-close" data-dismiss-alert aria-label="Cerrar">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
             </div>
-            <p class="text-muted">Este certificado fue verificado como autentico y vigente en el sistema Rethus.</p>
+            <p class="text-muted mt-3">Este certificado fue verificado como auténtico y vigente en el sistema Rethus.</p>
         }
     </div>
 </div>

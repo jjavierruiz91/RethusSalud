@@ -37,8 +37,14 @@
                     .FirstOrDefault()?.Motivo;
                 @if (!string.IsNullOrWhiteSpace(motivoRechazo))
                 {
-                    <div class="alert alert-danger mt-2 mb-0">
-                        <strong>Motivo del rechazo:</strong> @motivoRechazo
+                    <div class="app-alert app-alert-danger mt-2 mb-0" role="alert">
+                        <span class="app-alert-icon">
+                            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </span>
+                        <div class="app-alert-body">
+                            <strong class="app-alert-title">Motivo del rechazo</strong>
+                            <p class="app-alert-message mb-0">@motivoRechazo</p>
+                        </div>
                     </div>
                 }
             }

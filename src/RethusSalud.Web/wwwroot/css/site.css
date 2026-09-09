@@ -2443,3 +2443,218 @@ body {
   background: #e3f7ea;
   color: #1e8449;
 }
+
+/* ---- Alerta global de error (toast) ---- */
+
+.app-alert {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1rem;
+  box-shadow: 0 12px 30px rgba(11, 60, 102, 0.12);
+  margin-bottom: 1.25rem;
+  animation: appAlertIn 0.3s ease;
+}
+
+@keyframes appAlertIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes appAlertOut {
+  to { opacity: 0; transform: translateY(-10px); }
+}
+
+.app-alert-danger {
+  background: #fdf2f1;
+  border: 1px solid #f6cdc8;
+  border-left: 4px solid #c0392b;
+}
+
+.app-alert-warning {
+  background: #fef8ec;
+  border: 1px solid #fae3b0;
+  border-left: 4px solid #b9770e;
+}
+
+.app-alert-warning .app-alert-icon {
+  background: #fef4e0;
+  color: #b9770e;
+}
+
+.app-alert-warning .app-alert-title {
+  color: #935610;
+}
+
+.app-alert-warning .app-alert-close {
+  color: #b9770e;
+}
+
+.app-alert-warning .app-alert-close:hover {
+  background: rgba(185, 119, 14, 0.12);
+}
+
+.app-alert-success {
+  background: #eefbf2;
+  border: 1px solid #bfe8cc;
+  border-left: 4px solid #1e8449;
+}
+
+.app-alert-success .app-alert-icon {
+  background: #e3f7ea;
+  color: #1e8449;
+}
+
+.app-alert-success .app-alert-title {
+  color: #1e8449;
+}
+
+.app-alert-success .app-alert-close {
+  color: #1e8449;
+}
+
+.app-alert-success .app-alert-close:hover {
+  background: rgba(30, 132, 73, 0.12);
+}
+
+.app-alert-info {
+  background: #eaf3fb;
+  border: 1px solid #c7dff2;
+  border-left: 4px solid var(--rethus-blue);
+}
+
+.app-alert-info .app-alert-icon {
+  background: #dcebf9;
+  color: var(--rethus-blue-deep);
+}
+
+.app-alert-info .app-alert-title {
+  color: var(--rethus-blue-deep);
+}
+
+.app-alert-info .app-alert-close {
+  color: var(--rethus-blue-deep);
+}
+
+.app-alert-info .app-alert-close:hover {
+  background: rgba(15, 95, 166, 0.12);
+}
+
+.app-alert-icon {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fdecea;
+  color: #c0392b;
+}
+
+.app-alert-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.app-alert-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.app-alert-title {
+  display: block;
+  color: #922b21;
+  font-size: 0.95rem;
+  margin-bottom: 0.15rem;
+}
+
+.app-alert-message {
+  margin: 0;
+  color: var(--rethus-ink);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.app-alert-close {
+  flex: none;
+  border: none;
+  background: transparent;
+  color: #c0392b;
+  opacity: 0.6;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.app-alert-close:hover {
+  background: rgba(192, 57, 43, 0.1);
+  opacity: 1;
+}
+
+.app-alert-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---- Modal de exito (rediseno) ---- */
+
+.app-feedback-modal {
+  border: none;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 30px 70px rgba(11, 60, 102, 0.28);
+}
+
+.app-feedback-icon {
+  width: 68px;
+  height: 68px;
+  animation: appFeedbackPop 0.4s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+.app-feedback-icon svg {
+  width: 34px;
+  height: 34px;
+}
+
+@keyframes appFeedbackPop {
+  0% { transform: scale(0.4); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.app-feedback-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--rethus-ink);
+  margin-bottom: 0.35rem;
+}
+
+.app-feedback-message {
+  color: var(--rethus-muted);
+  font-size: 0.92rem;
+}
+
+.app-feedback-progress {
+  height: 4px;
+  background: var(--rethus-bg-soft);
+}
+
+.app-feedback-progress span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--rethus-teal-light), var(--rethus-teal));
+  animation: appFeedbackProgress linear forwards;
+  animation-duration: 5000ms;
+}
+
+@keyframes appFeedbackProgress {
+  from { width: 100%; }
+  to { width: 0%; }
+}

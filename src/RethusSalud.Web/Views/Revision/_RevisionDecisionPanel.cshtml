@@ -56,8 +56,14 @@ else if (Model.Consecutivo is not null)
     }
     else if (!puedeGestionar)
     {
-        <div class="alert alert-warning mb-0">
-            Esta solicitud está actualmente en <strong>@Model.EtapaActual</strong> — no puedes aprobarla ni rechazarla desde aquí. Puedes dejarle una nota al funcionario encargado en los comentarios.
+        <div class="app-alert app-alert-warning mb-0" role="alert">
+            <span class="app-alert-icon">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            </span>
+            <div class="app-alert-body">
+                <strong class="app-alert-title">Fuera de tu etapa</strong>
+                <p class="app-alert-message mb-0">Esta solicitud está actualmente en <strong>@Model.EtapaActual</strong> — no puedes aprobarla ni rechazarla desde aquí. Puedes dejarle una nota al funcionario encargado en los comentarios.</p>
+            </div>
         </div>
     }
     else

@@ -18,7 +18,18 @@
 
         @if (Model.Resultado is not null)
         {
-            <div class="alert alert-info mt-3">@Model.Resultado</div>
+            <div class="app-alert app-alert-info mt-3" role="alert">
+                <span class="app-alert-icon">
+                    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </span>
+                <div class="app-alert-body">
+                    <strong class="app-alert-title">Resultado de la consulta</strong>
+                    <p class="app-alert-message mb-0">@Model.Resultado</p>
+                </div>
+                <button type="button" class="app-alert-close" data-dismiss-alert aria-label="Cerrar">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
+            </div>
         }
     </div>
 </div>

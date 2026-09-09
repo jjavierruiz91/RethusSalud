@@ -144,7 +144,18 @@
             <main class="app-content">
                 @if (TempData["Error"] is string errorGlobal)
                 {
-                    <div class="alert alert-danger">@errorGlobal</div>
+                    <div class="app-alert app-alert-danger" role="alert">
+                        <span class="app-alert-icon">
+                            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </span>
+                        <div class="app-alert-body">
+                            <strong class="app-alert-title">Ocurrió un problema</strong>
+                            <p class="app-alert-message">@errorGlobal</p>
+                        </div>
+                        <button type="button" class="app-alert-close" data-dismiss-alert aria-label="Cerrar">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </button>
+                    </div>
                 }
                 @RenderBody()
             </main>
@@ -155,14 +166,16 @@
     {
         <div class="modal fade" id="successFeedbackModal" tabindex="-1" aria-hidden="true" data-autoclose="5000">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+                <div class="modal-content app-feedback-modal">
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     <div class="modal-body text-center py-4">
-                        <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                        <div class="confirm-modal-icon confirm-modal-icon-success">
+                        <div class="confirm-modal-icon confirm-modal-icon-success app-feedback-icon">
                             <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </div>
-                        <p class="mb-0 fw-semibold">@mensajeGlobal</p>
+                        <h3 class="app-feedback-title">¡Listo!</h3>
+                        <p class="mb-0 app-feedback-message">@mensajeGlobal</p>
                     </div>
+                    <div class="app-feedback-progress"><span></span></div>
                 </div>
             </div>
         </div>

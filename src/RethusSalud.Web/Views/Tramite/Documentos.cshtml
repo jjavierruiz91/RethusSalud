@@ -19,7 +19,18 @@
 <div class="mx-auto" style="max-width: 960px">
     @if (TempData["Error"] is string error)
     {
-        <div class="alert alert-danger">@error</div>
+        <div class="app-alert app-alert-danger" role="alert">
+            <span class="app-alert-icon">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+            <div class="app-alert-body">
+                <strong class="app-alert-title">Ocurrió un problema</strong>
+                <p class="app-alert-message mb-0">@error</p>
+            </div>
+            <button type="button" class="app-alert-close" data-dismiss-alert aria-label="Cerrar">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+        </div>
     }
     @foreach (var tipo in requeridos)
     {
