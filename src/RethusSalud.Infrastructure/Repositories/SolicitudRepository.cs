@@ -85,7 +85,7 @@ public class SolicitudRepository : ISolicitudRepository
             query = query.Where(s => s.FechaCreacion <= filtro.Hasta.Value);
         }
 
-        return await query.OrderByDescending(s => s.FechaCreacion).ToListAsync();
+        return await query.OrderBy(s => s.FechaCreacion).ToListAsync();
     }
 
     public async Task<List<Solicitud>> GetTodasAsync(BandejaFiltroDto filtro)
@@ -122,7 +122,7 @@ public class SolicitudRepository : ISolicitudRepository
             query = query.Where(s => s.FechaCreacion <= filtro.Hasta.Value);
         }
 
-        return await query.OrderByDescending(s => s.FechaCreacion).ToListAsync();
+        return await query.OrderBy(s => s.FechaCreacion).ToListAsync();
     }
 
     private IQueryable<Solicitud> ParaListado() =>
@@ -170,7 +170,7 @@ public class SolicitudRepository : ISolicitudRepository
         var totalEsperandoLargo = await query.CountAsync(s => s.Estado == EstadoSolicitud.EnProceso && s.FechaCreacion <= limiteEspera);
 
         var items = await query
-            .OrderByDescending(s => s.FechaCreacion)
+            .OrderBy(s => s.FechaCreacion)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -207,7 +207,7 @@ public class SolicitudRepository : ISolicitudRepository
 
         var totalCount = await query.CountAsync();
         var items = await query
-            .OrderByDescending(s => s.FechaCreacion)
+            .OrderBy(s => s.FechaCreacion)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -225,7 +225,7 @@ public class SolicitudRepository : ISolicitudRepository
         var totalRechazadas = await query.CountAsync(s => s.Estado == EstadoSolicitud.Rechazado);
 
         var items = await query
-            .OrderByDescending(s => s.FechaCreacion)
+            .OrderBy(s => s.FechaCreacion)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();

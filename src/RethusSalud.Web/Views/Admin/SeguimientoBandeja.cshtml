@@ -134,6 +134,7 @@
                 <th>Tipo de trámite</th>
                 <th>Estado</th>
                 <th>Etapa actual</th>
+                <th>Tiempo transcurrido</th>
                 <th>Consecutivo</th>
                 <th>Fecha de creación</th>
                 <th>Última actualización</th>
@@ -156,6 +157,7 @@
                     <td>@solicitud.TipoTramite</td>
                     <td><span class="app-badge @badgeClass">@EstadoDisplay.Texto(solicitud.Estado)</span></td>
                     <td>@(solicitud.EtapaActual?.ToString() ?? "-")</td>
+                    <td>@TiempoDisplay.Transcurrido(solicitud.FechaCreacion)</td>
                     <td>@(solicitud.Consecutivo is not null ? solicitud.Consecutivo.Numero : "No asignado")</td>
                     <td>@solicitud.FechaCreacion.ToLocalTime().ToString("dd MMM yy, HH:mm")</td>
                     <td>@solicitud.FechaActualizacion.ToLocalTime().ToString("dd MMM yy, HH:mm")</td>
@@ -167,7 +169,7 @@
             @if (!Model.Pagina.Items.Any())
             {
                 <tr>
-                    <td colspan="9" class="text-center text-muted">Sin resultados. No hay informacion disponible que coincida con tu busqueda.</td>
+                    <td colspan="10" class="text-center text-muted">Sin resultados. No hay informacion disponible que coincida con tu busqueda.</td>
                 </tr>
             }
         </tbody>
