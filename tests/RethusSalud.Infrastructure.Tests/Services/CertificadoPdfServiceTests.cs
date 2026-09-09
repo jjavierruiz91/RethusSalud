@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.FileProviders;
+using RethusSalud.Application.Dtos;
 using RethusSalud.Domain.Entities;
 using RethusSalud.Domain.Enums;
 using RethusSalud.Infrastructure.Services;
@@ -12,6 +15,20 @@ public class CertificadoPdfServiceTests
         new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?> { ["DomainWebUrl"] = "https://localhost:5299" })
             .Build();
+
+    private static IWebHostEnvironment CrearAmbiente() => new AmbientePrueba();
+
+    private static readonly FirmantesDocumentoDto FirmantesVacios = new(null, null, null, null, null);
+
+    private class AmbientePrueba : IWebHostEnvironment
+    {
+        public string WebRootPath { get; set; } = AppContext.BaseDirectory;
+        public IFileProvider WebRootFileProvider { get; set; } = new NullFileProvider();
+        public string ApplicationName { get; set; } = "Tests";
+        public IFileProvider ContentRootFileProvider { get; set; } = new NullFileProvider();
+        public string ContentRootPath { get; set; } = AppContext.BaseDirectory;
+        public string EnvironmentName { get; set; } = "Test";
+    }
 
     private static Solicitud CrearSolicitudAprobada()
     {
@@ -48,10 +65,10 @@ public class CertificadoPdfServiceTests
     [Fact]
     public void Generar_produce_un_pdf_valido_para_una_solicitud_aprobada()
     {
-        var servicio = new CertificadoPdfService(CrearConfiguracion());
+        var servicio = new CertificadoPdfService(CrearConfiguracion(), CrearAmbiente());
         var solicitud = CrearSolicitudAprobada();
 
-        var pdf = servicio.Generar(solicitud);
+        var pdf = servicio.Generar(solicitud, FirmantesVacios);
 
         Assert.NotEmpty(pdf);
         Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
@@ -65,8 +82,8 @@ public class CertificadoPdfServiceTests
         var profesion = new Profesion { Id = 1, Nombre = "Psicologia", TipoTramite = TipoTramite.Rethus, NivelFormacion = NivelFormacion.Profesional };
         var solicitud = Solicitud.IniciarBorrador(solicitante, profesion);
 
-        var servicio = new CertificadoPdfService(CrearConfiguracion());
+        var servicio = new CertificadoPdfService(CrearConfiguracion(), CrearAmbiente());
 
-        Assert.Throws<InvalidOperationException>(() => servicio.Generar(solicitud));
+        Assert.Throws<InvalidOperationException>(() => servicio.Generar(solicitud, FirmantesVacios));
     }
 }

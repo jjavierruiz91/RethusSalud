@@ -1,0 +1,137 @@
+@model RethusSalud.Web.Models.Admin.ConfiguracionInstitucionalViewModel
+@{
+    ViewData["Title"] = "Configuración institucional";
+    Layout = "_AppLayout";
+
+    string EtiquetaRol(string rol) => rol switch
+    {
+        "FuncionarioEtapa1" => "Etapa 1 · Proyectó",
+        "FuncionarioEtapa2" => "Etapa 2 · Aprobó",
+        "FuncionarioEtapa3" => "Etapa 3 · Revisó",
+        "Inventario" => "Inventario · Generó / Consecutivo",
+        _ => rol
+    };
+}
+
+<div class="app-panel" style="max-width: 560px">
+    <h2 class="profile-card-name" style="font-size:1.1rem">Firma institucional (Secretaria de Salud)</h2>
+    <p class="text-muted small">
+        Esta firma aparece en todos los documentos generados (resoluciones), como la autoridad que expide el acto administrativo.
+        No corresponde a ninguna etapa del flujo de revisión.
+    </p>
+    <form asp-action="ConfiguracionInstitucional" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label class="form-label">Nombre completo</label>
+            <input name="Nombre" class="form-control" value="@Model.Nombre" placeholder="Ej. Georgina Paola Sánchez Daza" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Cargo</label>
+            <input name="Cargo" class="form-control" value="@Model.Cargo" placeholder="Ej. Secretaria de Salud Departamento del Cesar" required />
+        </div>
+        <div class="mb-3">
+            @if (!string.IsNullOrEmpty(Model.FirmaUrl))
+            {
+                <img src="@Model.FirmaUrl" alt="Firma actual" style="max-height:50px;border:1px solid var(--rethus-border);border-radius:0.4rem;padding:4px" class="mb-2 d-block" />
+            }
+            else
+            {
+                <p class="text-muted small mb-2">Aún no se ha cargado una firma.</p>
+            }
+            <label class="form-label">Imagen de firma (JPG o PNG)</label>
+            <input name="Firma" type="file" accept="image/jpeg,image/png" class="form-control" />
+        </div>
+        <button type="submit" class="btn auth-submit-btn">Guardar</button>
+    </form>
+</div>
+
+<div class="app-panel mt-3">
+    <h2 class="profile-card-name" style="font-size:1.1rem">Firmantes por etapa</h2>
+    <p class="text-muted small">Nombre, cargo y firma de los funcionarios que aparecen en el bloque de firmas de cada documento generado.</p>
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Nombre</th>
+                    <th>Etapa</th>
+                    <th>Cargo</th>
+                    <th>Correo</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var funcionario in Model.Funcionarios)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(funcionario.FirmaUrl))
+                            {
+                                <img src="@funcionario.FirmaUrl" alt="Firma de @funcionario.Nombre" style="max-height:32px" />
+                            }
+                            else
+                            {
+                                <span class="text-muted small">Sin firma</span>
+                            }
+                        </td>
+                        <td>@funcionario.Nombre</td>
+                        <td>@EtiquetaRol(funcionario.Rol)</td>
+                        <td>@(string.IsNullOrEmpty(funcionario.Cargo) ? "—" : funcionario.Cargo)</td>
+                        <td>@funcionario.Email</td>
+                        <td class="text-end">
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editarFirmante-@funcionario.Id">Editar</button>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Funcionarios.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">No hay funcionarios asignados a etapas todavía.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@foreach (var funcionario in Model.Funcionarios)
+{
+    <div class="modal fade" id="editarFirmante-@funcionario.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form asp-controller="Admin" asp-action="Editar" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="Id" value="@funcionario.Id" />
+                    <input type="hidden" name="Email" value="@funcionario.Email" />
+                    <input type="hidden" name="Rol" value="@funcionario.Rol" />
+                    <input type="hidden" name="Origen" value="ConfiguracionInstitucional" />
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar firmante — @EtiquetaRol(funcionario.Rol)</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre completo</label>
+                            <input name="Nombre" class="form-control" value="@funcionario.Nombre" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Cargo</label>
+                            <textarea name="Cargo" class="form-control" rows="2" placeholder="Ej. Asesor Jurídico secretaria de salud Departamental">@funcionario.Cargo</textarea>
+                        </div>
+                        <div class="mb-3">
+                            @if (!string.IsNullOrEmpty(funcionario.FirmaUrl))
+                            {
+                                <img src="@funcionario.FirmaUrl" alt="Firma actual" style="max-height:45px;border:1px solid var(--rethus-border);border-radius:0.4rem;padding:4px" class="mb-2 d-block" />
+                            }
+                            <label class="form-label">Imagen de firma (JPG o PNG)</label>
+                            <input name="Firma" type="file" accept="image/jpeg,image/png" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn auth-submit-btn">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}

@@ -22,6 +22,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Comentario> Comentarios => Set<Comentario>();
     public DbSet<HistorialEstado> HistorialEstados => Set<HistorialEstado>();
     public DbSet<Consecutivo> Consecutivos => Set<Consecutivo>();
+    public DbSet<ConfiguracionInstitucional> ConfiguracionesInstitucionales => Set<ConfiguracionInstitucional>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

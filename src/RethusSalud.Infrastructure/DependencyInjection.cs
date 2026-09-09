@@ -38,6 +38,7 @@ public static class DependencyInjection
         services.AddScoped<ISolicitanteRepository, SolicitanteRepository>();
         services.AddScoped<ISolicitudRepository, SolicitudRepository>();
         services.AddScoped<ICatalogoRepository, CatalogoRepository>();
+        services.AddScoped<IConfiguracionInstitucionalRepository, ConfiguracionInstitucionalRepository>();
         services.AddSingleton<IFileStorageService, LocalFileStorageService>();
         services.AddScoped<IConsecutivoGenerator, SqlConsecutivoGenerator>();
         services.AddScoped<ICertificadoPdfService, CertificadoPdfService>();

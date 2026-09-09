@@ -11,6 +11,7 @@ using RethusSalud.Domain.Entities;
 using RethusSalud.Domain.Enums;
 using RethusSalud.Infrastructure.Identity;
 using RethusSalud.Web.Models.Tramite;
+using RethusSalud.Web.Services;
 
 namespace RethusSalud.Web.Controllers;
 
@@ -23,6 +24,7 @@ public class TramiteController : Controller
     private readonly DocumentoService _documentos;
     private readonly ICertificadoPdfService _certificados;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly FirmantesService _firmantes;
 
     public TramiteController(
         SolicitanteService solicitantes,
@@ -30,7 +32,8 @@ public class TramiteController : Controller
         CatalogoService catalogos,
         DocumentoService documentos,
         ICertificadoPdfService certificados,
-        UserManager<ApplicationUser> userManager)
+        UserManager<ApplicationUser> userManager,
+        FirmantesService firmantes)
     {
         _documentos = documentos;
         _certificados = certificados;
@@ -38,6 +41,7 @@ public class TramiteController : Controller
         _solicitudes = solicitudes;
         _catalogos = catalogos;
         _userManager = userManager;
+        _firmantes = firmantes;
     }
 
     private string UserId => _userManager.GetUserId(User)!;
@@ -62,7 +66,8 @@ public class TramiteController : Controller
             return NotFound();
         }
 
-        var pdf = _certificados.Generar(solicitud);
+        var firmantes = await _firmantes.ResolverAsync(solicitud);
+        var pdf = _certificados.Generar(solicitud, firmantes);
         return File(pdf, "application/pdf", $"certificado-{solicitud.Consecutivo!.Numero}.pdf");
     }
 

@@ -6,6 +6,7 @@ using RethusSalud.Application.Common;
 using RethusSalud.Application.Services;
 using RethusSalud.Domain.Constants;
 using RethusSalud.Infrastructure.Identity;
+using RethusSalud.Web.Helpers;
 using RethusSalud.Web.Models;
 using RethusSalud.Web.Models.Account;
 
@@ -16,15 +17,18 @@ public class AccountController : Controller
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SolicitanteService _solicitanteService;
+    private readonly IWebHostEnvironment _environment;
 
     public AccountController(
         SignInManager<ApplicationUser> signInManager,
         UserManager<ApplicationUser> userManager,
-        SolicitanteService solicitanteService)
+        SolicitanteService solicitanteService,
+        IWebHostEnvironment environment)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _solicitanteService = solicitanteService;
+        _environment = environment;
     }
 
     [HttpGet]
@@ -192,6 +196,36 @@ public class AccountController : Controller
         await _signInManager.RefreshSignInAsync(user);
         TempData["Mensaje"] = "Tu contrasena fue actualizada correctamente.";
         return Redirect(volverA);
+    }
+
+    [Authorize(Roles = $"{Roles.FuncionarioEtapa1},{Roles.FuncionarioEtapa2},{Roles.FuncionarioEtapa3},{Roles.Inventario}")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ActualizarMiFirma(ActualizarPerfilViewModel model)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null)
+        {
+            return Challenge();
+        }
+
+        user.Cargo = model.Cargo;
+
+        if (model.Firma is not null && model.Firma.Length > 0)
+        {
+            var error = ImagenHelper.Validar(model.Firma);
+            if (error is not null)
+            {
+                TempData["Error"] = error;
+                return RedirectToAction(nameof(HomeController.Panel), "Home");
+            }
+
+            user.FirmaUrl = await ImagenHelper.GuardarAsync(_environment, "firmas", user.Id, model.Firma);
+        }
+
+        await _userManager.UpdateAsync(user);
+        TempData["Mensaje"] = "Tu firma y cargo fueron actualizados correctamente.";
+        return RedirectToAction(nameof(HomeController.Panel), "Home");
     }
 
     [HttpPost]

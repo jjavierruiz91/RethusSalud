@@ -8,4 +8,6 @@ public class UsuarioInternoViewModel
     public string Rol { get; set; } = string.Empty;
     public bool Activo { get; set; }
     public string? FotoUrl { get; set; }
+    public string? Cargo { get; set; }
+    public string? FirmaUrl { get; set; }
 }

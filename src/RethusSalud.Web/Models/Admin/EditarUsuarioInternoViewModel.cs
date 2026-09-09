@@ -19,4 +19,7 @@ public class EditarUsuarioInternoViewModel
     public string Rol { get; set; } = string.Empty;
 
     public IFormFile? Foto { get; set; }
+    public string? Cargo { get; set; }
+    public IFormFile? Firma { get; set; }
+    public string? Origen { get; set; }
 }

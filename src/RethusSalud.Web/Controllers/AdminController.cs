@@ -6,6 +6,7 @@ using RethusSalud.Application.Interfaces;
 using RethusSalud.Application.Services;
 using RethusSalud.Domain.Constants;
 using RethusSalud.Infrastructure.Identity;
+using RethusSalud.Web.Helpers;
 using RethusSalud.Web.Models.Admin;
 
 namespace RethusSalud.Web.Controllers;
@@ -21,19 +22,22 @@ public class AdminController : Controller
     private readonly SolicitudService _solicitudes;
     private readonly DocumentoService _documentos;
     private readonly IReporteExcelService _reportes;
+    private readonly ConfiguracionInstitucionalService _configuracionInstitucional;
 
     public AdminController(
         UserManager<ApplicationUser> userManager,
         IWebHostEnvironment environment,
         SolicitudService solicitudes,
         DocumentoService documentos,
-        IReporteExcelService reportes)
+        IReporteExcelService reportes,
+        ConfiguracionInstitucionalService configuracionInstitucional)
     {
         _userManager = userManager;
         _environment = environment;
         _solicitudes = solicitudes;
         _documentos = documentos;
         _reportes = reportes;
+        _configuracionInstitucional = configuracionInstitucional;
     }
 
     private const int TamanoPagina = 15;
@@ -117,7 +121,9 @@ public class AdminController : Controller
                 Email = usuario.Email ?? string.Empty,
                 Rol = rolPrincipal,
                 Activo = usuario.Activo,
-                FotoUrl = usuario.FotoUrl
+                FotoUrl = usuario.FotoUrl,
+                Cargo = usuario.Cargo,
+                FirmaUrl = usuario.FirmaUrl
             });
         }
 
@@ -167,10 +173,14 @@ public class AdminController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Editar(EditarUsuarioInternoViewModel model)
     {
+        IActionResult VolverAOrigen() => model.Origen == nameof(ConfiguracionInstitucional)
+            ? RedirectToAction(nameof(ConfiguracionInstitucional))
+            : RedirectToAction(nameof(Usuarios));
+
         if (!ModelState.IsValid)
         {
             TempData["Error"] = "Revisa los datos del usuario e intenta nuevamente.";
-            return RedirectToAction(nameof(Usuarios));
+            return VolverAOrigen();
         }
 
         var usuario = await _userManager.FindByIdAsync(model.Id);
@@ -183,12 +193,13 @@ public class AdminController : Controller
         if (existente is not null && existente.Id != usuario.Id)
         {
             TempData["Error"] = "Ya existe otra cuenta con este correo.";
-            return RedirectToAction(nameof(Usuarios));
+            return VolverAOrigen();
         }
 
         usuario.NombreCompleto = model.Nombre;
         usuario.Email = model.Email;
         usuario.UserName = model.Email;
+        usuario.Cargo = model.Cargo;
 
         var rolesActuales = await _userManager.GetRolesAsync(usuario);
         var rolActual = rolesActuales.FirstOrDefault(r => r != Roles.Ciudadano);
@@ -208,21 +219,33 @@ public class AdminController : Controller
             if (error is not null)
             {
                 TempData["Error"] = error;
-                return RedirectToAction(nameof(Usuarios));
+                return VolverAOrigen();
             }
 
             usuario.FotoUrl = await GuardarFotoAsync(usuario.Id, model.Foto);
+        }
+
+        if (model.Firma is not null && model.Firma.Length > 0)
+        {
+            var error = ImagenHelper.Validar(model.Firma);
+            if (error is not null)
+            {
+                TempData["Error"] = error;
+                return VolverAOrigen();
+            }
+
+            usuario.FirmaUrl = await ImagenHelper.GuardarAsync(_environment, "firmas", usuario.Id, model.Firma);
         }
 
         var resultado = await _userManager.UpdateAsync(usuario);
         if (!resultado.Succeeded)
         {
             TempData["Error"] = string.Join(" ", resultado.Errors.Select(e => e.Description));
-            return RedirectToAction(nameof(Usuarios));
+            return VolverAOrigen();
         }
 
         TempData["Mensaje"] = "Usuario actualizado correctamente.";
-        return RedirectToAction(nameof(Usuarios));
+        return VolverAOrigen();
     }
 
     [HttpPost]
@@ -277,6 +300,70 @@ public class AdminController : Controller
 
         await _userManager.UpdateAsync(usuario);
         return RedirectToAction(nameof(Usuarios));
+    }
+
+    private static readonly string[] RolesFirmantes =
+    {
+        Roles.FuncionarioEtapa1, Roles.FuncionarioEtapa2, Roles.FuncionarioEtapa3, Roles.Inventario
+    };
+
+    [HttpGet]
+    public async Task<IActionResult> ConfiguracionInstitucional()
+    {
+        var configuracion = await _configuracionInstitucional.ObtenerAsync();
+
+        var funcionarios = new List<UsuarioInternoViewModel>();
+        foreach (var rol in RolesFirmantes)
+        {
+            var usuariosDelRol = await _userManager.GetUsersInRoleAsync(rol);
+            funcionarios.AddRange(usuariosDelRol.Select(u => new UsuarioInternoViewModel
+            {
+                Id = u.Id,
+                Nombre = u.NombreCompleto,
+                Email = u.Email ?? string.Empty,
+                Rol = rol,
+                Activo = u.Activo,
+                FotoUrl = u.FotoUrl,
+                Cargo = u.Cargo,
+                FirmaUrl = u.FirmaUrl
+            }));
+        }
+
+        return View(new ConfiguracionInstitucionalViewModel
+        {
+            Nombre = configuracion?.Nombre ?? string.Empty,
+            Cargo = configuracion?.Cargo ?? string.Empty,
+            FirmaUrl = configuracion?.FirmaUrl,
+            Funcionarios = funcionarios.OrderBy(f => f.Rol).ThenBy(f => f.Nombre).ToList()
+        });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ConfiguracionInstitucional(ConfiguracionInstitucionalViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            TempData["Error"] = "Revisa el nombre y el cargo e intenta nuevamente.";
+            return RedirectToAction(nameof(ConfiguracionInstitucional));
+        }
+
+        string? firmaUrl = null;
+        if (model.Firma is not null && model.Firma.Length > 0)
+        {
+            var error = ImagenHelper.Validar(model.Firma);
+            if (error is not null)
+            {
+                TempData["Error"] = error;
+                return RedirectToAction(nameof(ConfiguracionInstitucional));
+            }
+
+            firmaUrl = await ImagenHelper.GuardarAsync(_environment, "firmas", "jefe-institucional", model.Firma);
+        }
+
+        await _configuracionInstitucional.GuardarAsync(model.Nombre, model.Cargo, firmaUrl);
+        TempData["Mensaje"] = "Configuración institucional actualizada correctamente.";
+        return RedirectToAction(nameof(ConfiguracionInstitucional));
     }
 
     private string? ValidarFoto(Microsoft.AspNetCore.Http.IFormFile foto)

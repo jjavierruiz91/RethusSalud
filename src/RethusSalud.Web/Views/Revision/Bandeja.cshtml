@@ -150,7 +150,7 @@
                 @foreach (var solicitud in Model.Pagina.Items)
                 {
                     var puedeSeleccionar = Model.Etapa == EtapaSolicitud.Inventario && solicitud.Estado == EstadoSolicitud.EnProceso && solicitud.Consecutivo is null;
-                    <tr>
+                    <tr class="@TiempoDisplay.ClaseFila(solicitud.FechaCreacion)">
                         @if (Model.Etapa == EtapaSolicitud.Inventario)
                         {
                             <td>

@@ -7,4 +7,6 @@ public class ApplicationUser : IdentityUser
     public string NombreCompleto { get; set; } = string.Empty;
     public bool Activo { get; set; } = true;
     public string? FotoUrl { get; set; }
+    public string? Cargo { get; set; }
+    public string? FirmaUrl { get; set; }
 }

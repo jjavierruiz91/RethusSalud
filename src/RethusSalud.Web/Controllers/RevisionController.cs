@@ -9,6 +9,7 @@ using RethusSalud.Domain.Constants;
 using RethusSalud.Domain.Enums;
 using RethusSalud.Infrastructure.Identity;
 using RethusSalud.Web.Models.Revision;
+using RethusSalud.Web.Services;
 
 namespace RethusSalud.Web.Controllers;
 
@@ -20,19 +21,22 @@ public class RevisionController : Controller
     private readonly ICertificadoPdfService _certificados;
     private readonly IReporteExcelService _reportes;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly FirmantesService _firmantes;
 
     public RevisionController(
         SolicitudService solicitudes,
         DocumentoService documentos,
         ICertificadoPdfService certificados,
         IReporteExcelService reportes,
-        UserManager<ApplicationUser> userManager)
+        UserManager<ApplicationUser> userManager,
+        FirmantesService firmantes)
     {
         _solicitudes = solicitudes;
         _documentos = documentos;
         _reportes = reportes;
         _certificados = certificados;
         _userManager = userManager;
+        _firmantes = firmantes;
     }
 
     private const int TamanoPagina = 15;
@@ -295,7 +299,8 @@ public class RevisionController : Controller
             return NotFound();
         }
 
-        var pdf = _certificados.Generar(solicitud);
+        var firmantes = await _firmantes.ResolverAsync(solicitud);
+        var pdf = _certificados.Generar(solicitud, firmantes);
         return File(pdf, "application/pdf", $"certificado-{solicitud.Consecutivo!.Numero}.pdf");
     }
 }

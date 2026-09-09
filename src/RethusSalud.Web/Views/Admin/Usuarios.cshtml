@@ -67,7 +67,7 @@
             <tbody>
                 @foreach (var usuario in Model)
                 {
-                    <tr>
+                    <tr class="@(usuario.Activo ? "fila-verde" : "fila-inactiva")">
                         <td>
                             @if (!string.IsNullOrEmpty(usuario.FotoUrl))
                             {
@@ -81,11 +81,7 @@
                         <td>@usuario.Nombre</td>
                         <td>@usuario.Email</td>
                         <td>@usuario.Rol</td>
-                        <td>
-                            <span class="app-badge @(usuario.Activo ? "app-badge-success" : "app-badge-muted")">
-                                @(usuario.Activo ? "Activo" : "Inactivo")
-                            </span>
-                        </td>
+                        <td>@(usuario.Activo ? "Activo" : "Inactivo")</td>
                         <td class="text-end">
                             <div class="d-inline-flex gap-1">
                                 <button type="button" class="icon-btn icon-btn-primary" data-bs-toggle="modal" data-bs-target="#editModal-@usuario.Id" title="Editar usuario">
@@ -203,6 +199,18 @@
                         <div class="mb-3">
                             <label class="form-label">Correo electrónico</label>
                             <input name="Email" type="email" class="form-control" value="@usuario.Email" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Cargo</label>
+                            <input name="Cargo" class="form-control" value="@usuario.Cargo" placeholder="Ej. Asesor Jurídico secretaria de salud Departamental" />
+                        </div>
+                        <div class="mb-3">
+                            @if (!string.IsNullOrEmpty(usuario.FirmaUrl))
+                            {
+                                <img src="@usuario.FirmaUrl" alt="Firma actual" style="max-height:45px;border:1px solid var(--rethus-border);border-radius:0.4rem;padding:4px" class="mb-2 d-block" />
+                            }
+                            <label class="form-label">Imagen de firma (JPG o PNG)</label>
+                            <input name="Firma" type="file" accept="image/jpeg,image/png" class="form-control" />
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Rol</label>

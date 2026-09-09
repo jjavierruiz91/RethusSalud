@@ -1,4 +1,5 @@
 @model RethusSalud.Infrastructure.Identity.ApplicationUser
+@using RethusSalud.Domain.Constants
 @{
     ViewData["Title"] = "Mi perfil";
     Layout = "_AppLayout";
@@ -6,6 +7,10 @@
         .Where(c => c.Type == System.Security.Claims.ClaimTypes.Role)
         .Select(c => c.Value));
     var inicial = Model.NombreCompleto.Length > 0 ? Model.NombreCompleto[0].ToString().ToUpperInvariant() : "?";
+    var esFuncionarioDeEtapa = User.IsInRole(Roles.FuncionarioEtapa1)
+        || User.IsInRole(Roles.FuncionarioEtapa2)
+        || User.IsInRole(Roles.FuncionarioEtapa3)
+        || User.IsInRole(Roles.Inventario);
 }
 
 <div class="app-panel" style="max-width: 560px">
@@ -41,3 +46,32 @@
 
     <button type="button" class="btn auth-submit-btn" data-bs-toggle="modal" data-bs-target="#miPasswordModal">Cambiar contraseña</button>
 </div>
+
+@if (esFuncionarioDeEtapa)
+{
+    <div class="app-panel mt-3" style="max-width: 560px">
+        <h2 class="profile-card-name" style="font-size:1.1rem">Cargo y firma</h2>
+        <p class="text-muted small">Esta información se usa para el bloque de firmas de los documentos que generas o apruebas.</p>
+        <form asp-controller="Account" asp-action="ActualizarMiFirma" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label">Cargo</label>
+                <input name="Cargo" class="form-control" value="@Model.Cargo" placeholder="Ej. Profesional universitario contratista secretaria de salud Departamental" />
+            </div>
+            <div class="mb-3">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    @if (!string.IsNullOrEmpty(Model.FirmaUrl))
+                    {
+                        <img src="@Model.FirmaUrl" alt="Firma actual" style="max-height:50px;border:1px solid var(--rethus-border);border-radius:0.4rem;padding:4px" />
+                    }
+                    else
+                    {
+                        <span class="text-muted small">Aún no has cargado una firma.</span>
+                    }
+                </div>
+                <label class="form-label">Imagen de firma (JPG o PNG)</label>
+                <input name="Firma" type="file" accept="image/jpeg,image/png" class="form-control" />
+            </div>
+            <button type="submit" class="btn auth-submit-btn">Guardar</button>
+        </form>
+    </div>
+}

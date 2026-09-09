@@ -151,7 +151,7 @@
                     EstadoSolicitud.EnProceso => "app-badge-warning",
                     _ => "app-badge-muted"
                 };
-                <tr>
+                <tr class="@TiempoDisplay.ClaseFila(solicitud.FechaCreacion)">
                     <td>@solicitud.Solicitante.NumeroIdentificacion</td>
                     <td>@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</td>
                     <td>@solicitud.TipoTramite</td>

@@ -26,6 +26,7 @@ try
     builder.Services.AddControllersWithViews();
     builder.Services.AddApplicationServices();
     builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddScoped<RethusSalud.Web.Services.FirmantesService>();
 
     builder.Services.ConfigureApplicationCookie(options =>
     {
