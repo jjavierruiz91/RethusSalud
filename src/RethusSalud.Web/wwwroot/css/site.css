@@ -1403,8 +1403,8 @@ body {
 
 .app-avatar {
   flex: none;
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1412,14 +1412,14 @@ body {
   background: linear-gradient(135deg, var(--rethus-blue-deep), var(--rethus-teal));
   color: #fff;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1rem;
   overflow: hidden;
 }
 
 .app-avatar-lg {
-  width: 46px;
-  height: 46px;
-  font-size: 1.05rem;
+  width: 56px;
+  height: 56px;
+  font-size: 1.2rem;
 }
 
 /* ---- Symmetric icon action buttons (tables, topbar) ---- */
@@ -1489,13 +1489,13 @@ body {
 
 .app-avatar-img {
   object-fit: cover;
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
 }
 
 .app-avatar-img.app-avatar-lg {
-  width: 46px;
-  height: 46px;
+  width: 56px;
+  height: 56px;
 }
 
 .app-topbar-user-info {
@@ -2612,6 +2612,10 @@ body {
   box-shadow: 0 30px 70px rgba(11, 60, 102, 0.28);
 }
 
+.app-feedback-modal .btn-close {
+  z-index: 2;
+}
+
 .app-feedback-icon {
   width: 68px;
   height: 68px;
@@ -2657,4 +2661,190 @@ body {
 @keyframes appFeedbackProgress {
   from { width: 100%; }
   to { width: 0%; }
+}
+
+/* ---- Modales de cuenta (mi perfil, contrasena, cargo y firma) ---- */
+
+.app-account-modal .modal-dialog {
+  max-width: 540px;
+}
+
+.app-account-modal .modal-content {
+  border: none;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 30px 70px rgba(11, 60, 102, 0.28);
+  animation: appAccountModalIn 0.25s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+@keyframes appAccountModalIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.app-account-modal .modal-header {
+  background: linear-gradient(135deg, var(--rethus-blue-deep), var(--rethus-teal));
+  border: none;
+  padding: 1.6rem 1.75rem;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+
+.app-account-modal-icon {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  overflow: hidden;
+}
+
+.app-account-modal-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.app-account-modal-heading {
+  flex: 1;
+  min-width: 0;
+}
+
+.app-account-modal .modal-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #fff;
+  margin: 0;
+}
+
+.app-account-modal-subtitle {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.82rem;
+  margin-top: 0.2rem;
+  line-height: 1.4;
+}
+
+.app-account-modal .btn-close {
+  filter: brightness(0) invert(1);
+  opacity: 0.75;
+  margin-top: 0.15rem;
+}
+
+.app-account-modal .btn-close:hover {
+  opacity: 1;
+}
+
+.app-account-modal .modal-body {
+  padding: 1.75rem;
+}
+
+.app-account-modal .modal-footer {
+  border: none;
+  padding: 0 1.75rem 1.75rem;
+  gap: 0.6rem;
+}
+
+.app-account-modal .btn-outline-secondary {
+  border-color: var(--rethus-border);
+  color: var(--rethus-muted);
+  border-radius: 0.6rem;
+  font-weight: 600;
+}
+
+.app-account-modal .btn-outline-secondary:hover {
+  background: var(--rethus-bg-soft);
+  border-color: var(--rethus-border);
+  color: var(--rethus-ink);
+}
+
+.app-signature-upload {
+  border: 1.5px dashed var(--rethus-border);
+  border-radius: 0.85rem;
+  padding: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  background: var(--rethus-bg-soft);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.app-signature-upload:hover,
+.app-signature-upload:focus-within {
+  border-color: var(--rethus-blue-light);
+  background: #eef5fb;
+}
+
+.app-signature-preview {
+  width: 88px;
+  height: 54px;
+  border-radius: 0.55rem;
+  border: 1px solid var(--rethus-border);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex: none;
+}
+
+.app-signature-preview img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.app-signature-preview-empty {
+  color: var(--rethus-muted);
+}
+
+.app-signature-preview-empty svg {
+  width: 26px;
+  height: 26px;
+}
+
+.app-photo-preview {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+
+.app-photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.app-signature-upload-body {
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.app-signature-upload-body input[type="file"] {
+  border: none;
+  padding: 0;
+  background: none;
+  font-size: 0.85rem;
+  color: var(--rethus-ink);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.app-signature-upload-hint {
+  color: var(--rethus-muted);
+  font-size: 0.78rem;
+  margin-top: 0.2rem;
+}
+
+.auth-input.auth-textarea {
+  resize: vertical;
+  min-height: 4.5rem;
+  line-height: 1.4;
 }

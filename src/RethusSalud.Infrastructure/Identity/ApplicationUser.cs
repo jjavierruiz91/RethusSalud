@@ -9,4 +9,6 @@ public class ApplicationUser : IdentityUser
     public string? FotoUrl { get; set; }
     public string? Cargo { get; set; }
     public string? FirmaUrl { get; set; }
+    public string? Telefono { get; set; }
+    public string? NumeroIdentificacion { get; set; }
 }

@@ -11,7 +11,7 @@ using RethusSalud.Web.Models.Admin;
 
 namespace RethusSalud.Web.Controllers;
 
-[Authorize(Roles = Roles.SuperAdmin)]
+[Authorize]
 public class AdminController : Controller
 {
     private static readonly string[] TiposFotoPermitidos = { "image/jpeg", "image/png" };
@@ -42,6 +42,7 @@ public class AdminController : Controller
 
     private const int TamanoPagina = 15;
 
+    [Authorize(Roles = Roles.SuperAdmin)]
     [HttpGet]
     public async Task<IActionResult> SeguimientoBandeja(SeguimientoFiltroViewModel filtro)
     {
@@ -59,6 +60,7 @@ public class AdminController : Controller
         });
     }
 
+    [Authorize(Roles = Roles.SuperAdmin)]
     [HttpGet]
     public async Task<IActionResult> ExportarSeguimientoExcel(SeguimientoFiltroViewModel filtro)
     {
@@ -69,6 +71,7 @@ public class AdminController : Controller
         return File(excel, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "seguimiento-revisiones.xlsx");
     }
 
+    [Authorize(Roles = Roles.SuperAdmin)]
     [HttpGet]
     public async Task<IActionResult> SeguimientoDetalle(int id)
     {
@@ -81,6 +84,7 @@ public class AdminController : Controller
         return View(solicitud);
     }
 
+    [Authorize(Roles = Roles.SuperAdmin)]
     [HttpGet]
     public async Task<IActionResult> DescargarArchivoSeguimiento(int archivoId)
     {
@@ -88,9 +92,11 @@ public class AdminController : Controller
         return File(contenido, archivo.ContentType, archivo.NombreArchivo);
     }
 
+    [Authorize(Roles = $"{Roles.SuperAdmin},{Roles.FuncionarioEtapa1}")]
     [HttpGet]
     public async Task<IActionResult> Usuarios(string? nombre, string? rol)
     {
+        var esSuperAdmin = User.IsInRole(Roles.SuperAdmin);
         var usuarios = _userManager.Users.ToList();
         var resultado = new List<UsuarioInternoViewModel>();
 
@@ -99,6 +105,11 @@ public class AdminController : Controller
             var roles = await _userManager.GetRolesAsync(usuario);
             var rolPrincipal = roles.FirstOrDefault(r => r != Roles.Ciudadano);
             if (rolPrincipal is null)
+            {
+                continue;
+            }
+
+            if (rolPrincipal == Roles.SuperAdmin && !esSuperAdmin)
             {
                 continue;
             }
@@ -129,10 +140,11 @@ public class AdminController : Controller
 
         ViewBag.Nombre = nombre;
         ViewBag.Rol = rol;
-        ViewBag.Roles = Roles.All.Where(r => r != Roles.Ciudadano).ToList();
+        ViewBag.Roles = Roles.All.Where(r => r != Roles.Ciudadano && (esSuperAdmin || r != Roles.SuperAdmin)).ToList();
         return View(resultado.OrderBy(u => u.Nombre).ToList());
     }
 
+    [Authorize(Roles = $"{Roles.SuperAdmin},{Roles.FuncionarioEtapa1}")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Crear(CrearUsuarioInternoViewModel model)
@@ -140,6 +152,12 @@ public class AdminController : Controller
         if (!ModelState.IsValid)
         {
             TempData["Error"] = "Revisa los datos del nuevo usuario e intenta nuevamente.";
+            return RedirectToAction(nameof(Usuarios));
+        }
+
+        if (model.Rol == Roles.SuperAdmin && !User.IsInRole(Roles.SuperAdmin))
+        {
+            TempData["Error"] = "No tienes permisos para asignar el rol SuperAdmin.";
             return RedirectToAction(nameof(Usuarios));
         }
 
@@ -169,6 +187,7 @@ public class AdminController : Controller
         return RedirectToAction(nameof(Usuarios));
     }
 
+    [Authorize(Roles = $"{Roles.SuperAdmin},{Roles.FuncionarioEtapa1}")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Editar(EditarUsuarioInternoViewModel model)
@@ -189,6 +208,16 @@ public class AdminController : Controller
             return NotFound();
         }
 
+        var esSuperAdmin = User.IsInRole(Roles.SuperAdmin);
+        var rolesActuales = await _userManager.GetRolesAsync(usuario);
+        var rolActual = rolesActuales.FirstOrDefault(r => r != Roles.Ciudadano);
+
+        if (!esSuperAdmin && (rolActual == Roles.SuperAdmin || model.Rol == Roles.SuperAdmin))
+        {
+            TempData["Error"] = "No tienes permisos para gestionar cuentas SuperAdmin.";
+            return VolverAOrigen();
+        }
+
         var existente = await _userManager.FindByEmailAsync(model.Email);
         if (existente is not null && existente.Id != usuario.Id)
         {
@@ -201,8 +230,6 @@ public class AdminController : Controller
         usuario.UserName = model.Email;
         usuario.Cargo = model.Cargo;
 
-        var rolesActuales = await _userManager.GetRolesAsync(usuario);
-        var rolActual = rolesActuales.FirstOrDefault(r => r != Roles.Ciudadano);
         if (rolActual != model.Rol)
         {
             if (rolActual is not null)
@@ -248,6 +275,7 @@ public class AdminController : Controller
         return VolverAOrigen();
     }
 
+    [Authorize(Roles = $"{Roles.SuperAdmin},{Roles.FuncionarioEtapa1}")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CambiarPassword(CambiarPasswordUsuarioViewModel model)
@@ -264,6 +292,12 @@ public class AdminController : Controller
             return NotFound();
         }
 
+        if (!User.IsInRole(Roles.SuperAdmin) && await _userManager.IsInRoleAsync(usuario, Roles.SuperAdmin))
+        {
+            TempData["Error"] = "No tienes permisos para gestionar cuentas SuperAdmin.";
+            return RedirectToAction(nameof(Usuarios));
+        }
+
         var token = await _userManager.GeneratePasswordResetTokenAsync(usuario);
         var resultado = await _userManager.ResetPasswordAsync(usuario, token, model.NuevaPassword);
         if (!resultado.Succeeded)
@@ -276,6 +310,7 @@ public class AdminController : Controller
         return RedirectToAction(nameof(Usuarios));
     }
 
+    [Authorize(Roles = $"{Roles.SuperAdmin},{Roles.FuncionarioEtapa1}")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ToggleActivo(string id)
@@ -284,6 +319,12 @@ public class AdminController : Controller
         if (usuario is null)
         {
             return NotFound();
+        }
+
+        if (!User.IsInRole(Roles.SuperAdmin) && await _userManager.IsInRoleAsync(usuario, Roles.SuperAdmin))
+        {
+            TempData["Error"] = "No tienes permisos para gestionar cuentas SuperAdmin.";
+            return RedirectToAction(nameof(Usuarios));
         }
 
         usuario.Activo = !usuario.Activo;
@@ -307,6 +348,7 @@ public class AdminController : Controller
         Roles.FuncionarioEtapa1, Roles.FuncionarioEtapa2, Roles.FuncionarioEtapa3, Roles.Inventario
     };
 
+    [Authorize(Roles = Roles.SuperAdmin)]
     [HttpGet]
     public async Task<IActionResult> ConfiguracionInstitucional()
     {
@@ -338,6 +380,7 @@ public class AdminController : Controller
         });
     }
 
+    [Authorize(Roles = Roles.SuperAdmin)]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ConfiguracionInstitucional(ConfiguracionInstitucionalViewModel model)

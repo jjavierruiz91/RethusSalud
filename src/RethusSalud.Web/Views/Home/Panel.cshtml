@@ -31,10 +31,6 @@
 
     <dl class="profile-card-details">
         <div>
-            <dt>Correo electrónico</dt>
-            <dd>@Model.Email</dd>
-        </div>
-        <div>
             <dt>Estado de la cuenta</dt>
             <dd>
                 <span class="app-badge @(Model.Activo ? "app-badge-success" : "app-badge-muted")">
@@ -47,9 +43,25 @@
     <button type="button" class="btn auth-submit-btn" data-bs-toggle="modal" data-bs-target="#miPasswordModal">Cambiar contraseña</button>
 </div>
 
+<div class="app-panel mt-3" style="max-width: 560px">
+    <h2 class="profile-card-name" style="font-size:1.1rem">Mis datos personales</h2>
+    <p class="text-muted small">Actualiza tu nombre y tu correo electrónico. El correo es también tu usuario para iniciar sesión.</p>
+    <form asp-controller="Account" asp-action="ActualizarMiPerfil" method="post">
+        <div class="mb-3">
+            <label class="form-label">Nombre completo</label>
+            <input name="NombreCompleto" class="form-control" value="@Model.NombreCompleto" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Correo electrónico</label>
+            <input name="Email" type="email" class="form-control" value="@Model.Email" required />
+        </div>
+        <button type="submit" class="btn auth-submit-btn">Guardar</button>
+    </form>
+</div>
+
 @if (esFuncionarioDeEtapa)
 {
-    <div class="app-panel mt-3" style="max-width: 560px">
+    <div class="app-panel mt-3" style="max-width: 560px" id="cargo-firma">
         <h2 class="profile-card-name" style="font-size:1.1rem">Cargo y firma</h2>
         <p class="text-muted small">Esta información se usa para el bloque de firmas de los documentos que generas o apruebas.</p>
         <form asp-controller="Account" asp-action="ActualizarMiFirma" method="post" enctype="multipart/form-data">

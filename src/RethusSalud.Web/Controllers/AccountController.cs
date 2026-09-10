@@ -57,7 +57,9 @@ public class AccountController : Controller
         {
             UserName = model.CorreoElectronico,
             Email = model.CorreoElectronico,
-            NombreCompleto = model.Nombre
+            NombreCompleto = model.Nombre,
+            Telefono = model.Telefono,
+            NumeroIdentificacion = model.NumeroIdentificacion
         };
 
         var resultado = await _userManager.CreateAsync(user, model.Password);
@@ -198,11 +200,79 @@ public class AccountController : Controller
         return Redirect(volverA);
     }
 
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ActualizarMiPerfil(EditarMiPerfilViewModel model, string? returnUrl)
+    {
+        var referer = Request.Headers.Referer.ToString();
+        var volverA = !string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)
+            ? returnUrl
+            : !string.IsNullOrEmpty(referer) && Url.IsLocalUrl(referer)
+                ? referer
+                : Url.Action("Index", "Home")!;
+
+        if (!ModelState.IsValid)
+        {
+            TempData["Error"] = "Revisa tus datos e intenta nuevamente.";
+            return Redirect(volverA);
+        }
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null)
+        {
+            return Challenge();
+        }
+
+        var existente = await _userManager.FindByEmailAsync(model.Email);
+        if (existente is not null && existente.Id != user.Id)
+        {
+            TempData["Error"] = "Ya existe otra cuenta con este correo.";
+            return Redirect(volverA);
+        }
+
+        user.NombreCompleto = model.NombreCompleto;
+        user.Email = model.Email;
+        user.UserName = model.Email;
+        user.Telefono = model.Telefono;
+        user.NumeroIdentificacion = model.NumeroIdentificacion;
+
+        if (model.Foto is not null && model.Foto.Length > 0)
+        {
+            var errorFoto = ImagenHelper.Validar(model.Foto);
+            if (errorFoto is not null)
+            {
+                TempData["Error"] = errorFoto;
+                return Redirect(volverA);
+            }
+
+            user.FotoUrl = await ImagenHelper.GuardarAsync(_environment, "usuarios", user.Id, model.Foto);
+        }
+
+        var resultadoPerfil = await _userManager.UpdateAsync(user);
+        if (!resultadoPerfil.Succeeded)
+        {
+            TempData["Error"] = string.Join(" ", resultadoPerfil.Errors.Select(e => e.Description));
+            return Redirect(volverA);
+        }
+
+        await _signInManager.RefreshSignInAsync(user);
+        TempData["Mensaje"] = "Tus datos fueron actualizados correctamente.";
+        return Redirect(volverA);
+    }
+
     [Authorize(Roles = $"{Roles.FuncionarioEtapa1},{Roles.FuncionarioEtapa2},{Roles.FuncionarioEtapa3},{Roles.Inventario}")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ActualizarMiFirma(ActualizarPerfilViewModel model)
+    public async Task<IActionResult> ActualizarMiFirma(ActualizarPerfilViewModel model, string? returnUrl)
     {
+        var referer = Request.Headers.Referer.ToString();
+        var volverA = !string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)
+            ? returnUrl
+            : !string.IsNullOrEmpty(referer) && Url.IsLocalUrl(referer)
+                ? referer
+                : Url.Action("Index", "Home")!;
+
         var user = await _userManager.GetUserAsync(User);
         if (user is null)
         {
@@ -217,7 +287,7 @@ public class AccountController : Controller
             if (error is not null)
             {
                 TempData["Error"] = error;
-                return RedirectToAction(nameof(HomeController.Panel), "Home");
+                return Redirect(volverA);
             }
 
             user.FirmaUrl = await ImagenHelper.GuardarAsync(_environment, "firmas", user.Id, model.Firma);
@@ -225,7 +295,7 @@ public class AccountController : Controller
 
         await _userManager.UpdateAsync(user);
         TempData["Mensaje"] = "Tu firma y cargo fueron actualizados correctamente.";
-        return RedirectToAction(nameof(HomeController.Panel), "Home");
+        return Redirect(volverA);
     }
 
     [HttpPost]

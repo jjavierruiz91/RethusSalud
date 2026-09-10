@@ -36,6 +36,12 @@
                     </div>
 
                     <div class="auth-field">
+                        <label asp-for="Telefono" class="auth-label"></label>
+                        <input asp-for="Telefono" type="tel" class="form-control auth-input" autocomplete="tel" placeholder="Ej. 3001234567" />
+                        <span asp-validation-for="Telefono" class="auth-field-error"></span>
+                    </div>
+
+                    <div class="auth-field">
                         <label asp-for="Password" class="auth-label"></label>
                         <div class="auth-password-wrapper">
                             <input asp-for="Password" class="form-control auth-input" autocomplete="new-password" placeholder="Minimo 4 caracteres" id="registerPassword" />

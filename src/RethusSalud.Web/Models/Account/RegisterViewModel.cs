@@ -17,6 +17,11 @@ public class RegisterViewModel
     [Display(Name = "Identificacion")]
     public string NumeroIdentificacion { get; set; } = string.Empty;
 
+    [Required(ErrorMessage = "Ingresa tu numero de telefono")]
+    [Phone(ErrorMessage = "Numero de telefono invalido")]
+    [Display(Name = "Telefono")]
+    public string Telefono { get; set; } = string.Empty;
+
     [Required(ErrorMessage = "Ingresa una contrasena")]
     [DataType(DataType.Password)]
     [MinLength(4, ErrorMessage = "La contrasena debe tener al menos 4 caracteres")]

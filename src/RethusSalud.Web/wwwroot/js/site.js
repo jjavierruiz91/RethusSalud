@@ -108,6 +108,28 @@ function initCascadaUbicacion(options) {
     });
 })();
 
+(function initSignaturePreview() {
+    document.querySelectorAll('[data-signature-preview]').forEach(function (input) {
+        var preview = document.getElementById(input.getAttribute('data-signature-preview'));
+        if (!preview) {
+            return;
+        }
+
+        input.addEventListener('change', function () {
+            var file = input.files && input.files[0];
+            if (!file) {
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                preview.innerHTML = '<img src="' + e.target.result + '" alt="Firma seleccionada" />';
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+})();
+
 (function initAutoCloseModals() {
     document.querySelectorAll('[data-autoclose]').forEach(function (el) {
         var delay = parseInt(el.getAttribute('data-autoclose'), 10) || 5000;
