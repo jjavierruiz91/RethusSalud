@@ -37,6 +37,10 @@
         {
             navItems.Add(("inbox", "Bandeja de revisión", "Revision", "Bandeja"));
             navItems.Add(("search", "Buscar solicitud", "Revision", "Buscar"));
+            if (isFuncionarioEtapa1)
+            {
+                navItems.Add(("users", "Usuarios", "Admin", "Usuarios"));
+            }
         }
         else
         {
