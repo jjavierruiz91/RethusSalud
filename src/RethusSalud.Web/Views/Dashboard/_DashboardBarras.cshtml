@@ -1,0 +1,19 @@
+@model List<RethusSalud.Web.Models.Dashboard.BarraItemViewModel>
+@using System.Globalization
+@{
+    var maxValor = Model.Any() ? Model.Max(b => b.Cantidad) : 0;
+}
+<div class="analitica-bars">
+    @foreach (var b in Model)
+    {
+        var ancho = maxValor > 0 ? (b.Cantidad * 100.0 / maxValor) : 0;
+        <div class="analitica-bar-row">
+            <div class="analitica-bar-label"><span>@b.Label</span><span>@b.Cantidad</span></div>
+            <div class="analitica-bar-track"><div class="analitica-bar-fill" style="width:@(ancho.ToString("0.##", CultureInfo.InvariantCulture))%"></div></div>
+        </div>
+    }
+    @if (!Model.Any())
+    {
+        <span class="text-muted small">Sin datos para este filtro.</span>
+    }
+</div>

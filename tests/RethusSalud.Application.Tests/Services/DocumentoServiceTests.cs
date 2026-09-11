@@ -18,11 +18,17 @@ public class DocumentoServiceTests
         NivelFormacion = NivelFormacion.Profesional
     };
 
+    private static Solicitud CrearSolicitud(string nombreProfesion)
+    {
+        var solicitante = new Solicitante { Id = 1, Nombres = "Franco", Apellidos = "Ovalle", CorreoElectronico = "franco@example.com" };
+        return Solicitud.IniciarBorrador(solicitante, CrearProfesion(nombreProfesion));
+    }
+
     [Fact]
     public void DocumentosRequeridos_incluye_tarjeta_profesional_solo_para_psicologia()
     {
-        var psicologia = DocumentoService.DocumentosRequeridos(CrearProfesion("Psicologia"));
-        var auxiliar = DocumentoService.DocumentosRequeridos(CrearProfesion("Auxiliar en enfermeria"));
+        var psicologia = DocumentoService.DocumentosRequeridos(CrearSolicitud("Psicologia"));
+        var auxiliar = DocumentoService.DocumentosRequeridos(CrearSolicitud("Auxiliar en enfermeria"));
 
         Assert.Contains(TipoDocumentoAdjunto.TarjetaProfesional, psicologia);
         Assert.DoesNotContain(TipoDocumentoAdjunto.TarjetaProfesional, auxiliar);

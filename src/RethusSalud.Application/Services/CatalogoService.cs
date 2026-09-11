@@ -19,6 +19,9 @@ public class CatalogoService
     public async Task<List<CatalogoItemDto>> ObtenerDepartamentosAsync(int paisId) =>
         (await _catalogos.GetDepartamentosAsync(paisId)).Select(d => new CatalogoItemDto(d.Id, d.Nombre)).ToList();
 
+    public async Task<List<CatalogoItemDto>> ObtenerTodosDepartamentosAsync() =>
+        (await _catalogos.GetTodosDepartamentosAsync()).Select(d => new CatalogoItemDto(d.Id, d.Nombre)).ToList();
+
     public async Task<List<CatalogoItemDto>> ObtenerMunicipiosAsync(int departamentoId) =>
         (await _catalogos.GetMunicipiosAsync(departamentoId)).Select(m => new CatalogoItemDto(m.Id, m.Nombre)).ToList();
 

@@ -1,0 +1,430 @@
+@model RethusSalud.Web.Models.Dashboard.DashboardViewModel
+@using System.Globalization
+@using RethusSalud.Domain.Enums
+@using RethusSalud.Web.Helpers
+@using RethusSalud.Web.Models.Dashboard
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_AppLayout";
+
+    string[] paleta = { "#0f5fa6", "#0f7d68", "#b8730f", "#5b3f9e", "#c0392b", "#2f8fd6" };
+
+    var etapaColores = new Dictionary<EtapaSolicitud, string>
+    {
+        { EtapaSolicitud.Etapa1, "#0f5fa6" },
+        { EtapaSolicitud.Etapa2, "#0f7d68" },
+        { EtapaSolicitud.Etapa3, "#b8730f" },
+        { EtapaSolicitud.Inventario, "#5b3f9e" }
+    };
+
+    List<DonutSegmentoViewModel> ConstruirSegmentos(IEnumerable<(string Color, string Label, int Cantidad)> datos)
+    {
+        var lista = datos.ToList();
+        var total = lista.Sum(d => d.Cantidad);
+        var acumulado = 0.0;
+        var resultado = new List<DonutSegmentoViewModel>();
+        foreach (var d in lista)
+        {
+            var pct = total > 0 ? d.Cantidad * 100.0 / total : 0;
+            resultado.Add(new DonutSegmentoViewModel { Color = d.Color, DashA = pct, DashB = 100 - pct, Offset = 25 - acumulado, Label = d.Label, Cantidad = d.Cantidad });
+            acumulado += pct;
+        }
+        return resultado;
+    }
+
+    List<BarraItemViewModel> ConstruirBarras(IEnumerable<(string Label, int Cantidad)> datos) =>
+        datos.Select(d => new BarraItemViewModel { Label = d.Label, Cantidad = d.Cantidad }).ToList();
+
+    var segmentosEtapa = ConstruirSegmentos(Model.Resultado.PorEtapa.OrderBy(e => (int)e.Etapa).Select(e => (etapaColores[e.Etapa], EtapaDisplay.Texto(e.Etapa), e.Cantidad)));
+
+    var estadoDatos = new (string Color, string Label, int Cantidad)[]
+    {
+        ("#0f7d68", "En proceso", Model.Resultado.EnProceso),
+        ("#1e8449", "Aprobadas", Model.Resultado.Aprobadas),
+        ("#c0392b", "Rechazadas", Model.Resultado.Rechazadas)
+    };
+    var segmentosEstado = ConstruirSegmentos(estadoDatos);
+
+    var segmentosSexo = ConstruirSegmentos(Model.Resultado.PorGenero.Select((g, i) => (paleta[i % paleta.Length], g.Genero.ToString(), g.Cantidad)));
+    var segmentosOrigen = ConstruirSegmentos(Model.Resultado.PorOrigenTitulo.Select((o, i) => (paleta[i % paleta.Length], o.Origen.ToString(), o.Cantidad)));
+    var segmentosInstitucion = ConstruirSegmentos(Model.Resultado.PorTipoInstitucion.Select((t, i) => (paleta[i % paleta.Length], EnumDisplay.Texto(t.Tipo), t.Cantidad)));
+
+    var barrasGrupoEtnico = ConstruirBarras(Model.Resultado.PorGrupoEtnico.OrderByDescending(g => g.Cantidad).Select(g => (EnumDisplay.Texto(g.GrupoEtnico), g.Cantidad)));
+    var barrasRangoEdad = ConstruirBarras(Model.Resultado.PorRangoEdad.Select(r => (r.Rango, r.Cantidad)));
+    var barrasTipoDocumento = ConstruirBarras(Model.Resultado.PorTipoDocumento.OrderByDescending(t => t.Cantidad).Select(t => (EnumDisplay.Texto(t.Tipo), t.Cantidad)));
+    var barrasPais = ConstruirBarras(Model.Resultado.PorPais.Select(p => (p.Pais, p.Cantidad)));
+    var barrasDepartamento = ConstruirBarras(Model.Resultado.PorDepartamento.Select(d => (d.Departamento, d.Cantidad)));
+    var barrasMunicipio = ConstruirBarras(Model.Resultado.PorMunicipio.Select(m => (m.Municipio, m.Cantidad)));
+    var barrasProfesiones = ConstruirBarras(Model.Resultado.TopProfesiones.Select(p => (p.Profesion, p.Cantidad)));
+
+    string[] meses = { "", "Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic" };
+    var tendencia = Model.Resultado.TendenciaMensual;
+    var maxTendencia = tendencia.Any() ? tendencia.Max(t => t.Cantidad) : 0;
+    var puntos = "";
+    if (tendencia.Count > 0)
+    {
+        var pasoX = tendencia.Count > 1 ? 280.0 / (tendencia.Count - 1) : 0;
+        var coords = new List<string>();
+        for (var i = 0; i < tendencia.Count; i++)
+        {
+            var x = 10 + i * pasoX;
+            var y = maxTendencia > 0 ? 85 - (tendencia[i].Cantidad * 70.0 / maxTendencia) : 85;
+            coords.Add($"{x.ToString(CultureInfo.InvariantCulture)},{y.ToString(CultureInfo.InvariantCulture)}");
+        }
+        puntos = string.Join(" ", coords);
+    }
+}
+
+<div class="app-panel mb-4">
+    <form method="get" class="row g-3 align-items-end">
+        @if (Model.EsSuperAdmin)
+        {
+            <div class="col-6 col-sm-4 col-lg-2">
+                <label class="form-label small text-muted mb-1">Etapa</label>
+                <select name="Etapa" class="form-select" onchange="this.form.submit()">
+                    <option value="">Todas</option>
+                    @foreach (var etapa in Enum.GetValues<EtapaSolicitud>())
+                    {
+                        @if (Model.Filtro.Etapa == etapa)
+                        {
+                            <option value="@etapa" selected>@EtapaDisplay.Texto(etapa)</option>
+                        }
+                        else
+                        {
+                            <option value="@etapa">@EtapaDisplay.Texto(etapa)</option>
+                        }
+                    }
+                </select>
+            </div>
+        }
+        else
+        {
+            <div class="col-6 col-sm-4 col-lg-2">
+                <label class="form-label small text-muted mb-1">Etapa</label>
+                <div><span class="app-badge app-badge-muted">Tu etapa: @EtapaDisplay.Texto(Model.EtapaBloqueada ?? EtapaSolicitud.Etapa1)</span></div>
+            </div>
+        }
+        <div class="col-6 col-sm-4 col-lg-2">
+            <label class="form-label small text-muted mb-1">País</label>
+            <select name="PaisId" class="form-select" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                @foreach (var pais in Model.Paises)
+                {
+                    @if (Model.Filtro.PaisId == pais.Id)
+                    {
+                        <option value="@pais.Id" selected>@pais.Nombre</option>
+                    }
+                    else
+                    {
+                        <option value="@pais.Id">@pais.Nombre</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+            <label class="form-label small text-muted mb-1">Departamento</label>
+            <select name="DepartamentoId" class="form-select" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                @foreach (var depto in Model.Departamentos)
+                {
+                    @if (Model.Filtro.DepartamentoId == depto.Id)
+                    {
+                        <option value="@depto.Id" selected>@depto.Nombre</option>
+                    }
+                    else
+                    {
+                        <option value="@depto.Id">@depto.Nombre</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+            <label class="form-label small text-muted mb-1">Municipio</label>
+            @if (Model.Filtro.DepartamentoId.HasValue)
+            {
+                <select name="MunicipioId" class="form-select" onchange="this.form.submit()">
+                    <option value="">Todos</option>
+                    @foreach (var municipio in Model.Municipios)
+                    {
+                        @if (Model.Filtro.MunicipioId == municipio.Id)
+                        {
+                            <option value="@municipio.Id" selected>@municipio.Nombre</option>
+                        }
+                        else
+                        {
+                            <option value="@municipio.Id">@municipio.Nombre</option>
+                        }
+                    }
+                </select>
+            }
+            else
+            {
+                <select class="form-select" disabled>
+                    <option>Elige un departamento</option>
+                </select>
+            }
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+            <label class="form-label small text-muted mb-1">Sexo</label>
+            <select name="Genero" class="form-select" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                @foreach (var genero in Enum.GetValues<Genero>())
+                {
+                    @if (Model.Filtro.Genero == genero)
+                    {
+                        <option value="@genero" selected>@genero</option>
+                    }
+                    else
+                    {
+                        <option value="@genero">@genero</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+            <label class="form-label small text-muted mb-1">Grupo étnico</label>
+            <select name="GrupoEtnico" class="form-select" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                @foreach (var g in Enum.GetValues<GrupoEtnico>())
+                {
+                    @if (Model.Filtro.GrupoEtnico == g)
+                    {
+                        <option value="@g" selected>@EnumDisplay.Texto(g)</option>
+                    }
+                    else
+                    {
+                        <option value="@g">@EnumDisplay.Texto(g)</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+            <label class="form-label small text-muted mb-1">Origen del título</label>
+            <select name="OrigenTitulo" class="form-select" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                @foreach (var o in Enum.GetValues<OrigenTitulo>())
+                {
+                    @if (Model.Filtro.OrigenTitulo == o)
+                    {
+                        <option value="@o" selected>@o</option>
+                    }
+                    else
+                    {
+                        <option value="@o">@o</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+            <label class="form-label small text-muted mb-1">Tipo de institución</label>
+            <select name="TipoInstitucion" class="form-select" onchange="this.form.submit()">
+                <option value="">Todas</option>
+                @foreach (var t in Enum.GetValues<TipoInstitucion>())
+                {
+                    @if (Model.Filtro.TipoInstitucion == t)
+                    {
+                        <option value="@t" selected>@EnumDisplay.Texto(t)</option>
+                    }
+                    else
+                    {
+                        <option value="@t">@EnumDisplay.Texto(t)</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+            <label class="form-label small text-muted mb-1">Desde</label>
+            <input type="date" name="Desde" class="form-control analitica-filtro-fecha" value="@Model.Filtro.Desde?.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+            <label class="form-label small text-muted mb-1">Hasta</label>
+            <input type="date" name="Hasta" class="form-control analitica-filtro-fecha" value="@Model.Filtro.Hasta?.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="col-12 d-flex flex-wrap gap-2">
+            <button type="submit" class="btn btn-outline-primary">Filtrar</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Limpiar</a>
+        </div>
+    </form>
+</div>
+
+<div class="app-stat-row">
+    <div class="app-stat-card app-stat-card--brand">
+        <span class="app-stat-card-value">@Model.Resultado.Total</span>
+        <span class="app-stat-card-label">Total solicitudes</span>
+    </div>
+    <div class="app-stat-card app-stat-card--success">
+        <span class="app-stat-card-value">@Model.Resultado.Aprobadas</span>
+        <span class="app-stat-card-label">Validadas</span>
+    </div>
+    <div class="app-stat-card app-stat-card--teal">
+        <span class="app-stat-card-value">@Model.Resultado.EnProceso</span>
+        <span class="app-stat-card-label">En proceso</span>
+        @if (Model.Resultado.EsperandoLargo > 0)
+        {
+            <span class="analitica-alerta">@Model.Resultado.EsperandoLargo esperando &gt;2 días</span>
+        }
+    </div>
+    <div class="app-stat-card app-stat-card--danger">
+        <span class="app-stat-card-value">@Model.Resultado.Rechazadas</span>
+        <span class="app-stat-card-label">Rechazadas</span>
+    </div>
+    <div class="app-stat-card app-stat-card--muted">
+        <span class="app-stat-card-value">@(Model.Resultado.TiempoPromedioAprobacionDias.HasValue ? Model.Resultado.TiempoPromedioAprobacionDias.Value.ToString("0.0") + " d" : "—")</span>
+        <span class="app-stat-card-label">Tiempo promedio</span>
+    </div>
+</div>
+
+<div class="analitica-grid-2 mb-4">
+    <div class="app-panel">
+        <h2 class="analitica-panel-title">@(Model.EsSuperAdmin ? "Solicitudes por etapa" : "Solicitudes por estado")</h2>
+        <partial name="_DashboardDonut" model="Model.EsSuperAdmin ? segmentosEtapa : segmentosEstado" />
+    </div>
+    <div class="app-panel">
+        <h2 class="analitica-panel-title">Por sexo</h2>
+        <partial name="_DashboardDonut" model="segmentosSexo" />
+    </div>
+</div>
+
+<div class="app-panel mb-4">
+    <h2 class="analitica-panel-title">Por grupo étnico</h2>
+    <partial name="_DashboardBarras" model="barrasGrupoEtnico" />
+</div>
+
+<div class="analitica-grid-2 mb-4">
+    <div class="app-panel">
+        <h2 class="analitica-panel-title">Por origen del título</h2>
+        <partial name="_DashboardDonut" model="segmentosOrigen" />
+    </div>
+    <div class="app-panel">
+        <h2 class="analitica-panel-title">Por tipo de institución</h2>
+        <partial name="_DashboardDonut" model="segmentosInstitucion" />
+    </div>
+</div>
+
+<div class="analitica-grid-2 mb-4">
+    <div class="app-panel">
+        <h2 class="analitica-panel-title">Por rango de edad</h2>
+        <partial name="_DashboardBarras" model="barrasRangoEdad" />
+    </div>
+    <div class="app-panel">
+        <h2 class="analitica-panel-title">Por tipo de documento adjunto</h2>
+        <partial name="_DashboardBarras" model="barrasTipoDocumento" />
+    </div>
+</div>
+
+<div class="app-panel mb-4">
+    <h2 class="analitica-panel-title">Tendencia mensual</h2>
+    @if (tendencia.Any())
+    {
+        <svg viewBox="0 0 300 100" class="analitica-trend" preserveAspectRatio="none">
+            <polyline points="@puntos" fill="none" stroke="var(--rethus-blue)" stroke-width="2"></polyline>
+            @foreach (var p in puntos.Split(' '))
+            {
+                var xy = p.Split(',');
+                <circle cx="@xy[0]" cy="@xy[1]" r="2.2" fill="var(--rethus-blue)"></circle>
+            }
+        </svg>
+        <div class="analitica-trend-labels">
+            @foreach (var t in tendencia)
+            {
+                <span>@meses[t.Mes] · @t.Cantidad</span>
+            }
+        </div>
+    }
+    else
+    {
+        <span class="text-muted small">Sin datos para este filtro.</span>
+    }
+</div>
+
+<div class="analitica-grid-2 mb-4">
+    <div class="app-panel">
+        <h2 class="analitica-panel-title">Por país</h2>
+        <partial name="_DashboardBarras" model="barrasPais" />
+    </div>
+    <div class="app-panel">
+        <h2 class="analitica-panel-title">Por departamento</h2>
+        <partial name="_DashboardBarras" model="barrasDepartamento" />
+    </div>
+</div>
+
+<div class="analitica-grid-2 mb-4">
+    <div class="app-panel">
+        <h2 class="analitica-panel-title">Por municipio</h2>
+        <partial name="_DashboardBarras" model="barrasMunicipio" />
+    </div>
+    <div class="app-panel">
+        <h2 class="analitica-panel-title">Profesiones más solicitadas</h2>
+        <partial name="_DashboardBarras" model="barrasProfesiones" />
+    </div>
+</div>
+
+<div class="app-panel mb-4">
+    <h2 class="analitica-panel-title">Desempeño por funcionario</h2>
+    <div class="analitica-ranking">
+        @{ var posicion = 0; }
+        @foreach (var f in Model.Resultado.DesempenoFuncionarios)
+        {
+            posicion++;
+            var etapaNumero = f.Etapa.HasValue ? EtapaDisplay.Numero(f.Etapa.Value) : 0;
+            <div class="analitica-ranking-row">
+                <span class="analitica-ranking-pos">@posicion</span>
+                <span class="analitica-ranking-nombre">@f.Nombre</span>
+                @if (f.Etapa.HasValue)
+                {
+                    <span class="revision-etapa-badge revision-etapa-badge-@etapaNumero">@EtapaDisplay.Texto(f.Etapa.Value)</span>
+                }
+                <span class="analitica-ranking-detalle">@f.Aprobadas aprobadas · @f.Rechazadas rechazadas</span>
+                <span class="analitica-ranking-total">@f.Gestionadas</span>
+            </div>
+        }
+        @if (!Model.Resultado.DesempenoFuncionarios.Any())
+        {
+            <span class="text-muted small">Aun no hay gestiones registradas para este filtro.</span>
+        }
+    </div>
+</div>
+
+<div class="app-panel">
+    <h2 class="analitica-panel-title">Solicitudes recientes</h2>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Identificación</th>
+                    <th>Nombre</th>
+                    <th>Profesión</th>
+                    <th>Estado</th>
+                    <th>Etapa</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var s in Model.Resultado.SolicitudesRecientes)
+                {
+                    var badgeClass = s.Estado switch
+                    {
+                        EstadoSolicitud.Aprobado => "app-badge-success",
+                        EstadoSolicitud.Rechazado => "app-badge-danger",
+                        EstadoSolicitud.EnProceso => "app-badge-warning",
+                        _ => "app-badge-muted"
+                    };
+                    <tr>
+                        <td>@s.NumeroIdentificacion</td>
+                        <td>@s.NombreCompleto</td>
+                        <td>@s.Profesion</td>
+                        <td><span class="app-badge @badgeClass">@EstadoDisplay.Texto(s.Estado)</span></td>
+                        <td>@(s.Etapa.HasValue ? EtapaDisplay.Texto(s.Etapa.Value) : "-")</td>
+                        <td>@s.FechaCreacion.ToLocalTime().ToString("dd MMM yy, HH:mm")</td>
+                    </tr>
+                }
+                @if (!Model.Resultado.SolicitudesRecientes.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Sin resultados para este filtro.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

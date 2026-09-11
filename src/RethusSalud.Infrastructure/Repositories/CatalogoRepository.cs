@@ -24,6 +24,11 @@ public class CatalogoRepository : ICatalogoRepository
             .OrderBy(d => d.Nombre)
             .ToListAsync();
 
+    public Task<List<Departamento>> GetTodosDepartamentosAsync() =>
+        _context.Departamentos.AsNoTracking()
+            .OrderBy(d => d.Nombre)
+            .ToListAsync();
+
     public Task<List<Municipio>> GetMunicipiosAsync(int departamentoId) =>
         _context.Municipios.AsNoTracking()
             .Where(m => m.DepartamentoId == departamentoId)

@@ -67,6 +67,9 @@ public class SolicitudService
     public Task<SeguimientoPagedResult> ObtenerSeguimientoConEstadisticasAsync(BandejaFiltroDto filtro, int pagina, int tamanoPagina) =>
         _solicitudes.GetSeguimientoPagedAsync(filtro, pagina, tamanoPagina);
 
+    public Task<DashboardResultDto> ObtenerDashboardAsync(DashboardFiltroDto filtro) =>
+        _solicitudes.GetDashboardAsync(filtro);
+
     public async Task AprobarAsync(int solicitudId, string usuarioId, string? mensaje = null)
     {
         var solicitud = await _solicitudes.GetByIdAsync(solicitudId)

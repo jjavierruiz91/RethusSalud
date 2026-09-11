@@ -1,4 +1,5 @@
 @model RethusSalud.Domain.Entities.Solicitud
+@using RethusSalud.Domain.Enums
 @using RethusSalud.Web.Helpers
 
 <div class="revision-card">
@@ -7,30 +8,37 @@
         <h2>Historial de revisión</h2>
     </div>
 
-    @foreach (var comentario in Model.Comentarios.OrderByDescending(c => c.FechaCreacion))
-    {
-        <div class="revision-historial-item">
-            @if (!string.IsNullOrEmpty(comentario.AutorFotoUrl))
-            {
-                <img src="@comentario.AutorFotoUrl" alt="" class="revision-historial-avatar revision-historial-avatar-img" />
-            }
-            else
-            {
-                <span class="revision-historial-avatar">@(comentario.AutorNombre.Length > 0 ? comentario.AutorNombre[0].ToString().ToUpper() : "F")</span>
-            }
-            <div>
-                <div class="revision-historial-meta">
-                    @comentario.FechaCreacion.ToLocalTime().ToString("dd MMM yyyy · hh:mm tt")
-                    &middot; @(string.IsNullOrWhiteSpace(comentario.AutorNombre) ? "Funcionario" : comentario.AutorNombre)
-                    @if (comentario.Etapa.HasValue)
+    <div class="revision-historial-timeline">
+        @foreach (var comentario in Model.Comentarios.OrderByDescending(c => c.FechaCreacion))
+        {
+            var etapaNumero = comentario.Etapa.HasValue ? EtapaDisplay.Numero(comentario.Etapa.Value) : 0;
+            var etapaEtiqueta = comentario.Etapa.HasValue ? EtapaDisplay.Texto(comentario.Etapa.Value) : null;
+
+            <div class="revision-historial-item">
+                <div class="revision-historial-avatar-col">
+                    @if (!string.IsNullOrEmpty(comentario.AutorFotoUrl))
                     {
-                        <text>&middot; @comentario.Etapa</text>
+                        <img src="@comentario.AutorFotoUrl" alt="" class="revision-historial-avatar revision-historial-avatar-img" />
+                    }
+                    else
+                    {
+                        <span class="revision-historial-avatar revision-historial-avatar-@etapaNumero">@(comentario.AutorNombre.Length > 0 ? comentario.AutorNombre[0].ToString().ToUpper() : "F")</span>
                     }
                 </div>
-                <p class="revision-historial-text">@comentario.Texto</p>
+                <div class="revision-historial-card">
+                    <div class="revision-historial-card-header">
+                        <span class="revision-historial-nombre">@(string.IsNullOrWhiteSpace(comentario.AutorNombre) ? "Funcionario" : comentario.AutorNombre)</span>
+                        @if (etapaEtiqueta is not null)
+                        {
+                            <span class="revision-etapa-badge revision-etapa-badge-@etapaNumero">@etapaEtiqueta</span>
+                        }
+                    </div>
+                    <div class="revision-historial-meta">@comentario.FechaCreacion.ToLocalTime().ToString("dd MMM yyyy · hh:mm tt")</div>
+                    <p class="revision-historial-text">@comentario.Texto</p>
+                </div>
             </div>
-        </div>
-    }
+        }
+    </div>
     @if (!Model.Comentarios.Any())
     {
         <p class="text-muted mb-0">Aun no hay comentarios registrados.</p>

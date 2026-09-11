@@ -1,0 +1,23 @@
+@model List<RethusSalud.Web.Models.Dashboard.DonutSegmentoViewModel>
+@using System.Globalization
+<div class="analitica-donut-row">
+    <svg viewBox="0 0 36 36" class="analitica-donut">
+        <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--rethus-border)" stroke-width="4"></circle>
+        @foreach (var s in Model)
+        {
+            <circle cx="18" cy="18" r="15.9" fill="none" stroke="@s.Color" stroke-width="4"
+                    stroke-dasharray="@(s.DashA.ToString("0.##", CultureInfo.InvariantCulture)) @(s.DashB.ToString("0.##", CultureInfo.InvariantCulture))"
+                    stroke-dashoffset="@(s.Offset.ToString("0.##", CultureInfo.InvariantCulture))"></circle>
+        }
+    </svg>
+    <div class="analitica-legend">
+        @foreach (var s in Model)
+        {
+            <span class="analitica-legend-item"><i style="background:@s.Color"></i>@s.Label · @s.Cantidad</span>
+        }
+        @if (!Model.Any())
+        {
+            <span class="text-muted small">Sin datos para este filtro.</span>
+        }
+    </div>
+</div>
