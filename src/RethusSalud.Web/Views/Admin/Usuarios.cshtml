@@ -8,15 +8,24 @@
 }
 
 <div class="app-stat-row">
-    <div class="app-stat-card">
+    <div class="app-stat-card app-stat-card--brand">
+        <span class="app-stat-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+        </span>
         <span class="app-stat-card-value">@Model.Count</span>
         <span class="app-stat-card-label">Total usuarios</span>
     </div>
-    <div class="app-stat-card">
+    <div class="app-stat-card app-stat-card--success">
+        <span class="app-stat-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /><path d="m17 11 2 2 4-4" /></svg>
+        </span>
         <span class="app-stat-card-value">@totalActivos</span>
         <span class="app-stat-card-label">Activos</span>
     </div>
-    <div class="app-stat-card">
+    <div class="app-stat-card app-stat-card--muted">
+        <span class="app-stat-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /><path d="m17 8 5 5" /><path d="m22 8-5 5" /></svg>
+        </span>
         <span class="app-stat-card-value">@totalInactivos</span>
         <span class="app-stat-card-label">Inactivos</span>
     </div>

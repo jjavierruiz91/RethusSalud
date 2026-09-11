@@ -292,3 +292,43 @@ function initCascadaUbicacion(options) {
 
     sections.forEach(function (s) { observer.observe(s.section); });
 })();
+
+(function initSiteNavbarScrollEffect() {
+    var navbar = document.querySelector('.site-navbar');
+    if (!navbar) {
+        return;
+    }
+
+    function update() {
+        navbar.classList.toggle('is-scrolled', window.scrollY > 12);
+    }
+
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+})();
+
+(function initScrollReveal() {
+    var targets = document.querySelectorAll('.home-section, .feature-card, .process-step, .floating-feature-card');
+    if (!targets.length) {
+        return;
+    }
+
+    if (!('IntersectionObserver' in window)) {
+        targets.forEach(function (el) { el.classList.add('reveal-on-scroll', 'in-view'); });
+        return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+    targets.forEach(function (el) {
+        el.classList.add('reveal-on-scroll');
+        observer.observe(el);
+    });
+})();
