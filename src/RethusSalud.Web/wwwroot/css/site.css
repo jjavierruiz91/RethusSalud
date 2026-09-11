@@ -1878,6 +1878,125 @@ body {
   color: var(--rethus-ink);
 }
 
+.tramite-intro-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--rethus-blue-deep);
+  margin-bottom: 1.25rem;
+}
+
+.tramite-intro-subtitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--rethus-ink);
+  margin: 1.5rem 0 0.75rem;
+}
+
+.profesion-grupo {
+  margin-bottom: 1rem;
+}
+
+.profesion-grupo > strong {
+  display: block;
+  color: var(--rethus-teal);
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.4rem;
+}
+
+.profesion-sublist {
+  margin: 0 0 0 1.25rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.profesion-radio-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--rethus-ink);
+  transition: background-color 0.15s ease;
+}
+
+.profesion-radio-item:hover {
+  background: var(--rethus-bg-soft);
+}
+
+.profesion-radio-item input[type="radio"] {
+  accent-color: var(--rethus-blue);
+  flex: none;
+  margin: 0;
+}
+
+.profesion-radio-item:has(input:checked) {
+  background: var(--rethus-bg-soft);
+  font-weight: 600;
+  color: var(--rethus-blue-deep);
+}
+
+.form-select-comfy {
+  padding-top: 0.65rem;
+  padding-bottom: 0.65rem;
+  white-space: normal;
+}
+
+.form-select-comfy option {
+  padding: 0.55rem 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.input-validation-error {
+  border-color: #c0392b !important;
+  background-color: #fdf2f1;
+}
+
+.input-validation-error:focus {
+  border-color: #c0392b !important;
+  box-shadow: 0 0 0 0.2rem rgba(192, 57, 43, 0.15) !important;
+}
+
+.field-validation-error {
+  color: #c0392b;
+  font-size: 0.82rem;
+  display: block;
+  margin-top: 0.3rem;
+}
+
+.field-validation-valid {
+  display: none;
+}
+
+.validation-summary-errors {
+  list-style: none;
+  padding: 0.85rem 1rem;
+  background: #fdf2f1;
+  border: 1px solid #f6cdc8;
+  border-left: 4px solid #c0392b;
+  border-radius: 0.6rem;
+}
+
+.validation-summary-errors ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.tramite-doc-simple-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--rethus-ink);
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
 .filter-role-select {
   min-width: 220px;
 }

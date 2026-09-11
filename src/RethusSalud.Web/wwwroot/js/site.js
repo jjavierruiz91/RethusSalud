@@ -1,6 +1,88 @@
 // Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
+var PROGRAMAS_POR_TIPO = {
+    Auxiliar: [
+        'Auxiliar administrativo en salud',
+        'Auxiliar en enfermería',
+        'Auxiliar en salud oral',
+        'Auxiliar en salud pública',
+        'Auxiliar en servicios farmacéuticos'
+    ],
+    Tecnico: [
+        'Técnico profesional en atención pre hospitalaria',
+        'Técnico profesional en citohistología'
+    ],
+    Tecnologo: [
+        'Tecnología en atención prehospitalaria',
+        'Tecnología en citohistología',
+        'Tecnología en regencia de farmacia',
+        'Tecnología en manejo de fuentes abiertas de uso diagnóstico y terapéutico',
+        'Tecnología en radiodiagnóstico y radioterapia',
+        'Tecnología en radiología e imágenes diagnósticas',
+        'Tecnología en radioterapia'
+    ],
+    Profesional: [
+        'Psicología'
+    ]
+};
+
+function initCascadaPrograma(options) {
+    var tipoSelect = document.getElementById(options.tipoId);
+    var nombreSelect = document.getElementById(options.nombreId);
+    if (!tipoSelect || !nombreSelect) {
+        return;
+    }
+
+    function llenarProgramas(tipo, nombreSeleccionado) {
+        nombreSelect.innerHTML = '';
+        var optionVacia = document.createElement('option');
+        optionVacia.value = '';
+        optionVacia.text = 'Seleccione el nombre del programa';
+        nombreSelect.appendChild(optionVacia);
+
+        var programas = PROGRAMAS_POR_TIPO[tipo] || [];
+        programas.forEach(function (nombre) {
+            var option = document.createElement('option');
+            option.value = nombre;
+            option.text = nombre;
+            if (nombreSeleccionado && nombreSeleccionado === nombre) {
+                option.selected = true;
+            }
+            nombreSelect.appendChild(option);
+        });
+
+        nombreSelect.disabled = programas.length === 0;
+    }
+
+    tipoSelect.addEventListener('change', function () {
+        llenarProgramas(tipoSelect.value, null);
+    });
+
+    llenarProgramas(tipoSelect.value, options.nombreSeleccionado);
+}
+
+function initConvalidacionToggle(options) {
+    var origenSelect = document.getElementById(options.origenId);
+    var campos = (options.campoIds || []).map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    if (!origenSelect || !campos.length) {
+        return;
+    }
+
+    function actualizar() {
+        var esExtranjero = origenSelect.value === options.valorExtranjero;
+        campos.forEach(function (campo) {
+            campo.disabled = !esExtranjero;
+            if (!esExtranjero) {
+                campo.value = '';
+            }
+        });
+    }
+
+    origenSelect.addEventListener('change', actualizar);
+    actualizar();
+}
+
 function initCascadaUbicacion(options) {
     var paisSelect = document.getElementById(options.paisId);
     var deptoSelect = document.getElementById(options.departamentoId);

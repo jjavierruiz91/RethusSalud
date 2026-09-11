@@ -1,5 +1,6 @@
 using FluentValidation;
 using RethusSalud.Application.Dtos;
+using RethusSalud.Domain.Enums;
 
 namespace RethusSalud.Application.Validators;
 
@@ -14,5 +15,9 @@ public class DatosAcademicosValidator : AbstractValidator<DatosAcademicosDto>
         RuleFor(x => x.FechaGrado)
             .LessThanOrEqualTo(_ => DateOnly.FromDateTime(DateTime.UtcNow))
             .WithMessage("La fecha de grado no puede ser futura.");
+        RuleFor(x => x.NumeroConvalidacion)
+            .NotEmpty()
+            .WithMessage("El numero de convalidacion es obligatorio cuando el origen del titulo es extranjero.")
+            .When(x => x.OrigenTitulo == OrigenTitulo.Extranjero);
     }
 }

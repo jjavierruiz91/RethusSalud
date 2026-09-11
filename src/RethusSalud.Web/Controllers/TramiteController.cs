@@ -158,7 +158,9 @@ public class TramiteController : Controller
             PaisNacimientoId = solicitante.PaisNacimientoId,
             DepartamentoNacimientoId = solicitante.DepartamentoNacimientoId,
             MunicipioNacimientoId = solicitante.MunicipioNacimientoId,
-            FechaNacimiento = solicitante.FechaNacimiento,
+            FechaNacimiento = solicitante.FechaNacimiento == default
+                ? DateOnly.FromDateTime(DateTime.Today)
+                : solicitante.FechaNacimiento,
             PaisResidenciaId = solicitante.PaisResidenciaId,
             DepartamentoResidenciaId = solicitante.DepartamentoResidenciaId,
             MunicipioResidenciaId = solicitante.MunicipioResidenciaId,
@@ -207,7 +209,7 @@ public class TramiteController : Controller
             TelefonoFijo = vm.TelefonoFijo,
             Celular = vm.Celular,
             CorreoElectronico = vm.CorreoElectronico,
-            GrupoEtnico = vm.GrupoEtnico
+            GrupoEtnico = vm.GrupoEtnico!.Value
         };
 
         try
@@ -319,7 +321,7 @@ public class TramiteController : Controller
             return NotFound();
         }
 
-        ViewBag.DocumentosRequeridos = DocumentoService.DocumentosRequeridos(solicitud.Profesion);
+        ViewBag.DocumentosRequeridos = DocumentoService.DocumentosRequeridos(solicitud);
         return View(solicitud);
     }
 

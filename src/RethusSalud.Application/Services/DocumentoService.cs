@@ -28,7 +28,7 @@ public class DocumentoService
         _emailSender = emailSender;
     }
 
-    public static List<TipoDocumentoAdjunto> DocumentosRequeridos(Profesion profesion)
+    public static List<TipoDocumentoAdjunto> DocumentosRequeridos(Solicitud solicitud)
     {
         var requeridos = new List<TipoDocumentoAdjunto>
         {
@@ -37,7 +37,10 @@ public class DocumentoService
             TipoDocumentoAdjunto.ActaGrado
         };
 
-        if (profesion.Nombre.Contains("Psicologia", StringComparison.OrdinalIgnoreCase))
+        var esPsicologiaPorProfesion = solicitud.Profesion.Nombre.Contains("Psicologia", StringComparison.OrdinalIgnoreCase);
+        var esPsicologiaPorPrograma = solicitud.DatosAcademicos?.NombrePrograma?.Contains("Psicolog", StringComparison.OrdinalIgnoreCase) ?? false;
+
+        if (esPsicologiaPorProfesion || esPsicologiaPorPrograma)
         {
             requeridos.Add(TipoDocumentoAdjunto.TarjetaProfesional);
         }
@@ -117,7 +120,7 @@ public class DocumentoService
         var solicitud = await _solicitudes.GetByIdAsync(solicitudId)
             ?? throw new InvalidOperationException("Solicitud no encontrada.");
 
-        var requeridos = DocumentosRequeridos(solicitud.Profesion);
+        var requeridos = DocumentosRequeridos(solicitud);
         var faltantes = requeridos.Where(r => solicitud.Archivos.All(a => a.TipoDocumento != r)).ToList();
         if (faltantes.Count > 0)
         {

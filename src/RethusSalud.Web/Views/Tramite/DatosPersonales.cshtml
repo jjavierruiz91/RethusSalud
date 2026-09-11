@@ -14,17 +14,20 @@
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
     <div class="row">
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 mb-3">
             <label asp-for="TipoIdentificacion" class="form-label"></label>
-            <select asp-for="TipoIdentificacion" class="form-select" asp-items="Html.GetEnumSelectList<TipoIdentificacion>()"></select>
+            <select asp-for="TipoIdentificacion" class="form-select form-select-comfy" asp-items="Html.GetEnumSelectList<TipoIdentificacion>()"></select>
+            <span asp-validation-for="TipoIdentificacion" class="text-danger"></span>
         </div>
-        <div class="col-md-4 mb-3">
+        <div class="col-md-3 mb-3">
             <label asp-for="NumeroIdentificacion" class="form-label"></label>
             <input asp-for="NumeroIdentificacion" class="form-control" />
+            <span asp-validation-for="NumeroIdentificacion" class="text-danger"></span>
         </div>
-        <div class="col-md-4 mb-3">
+        <div class="col-md-3 mb-3">
             <label asp-for="LugarExpedicion" class="form-label"></label>
             <input asp-for="LugarExpedicion" class="form-control" />
+            <span asp-validation-for="LugarExpedicion" class="text-danger"></span>
         </div>
     </div>
 
@@ -32,14 +35,17 @@
         <div class="col-md-4 mb-3">
             <label asp-for="Genero" class="form-label"></label>
             <select asp-for="Genero" class="form-select" asp-items="Html.GetEnumSelectList<Genero>()"></select>
+            <span asp-validation-for="Genero" class="text-danger"></span>
         </div>
         <div class="col-md-4 mb-3">
             <label asp-for="Nombres" class="form-label"></label>
             <input asp-for="Nombres" class="form-control" />
+            <span asp-validation-for="Nombres" class="text-danger"></span>
         </div>
         <div class="col-md-4 mb-3">
             <label asp-for="Apellidos" class="form-label"></label>
             <input asp-for="Apellidos" class="form-control" />
+            <span asp-validation-for="Apellidos" class="text-danger"></span>
         </div>
     </div>
 
@@ -48,20 +54,24 @@
         <div class="col-md-4 mb-3">
             <label asp-for="PaisNacimientoId" class="form-label"></label>
             <select asp-for="PaisNacimientoId" id="paisNacimiento" class="form-select" asp-items="ViewBag.Paises"></select>
+            <span asp-validation-for="PaisNacimientoId" class="text-danger"></span>
         </div>
         <div class="col-md-4 mb-3">
             <label asp-for="DepartamentoNacimientoId" class="form-label"></label>
             <select asp-for="DepartamentoNacimientoId" id="departamentoNacimiento" class="form-select"></select>
+            <span asp-validation-for="DepartamentoNacimientoId" class="text-danger"></span>
         </div>
         <div class="col-md-4 mb-3">
             <label asp-for="MunicipioNacimientoId" class="form-label"></label>
             <select asp-for="MunicipioNacimientoId" id="municipioNacimiento" class="form-select"></select>
+            <span asp-validation-for="MunicipioNacimientoId" class="text-danger"></span>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4 mb-3">
             <label asp-for="FechaNacimiento" class="form-label"></label>
             <input asp-for="FechaNacimiento" class="form-control" />
+            <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
         </div>
     </div>
 
@@ -70,14 +80,17 @@
         <div class="col-md-4 mb-3">
             <label asp-for="PaisResidenciaId" class="form-label"></label>
             <select asp-for="PaisResidenciaId" id="paisResidencia" class="form-select" asp-items="ViewBag.Paises"></select>
+            <span asp-validation-for="PaisResidenciaId" class="text-danger"></span>
         </div>
         <div class="col-md-4 mb-3">
             <label asp-for="DepartamentoResidenciaId" class="form-label"></label>
             <select asp-for="DepartamentoResidenciaId" id="departamentoResidencia" class="form-select"></select>
+            <span asp-validation-for="DepartamentoResidenciaId" class="text-danger"></span>
         </div>
         <div class="col-md-4 mb-3">
             <label asp-for="MunicipioResidenciaId" class="form-label"></label>
             <select asp-for="MunicipioResidenciaId" id="municipioResidencia" class="form-select"></select>
+            <span asp-validation-for="MunicipioResidenciaId" class="text-danger"></span>
         </div>
     </div>
 
@@ -85,25 +98,30 @@
         <div class="col-md-4 mb-3">
             <label asp-for="DireccionDomicilio" class="form-label"></label>
             <input asp-for="DireccionDomicilio" class="form-control" />
+            <span asp-validation-for="DireccionDomicilio" class="text-danger"></span>
         </div>
         <div class="col-md-4 mb-3">
             <label asp-for="TelefonoFijo" class="form-label"></label>
             <input asp-for="TelefonoFijo" class="form-control" />
+            <span asp-validation-for="TelefonoFijo" class="text-danger"></span>
         </div>
         <div class="col-md-4 mb-3">
             <label asp-for="Celular" class="form-label"></label>
             <input asp-for="Celular" class="form-control" />
+            <span asp-validation-for="Celular" class="text-danger"></span>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 mb-3">
             <label asp-for="CorreoElectronico" class="form-label"></label>
             <input asp-for="CorreoElectronico" class="form-control" />
+            <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
         </div>
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 mb-3">
             <label asp-for="GrupoEtnico" class="form-label"></label>
-            <select asp-for="GrupoEtnico" class="form-select" asp-items="Html.GetEnumSelectList<GrupoEtnico>()"></select>
+            <select asp-for="GrupoEtnico" class="form-select form-select-comfy" asp-items="Html.GetEnumSelectList<GrupoEtnico>()"></select>
+            <span asp-validation-for="GrupoEtnico" class="text-danger"></span>
         </div>
     </div>
 
@@ -112,6 +130,7 @@
 </div>
 
 @section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
         initCascadaUbicacion({
             paisId: 'paisNacimiento',

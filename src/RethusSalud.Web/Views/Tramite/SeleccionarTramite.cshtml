@@ -1,31 +1,70 @@
 @model RethusSalud.Web.Models.Tramite.SeleccionarTramiteViewModel
+@using RethusSalud.Domain.Enums
 @{
     ViewData["Title"] = "Seleccionar tramite";
+    var grupos = Model.Profesiones
+        .GroupBy(p => p.NivelFormacion)
+        .OrderBy(g => (int)g.Key);
 }
+
+<div class="d-flex align-items-center gap-3 mb-3">
+    <a asp-controller="Tramite" asp-action="Dashboard" class="btn btn-outline-secondary btn-sm">&larr; Volver</a>
+    <h1 class="m-0">Seleccionar tipo de trámite</h1>
+</div>
 
 @await Html.PartialAsync("_TramiteSteps", new RethusSalud.Web.Models.Tramite.TramiteStepsViewModel { PasoActual = 1, PasoMaximo = (int)(ViewBag.PasoMaximo ?? 1), SolicitudId = (int?)ViewBag.SolicitudId })
 
-<h1 class="text-center">Selecciona tu profesión u ocupación</h1>
-
 <div class="app-panel mx-auto" style="max-width: 960px">
-    <div class="text-center">
-        <span class="hero-eyebrow auth-eyebrow-dark">Registro Rethus</span>
-    </div>
+    <h2 class="tramite-intro-title">Registro Único Nacional de Talento Humano en Salud - ReTHUS</h2>
 
-    <ul class="profesion-list">
-        @foreach (var profesion in Model.Profesiones)
+    <form asp-action="SeleccionarTramite" method="post">
+        <h3 class="tramite-intro-subtitle">Profesiones:</h3>
+        @{ var numeroGrupo = 0; }
+        @foreach (var grupo in grupos)
         {
-            <li class="profesion-item">
-                <span>@profesion.Nombre</span>
-                <form asp-action="SeleccionarTramite" method="post" class="m-0">
-                    <input type="hidden" name="profesionId" value="@profesion.Id" />
-                    <button type="submit" class="btn btn-sm btn-outline-primary">Realizar trámite</button>
-                </form>
-            </li>
+            numeroGrupo++;
+            <div class="profesion-grupo">
+                <strong>@numeroGrupo. @NivelFormacionHelper.Etiqueta(grupo.Key):</strong>
+                <ol class="profesion-sublist">
+                    @foreach (var profesion in grupo)
+                    {
+                        <li>
+                            <label class="profesion-radio-item">
+                                <input type="radio" name="profesionId" value="@profesion.Id" required />
+                                <span>@profesion.Nombre.ToUpperInvariant()</span>
+                            </label>
+                        </li>
+                    }
+                </ol>
+            </div>
         }
         @if (!Model.Profesiones.Any())
         {
-            <li class="text-center text-muted py-3">No hay profesiones disponibles para este tipo de trámite.</li>
+            <p class="text-muted">No hay profesiones disponibles para este tipo de trámite.</p>
         }
-    </ul>
+
+        <h3 class="tramite-intro-subtitle">Documentos a cargar</h3>
+        <ol class="tramite-doc-simple-list">
+            <li>Copia de cédula ampliada a 150% legible</li>
+            <li>Copia legible del diploma de grado</li>
+            <li>Copia legible del acta de grado</li>
+            <li>Copia legible de la tarjeta profesional (solo profesionales en Psicología), sin esta no se registra el título</li>
+        </ol>
+
+        <button type="submit" class="btn auth-submit-btn mt-2">Realizar trámite</button>
+    </form>
 </div>
+
+@functions {
+    static class NivelFormacionHelper
+    {
+        public static string Etiqueta(NivelFormacion nivel) => nivel switch
+        {
+            NivelFormacion.Auxiliar => "AUXILIARES",
+            NivelFormacion.TecnicoProfesional => "TÉCNICO PROFESIONAL",
+            NivelFormacion.Tecnologo => "TECNOLOGÍA",
+            NivelFormacion.Profesional => "PROFESIONAL",
+            _ => nivel.ToString()
+        };
+    }
+}

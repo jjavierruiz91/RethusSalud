@@ -10,6 +10,8 @@ public class SolicitanteConfiguration : IEntityTypeConfiguration<Solicitante>
     {
         builder.Property(s => s.ApplicationUserId).IsRequired().HasMaxLength(450);
         builder.Property(s => s.NumeroIdentificacion).IsRequired().HasMaxLength(30);
+        builder.Property(s => s.TipoIdentificacion).HasConversion<string>().HasMaxLength(50);
+        builder.Property(s => s.GrupoEtnico).HasConversion<string>().HasMaxLength(50);
         builder.Property(s => s.LugarExpedicion).HasMaxLength(150);
         builder.Property(s => s.Nombres).IsRequired().HasMaxLength(150);
         builder.Property(s => s.Apellidos).IsRequired().HasMaxLength(150);

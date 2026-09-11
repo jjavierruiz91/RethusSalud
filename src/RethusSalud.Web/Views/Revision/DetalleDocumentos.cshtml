@@ -30,7 +30,7 @@
                 </div>
             </div>
 
-            @foreach (var tipo in RethusSalud.Application.Services.DocumentoService.DocumentosRequeridos(Model.Profesion))
+            @foreach (var tipo in RethusSalud.Application.Services.DocumentoService.DocumentosRequeridos(Model))
             {
                 var archivo = Model.Archivos.FirstOrDefault(a => a.TipoDocumento == tipo);
                 <div class="wizard-doc-card mb-2">

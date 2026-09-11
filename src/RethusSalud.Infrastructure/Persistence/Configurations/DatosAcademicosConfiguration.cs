@@ -8,6 +8,7 @@ public class DatosAcademicosConfiguration : IEntityTypeConfiguration<DatosAcadem
 {
     public void Configure(EntityTypeBuilder<DatosAcademicos> builder)
     {
+        builder.Property(d => d.TipoInstitucion).HasConversion<string>().HasMaxLength(50);
         builder.Property(d => d.TipoPrograma).IsRequired().HasMaxLength(150);
         builder.Property(d => d.NombreInstitucion).IsRequired().HasMaxLength(250);
         builder.Property(d => d.NombrePrograma).IsRequired().HasMaxLength(150);

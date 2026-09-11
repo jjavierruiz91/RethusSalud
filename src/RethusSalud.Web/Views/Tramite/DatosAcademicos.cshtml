@@ -2,6 +2,13 @@
 @using RethusSalud.Domain.Enums
 @{
     ViewData["Title"] = "Datos academicos";
+    var tiposPrograma = new[]
+    {
+        ("Auxiliar", "Auxiliar"),
+        ("Tecnico", "Técnico"),
+        ("Tecnologo", "Tecnólogo"),
+        ("Profesional", "Profesional")
+    };
 }
 
 @await Html.PartialAsync("_TramiteSteps", new RethusSalud.Web.Models.Tramite.TramiteStepsViewModel { PasoActual = 3, PasoMaximo = (int)(ViewBag.PasoMaximo ?? 3), SolicitudId = Model.SolicitudId })
@@ -14,17 +21,36 @@
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
     <div class="row">
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 mb-3">
             <label asp-for="OrigenTitulo" class="form-label"></label>
-            <select asp-for="OrigenTitulo" class="form-select" asp-items="Html.GetEnumSelectList<OrigenTitulo>()"></select>
+            <select asp-for="OrigenTitulo" id="origenTitulo" class="form-select" asp-items="Html.GetEnumSelectList<OrigenTitulo>()"></select>
+            <span asp-validation-for="OrigenTitulo" class="text-danger"></span>
         </div>
-        <div class="col-md-4 mb-3">
-            <label asp-for="TipoInstitucion" class="form-label"></label>
-            <select asp-for="TipoInstitucion" class="form-select" asp-items="Html.GetEnumSelectList<TipoInstitucion>()"></select>
-        </div>
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 mb-3">
             <label asp-for="TipoPrograma" class="form-label"></label>
-            <input asp-for="TipoPrograma" class="form-control" placeholder="Universitario" />
+            <select asp-for="TipoPrograma" id="tipoPrograma" class="form-select">
+                <option value="">Seleccione</option>
+                @foreach (var (valor, etiqueta) in tiposPrograma)
+                {
+                    @if (Model.TipoPrograma == valor)
+                    {
+                        <option value="@valor" selected>@etiqueta</option>
+                    }
+                    else
+                    {
+                        <option value="@valor">@etiqueta</option>
+                    }
+                }
+            </select>
+            <span asp-validation-for="TipoPrograma" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mb-3">
+            <label asp-for="TipoInstitucion" class="form-label"></label>
+            <select asp-for="TipoInstitucion" class="form-select form-select-comfy" asp-items="Html.GetEnumSelectList<TipoInstitucion>()"></select>
+            <span asp-validation-for="TipoInstitucion" class="text-danger"></span>
         </div>
     </div>
 
@@ -33,45 +59,60 @@
         <div class="col-md-4 mb-3">
             <label asp-for="PaisInstitucionId" class="form-label"></label>
             <select asp-for="PaisInstitucionId" id="paisInstitucion" class="form-select" asp-items="ViewBag.Paises"></select>
+            <span asp-validation-for="PaisInstitucionId" class="text-danger"></span>
         </div>
         <div class="col-md-4 mb-3">
             <label asp-for="DepartamentoInstitucionId" class="form-label"></label>
             <select asp-for="DepartamentoInstitucionId" id="departamentoInstitucion" class="form-select"></select>
+            <span asp-validation-for="DepartamentoInstitucionId" class="text-danger"></span>
         </div>
         <div class="col-md-4 mb-3">
             <label asp-for="MunicipioInstitucionId" class="form-label"></label>
             <select asp-for="MunicipioInstitucionId" id="municipioInstitucion" class="form-select"></select>
+            <span asp-validation-for="MunicipioInstitucionId" class="text-danger"></span>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-6 mb-3">
+        <div class="col-md-8 mb-3">
             <label asp-for="NombreInstitucion" class="form-label"></label>
             <input asp-for="NombreInstitucion" class="form-control" />
+            <span asp-validation-for="NombreInstitucion" class="text-danger"></span>
         </div>
-        <div class="col-md-3 mb-3">
-            <label asp-for="NombrePrograma" class="form-label"></label>
-            <input asp-for="NombrePrograma" class="form-control" />
-        </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-4 mb-3">
             <label asp-for="FechaGrado" class="form-label"></label>
             <input asp-for="FechaGrado" class="form-control" />
+            <span asp-validation-for="FechaGrado" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mb-3">
+            <label asp-for="NombrePrograma" class="form-label"></label>
+            <select asp-for="NombrePrograma" id="nombrePrograma" class="form-select form-select-comfy">
+                <option value="">Seleccione el tipo de programa primero</option>
+            </select>
+            <span asp-validation-for="NombrePrograma" class="text-danger"></span>
         </div>
     </div>
 
     <h2 class="wizard-subheading">Convalidacion (si aplica)</h2>
+    <p class="text-muted small mb-3">Estos campos solo aplican cuando el origen del título es extranjero.</p>
     <div class="row">
         <div class="col-md-4 mb-3">
             <label asp-for="NumeroConvalidacion" class="form-label"></label>
-            <input asp-for="NumeroConvalidacion" class="form-control" />
+            <input asp-for="NumeroConvalidacion" id="numeroConvalidacion" class="form-control" />
+            <span asp-validation-for="NumeroConvalidacion" class="text-danger"></span>
         </div>
         <div class="col-md-4 mb-3">
             <label asp-for="FechaConvalidacion" class="form-label"></label>
-            <input asp-for="FechaConvalidacion" class="form-control" />
+            <input asp-for="FechaConvalidacion" id="fechaConvalidacion" class="form-control" />
+            <span asp-validation-for="FechaConvalidacion" class="text-danger"></span>
         </div>
         <div class="col-md-4 mb-3">
             <label asp-for="TituloEquivalente" class="form-label"></label>
-            <input asp-for="TituloEquivalente" class="form-control" />
+            <input asp-for="TituloEquivalente" id="tituloEquivalente" class="form-control" />
+            <span asp-validation-for="TituloEquivalente" class="text-danger"></span>
         </div>
     </div>
 
@@ -80,6 +121,7 @@
 </div>
 
 @section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
         initCascadaUbicacion({
             paisId: 'paisInstitucion',
@@ -89,6 +131,16 @@
             municipiosUrl: '@Url.Action("Municipios")',
             departamentoSeleccionado: '@Model.DepartamentoInstitucionId',
             municipioSeleccionado: '@Model.MunicipioInstitucionId'
+        });
+        initCascadaPrograma({
+            tipoId: 'tipoPrograma',
+            nombreId: 'nombrePrograma',
+            nombreSeleccionado: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.NombrePrograma))
+        });
+        initConvalidacionToggle({
+            origenId: 'origenTitulo',
+            campoIds: ['numeroConvalidacion', 'fechaConvalidacion', 'tituloEquivalente'],
+            valorExtranjero: '@((int)OrigenTitulo.Extranjero)'
         });
     </script>
 }

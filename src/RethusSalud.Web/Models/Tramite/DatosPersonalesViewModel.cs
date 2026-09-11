@@ -28,10 +28,10 @@ public class DatosPersonalesViewModel
     [Required, Display(Name = "Pais de nacimiento")]
     public int PaisNacimientoId { get; set; }
 
-    [Display(Name = "Departamento de nacimiento")]
+    [Required(ErrorMessage = "El campo Departamento de nacimiento es obligatorio."), Display(Name = "Departamento de nacimiento")]
     public int? DepartamentoNacimientoId { get; set; }
 
-    [Display(Name = "Municipio de nacimiento")]
+    [Required(ErrorMessage = "El campo Municipio de nacimiento es obligatorio."), Display(Name = "Municipio de nacimiento")]
     public int? MunicipioNacimientoId { get; set; }
 
     [Required, DataType(DataType.Date), Display(Name = "Fecha de nacimiento")]
@@ -40,16 +40,16 @@ public class DatosPersonalesViewModel
     [Required, Display(Name = "Pais de residencia")]
     public int PaisResidenciaId { get; set; }
 
-    [Display(Name = "Departamento de residencia")]
+    [Required(ErrorMessage = "El campo Departamento de residencia es obligatorio."), Display(Name = "Departamento de residencia")]
     public int? DepartamentoResidenciaId { get; set; }
 
-    [Display(Name = "Municipio de residencia")]
+    [Required(ErrorMessage = "El campo Municipio de residencia es obligatorio."), Display(Name = "Municipio de residencia")]
     public int? MunicipioResidenciaId { get; set; }
 
     [Required, Display(Name = "Direccion de domicilio")]
     public string DireccionDomicilio { get; set; } = string.Empty;
 
-    [Display(Name = "Telefono fijo")]
+    [Required(ErrorMessage = "El campo Telefono fijo es obligatorio."), Display(Name = "Telefono fijo")]
     public string? TelefonoFijo { get; set; }
 
     [Required]
@@ -58,6 +58,6 @@ public class DatosPersonalesViewModel
     [Required, EmailAddress, Display(Name = "Correo electronico")]
     public string CorreoElectronico { get; set; } = string.Empty;
 
-    [Display(Name = "Grupo etnico")]
-    public GrupoEtnico GrupoEtnico { get; set; }
+    [Required(ErrorMessage = "El campo Grupo etnico es obligatorio."), Display(Name = "Grupo etnico")]
+    public GrupoEtnico? GrupoEtnico { get; set; }
 }
