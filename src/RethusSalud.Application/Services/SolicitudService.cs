@@ -215,7 +215,7 @@ public class SolicitudService
     public Task<Solicitud?> ObtenerPorConsecutivoAsync(string numero) =>
         _solicitudes.GetByConsecutivoAsync(numero);
 
-    public async Task AgregarComentarioAsync(int solicitudId, string usuarioId, string texto)
+    public async Task AgregarComentarioAsync(int solicitudId, string usuarioId, string autorNombre, string? autorFotoUrl, EtapaSolicitud? etapa, string texto)
     {
         if (string.IsNullOrWhiteSpace(texto))
         {
@@ -228,6 +228,9 @@ public class SolicitudService
         solicitud.AgregarComentario(new Comentario
         {
             AutorUserId = usuarioId,
+            AutorNombre = autorNombre,
+            AutorFotoUrl = autorFotoUrl,
+            Etapa = etapa,
             Texto = texto,
             FechaCreacion = DateTime.UtcNow
         });

@@ -206,7 +206,10 @@ public class RevisionController : Controller
     {
         try
         {
-            await _solicitudes.AgregarComentarioAsync(id, UserId, texto);
+            var usuario = await _userManager.GetUserAsync(User);
+            var etapa = await ObtenerEtapaDelUsuarioAsync();
+            var autorNombre = string.IsNullOrWhiteSpace(usuario?.NombreCompleto) ? "Funcionario" : usuario.NombreCompleto;
+            await _solicitudes.AgregarComentarioAsync(id, UserId, autorNombre, usuario?.FotoUrl, etapa, texto);
         }
         catch (AppValidationException ex)
         {

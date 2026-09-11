@@ -2586,6 +2586,10 @@ body {
   font-size: 0.8rem;
 }
 
+.revision-historial-avatar-img {
+  object-fit: cover;
+}
+
 .revision-historial-meta {
   font-size: 0.78rem;
   color: var(--rethus-muted);

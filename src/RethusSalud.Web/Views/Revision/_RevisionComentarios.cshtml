@@ -10,11 +10,22 @@
     @foreach (var comentario in Model.Comentarios.OrderByDescending(c => c.FechaCreacion))
     {
         <div class="revision-historial-item">
-            <span class="revision-historial-avatar">F</span>
+            @if (!string.IsNullOrEmpty(comentario.AutorFotoUrl))
+            {
+                <img src="@comentario.AutorFotoUrl" alt="" class="revision-historial-avatar revision-historial-avatar-img" />
+            }
+            else
+            {
+                <span class="revision-historial-avatar">@(comentario.AutorNombre.Length > 0 ? comentario.AutorNombre[0].ToString().ToUpper() : "F")</span>
+            }
             <div>
                 <div class="revision-historial-meta">
                     @comentario.FechaCreacion.ToLocalTime().ToString("dd MMM yyyy · hh:mm tt")
-                    &middot; Funcionario
+                    &middot; @(string.IsNullOrWhiteSpace(comentario.AutorNombre) ? "Funcionario" : comentario.AutorNombre)
+                    @if (comentario.Etapa.HasValue)
+                    {
+                        <text>&middot; @comentario.Etapa</text>
+                    }
                 </div>
                 <p class="revision-historial-text">@comentario.Texto</p>
             </div>
