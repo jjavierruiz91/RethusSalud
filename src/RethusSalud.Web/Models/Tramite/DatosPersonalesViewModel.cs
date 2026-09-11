@@ -28,11 +28,17 @@ public class DatosPersonalesViewModel
     [Required, Display(Name = "Pais de nacimiento")]
     public int PaisNacimientoId { get; set; }
 
-    [Required(ErrorMessage = "El campo Departamento de nacimiento es obligatorio."), Display(Name = "Departamento de nacimiento")]
+    [Display(Name = "Departamento de nacimiento")]
     public int? DepartamentoNacimientoId { get; set; }
 
-    [Required(ErrorMessage = "El campo Municipio de nacimiento es obligatorio."), Display(Name = "Municipio de nacimiento")]
+    [Display(Name = "Municipio de nacimiento")]
     public int? MunicipioNacimientoId { get; set; }
+
+    [Display(Name = "Departamento o provincia de nacimiento")]
+    public string? DepartamentoNacimientoTexto { get; set; }
+
+    [Display(Name = "Municipio o ciudad de nacimiento")]
+    public string? MunicipioNacimientoTexto { get; set; }
 
     [Required, DataType(DataType.Date), Display(Name = "Fecha de nacimiento")]
     public DateOnly FechaNacimiento { get; set; }

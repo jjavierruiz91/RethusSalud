@@ -16,6 +16,8 @@ public class SolicitanteConfiguration : IEntityTypeConfiguration<Solicitante>
         builder.Property(s => s.Nombres).IsRequired().HasMaxLength(150);
         builder.Property(s => s.Apellidos).IsRequired().HasMaxLength(150);
         builder.Property(s => s.DireccionDomicilio).HasMaxLength(250);
+        builder.Property(s => s.DepartamentoNacimientoTexto).HasMaxLength(150);
+        builder.Property(s => s.MunicipioNacimientoTexto).HasMaxLength(150);
         builder.Property(s => s.TelefonoFijo).HasMaxLength(20);
         builder.Property(s => s.Celular).IsRequired().HasMaxLength(20);
         builder.Property(s => s.CorreoElectronico).IsRequired().HasMaxLength(200);

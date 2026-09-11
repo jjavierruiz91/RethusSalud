@@ -92,7 +92,7 @@ function initCascadaUbicacion(options) {
         return;
     }
 
-    function llenarSelect(select, items, valorSeleccionado, placeholder) {
+    function llenarSelect(select, items, valorSeleccionado, placeholder, deshabilitar) {
         select.innerHTML = '';
         var optionVacia = document.createElement('option');
         optionVacia.value = '';
@@ -108,37 +108,41 @@ function initCascadaUbicacion(options) {
             }
             select.appendChild(option);
         });
+
+        select.disabled = !!deshabilitar;
     }
 
     function cargarDepartamentos(paisId, deptoSeleccionado, municipioSeleccionado) {
         if (!paisId) {
-            llenarSelect(deptoSelect, [], null, 'Departamento');
-            llenarSelect(municipioSelect, [], null, 'Municipio');
+            llenarSelect(deptoSelect, [], null, 'Departamento', false);
+            llenarSelect(municipioSelect, [], null, 'Municipio', false);
             return;
         }
 
         fetch(options.departamentosUrl + '?paisId=' + paisId)
             .then(function (r) { return r.json(); })
             .then(function (departamentos) {
-                llenarSelect(deptoSelect, departamentos, deptoSeleccionado, 'Departamento');
-                if (deptoSeleccionado) {
+                var sinDatos = departamentos.length === 0;
+                llenarSelect(deptoSelect, departamentos, deptoSeleccionado, sinDatos ? 'No aplica para este país' : 'Departamento', sinDatos);
+                if (!sinDatos && deptoSeleccionado) {
                     cargarMunicipios(deptoSeleccionado, municipioSeleccionado);
                 } else {
-                    llenarSelect(municipioSelect, [], null, 'Municipio');
+                    llenarSelect(municipioSelect, [], null, sinDatos ? 'No aplica para este país' : 'Municipio', sinDatos);
                 }
             });
     }
 
     function cargarMunicipios(departamentoId, municipioSeleccionado) {
         if (!departamentoId) {
-            llenarSelect(municipioSelect, [], null, 'Municipio');
+            llenarSelect(municipioSelect, [], null, 'Municipio', false);
             return;
         }
 
         fetch(options.municipiosUrl + '?departamentoId=' + departamentoId)
             .then(function (r) { return r.json(); })
             .then(function (municipios) {
-                llenarSelect(municipioSelect, municipios, municipioSeleccionado, 'Municipio');
+                var sinDatos = municipios.length === 0;
+                llenarSelect(municipioSelect, municipios, municipioSeleccionado, sinDatos ? 'No aplica para este departamento' : 'Municipio', sinDatos);
             });
     }
 

@@ -16,7 +16,10 @@ public class CatalogoRepository : ICatalogoRepository
     }
 
     public Task<List<Pais>> GetPaisesAsync() =>
-        _context.Paises.AsNoTracking().OrderBy(p => p.Nombre).ToListAsync();
+        _context.Paises.AsNoTracking()
+            .OrderBy(p => p.Nombre == "Colombia" ? 0 : 1)
+            .ThenBy(p => p.Nombre)
+            .ToListAsync();
 
     public Task<List<Departamento>> GetDepartamentosAsync(int paisId) =>
         _context.Departamentos.AsNoTracking()

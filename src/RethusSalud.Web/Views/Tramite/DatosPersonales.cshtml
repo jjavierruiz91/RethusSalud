@@ -56,15 +56,25 @@
             <select asp-for="PaisNacimientoId" id="paisNacimiento" class="form-select" asp-items="ViewBag.Paises"></select>
             <span asp-validation-for="PaisNacimientoId" class="text-danger"></span>
         </div>
-        <div class="col-md-4 mb-3">
+        <div class="col-md-4 mb-3" id="grupoDepartamentoNacimientoSelect">
             <label asp-for="DepartamentoNacimientoId" class="form-label"></label>
             <select asp-for="DepartamentoNacimientoId" id="departamentoNacimiento" class="form-select"></select>
             <span asp-validation-for="DepartamentoNacimientoId" class="text-danger"></span>
         </div>
-        <div class="col-md-4 mb-3">
+        <div class="col-md-4 mb-3" id="grupoMunicipioNacimientoSelect">
             <label asp-for="MunicipioNacimientoId" class="form-label"></label>
             <select asp-for="MunicipioNacimientoId" id="municipioNacimiento" class="form-select"></select>
             <span asp-validation-for="MunicipioNacimientoId" class="text-danger"></span>
+        </div>
+        <div class="col-md-4 mb-3 d-none" id="grupoDepartamentoNacimientoTexto">
+            <label asp-for="DepartamentoNacimientoTexto" class="form-label"></label>
+            <input asp-for="DepartamentoNacimientoTexto" class="form-control" placeholder="Departamento, provincia o estado" />
+            <span asp-validation-for="DepartamentoNacimientoTexto" class="text-danger"></span>
+        </div>
+        <div class="col-md-4 mb-3 d-none" id="grupoMunicipioNacimientoTexto">
+            <label asp-for="MunicipioNacimientoTexto" class="form-label"></label>
+            <input asp-for="MunicipioNacimientoTexto" class="form-control" placeholder="Municipio o ciudad" />
+            <span asp-validation-for="MunicipioNacimientoTexto" class="text-danger"></span>
         </div>
     </div>
     <div class="row">
@@ -76,11 +86,12 @@
     </div>
 
     <h2 class="wizard-subheading">Residencia</h2>
+    <p class="text-muted small mb-2">El trámite Rethus exige residencia en Colombia.</p>
     <div class="row">
         <div class="col-md-4 mb-3">
             <label asp-for="PaisResidenciaId" class="form-label"></label>
-            <select asp-for="PaisResidenciaId" id="paisResidencia" class="form-select" asp-items="ViewBag.Paises"></select>
-            <span asp-validation-for="PaisResidenciaId" class="text-danger"></span>
+            <input type="text" class="form-control" value="Colombia" disabled />
+            <input type="hidden" asp-for="PaisResidenciaId" id="paisResidencia" />
         </div>
         <div class="col-md-4 mb-3">
             <label asp-for="DepartamentoResidenciaId" class="form-label"></label>
@@ -150,5 +161,37 @@
             departamentoSeleccionado: '@Model.DepartamentoResidenciaId',
             municipioSeleccionado: '@Model.MunicipioResidenciaId'
         });
+
+        (function () {
+            var paisColombiaId = '@ViewBag.PaisColombiaId';
+            var paisNacimiento = document.getElementById('paisNacimiento');
+            var grupoDeptoSelect = document.getElementById('grupoDepartamentoNacimientoSelect');
+            var grupoMuniSelect = document.getElementById('grupoMunicipioNacimientoSelect');
+            var grupoDeptoTexto = document.getElementById('grupoDepartamentoNacimientoTexto');
+            var grupoMuniTexto = document.getElementById('grupoMunicipioNacimientoTexto');
+            var deptoTextoInput = grupoDeptoTexto.querySelector('input');
+            var muniTextoInput = grupoMuniTexto.querySelector('input');
+            var deptoSelectEl = document.getElementById('departamentoNacimiento');
+            var muniSelectEl = document.getElementById('municipioNacimiento');
+
+            function actualizarModoNacimiento() {
+                var esColombia = paisNacimiento.value === paisColombiaId;
+                grupoDeptoSelect.classList.toggle('d-none', !esColombia);
+                grupoMuniSelect.classList.toggle('d-none', !esColombia);
+                grupoDeptoTexto.classList.toggle('d-none', esColombia);
+                grupoMuniTexto.classList.toggle('d-none', esColombia);
+
+                if (esColombia) {
+                    deptoTextoInput.value = '';
+                    muniTextoInput.value = '';
+                } else {
+                    deptoSelectEl.value = '';
+                    muniSelectEl.value = '';
+                }
+            }
+
+            paisNacimiento.addEventListener('change', actualizarModoNacimiento);
+            actualizarModoNacimiento();
+        })();
     </script>
 }

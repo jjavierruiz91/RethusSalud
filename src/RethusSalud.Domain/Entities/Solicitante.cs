@@ -21,6 +21,11 @@ public class Solicitante : Entity
     public int? MunicipioNacimientoId { get; set; }
     public Municipio? MunicipioNacimiento { get; set; }
 
+    // Usados cuando PaisNacimientoId no es Colombia, ya que solo tenemos el catalogo
+    // completo de departamentos/municipios colombianos.
+    public string? DepartamentoNacimientoTexto { get; set; }
+    public string? MunicipioNacimientoTexto { get; set; }
+
     public DateOnly FechaNacimiento { get; set; }
 
     public int PaisResidenciaId { get; set; }

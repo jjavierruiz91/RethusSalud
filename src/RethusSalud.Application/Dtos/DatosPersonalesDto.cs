@@ -14,6 +14,8 @@ public class DatosPersonalesDto
     public int PaisNacimientoId { get; set; }
     public int? DepartamentoNacimientoId { get; set; }
     public int? MunicipioNacimientoId { get; set; }
+    public string? DepartamentoNacimientoTexto { get; set; }
+    public string? MunicipioNacimientoTexto { get; set; }
     public DateOnly FechaNacimiento { get; set; }
 
     public int PaisResidenciaId { get; set; }

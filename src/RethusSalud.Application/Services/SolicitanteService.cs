@@ -2,6 +2,7 @@ using FluentValidation;
 using RethusSalud.Application.Common;
 using RethusSalud.Application.Dtos;
 using RethusSalud.Application.Interfaces;
+using RethusSalud.Domain.Constants;
 using RethusSalud.Domain.Entities;
 using RethusSalud.Domain.Enums;
 
@@ -36,8 +37,8 @@ public class SolicitanteService
             DireccionDomicilio = string.Empty,
             LugarExpedicion = string.Empty,
             TipoIdentificacion = TipoIdentificacion.CedulaCiudadania,
-            PaisNacimientoId = 1,
-            PaisResidenciaId = 1
+            PaisNacimientoId = Catalogos.PaisColombiaId,
+            PaisResidenciaId = Catalogos.PaisColombiaId
         };
 
         await _solicitantes.AddAsync(solicitante);
@@ -59,6 +60,9 @@ public class SolicitanteService
 
     public async Task ActualizarDatosPersonalesAsync(string applicationUserId, DatosPersonalesDto dto)
     {
+        // La residencia siempre debe ser en Colombia; se ignora cualquier otro valor recibido.
+        dto.PaisResidenciaId = Catalogos.PaisColombiaId;
+
         var validacion = await _datosPersonalesValidator.ValidateAsync(dto);
         if (!validacion.IsValid)
         {
@@ -72,6 +76,8 @@ public class SolicitanteService
             throw new AppValidationException(new[] { "Ya existe otro solicitante registrado con este numero de identificacion." });
         }
 
+        var esColombiaNacimiento = dto.PaisNacimientoId == Catalogos.PaisColombiaId;
+
         solicitante.TipoIdentificacion = dto.TipoIdentificacion;
         solicitante.NumeroIdentificacion = dto.NumeroIdentificacion;
         solicitante.LugarExpedicion = dto.LugarExpedicion;
@@ -79,8 +85,10 @@ public class SolicitanteService
         solicitante.Nombres = dto.Nombres;
         solicitante.Apellidos = dto.Apellidos;
         solicitante.PaisNacimientoId = dto.PaisNacimientoId;
-        solicitante.DepartamentoNacimientoId = dto.DepartamentoNacimientoId;
-        solicitante.MunicipioNacimientoId = dto.MunicipioNacimientoId;
+        solicitante.DepartamentoNacimientoId = esColombiaNacimiento ? dto.DepartamentoNacimientoId : null;
+        solicitante.MunicipioNacimientoId = esColombiaNacimiento ? dto.MunicipioNacimientoId : null;
+        solicitante.DepartamentoNacimientoTexto = esColombiaNacimiento ? null : dto.DepartamentoNacimientoTexto;
+        solicitante.MunicipioNacimientoTexto = esColombiaNacimiento ? null : dto.MunicipioNacimientoTexto;
         solicitante.FechaNacimiento = dto.FechaNacimiento;
         solicitante.PaisResidenciaId = dto.PaisResidenciaId;
         solicitante.DepartamentoResidenciaId = dto.DepartamentoResidenciaId;

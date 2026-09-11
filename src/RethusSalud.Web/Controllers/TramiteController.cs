@@ -158,10 +158,12 @@ public class TramiteController : Controller
             PaisNacimientoId = solicitante.PaisNacimientoId,
             DepartamentoNacimientoId = solicitante.DepartamentoNacimientoId,
             MunicipioNacimientoId = solicitante.MunicipioNacimientoId,
+            DepartamentoNacimientoTexto = solicitante.DepartamentoNacimientoTexto,
+            MunicipioNacimientoTexto = solicitante.MunicipioNacimientoTexto,
             FechaNacimiento = solicitante.FechaNacimiento == default
                 ? DateOnly.FromDateTime(DateTime.Today)
                 : solicitante.FechaNacimiento,
-            PaisResidenciaId = solicitante.PaisResidenciaId,
+            PaisResidenciaId = Catalogos.PaisColombiaId,
             DepartamentoResidenciaId = solicitante.DepartamentoResidenciaId,
             MunicipioResidenciaId = solicitante.MunicipioResidenciaId,
             DireccionDomicilio = solicitante.DireccionDomicilio,
@@ -182,6 +184,9 @@ public class TramiteController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DatosPersonales(DatosPersonalesViewModel vm)
     {
+        // La residencia siempre debe ser en Colombia; se ignora cualquier otro valor manipulado en el formulario.
+        vm.PaisResidenciaId = Catalogos.PaisColombiaId;
+
         if (!ModelState.IsValid)
         {
             var solicitudEnCurso = await _solicitudes.ObtenerPorIdAsync(vm.SolicitudId);
@@ -201,6 +206,8 @@ public class TramiteController : Controller
             PaisNacimientoId = vm.PaisNacimientoId,
             DepartamentoNacimientoId = vm.DepartamentoNacimientoId,
             MunicipioNacimientoId = vm.MunicipioNacimientoId,
+            DepartamentoNacimientoTexto = vm.DepartamentoNacimientoTexto,
+            MunicipioNacimientoTexto = vm.MunicipioNacimientoTexto,
             FechaNacimiento = vm.FechaNacimiento,
             PaisResidenciaId = vm.PaisResidenciaId,
             DepartamentoResidenciaId = vm.DepartamentoResidenciaId,
@@ -381,5 +388,6 @@ public class TramiteController : Controller
     private async Task CargarPaisesAsync()
     {
         ViewBag.Paises = new SelectList(await _catalogos.ObtenerPaisesAsync(), nameof(CatalogoItemDto.Id), nameof(CatalogoItemDto.Nombre));
+        ViewBag.PaisColombiaId = Catalogos.PaisColombiaId;
     }
 }
