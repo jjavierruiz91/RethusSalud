@@ -1944,6 +1944,39 @@ body {
   color: #c0392b;
 }
 
+.confirm-modal-icon-info {
+  background: #dcebf9;
+  color: var(--rethus-blue-deep);
+}
+
+.revision-motivo-preview {
+  background: var(--rethus-bg-soft);
+  border: 1px solid var(--rethus-border);
+  border-left: 3px solid #c0392b;
+  border-radius: 0.6rem;
+  padding: 0.85rem 1rem;
+  text-align: left;
+  font-size: 0.9rem;
+  color: var(--rethus-ink);
+  max-height: 160px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.revision-motivo-preview-success {
+  border-left-color: #1e8449;
+}
+
+.revision-motivo-preview-info {
+  border-left-color: var(--rethus-blue);
+}
+
+.revision-motivo-preview-empty {
+  color: var(--rethus-muted);
+  font-style: italic;
+}
+
 /* ---- Revision de funcionario ---- */
 
 .revision-icon {

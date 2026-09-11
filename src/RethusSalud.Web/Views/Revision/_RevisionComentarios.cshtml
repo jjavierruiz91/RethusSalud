@@ -25,10 +25,53 @@
         <p class="text-muted mb-0">Aun no hay comentarios registrados.</p>
     }
 
-    <form asp-controller="Revision" asp-action="AgregarComentario" method="post" class="revision-comment-form">
+    <form asp-controller="Revision" asp-action="AgregarComentario" method="post" class="revision-comment-form" id="formComentario-@Model.Id">
         <input type="hidden" name="id" value="@Model.Id" />
         <input type="hidden" name="volverA" value="@ViewBag.VolverA" />
-        <input type="text" name="texto" class="form-control" placeholder="Escribe un comentario..." required />
+        <input type="text" name="texto" id="comentarioTexto-@Model.Id" class="form-control" placeholder="Escribe un comentario..." required />
         <button type="submit" class="btn btn-primary revision-comment-send">@RevisionIcons.Icon("send") Agregar comentario</button>
     </form>
+
+    <div class="modal fade" id="confirmarComentarioModal-@Model.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center pt-4">
+                    <div class="confirm-modal-icon confirm-modal-icon-info">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H9l-5 4V5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                    </div>
+                    <h5 class="modal-title mb-2">¿Agregar este comentario?</h5>
+                    <p class="text-muted mb-3">Quedará visible en el historial de revisión de esta solicitud.</p>
+                    <div class="revision-motivo-preview revision-motivo-preview-info" id="comentarioPreview-@Model.Id"></div>
+                </div>
+                <div class="modal-footer border-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="btnConfirmarComentario-@Model.Id" class="btn btn-primary">Sí, agregar comentario</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    (function () {
+        var form = document.getElementById('formComentario-@Model.Id');
+        var texto = document.getElementById('comentarioTexto-@Model.Id');
+        var modalEl = document.getElementById('confirmarComentarioModal-@Model.Id');
+        var preview = document.getElementById('comentarioPreview-@Model.Id');
+        var btnConfirmar = document.getElementById('btnConfirmarComentario-@Model.Id');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (!texto.value.trim()) {
+                texto.reportValidity();
+                return;
+            }
+            preview.textContent = texto.value.trim();
+            bootstrap.Modal.getOrCreateInstance(modalEl).show();
+        });
+
+        btnConfirmar.addEventListener('click', function () {
+            form.submit();
+        });
+    })();
+</script>

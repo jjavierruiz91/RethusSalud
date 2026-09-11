@@ -99,11 +99,50 @@ else if (Model.Consecutivo is not null)
         <div class="mt-2 mb-3">
             <label class="form-label small text-muted" id="motivoLabel">Mensaje (opcional)</label>
             <textarea id="motivoTexto" class="form-control" rows="3" placeholder="Agrega una observación sobre la solicitud (opcional)."></textarea>
+            <span class="auth-field-error" id="motivoError" style="display:none">Debes indicar el motivo del rechazo.</span>
         </div>
 
         <div class="d-flex gap-2">
             <a class="btn btn-outline-secondary flex-fill" asp-controller="Revision" asp-action="Bandeja">Cancelar</a>
             <button type="button" id="btnDecidir" class="btn btn-primary flex-fill">Aprobar revisión</button>
+        </div>
+
+        <div class="modal fade" id="confirmarAprobacionModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-center pt-4">
+                        <div class="confirm-modal-icon confirm-modal-icon-success">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                        <h5 class="modal-title mb-2">¿Confirmas la aprobación de esta solicitud?</h5>
+                        <p class="text-muted mb-3" id="aprobacionMensajeIntro">Se notificará al ciudadano por correo con el siguiente mensaje:</p>
+                        <div class="revision-motivo-preview revision-motivo-preview-success" id="aprobacionMensajePreview"></div>
+                    </div>
+                    <div class="modal-footer border-0 justify-content-center pb-4">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" id="btnConfirmarAprobacion" class="btn btn-success">Sí, aprobar solicitud</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="confirmarRechazoModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-center pt-4">
+                        <div class="confirm-modal-icon confirm-modal-icon-danger">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                        </div>
+                        <h5 class="modal-title mb-2">¿Confirmas el rechazo de esta solicitud?</h5>
+                        <p class="text-muted mb-3">Se notificará al ciudadano por correo con el siguiente motivo:</p>
+                        <div class="revision-motivo-preview" id="motivoPreview"></div>
+                    </div>
+                    <div class="modal-footer border-0 justify-content-center pb-4">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" id="btnConfirmarRechazo" class="btn btn-danger">Sí, rechazar solicitud</button>
+                    </div>
+                </div>
+            </div>
         </div>
     }
 </div>
@@ -117,13 +156,33 @@ else if (Model.Consecutivo is not null)
             var opcionRechazar = document.getElementById('opcionRechazar');
             var motivoLabel = document.getElementById('motivoLabel');
             var motivoTexto = document.getElementById('motivoTexto');
+            var motivoError = document.getElementById('motivoError');
             var btn = document.getElementById('btnDecidir');
+            var confirmarRechazoModalEl = document.getElementById('confirmarRechazoModal');
+            var motivoPreview = document.getElementById('motivoPreview');
+            var btnConfirmarRechazo = document.getElementById('btnConfirmarRechazo');
+            var confirmarAprobacionModalEl = document.getElementById('confirmarAprobacionModal');
+            var aprobacionMensajePreview = document.getElementById('aprobacionMensajePreview');
+            var aprobacionMensajeIntro = document.getElementById('aprobacionMensajeIntro');
+            var btnConfirmarAprobacion = document.getElementById('btnConfirmarAprobacion');
+
+            function limpiarError() {
+                motivoTexto.classList.remove('is-invalid');
+                motivoError.style.display = 'none';
+            }
+
+            function mostrarError() {
+                motivoTexto.classList.add('is-invalid');
+                motivoError.style.display = 'block';
+                motivoTexto.focus();
+            }
 
             function actualizar() {
                 var seleccion = document.querySelector('input[name="decisionRevision"]:checked').value;
                 var esRechazo = seleccion === 'rechazar';
                 opcionAprobar.classList.toggle('selected', !esRechazo);
                 opcionRechazar.classList.toggle('selected', esRechazo);
+                limpiarError();
                 if (esRechazo) {
                     motivoLabel.textContent = 'Motivo del rechazo';
                     motivoTexto.placeholder = 'Explique brevemente por qué la solicitud no cumple los requisitos.';
@@ -138,23 +197,46 @@ else if (Model.Consecutivo is not null)
             }
 
             radios.forEach(function (r) { r.addEventListener('change', actualizar); });
+            motivoTexto.addEventListener('input', function () {
+                if (motivoTexto.value.trim()) {
+                    limpiarError();
+                }
+            });
 
             btn.addEventListener('click', function () {
                 var seleccion = document.querySelector('input[name="decisionRevision"]:checked').value;
                 var texto = motivoTexto.value.trim();
 
                 if (seleccion === 'aprobar') {
-                    document.getElementById('mensajeOculto').value = texto;
-                    document.getElementById('formAprobar').submit();
+                    if (texto) {
+                        aprobacionMensajeIntro.textContent = 'Se notificará al ciudadano por correo con el siguiente mensaje:';
+                        aprobacionMensajePreview.textContent = texto;
+                        aprobacionMensajePreview.classList.remove('revision-motivo-preview-empty');
+                    } else {
+                        aprobacionMensajeIntro.textContent = 'No agregaste ningún mensaje adicional para el ciudadano.';
+                        aprobacionMensajePreview.textContent = 'Sin mensaje adicional.';
+                        aprobacionMensajePreview.classList.add('revision-motivo-preview-empty');
+                    }
+                    bootstrap.Modal.getOrCreateInstance(confirmarAprobacionModalEl).show();
                     return;
                 }
 
                 if (!texto) {
-                    alert('Debes indicar el motivo del rechazo.');
+                    mostrarError();
                     return;
                 }
 
-                document.getElementById('motivoOculto').value = texto;
+                motivoPreview.textContent = texto;
+                bootstrap.Modal.getOrCreateInstance(confirmarRechazoModalEl).show();
+            });
+
+            btnConfirmarAprobacion.addEventListener('click', function () {
+                document.getElementById('mensajeOculto').value = motivoTexto.value.trim();
+                document.getElementById('formAprobar').submit();
+            });
+
+            btnConfirmarRechazo.addEventListener('click', function () {
+                document.getElementById('motivoOculto').value = motivoTexto.value.trim();
                 document.getElementById('formRechazar').submit();
             });
         })();
