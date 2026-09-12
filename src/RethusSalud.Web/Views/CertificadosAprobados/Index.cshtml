@@ -22,8 +22,8 @@
     };
 }
 
-<div class="app-panel">
-<form method="get" class="row g-3 mb-3 align-items-end" data-autosubmit>
+<div class="app-panel app-panel--compacta">
+<form method="get" class="row g-2 mb-2 align-items-end filtro-bar" data-autosubmit>
     <div class="col-12 col-sm-6 col-lg-3">
         <label class="form-label small text-muted mb-1">Identificación</label>
         <input type="text" name="NumeroIdentificacion" class="form-control" placeholder="Número de identificación" value="@Model.Filtro.NumeroIdentificacion" />
@@ -69,7 +69,7 @@
         </div>
     </div>
 
-    <div class="table-responsive">
+    <div class="table-responsive tabla-scroll">
         <table class="table align-middle">
             <thead>
                 <tr>

@@ -39,7 +39,8 @@ public class RevisionController : Controller
         _firmantes = firmantes;
     }
 
-    private const int TamanoPagina = 15;
+    private const int TamanoPaginaBandeja = 15;
+    private const int TamanoPaginaBuscar = 15;
 
     private string UserId => _userManager.GetUserId(User)!;
 
@@ -82,7 +83,7 @@ public class RevisionController : Controller
 
         var filtroDto = new BandejaFiltroDto(filtro.NumeroIdentificacion, filtro.TipoTramite, filtro.Estado, filtro.Desde, filtro.Hasta);
         var pagina = Math.Max(filtro.Pagina, 1);
-        var resultado = await _solicitudes.ObtenerBandejaPaginadaAsync(etapa.Value, filtroDto, pagina, TamanoPagina);
+        var resultado = await _solicitudes.ObtenerBandejaPaginadaAsync(etapa.Value, filtroDto, pagina, TamanoPaginaBandeja);
 
         return View(new BandejaViewModel
         {
@@ -116,7 +117,7 @@ public class RevisionController : Controller
     {
         var filtroDto = new BandejaFiltroDto(filtro.NumeroIdentificacion, filtro.TipoTramite, filtro.Estado, filtro.Desde, filtro.Hasta, filtro.Etapa);
         var pagina = Math.Max(filtro.Pagina, 1);
-        var resultado = await _solicitudes.ObtenerSeguimientoPaginadoAsync(filtroDto, pagina, TamanoPagina);
+        var resultado = await _solicitudes.ObtenerSeguimientoPaginadoAsync(filtroDto, pagina, TamanoPaginaBuscar);
 
         return View(new BuscarViewModel { Filtro = filtro, Pagina = resultado });
     }

@@ -1860,7 +1860,9 @@ body {
 
 .app-content {
   flex: 1;
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 1.5rem;
   overflow-y: auto;
 }
 
@@ -1931,6 +1933,50 @@ body {
   margin-bottom: 0;
 }
 
+/* ---- Vista compacta: el panel llena el alto disponible; solo la tabla hace scroll ---- */
+
+.tabla-scroll {
+  overflow-y: auto;
+}
+
+.tabla-scroll thead th {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 1;
+}
+
+.app-panel--compacta {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.app-panel--compacta .filtro-bar,
+.app-panel--compacta .app-pagination,
+.app-panel--compacta > p {
+  flex: none;
+}
+
+.app-panel--compacta form#formLote {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.app-panel--compacta .revision-card {
+  flex: none;
+}
+
+.app-panel--compacta .tabla-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+}
+
 .app-content .table thead th {
   border-bottom: 2px solid var(--rethus-border);
   color: var(--rethus-muted);
@@ -1944,6 +1990,40 @@ body {
 .app-content .table th {
   vertical-align: middle;
   border-color: var(--rethus-border);
+  padding: 0.45rem 0.6rem;
+}
+
+.app-content .table thead th {
+  padding-bottom: 0.5rem;
+}
+
+/* ---- Compact inline filter bar ---- */
+
+.filtro-bar {
+  background: var(--rethus-bg-soft);
+  border-radius: 0.6rem;
+  padding: 0.6rem 0.7rem;
+  align-items: end;
+}
+
+.filtro-bar .form-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.15rem !important;
+}
+
+.filtro-bar .form-control,
+.filtro-bar .form-select {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.85rem;
+  background: #fff;
+}
+
+.filtro-bar .btn {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.82rem;
 }
 
 .app-content h1 {
@@ -1958,14 +2038,14 @@ body {
   border: 1px solid var(--rethus-border);
   border-radius: 1rem;
   box-shadow: 0 4px 16px rgba(11, 60, 102, 0.05);
-  padding: 1.5rem;
+  padding: 1rem 1.25rem;
 }
 
 .app-stat-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .app-stat-card {
@@ -1973,64 +2053,62 @@ body {
   flex: 1 1 170px;
   background: #fff;
   border: 1px solid var(--rethus-border);
-  border-radius: 1rem;
-  padding: 1.3rem 1.35rem 1.4rem;
+  border-left: 3px solid var(--stat-accent, var(--rethus-blue));
+  border-radius: 0.7rem;
+  padding: 0.75rem 1rem;
   overflow: hidden;
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
-}
-
-.app-stat-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--stat-accent, var(--rethus-blue));
-  opacity: 0.9;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 0.75rem;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .app-stat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 18px 34px rgba(11, 60, 102, 0.14);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(11, 60, 102, 0.12);
 }
 
 .app-stat-card-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
-  margin-bottom: 1.1rem;
-  border-radius: 0.7rem;
+  width: 34px;
+  height: 34px;
+  grid-row: 1 / span 2;
+  border-radius: 0.55rem;
   background: var(--stat-accent-soft, rgba(15, 95, 166, 0.1));
   color: var(--stat-accent, var(--rethus-blue));
   flex: none;
 }
 
 .app-stat-card-icon svg {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
 }
 
 .app-stat-card-value {
   display: block;
-  font-size: 2rem;
+  grid-row: 1;
+  grid-column: 2;
+  font-size: 1.4rem;
   font-weight: 800;
   color: var(--rethus-ink);
-  line-height: 1;
+  line-height: 1.2;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
 }
 
 .app-stat-card-label {
   display: block;
-  font-size: 0.76rem;
+  grid-row: 2;
+  grid-column: 2;
+  font-size: 0.68rem;
   font-weight: 600;
   color: var(--rethus-muted);
   text-transform: uppercase;
-  letter-spacing: 0.055em;
-  margin-top: 0.45rem;
+  letter-spacing: 0.045em;
+  margin-top: 0.1rem;
 }
 
 .app-stat-card--brand   { --stat-accent: #0f5fa6; --stat-accent-soft: rgba(15, 95, 166, 0.1); }
