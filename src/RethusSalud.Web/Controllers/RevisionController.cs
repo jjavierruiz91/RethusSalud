@@ -13,7 +13,7 @@ using RethusSalud.Web.Services;
 
 namespace RethusSalud.Web.Controllers;
 
-[Authorize(Roles = $"{Roles.FuncionarioEtapa1},{Roles.FuncionarioEtapa2},{Roles.FuncionarioEtapa3},{Roles.Inventario}")]
+[Authorize(Roles = $"{Roles.FuncionarioEtapa1},{Roles.FuncionarioEtapa2},{Roles.FuncionarioEtapa3},{Roles.Inventario},{Roles.SuperAdmin}")]
 public class RevisionController : Controller
 {
     private readonly SolicitudService _solicitudes;

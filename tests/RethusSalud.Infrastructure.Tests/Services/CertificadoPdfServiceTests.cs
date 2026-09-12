@@ -75,6 +75,22 @@ public class CertificadoPdfServiceTests
     }
 
     [Fact]
+    public void GenerarLote_fusiona_varios_certificados_en_un_solo_pdf()
+    {
+        var servicio = new CertificadoPdfService(CrearConfiguracion(), CrearAmbiente());
+        var items = new[]
+        {
+            (CrearSolicitudAprobada(), FirmantesVacios),
+            (CrearSolicitudAprobada(), FirmantesVacios)
+        };
+
+        var pdf = servicio.GenerarLote(items);
+
+        Assert.NotEmpty(pdf);
+        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+    }
+
+    [Fact]
     public void Generar_lanza_excepcion_si_no_hay_consecutivo_asignado()
     {
         var pais = new Pais { Id = 1, Nombre = "Colombia" };

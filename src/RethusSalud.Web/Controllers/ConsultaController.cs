@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using RethusSalud.Application.Interfaces;
 using RethusSalud.Application.Services;
 using RethusSalud.Web.Models;
+using RethusSalud.Web.Services;
 
 namespace RethusSalud.Web.Controllers;
 
@@ -9,10 +11,14 @@ namespace RethusSalud.Web.Controllers;
 public class ConsultaController : Controller
 {
     private readonly ConsultaPublicaService _consulta;
+    private readonly ICertificadoPdfService _certificados;
+    private readonly FirmantesService _firmantes;
 
-    public ConsultaController(ConsultaPublicaService consulta)
+    public ConsultaController(ConsultaPublicaService consulta, ICertificadoPdfService certificados, FirmantesService firmantes)
     {
         _consulta = consulta;
+        _certificados = certificados;
+        _firmantes = firmantes;
     }
 
     [HttpGet]
@@ -30,12 +36,24 @@ public class ConsultaController : Controller
             return View(model);
         }
 
-        var resultado = await _consulta.ConsultarAsync(model.NumeroIdentificacion);
-        model.Resultado = resultado is null
-            ? "No se encontro ninguna solicitud con esta identificacion."
-            : $"El proceso de {resultado.NombreCompleto} se encuentra en estado: {resultado.Estado}";
+        model.Consultado = true;
+        model.Resultado = await _consulta.ConsultarAsync(model.NumeroIdentificacion);
 
         return View(model);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> DescargarCertificado(string numeroIdentificacion)
+    {
+        var solicitud = await _consulta.ObtenerSolicitudAprobadaAsync(numeroIdentificacion);
+        if (solicitud is null)
+        {
+            return NotFound();
+        }
+
+        var firmantes = await _firmantes.ResolverAsync(solicitud);
+        var pdf = _certificados.Generar(solicitud, firmantes);
+        return File(pdf, "application/pdf", $"certificado-{solicitud.Consecutivo!.Numero}.pdf");
     }
 
     [HttpGet]

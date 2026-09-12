@@ -1,36 +1,179 @@
 @model RethusSalud.Web.Models.ConsultaEstadoViewModel
+@using RethusSalud.Domain.Enums
 @{
     ViewData["Title"] = "Consultar estado del tramite";
+
+    var etapas = new (EtapaSolicitud? Valor, string Label, string Descripcion)[]
+    {
+        (null, "Radicado", "Tu solicitud fue enviada y quedó registrada."),
+        (EtapaSolicitud.Etapa1, "Etapa 1", "Un funcionario está validando tus datos y documentos."),
+        (EtapaSolicitud.Etapa2, "Etapa 2", "Tu solicitud pasa por una segunda revisión."),
+        (EtapaSolicitud.Etapa3, "Etapa 3", "Se realiza la revisión final antes de la aprobación."),
+        (EtapaSolicitud.Inventario, "Inventario", "Se asigna el folio y se expide tu certificado."),
+    };
+
+    int OrdenDe(EtapaSolicitud? etapa) => etapa switch
+    {
+        null => 0,
+        EtapaSolicitud.Etapa1 => 1,
+        EtapaSolicitud.Etapa2 => 2,
+        EtapaSolicitud.Etapa3 => 3,
+        EtapaSolicitud.Inventario => 4,
+        _ => 0
+    };
+
+    var estaAprobado = Model.Resultado?.Estado == EstadoSolicitud.Aprobado;
+    var ordenActual = estaAprobado ? 5 : OrdenDe(Model.Resultado?.EtapaActual);
 }
 
 <div class="row justify-content-center">
-    <div class="col-md-5">
-        <h1 class="h4 mb-3">Consultar estado del tramite</h1>
-
-        <form asp-action="Index" method="post">
-            <div class="mb-3">
-                <label asp-for="NumeroIdentificacion" class="form-label"></label>
-                <input asp-for="NumeroIdentificacion" class="form-control" />
-                <span asp-validation-for="NumeroIdentificacion" class="text-danger"></span>
+    <div class="col-lg-7 col-md-9">
+        <div class="app-panel consulta-panel">
+            <div class="ffc-icon consulta-panel-icon">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2"/><path d="m20 20-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
             </div>
-            <button type="submit" class="btn btn-primary w-100">Consultar proceso</button>
-        </form>
+            <h1 class="h4 text-center mb-1">Consultar estado del trámite</h1>
+            <p class="text-center text-muted mb-4">Ingresa tu número de identificación para conocer en qué etapa se encuentra tu solicitud Rethus.</p>
 
-        @if (Model.Resultado is not null)
-        {
-            <div class="app-alert app-alert-info mt-3" role="alert">
-                <span class="app-alert-icon">
-                    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                </span>
-                <div class="app-alert-body">
-                    <strong class="app-alert-title">Resultado de la consulta</strong>
-                    <p class="app-alert-message mb-0">@Model.Resultado</p>
+            <form asp-action="Index" method="post" class="mb-2">
+                <div class="mb-3">
+                    <label asp-for="NumeroIdentificacion" class="form-label"></label>
+                    <input asp-for="NumeroIdentificacion" class="form-control form-control-lg" placeholder="Ej. 1065123456" autofocus />
+                    <span asp-validation-for="NumeroIdentificacion" class="text-danger"></span>
                 </div>
-                <button type="button" class="app-alert-close" data-dismiss-alert aria-label="Cerrar">
-                    <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                </button>
-            </div>
-        }
+                <button type="submit" class="btn auth-submit-btn w-100">Consultar proceso</button>
+            </form>
+
+            @if (Model.Consultado)
+            {
+                @if (Model.Resultado is null)
+                {
+                    <div class="app-alert app-alert-warning mt-4" role="alert">
+                        <span class="app-alert-icon">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10.3 3.9 2.7 17a1.6 1.6 0 0 0 1.4 2.4h15.8a1.6 1.6 0 0 0 1.4-2.4L13.7 3.9a1.6 1.6 0 0 0-2.8 0Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                        </span>
+                        <div class="app-alert-body">
+                            <strong class="app-alert-title">No encontramos tu solicitud</strong>
+                            <p class="app-alert-message mb-0">No existe ninguna solicitud asociada al número de identificación <strong>@Model.NumeroIdentificacion</strong>. Verifica que esté digitado correctamente.</p>
+                        </div>
+                    </div>
+                }
+                else if (!Model.Resultado.TieneSolicitud)
+                {
+                    <div class="app-alert app-alert-info mt-4" role="alert">
+                        <span class="app-alert-icon">
+                            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </span>
+                        <div class="app-alert-body">
+                            <strong class="app-alert-title">Hola, @Model.Resultado.NombreCompleto</strong>
+                            <p class="app-alert-message mb-0">Aún no has iniciado tu trámite Rethus. Ingresa a tu cuenta para comenzarlo.</p>
+                        </div>
+                    </div>
+                }
+                else if (Model.Resultado.Estado == EstadoSolicitud.Borrador)
+                {
+                    <div class="app-alert app-alert-info mt-4" role="alert">
+                        <span class="app-alert-icon">
+                            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </span>
+                        <div class="app-alert-body">
+                            <strong class="app-alert-title">@Model.Resultado.NombreCompleto</strong>
+                            <p class="app-alert-message mb-0">Tu solicitud está en elaboración y aún no ha sido enviada a revisión.</p>
+                        </div>
+                    </div>
+                }
+                else if (Model.Resultado.Estado == EstadoSolicitud.Rechazado)
+                {
+                    <div class="app-alert app-alert-danger mt-4" role="alert">
+                        <span class="app-alert-icon">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </span>
+                        <div class="app-alert-body">
+                            <strong class="app-alert-title">@Model.Resultado.NombreCompleto</strong>
+                            <p class="app-alert-message mb-0">Tu solicitud fue rechazada. Ingresa a tu cuenta para conocer el motivo y corregirla.</p>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="mt-4">
+                        <p class="mb-3"><strong>@Model.Resultado.NombreCompleto</strong></p>
+
+                        <div class="wizard-steps consulta-steps">
+                            @for (var i = 0; i < etapas.Length; i++)
+                            {
+                                var paso = etapas[i];
+                                var orden = OrdenDe(paso.Valor);
+                                var esActual = !estaAprobado && orden == ordenActual;
+                                var esHecho = orden < ordenActual || estaAprobado;
+
+                                if (i > 0)
+                                {
+                                    <div class="wizard-step-connector @(esHecho || esActual ? "done" : "")"></div>
+                                }
+
+                                <div class="wizard-step @(esActual ? "current" : "") @(esHecho ? "done" : "")">
+                                    <span class="wizard-step-number">
+                                        @if (esHecho)
+                                        {
+                                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                        }
+                                        else
+                                        {
+                                            @(i + 1)
+                                        }
+                                    </span>
+                                    <span class="wizard-step-label">@paso.Label</span>
+                                </div>
+                            }
+
+                            <div class="wizard-step-connector @(estaAprobado ? "done" : "")"></div>
+                            <div class="wizard-step @(estaAprobado ? "done" : "")">
+                                <span class="wizard-step-number">
+                                    @if (estaAprobado)
+                                    {
+                                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    }
+                                    else
+                                    {
+                                        @(etapas.Length + 1)
+                                    }
+                                </span>
+                                <span class="wizard-step-label">Aprobado</span>
+                            </div>
+                        </div>
+
+                        @if (estaAprobado)
+                        {
+                            <div class="app-alert app-alert-success mt-3" role="alert">
+                                <span class="app-alert-icon">
+                                    <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                                <div class="app-alert-body">
+                                    <strong class="app-alert-title">¡Tu certificado está listo!</strong>
+                                    <p class="app-alert-message mb-0">Tu solicitud fue aprobada. Ya puedes descargar tu certificado Rethus.</p>
+                                </div>
+                            </div>
+                            <a class="btn auth-submit-btn w-100" asp-action="DescargarCertificado" asp-route-numeroIdentificacion="@Model.NumeroIdentificacion">
+                                Descargar certificado
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="app-alert app-alert-info mt-3" role="alert">
+                                <span class="app-alert-icon">
+                                    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                                </span>
+                                <div class="app-alert-body">
+                                    <strong class="app-alert-title">@(etapas[ordenActual].Label)</strong>
+                                    <p class="app-alert-message mb-0">@(etapas[ordenActual].Descripcion)</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </div>
     </div>
 </div>
 

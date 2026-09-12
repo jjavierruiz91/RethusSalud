@@ -1,5 +1,6 @@
 using RethusSalud.Application.Dtos;
 using RethusSalud.Application.Interfaces;
+using RethusSalud.Domain.Entities;
 using RethusSalud.Domain.Enums;
 
 namespace RethusSalud.Application.Services;
@@ -26,21 +27,21 @@ public class ConsultaPublicaService
         var nombreCompleto = $"{solicitante.Nombres} {solicitante.Apellidos}".Trim();
         var solicitud = await _solicitudes.GetUltimaBySolicitanteIdAsync(solicitante.Id);
 
-        if (solicitud is null)
+        return solicitud is null
+            ? new ConsultaEstadoDto(nombreCompleto, false, null, null)
+            : new ConsultaEstadoDto(nombreCompleto, true, solicitud.Estado, solicitud.EtapaActual);
+    }
+
+    public async Task<Solicitud?> ObtenerSolicitudAprobadaAsync(string numeroIdentificacion)
+    {
+        var solicitante = await _solicitantes.GetByNumeroIdentificacionAsync(numeroIdentificacion);
+        if (solicitante is null)
         {
-            return new ConsultaEstadoDto(nombreCompleto, "Sin solicitud registrada");
+            return null;
         }
 
-        var estadoTexto = solicitud.Estado switch
-        {
-            EstadoSolicitud.Borrador => "En elaboracion (aun no ha sido enviada a revision)",
-            EstadoSolicitud.EnProceso => $"En proceso - {solicitud.EtapaActual}",
-            EstadoSolicitud.Aprobado => "Aprobado",
-            EstadoSolicitud.Rechazado => "Rechazado",
-            _ => "Desconocido"
-        };
-
-        return new ConsultaEstadoDto(nombreCompleto, estadoTexto);
+        var solicitud = await _solicitudes.GetUltimaBySolicitanteIdAsync(solicitante.Id);
+        return solicitud is not null && solicitud.Estado == EstadoSolicitud.Aprobado ? solicitud : null;
     }
 
     public async Task<VerificacionFolioDto?> VerificarFolioAsync(string numero)

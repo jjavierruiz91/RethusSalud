@@ -1,0 +1,139 @@
+@model RethusSalud.Web.Models.CertificadosAprobados.AprobadasViewModel
+@using RethusSalud.Domain.Enums
+@using RethusSalud.Web.Helpers
+@using RethusSalud.Web.Models.Shared
+@{
+    ViewData["Title"] = "Certificados aprobados";
+    Layout = "_AppLayout";
+
+    var paginacion = new PaginacionViewModel
+    {
+        PaginaActual = Model.Pagina.PageNumber,
+        TotalPaginas = Model.Pagina.TotalPages,
+        TotalRegistros = Model.Pagina.TotalCount,
+        Accion = "Index",
+        RouteValues = new Dictionary<string, string?>
+        {
+            ["NumeroIdentificacion"] = Model.Filtro.NumeroIdentificacion,
+            ["TipoTramite"] = Model.Filtro.TipoTramite?.ToString(),
+            ["Desde"] = Model.Filtro.Desde?.ToString("yyyy-MM-dd"),
+            ["Hasta"] = Model.Filtro.Hasta?.ToString("yyyy-MM-dd")
+        }
+    };
+}
+
+<div class="app-panel">
+<form method="get" class="row g-3 mb-3 align-items-end" data-autosubmit>
+    <div class="col-12 col-sm-6 col-lg-3">
+        <label class="form-label small text-muted mb-1">Identificación</label>
+        <input type="text" name="NumeroIdentificacion" class="form-control" placeholder="Número de identificación" value="@Model.Filtro.NumeroIdentificacion" />
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+        <label class="form-label small text-muted mb-1">Tipo de trámite</label>
+        <select name="TipoTramite" class="form-select" onchange="this.form.submit()">
+            <option value="">Todos</option>
+            @foreach (var tipo in Enum.GetValues<TipoTramite>())
+            {
+                @if (Model.Filtro.TipoTramite == tipo)
+                {
+                    <option value="@tipo" selected>@tipo</option>
+                }
+                else
+                {
+                    <option value="@tipo">@tipo</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-6 col-sm-6 col-lg-2">
+        <label class="form-label small text-muted mb-1">Desde</label>
+        <input type="date" name="Desde" class="form-control" value="@Model.Filtro.Desde?.ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="col-6 col-sm-6 col-lg-2">
+        <label class="form-label small text-muted mb-1">Hasta</label>
+        <input type="date" name="Hasta" class="form-control" value="@Model.Filtro.Hasta?.ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="col-12 d-flex flex-wrap gap-2">
+        <button type="submit" class="btn btn-outline-primary">Buscar</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Limpiar</a>
+    </div>
+</form>
+
+<form id="formLote" asp-action="DescargarSeleccionados" method="post">
+    <div class="revision-card d-none" id="barraLote">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <div>
+                <strong><span id="contadorSeleccion">0</span> seleccionada(s)</strong>
+            </div>
+            <button type="submit" class="btn btn-primary">Descargar seleccionados (PDF)</button>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" class="form-check-input" id="seleccionarTodo" /></th>
+                    <th>Identificación</th>
+                    <th>Nombre</th>
+                    <th>Tipo de trámite</th>
+                    <th>Estado</th>
+                    <th>Folio / Consecutivo</th>
+                    <th>Fecha de aprobación</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var solicitud in Model.Pagina.Items)
+                {
+                    <tr>
+                        <td><input type="checkbox" class="form-check-input seleccion-item" name="ids" value="@solicitud.Id" /></td>
+                        <td>@solicitud.Solicitante.NumeroIdentificacion</td>
+                        <td>@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</td>
+                        <td>@solicitud.TipoTramite</td>
+                        <td><span class="app-badge app-badge-success">Aprobado</span></td>
+                        <td>@(solicitud.Consecutivo is not null ? solicitud.Consecutivo.Numero : "No asignado")</td>
+                        <td>@solicitud.FechaActualizacion.ToLocalTime().ToString("dd MMM yy, HH:mm")</td>
+                        <td class="text-end d-flex gap-2 justify-content-end">
+                            <a class="btn btn-sm btn-outline-primary" asp-controller="Revision" asp-action="Detalle" asp-route-id="@solicitud.Id">Ver detalle</a>
+                            <a class="btn btn-sm btn-primary" asp-controller="Revision" asp-action="DescargarCertificado" asp-route-id="@solicitud.Id">Descargar</a>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Pagina.Items.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">Sin resultados. No hay certificados aprobados que coincidan con tu búsqueda.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</form>
+
+<partial name="_Pagination" model="paginacion" />
+</div>
+
+<script>
+    (function () {
+        var checkboxes = document.querySelectorAll('.seleccion-item');
+        var seleccionarTodo = document.getElementById('seleccionarTodo');
+        var barra = document.getElementById('barraLote');
+        var contador = document.getElementById('contadorSeleccion');
+
+        function actualizar() {
+            var marcados = document.querySelectorAll('.seleccion-item:checked').length;
+            contador.textContent = marcados;
+            barra.classList.toggle('d-none', marcados === 0);
+        }
+
+        checkboxes.forEach(function (cb) { cb.addEventListener('change', actualizar); });
+
+        if (seleccionarTodo) {
+            seleccionarTodo.addEventListener('change', function () {
+                checkboxes.forEach(function (cb) { cb.checked = seleccionarTodo.checked; });
+                actualizar();
+            });
+        }
+    })();
+</script>

@@ -569,6 +569,22 @@ body {
   }
 }
 
+/* ---- Consulta publica ---- */
+
+.consulta-panel {
+  max-width: 560px;
+  margin: 2.5rem auto;
+}
+
+.consulta-panel-icon {
+  width: 60px;
+  height: 60px;
+}
+
+.consulta-steps {
+  margin: 1.5rem 0 0.25rem;
+}
+
 /* ---- Home sub navigation (sticky) ---- */
 
 .home-subnav {

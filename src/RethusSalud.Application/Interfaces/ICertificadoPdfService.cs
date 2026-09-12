@@ -6,4 +6,5 @@ namespace RethusSalud.Application.Interfaces;
 public interface ICertificadoPdfService
 {
     byte[] Generar(Solicitud solicitud, FirmantesDocumentoDto firmantes);
+    byte[] GenerarLote(IEnumerable<(Solicitud Solicitud, FirmantesDocumentoDto Firmantes)> items);
 }

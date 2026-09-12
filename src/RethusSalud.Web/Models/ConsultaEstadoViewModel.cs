@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using RethusSalud.Application.Dtos;
 
 namespace RethusSalud.Web.Models;
 
@@ -8,5 +9,6 @@ public class ConsultaEstadoViewModel
     [Display(Name = "Numero de identificacion")]
     public string NumeroIdentificacion { get; set; } = string.Empty;
 
-    public string? Resultado { get; set; }
+    public bool Consultado { get; set; }
+    public ConsultaEstadoDto? Resultado { get; set; }
 }

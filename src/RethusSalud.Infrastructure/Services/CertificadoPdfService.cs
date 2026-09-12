@@ -28,7 +28,16 @@ public class CertificadoPdfService : ICertificadoPdfService
         _environment = environment;
     }
 
-    public byte[] Generar(Solicitud solicitud, FirmantesDocumentoDto firmantes)
+    public byte[] Generar(Solicitud solicitud, FirmantesDocumentoDto firmantes) =>
+        CrearDocumento(solicitud, firmantes).GeneratePdf();
+
+    public byte[] GenerarLote(IEnumerable<(Solicitud Solicitud, FirmantesDocumentoDto Firmantes)> items)
+    {
+        var documentos = items.Select(i => CrearDocumento(i.Solicitud, i.Firmantes)).ToList();
+        return Document.Merge(documentos).GeneratePdf();
+    }
+
+    private IDocument CrearDocumento(Solicitud solicitud, FirmantesDocumentoDto firmantes)
     {
         if (solicitud.Consecutivo is null)
         {
@@ -247,7 +256,7 @@ public class CertificadoPdfService : ICertificadoPdfService
                     });
                 });
             });
-        }).GeneratePdf();
+        });
     }
 
     internal byte[]? CargarImagenFirma(string? firmaUrl)

@@ -311,6 +311,50 @@ function initCascadaUbicacion(options) {
     window.addEventListener('scroll', update, { passive: true });
 })();
 
+(function initAutoSubmitFilters() {
+    var forms = document.querySelectorAll('form[data-autosubmit]');
+    if (!forms.length) {
+        return;
+    }
+
+    var DEBOUNCE_MS = 500;
+
+    forms.forEach(function (form) {
+        var timer = null;
+
+        function enviar(nombreCampo) {
+            var marcador = form.querySelector('input[name="__focus"]');
+            if (!marcador) {
+                marcador = document.createElement('input');
+                marcador.type = 'hidden';
+                marcador.name = '__focus';
+                form.appendChild(marcador);
+            }
+            marcador.value = nombreCampo || '';
+            form.submit();
+        }
+
+        form.querySelectorAll('input[type="text"], input[type="search"]').forEach(function (campo) {
+            campo.addEventListener('input', function () {
+                clearTimeout(timer);
+                timer = setTimeout(function () { enviar(campo.name); }, DEBOUNCE_MS);
+            });
+        });
+    });
+
+    var focoCampo = new URLSearchParams(window.location.search).get('__focus');
+    if (focoCampo) {
+        var elFoco = document.querySelector('[name="' + focoCampo + '"]');
+        if (elFoco && typeof elFoco.focus === 'function') {
+            elFoco.focus();
+            var valor = elFoco.value || '';
+            if (elFoco.setSelectionRange) {
+                elFoco.setSelectionRange(valor.length, valor.length);
+            }
+        }
+    }
+})();
+
 (function initScrollReveal() {
     var targets = document.querySelectorAll('.home-section, .feature-card, .process-step, .floating-feature-card');
     if (!targets.length) {
