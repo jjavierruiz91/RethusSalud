@@ -83,6 +83,17 @@ try
                 PermitLimit = 10,
                 QueueLimit = 0
             }));
+
+        // Politica propia para el registro de cuentas: mas estricta que "auth" y separada de ella,
+        // para que un ataque de creacion masiva de cuentas no agote tambien el cupo de login de esa IP.
+        options.AddPolicy("registro", contexto => RateLimitPartition.GetFixedWindowLimiter(
+            ClienteId(contexto),
+            _ => new FixedWindowRateLimiterOptions
+            {
+                Window = TimeSpan.FromMinutes(10),
+                PermitLimit = 5,
+                QueueLimit = 0
+            }));
     });
 
     var app = builder.Build();
