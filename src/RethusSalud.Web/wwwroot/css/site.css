@@ -569,6 +569,118 @@ body {
   }
 }
 
+/* ---- Pagina de error (404, 429, etc.) ---- */
+
+.error-page {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 1.5rem;
+  background: radial-gradient(circle at 30% 20%, #eaf3fb 0%, var(--rethus-bg-soft) 55%, #e7edf3 100%);
+  border-radius: 1.5rem;
+  margin: 1rem 0;
+}
+
+.error-page-badge-wrap {
+  position: relative;
+  width: 168px;
+  height: 168px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.4rem;
+}
+
+.error-page-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px dashed #bcd7ef;
+}
+
+.error-page-badge {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 16px 34px rgba(11, 60, 102, 0.18);
+}
+
+.error-page-pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.3rem 0.85rem;
+  border-radius: 50rem;
+  background: #eaf3fb;
+  color: var(--rethus-blue-deep);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.error-page-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--rethus-ink);
+  margin: 0 0 0.6rem;
+}
+
+.error-page-text {
+  font-size: 0.95rem;
+  color: var(--rethus-muted);
+  max-width: 460px;
+  line-height: 1.6;
+  margin: 0 0 1.6rem;
+}
+
+.error-page-btn {
+  padding: 0.7rem 1.8rem;
+  display: inline-block;
+  border-radius: 0.6rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.error-page-btn-disabled {
+  background: var(--rethus-bg-soft);
+  color: var(--rethus-muted);
+  border: 1.5px solid var(--rethus-border);
+  pointer-events: none;
+}
+
+.error-page-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  margin-bottom: 1.4rem;
+}
+
+.error-page-countdown-value {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: var(--rethus-blue-deep);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.error-page-countdown-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--rethus-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 /* ---- Consulta publica ---- */
 
 .consulta-panel {
@@ -576,13 +688,90 @@ body {
   margin: 2.5rem auto;
 }
 
-.consulta-panel-icon {
-  width: 60px;
-  height: 60px;
+.consulta-panel-logo {
+  width: 148px;
+  height: 148px;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+.consulta-panel-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.consulta-panel-logo:hover img {
+  transform: scale(1.15);
+  filter: drop-shadow(0 12px 22px rgba(11, 60, 102, 0.28));
 }
 
 .consulta-steps {
   margin: 1.5rem 0 0.25rem;
+}
+
+/* ---- Loading overlay (branded) ---- */
+
+.site-loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  background: rgba(11, 32, 51, 0.55);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.site-loading-overlay.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.site-loading-badge {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+}
+
+.site-loading-badge img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.site-loading-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 4px solid var(--rethus-border);
+  border-top-color: var(--rethus-blue);
+  animation: siteLoadingSpin 0.9s linear infinite;
+}
+
+.site-loading-text {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+@keyframes siteLoadingSpin {
+  to { transform: rotate(360deg); }
 }
 
 /* ---- Home sub navigation (sticky) ---- */

@@ -29,13 +29,13 @@
 <div class="row justify-content-center">
     <div class="col-lg-7 col-md-9">
         <div class="app-panel consulta-panel">
-            <div class="ffc-icon consulta-panel-icon">
-                <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2"/><path d="m20 20-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <div class="consulta-panel-logo">
+                <img src="~/img/institucional/escudo_cesar_2024.png" alt="Escudo de la Gobernación del Cesar" />
             </div>
             <h1 class="h4 text-center mb-1">Consultar estado del trámite</h1>
             <p class="text-center text-muted mb-4">Ingresa tu número de identificación para conocer en qué etapa se encuentra tu solicitud Rethus.</p>
 
-            <form asp-action="Index" method="post" class="mb-2">
+            <form asp-action="Index" method="post" class="mb-2" data-show-loading data-loading-text="Consultando tu solicitud...">
                 <div class="mb-3">
                     <label asp-for="NumeroIdentificacion" class="form-label"></label>
                     <input asp-for="NumeroIdentificacion" class="form-control form-control-lg" placeholder="Ej. 1065123456" autofocus />

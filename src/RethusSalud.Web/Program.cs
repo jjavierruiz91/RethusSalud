@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
@@ -38,19 +39,46 @@ try
     {
         options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 
-        options.AddFixedWindowLimiter("consulta-publica", opt =>
-        {
-            opt.Window = TimeSpan.FromMinutes(1);
-            opt.PermitLimit = 10;
-            opt.QueueLimit = 0;
-        });
+        var ventana = TimeSpan.FromMinutes(1);
+        var inicioVentanaPorCliente = new ConcurrentDictionary<string, DateTimeOffset>();
 
-        options.AddFixedWindowLimiter("auth", opt =>
+        options.OnRejected = (contexto, _) =>
         {
-            opt.Window = TimeSpan.FromMinutes(1);
-            opt.PermitLimit = 10;
-            opt.QueueLimit = 0;
-        });
+            var clave = $"{contexto.HttpContext.Request.Path}:{ClienteId(contexto.HttpContext)}";
+            var ahora = DateTimeOffset.UtcNow;
+
+            var inicio = inicioVentanaPorCliente.AddOrUpdate(
+                clave,
+                ahora,
+                (_, inicioExistente) => ahora - inicioExistente >= ventana ? ahora : inicioExistente);
+
+            var restante = ventana - (ahora - inicio);
+            var segundos = Math.Max(1, (int)Math.Ceiling(restante.TotalSeconds));
+            contexto.HttpContext.Items["RetryAfterSeconds"] = segundos;
+
+            return ValueTask.CompletedTask;
+        };
+
+        static string ClienteId(HttpContext contexto) =>
+            contexto.Connection.RemoteIpAddress?.ToString() ?? "desconocido";
+
+        options.AddPolicy("consulta-publica", contexto => RateLimitPartition.GetFixedWindowLimiter(
+            ClienteId(contexto),
+            _ => new FixedWindowRateLimiterOptions
+            {
+                Window = TimeSpan.FromMinutes(1),
+                PermitLimit = 10,
+                QueueLimit = 0
+            }));
+
+        options.AddPolicy("auth", contexto => RateLimitPartition.GetFixedWindowLimiter(
+            ClienteId(contexto),
+            _ => new FixedWindowRateLimiterOptions
+            {
+                Window = TimeSpan.FromMinutes(1),
+                PermitLimit = 10,
+                QueueLimit = 0
+            }));
     });
 
     var app = builder.Build();
@@ -79,6 +107,8 @@ try
 
     app.UseHttpsRedirection();
     app.UseStaticFiles();
+
+    app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
     app.UseRouting();
 

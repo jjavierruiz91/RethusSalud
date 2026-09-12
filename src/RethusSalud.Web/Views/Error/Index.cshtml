@@ -1,0 +1,74 @@
+@model RethusSalud.Web.Models.ErrorPageViewModel
+@{
+    ViewData["Title"] = "Error " + Model.Codigo;
+}
+
+<div class="error-page">
+    <div class="error-page-badge-wrap">
+        <div class="error-page-ring"></div>
+        <div class="error-page-badge">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3z" fill="#0f5fa6" />
+                <path d="m8.5 12 2.3 2.3L15.5 9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+    </div>
+    <span class="error-page-pill">Error @Model.Codigo</span>
+    <h1 class="error-page-title">@Model.Titulo</h1>
+    <p class="error-page-text">@Model.Mensaje</p>
+
+    @if (Model.RetryAfterSegundos.HasValue && Model.RetryAfterSegundos.Value > 0)
+    {
+        <div class="error-page-countdown" id="errorCountdown" data-segundos="@Model.RetryAfterSegundos" data-volver-url="@Model.VolverUrl">
+            <span class="error-page-countdown-value" id="errorCountdownValue">@Model.RetryAfterSegundos</span>
+            <span class="error-page-countdown-label" id="errorCountdownLabel">segundos para volver a intentar</span>
+        </div>
+        <a href="@Model.VolverUrl" class="btn error-page-btn error-page-btn-disabled" id="errorPageBtn" aria-disabled="true">Espera un momento…</a>
+    }
+    else
+    {
+        <a href="@Model.VolverUrl" class="btn auth-submit-btn error-page-btn">Volver al inicio</a>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var contenedor = document.getElementById('errorCountdown');
+            if (!contenedor) {
+                return;
+            }
+
+            var restante = parseInt(contenedor.getAttribute('data-segundos'), 10) || 0;
+            var volverUrl = contenedor.getAttribute('data-volver-url') || '/';
+            var valor = document.getElementById('errorCountdownValue');
+            var etiqueta = document.getElementById('errorCountdownLabel');
+            var boton = document.getElementById('errorPageBtn');
+
+            function habilitarBoton() {
+                contenedor.style.display = 'none';
+                boton.textContent = 'Reintentar ahora';
+                boton.href = volverUrl;
+                boton.classList.remove('error-page-btn-disabled');
+                boton.classList.add('auth-submit-btn');
+                boton.removeAttribute('aria-disabled');
+            }
+
+            if (restante <= 0) {
+                habilitarBoton();
+                return;
+            }
+
+            var intervalo = setInterval(function () {
+                restante -= 1;
+                if (restante <= 0) {
+                    clearInterval(intervalo);
+                    habilitarBoton();
+                    return;
+                }
+                valor.textContent = restante;
+                etiqueta.textContent = restante === 1 ? 'segundo para volver a intentar' : 'segundos para volver a intentar';
+            }, 1000);
+        })();
+    </script>
+}

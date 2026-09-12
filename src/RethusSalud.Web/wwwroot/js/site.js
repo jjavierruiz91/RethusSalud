@@ -355,6 +355,37 @@ function initCascadaUbicacion(options) {
     }
 })();
 
+(function initLoadingOverlay() {
+    var overlay = document.getElementById('siteLoadingOverlay');
+    var texto = document.getElementById('siteLoadingText');
+    if (!overlay) {
+        return;
+    }
+
+    document.querySelectorAll('form[data-show-loading]').forEach(function (form) {
+        form.addEventListener('submit', function (evento) {
+            if (window.jQuery && typeof jQuery(form).valid === 'function' && !jQuery(form).valid()) {
+                return;
+            }
+
+            if (form.dataset.enviando === 'true') {
+                evento.preventDefault();
+                return;
+            }
+            form.dataset.enviando = 'true';
+
+            form.querySelectorAll('button[type="submit"]').forEach(function (boton) {
+                boton.disabled = true;
+            });
+
+            if (texto) {
+                texto.textContent = form.getAttribute('data-loading-text') || 'Cargando...';
+            }
+            overlay.classList.add('is-visible');
+        });
+    });
+})();
+
 (function initScrollReveal() {
     var targets = document.querySelectorAll('.home-section, .feature-card, .process-step, .floating-feature-card');
     if (!targets.length) {
