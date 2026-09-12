@@ -58,11 +58,11 @@
     </div>
 </div>
 
-<div class="app-panel">
-<form method="get" class="row g-3 mb-4 align-items-end" data-autosubmit>
+<div class="app-panel app-panel--compacta">
+<form method="get" class="row g-2 mb-2 align-items-end filtro-bar" data-autosubmit>
     <div class="col-12 col-sm-6 col-lg-2">
-        <label class="form-label small text-muted mb-1">Identificación</label>
-        <input type="text" name="NumeroIdentificacion" class="form-control" placeholder="Número de identificación" value="@Model.Filtro.NumeroIdentificacion" />
+        <label class="form-label small text-muted mb-1">Nombre o identificación</label>
+        <input type="text" name="NumeroIdentificacion" class="form-control" placeholder="Nombre o identificación" value="@Model.Filtro.NumeroIdentificacion" />
     </div>
     <div class="col-6 col-sm-4 col-lg-2">
         <label class="form-label small text-muted mb-1">Tipo de trámite</label>
@@ -137,7 +137,7 @@
     </div>
 </form>
 
-<div class="table-responsive">
+<div class="table-responsive tabla-scroll">
     <table class="table">
         <thead>
             <tr>
@@ -173,8 +173,12 @@
                     <td>@(solicitud.Consecutivo is not null ? solicitud.Consecutivo.Numero : "No asignado")</td>
                     <td>@solicitud.FechaCreacion.ToLocalTime().ToString("dd MMM yy, HH:mm")</td>
                     <td>@solicitud.FechaActualizacion.ToLocalTime().ToString("dd MMM yy, HH:mm")</td>
-                    <td>
+                    <td class="text-end d-flex gap-2 justify-content-end">
                         <a class="btn btn-sm btn-outline-primary" asp-action="SeguimientoDetalle" asp-route-id="@solicitud.Id">Ver seguimiento</a>
+                        @if (solicitud.Estado == EstadoSolicitud.Aprobado)
+                        {
+                            <a class="btn btn-sm btn-primary" asp-controller="Revision" asp-action="DescargarCertificado" asp-route-id="@solicitud.Id">Descargar</a>
+                        }
                     </td>
                 </tr>
             }

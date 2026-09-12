@@ -66,10 +66,7 @@ public class SolicitudRepository : ISolicitudRepository
             ? query.Where(s => s.Estado == filtro.Estado.Value)
             : query.Where(s => s.Estado == EstadoSolicitud.EnProceso);
 
-        if (!string.IsNullOrWhiteSpace(filtro.NumeroIdentificacion))
-        {
-            query = query.Where(s => s.Solicitante.NumeroIdentificacion.Contains(filtro.NumeroIdentificacion));
-        }
+        query = AplicarFiltroTexto(query, filtro.NumeroIdentificacion);
 
         if (filtro.TipoTramite.HasValue)
         {
@@ -103,10 +100,7 @@ public class SolicitudRepository : ISolicitudRepository
             query = query.Where(s => s.EtapaActual == filtro.Etapa.Value);
         }
 
-        if (!string.IsNullOrWhiteSpace(filtro.NumeroIdentificacion))
-        {
-            query = query.Where(s => s.Solicitante.NumeroIdentificacion.Contains(filtro.NumeroIdentificacion));
-        }
+        query = AplicarFiltroTexto(query, filtro.NumeroIdentificacion);
 
         if (filtro.TipoTramite.HasValue)
         {
@@ -131,12 +125,28 @@ public class SolicitudRepository : ISolicitudRepository
             .Include(s => s.Solicitante)
             .Include(s => s.Consecutivo);
 
+    // Busqueda mixta: coincide por numero de identificacion, nombres, apellidos o el nombre completo.
+    // Se recorta (Trim) cada valor porque algunos registros tienen espacios sobrantes guardados,
+    // lo que rompia la coincidencia al concatenar "Nombres + Apellidos".
+    private static IQueryable<Solicitud> AplicarFiltroTexto(IQueryable<Solicitud> query, string? texto)
+    {
+        if (string.IsNullOrWhiteSpace(texto))
+        {
+            return query;
+        }
+
+        var textoBuscado = texto.Trim();
+
+        return query.Where(s =>
+            s.Solicitante.NumeroIdentificacion.Contains(textoBuscado) ||
+            s.Solicitante.Nombres.Contains(textoBuscado) ||
+            s.Solicitante.Apellidos.Contains(textoBuscado) ||
+            (s.Solicitante.Nombres.Trim() + " " + s.Solicitante.Apellidos.Trim()).Contains(textoBuscado));
+    }
+
     private static IQueryable<Solicitud> AplicarFiltrosComunes(IQueryable<Solicitud> query, BandejaFiltroDto filtro)
     {
-        if (!string.IsNullOrWhiteSpace(filtro.NumeroIdentificacion))
-        {
-            query = query.Where(s => s.Solicitante.NumeroIdentificacion.Contains(filtro.NumeroIdentificacion));
-        }
+        query = AplicarFiltroTexto(query, filtro.NumeroIdentificacion);
 
         if (filtro.TipoTramite.HasValue)
         {
@@ -447,7 +457,7 @@ public class SolicitudRepository : ISolicitudRepository
             .Select(g => new TendenciaMesDto(g.Key.Year, g.Key.Month, g.Count()))
             .ToListAsync();
 
-        var desempeno = await ObtenerDesempenoFuncionariosAsync(filtro.Etapa);
+        var desempeno = await ObtenerDesempenoFuncionariosAsync();
 
         return new DashboardResultDto
         {
@@ -474,7 +484,7 @@ public class SolicitudRepository : ISolicitudRepository
         };
     }
 
-    private async Task<List<FuncionarioDesempenoDto>> ObtenerDesempenoFuncionariosAsync(EtapaSolicitud? etapaFiltro)
+    private async Task<List<FuncionarioDesempenoDto>> ObtenerDesempenoFuncionariosAsync()
     {
         // Un avance de etapa (Etapa1->Etapa2, Etapa2->Etapa3, etc.) deja el Estado en EnProceso, no en Aprobado
         // (solo la aprobacion final en Inventario pone Estado=Aprobado). Por eso contamos EnProceso tambien como
@@ -534,7 +544,6 @@ public class SolicitudRepository : ISolicitudRepository
                     c.Rechazadas);
             })
             .Where(d => d.Etapa.HasValue) // excluye al ciudadano que radico (su registro de "Solicitud radicada" tambien queda en EnProceso, pero no es un funcionario)
-            .Where(d => !etapaFiltro.HasValue || d.Etapa == etapaFiltro.Value)
             .OrderByDescending(d => d.Gestionadas)
             .Take(10)
             .ToList();

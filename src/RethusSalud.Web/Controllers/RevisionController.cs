@@ -117,9 +117,16 @@ public class RevisionController : Controller
     {
         var filtroDto = new BandejaFiltroDto(filtro.NumeroIdentificacion, filtro.TipoTramite, filtro.Estado, filtro.Desde, filtro.Hasta, filtro.Etapa);
         var pagina = Math.Max(filtro.Pagina, 1);
-        var resultado = await _solicitudes.ObtenerSeguimientoPaginadoAsync(filtroDto, pagina, TamanoPaginaBuscar);
+        var resultado = await _solicitudes.ObtenerSeguimientoConEstadisticasAsync(filtroDto, pagina, TamanoPaginaBuscar);
 
-        return View(new BuscarViewModel { Filtro = filtro, Pagina = resultado });
+        return View(new BuscarViewModel
+        {
+            Filtro = filtro,
+            Pagina = resultado.Pagina,
+            TotalEnProceso = resultado.TotalEnProceso,
+            TotalAprobadas = resultado.TotalAprobadas,
+            TotalRechazadas = resultado.TotalRechazadas
+        });
     }
 
     private static readonly HashSet<string> PasosDeRevision = new()

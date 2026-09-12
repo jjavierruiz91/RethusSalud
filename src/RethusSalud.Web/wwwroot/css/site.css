@@ -1046,6 +1046,32 @@ body {
   color: rgba(255, 255, 255, 0.5);
 }
 
+.site-footer-credito {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.site-footer-credito svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+.site-footer-credito a {
+  color: #7fb8ee;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.site-footer-credito a:hover {
+  text-decoration: underline;
+}
+
 /* ---- Site navbar ---- */
 
 .site-navbar {
@@ -1467,6 +1493,32 @@ body {
   text-decoration: none;
 }
 
+.auth-footer-credito {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+  color: var(--rethus-muted);
+}
+
+.auth-footer-credito svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+
+.auth-footer-credito a {
+  margin-left: 0;
+  color: var(--rethus-blue);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-footer-credito a:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 991.98px) {
   .auth-card-wrapper {
     grid-template-columns: 1fr;
@@ -1593,6 +1645,33 @@ body {
 .app-sidebar-footer {
   padding: 0.9rem;
   border-top: 1px solid var(--rethus-border);
+}
+
+.app-sidebar-credito {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+  font-size: 0.68rem;
+  color: var(--rethus-muted);
+  text-align: center;
+}
+
+.app-sidebar-credito svg {
+  width: 11px;
+  height: 11px;
+  flex: none;
+}
+
+.app-sidebar-credito a {
+  color: var(--rethus-blue);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.app-sidebar-credito a:hover {
+  text-decoration: underline;
 }
 
 .app-nav-link-btn:hover {
