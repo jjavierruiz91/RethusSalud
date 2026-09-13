@@ -1,4 +1,4 @@
--- Crea 3 usuarios de prueba para RethusSalud: Etapa 2, Etapa 3 e Inventario.
+-- Crea 4 usuarios de prueba para RethusSalud: Etapa 1, Etapa 2, Etapa 3 e Inventario.
 -- Contraseña para los tres: Rethus2026*
 -- El hash de contraseña ya viene generado con el mismo algoritmo que usa
 -- ASP.NET Core Identity (PBKDF2), así que el login funciona igual que si
@@ -12,6 +12,10 @@ SET NOCOUNT ON;
 
 DECLARE @PasswordHash nvarchar(max) = N'AQAAAAIAAYagAAAAEEngj29MwN7C1CdevQR/4EnmAGsNMaLIqeIijxFFu8PLOHX5qwpTnqO96Eqi0frM7w==';
 
+IF NOT EXISTS (SELECT 1 FROM AspNetRoles WHERE Name = 'FuncionarioEtapa1')
+    INSERT INTO AspNetRoles (Id, Name, NormalizedName, ConcurrencyStamp)
+    VALUES (CONVERT(nvarchar(450), NEWID()), 'FuncionarioEtapa1', 'FUNCIONARIOETAPA1', CONVERT(nvarchar(max), NEWID()));
+
 IF NOT EXISTS (SELECT 1 FROM AspNetRoles WHERE Name = 'FuncionarioEtapa2')
     INSERT INTO AspNetRoles (Id, Name, NormalizedName, ConcurrencyStamp)
     VALUES (CONVERT(nvarchar(450), NEWID()), 'FuncionarioEtapa2', 'FUNCIONARIOETAPA2', CONVERT(nvarchar(max), NEWID()));
@@ -23,6 +27,28 @@ IF NOT EXISTS (SELECT 1 FROM AspNetRoles WHERE Name = 'FuncionarioEtapa3')
 IF NOT EXISTS (SELECT 1 FROM AspNetRoles WHERE Name = 'Inventario')
     INSERT INTO AspNetRoles (Id, Name, NormalizedName, ConcurrencyStamp)
     VALUES (CONVERT(nvarchar(450), NEWID()), 'Inventario', 'INVENTARIO', CONVERT(nvarchar(max), NEWID()));
+
+-- Usuario 0: Etapa 1 (Proyectó)
+IF NOT EXISTS (SELECT 1 FROM AspNetUsers WHERE NormalizedEmail = 'ANDRES.MEZA@RETHUSSALUD.TEST')
+BEGIN
+    DECLARE @Id0 nvarchar(450) = CONVERT(nvarchar(450), NEWID());
+    INSERT INTO AspNetUsers
+        (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed,
+         PasswordHash, SecurityStamp, ConcurrencyStamp,
+         PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount,
+         NombreCompleto, Activo, Cargo, Telefono, NumeroIdentificacion)
+    VALUES
+        (@Id0, N'andres.meza@rethussalud.test', N'ANDRES.MEZA@RETHUSSALUD.TEST',
+         N'andres.meza@rethussalud.test', N'ANDRES.MEZA@RETHUSSALUD.TEST', 1,
+         @PasswordHash, CONVERT(nvarchar(max), NEWID()), CONVERT(nvarchar(max), NEWID()),
+         0, 0, 1, 0,
+         N'Andrés Felipe Meza Cárdenas', 1,
+         N'Profesional universitario contratista secretaria de salud Departamental del Cesar - Oficina Asesora Jurídica',
+         N'3045678901', N'1065734521');
+
+    INSERT INTO AspNetUserRoles (UserId, RoleId)
+    SELECT @Id0, Id FROM AspNetRoles WHERE Name = 'FuncionarioEtapa1';
+END
 
 -- Usuario 1: Etapa 2 (Aprobó)
 IF NOT EXISTS (SELECT 1 FROM AspNetUsers WHERE NormalizedEmail = 'DIANA.HERRERA@RETHUSSALUD.TEST')
