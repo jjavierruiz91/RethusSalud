@@ -381,23 +381,39 @@
                             </div>
                             <div class="auth-field mb-0">
                                 <label class="auth-label">Imagen de firma</label>
-                                <div class="app-signature-upload">
-                                    <div class="app-signature-preview" id="firmaPreviewBox">
-                                        @if (!string.IsNullOrEmpty(currentAppUser?.FirmaUrl))
-                                        {
-                                            <img src="@currentAppUser.FirmaUrl" alt="Firma actual" />
-                                        }
-                                        else
-                                        {
-                                            <span class="app-signature-preview-empty">
-                                                <svg viewBox="0 0 24 24" fill="none"><path d="M4 18c3-4 6 2 9-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M6 9l9-4 3 3-9 4-3-3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-                                            </span>
-                                        }
+                                <div data-firma-input>
+                                    <div class="firma-input-tabs">
+                                        <button type="button" class="firma-input-tab active" data-firma-tab="subir">Subir imagen</button>
+                                        <button type="button" class="firma-input-tab" data-firma-tab="dibujar">Dibujar firma</button>
                                     </div>
-                                    <div class="app-signature-upload-body">
-                                        <input name="Firma" type="file" accept="image/jpeg,image/png" data-signature-preview="firmaPreviewBox" />
-                                        <div class="app-signature-upload-hint">JPG o PNG, máx. 5 MB</div>
+                                    <div data-firma-panel="subir">
+                                        <div class="app-signature-upload">
+                                            <div class="app-signature-preview" id="firmaPreviewBox">
+                                                @if (!string.IsNullOrEmpty(currentAppUser?.FirmaUrl))
+                                                {
+                                                    <img src="@currentAppUser.FirmaUrl" alt="Firma actual" />
+                                                }
+                                                else
+                                                {
+                                                    <span class="app-signature-preview-empty">
+                                                        <svg viewBox="0 0 24 24" fill="none"><path d="M4 18c3-4 6 2 9-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M6 9l9-4 3 3-9 4-3-3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                                                    </span>
+                                                }
+                                            </div>
+                                            <div class="app-signature-upload-body">
+                                                <input name="Firma" type="file" accept="image/jpeg,image/png" data-signature-preview="firmaPreviewBox" />
+                                                <div class="app-signature-upload-hint">JPG o PNG, máx. 5 MB</div>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div data-firma-panel="dibujar" class="d-none">
+                                        <canvas data-firma-canvas width="320" height="120" class="firma-input-canvas" style="max-width:320px;height:120px;"></canvas>
+                                        <div class="firma-input-canvas-actions">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" data-firma-clear>Limpiar</button>
+                                        </div>
+                                        <p class="firma-input-error d-none" data-firma-error>Dibuja una firma antes de continuar.</p>
+                                    </div>
+                                    <input type="hidden" name="FirmaDibujada" data-firma-hidden />
                                 </div>
                             </div>
                         </div>

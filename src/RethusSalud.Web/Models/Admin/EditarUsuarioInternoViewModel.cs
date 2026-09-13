@@ -21,5 +21,6 @@ public class EditarUsuarioInternoViewModel
     public IFormFile? Foto { get; set; }
     public string? Cargo { get; set; }
     public IFormFile? Firma { get; set; }
+    public string? FirmaDibujada { get; set; }
     public string? Origen { get; set; }
 }

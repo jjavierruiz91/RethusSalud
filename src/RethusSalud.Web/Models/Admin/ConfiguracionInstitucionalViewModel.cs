@@ -15,5 +15,7 @@ public class ConfiguracionInstitucionalViewModel
 
     public IFormFile? Firma { get; set; }
 
+    public string? FirmaDibujada { get; set; }
+
     public List<UsuarioInternoViewModel> Funcionarios { get; set; } = new();
 }

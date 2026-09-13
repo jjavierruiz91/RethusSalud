@@ -216,6 +216,116 @@ function initCascadaUbicacion(options) {
     });
 })();
 
+(function initFirmaDibujada() {
+    document.querySelectorAll('[data-firma-input]').forEach(function (root) {
+        var canvas = root.querySelector('[data-firma-canvas]');
+        var hidden = root.querySelector('[data-firma-hidden]');
+        if (!canvas || !hidden) {
+            return;
+        }
+
+        var tabs = root.querySelectorAll('[data-firma-tab]');
+        var panels = root.querySelectorAll('[data-firma-panel]');
+        var clearBtn = root.querySelector('[data-firma-clear]');
+        var errorEl = root.querySelector('[data-firma-error]');
+        var ctx = canvas.getContext('2d');
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#0b283b';
+        var dibujando = false;
+        var trazado = false;
+
+        function activarTab(nombre) {
+            tabs.forEach(function (tab) {
+                tab.classList.toggle('active', tab.getAttribute('data-firma-tab') === nombre);
+            });
+            panels.forEach(function (panel) {
+                panel.classList.toggle('d-none', panel.getAttribute('data-firma-panel') !== nombre);
+            });
+        }
+
+        tabs.forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                activarTab(tab.getAttribute('data-firma-tab'));
+            });
+        });
+
+        function posicion(e) {
+            var r = canvas.getBoundingClientRect();
+            var t = e.touches ? e.touches[0] : e;
+            return {
+                x: (t.clientX - r.left) * canvas.width / r.width,
+                y: (t.clientY - r.top) * canvas.height / r.height
+            };
+        }
+
+        function iniciarTrazo(e) {
+            dibujando = true;
+            trazado = true;
+            var p = posicion(e);
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            e.preventDefault();
+        }
+
+        function moverTrazo(e) {
+            if (!dibujando) {
+                return;
+            }
+            var p = posicion(e);
+            ctx.lineTo(p.x, p.y);
+            ctx.stroke();
+            e.preventDefault();
+        }
+
+        function soltarTrazo() {
+            dibujando = false;
+        }
+
+        canvas.addEventListener('mousedown', iniciarTrazo);
+        canvas.addEventListener('mousemove', moverTrazo);
+        window.addEventListener('mouseup', soltarTrazo);
+        canvas.addEventListener('touchstart', iniciarTrazo);
+        canvas.addEventListener('touchmove', moverTrazo);
+        canvas.addEventListener('touchend', soltarTrazo);
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function () {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                trazado = false;
+                if (errorEl) {
+                    errorEl.classList.add('d-none');
+                }
+            });
+        }
+
+        var form = root.closest('form');
+        if (!form) {
+            return;
+        }
+
+        form.addEventListener('submit', function (e) {
+            var tabDibujar = root.querySelector('[data-firma-tab="dibujar"]');
+            var enModoDibujo = tabDibujar && tabDibujar.classList.contains('active');
+
+            if (!enModoDibujo) {
+                hidden.value = '';
+                return;
+            }
+
+            if (!trazado) {
+                e.preventDefault();
+                if (errorEl) {
+                    errorEl.classList.remove('d-none');
+                }
+                return;
+            }
+
+            hidden.value = canvas.toDataURL('image/png');
+        });
+    });
+})();
+
 (function initAutoCloseModals() {
     document.querySelectorAll('[data-autoclose]').forEach(function (el) {
         var delay = parseInt(el.getAttribute('data-autoclose'), 10) || 5000;

@@ -13,42 +13,62 @@
     };
 }
 
-<div class="app-panel" style="max-width: 560px">
-    <h2 class="profile-card-name" style="font-size:1.1rem">Firma institucional (Secretaria de Salud)</h2>
-    <p class="text-muted small">
-        Esta firma aparece en todos los documentos generados (resoluciones), como la autoridad que expide el acto administrativo.
-        No corresponde a ninguna etapa del flujo de revisión.
-    </p>
-    <form asp-action="ConfiguracionInstitucional" method="post" enctype="multipart/form-data">
-        <div class="mb-3">
-            <label class="form-label">Nombre completo</label>
-            <input name="Nombre" class="form-control" value="@Model.Nombre" placeholder="Ej. Georgina Paola Sánchez Daza" required />
+<div class="config-institucional-layout">
+<div class="app-panel firma-toolbar-panel">
+    <form asp-action="ConfiguracionInstitucional" method="post" enctype="multipart/form-data" class="firma-toolbar">
+        <div class="firma-toolbar-title">
+            <h2 class="config-panel-title mb-0">Firma institucional</h2>
+            <span class="config-info-icon" tabindex="0" title="Esta firma aparece en todos los documentos generados (resoluciones), como la autoridad que expide el acto administrativo. No corresponde a ninguna etapa del flujo de revisión.">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 8h.01M11 11h1v5h1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Cargo</label>
-            <input name="Cargo" class="form-control" value="@Model.Cargo" placeholder="Ej. Secretaria de Salud Departamento del Cesar" required />
+        <div class="firma-toolbar-field">
+            <label class="form-label small mb-1">Nombre completo</label>
+            <input name="Nombre" class="form-control form-control-sm" value="@Model.Nombre" placeholder="Ej. Georgina Paola Sánchez Daza" required />
         </div>
-        <div class="mb-3">
-            @if (!string.IsNullOrEmpty(Model.FirmaUrl))
-            {
-                <img src="@Model.FirmaUrl" alt="Firma actual" style="max-height:50px;border:1px solid var(--rethus-border);border-radius:0.4rem;padding:4px" class="mb-2 d-block" />
-            }
-            else
-            {
-                <p class="text-muted small mb-2">Aún no se ha cargado una firma.</p>
-            }
-            <label class="form-label">Imagen de firma (JPG o PNG)</label>
-            <input name="Firma" type="file" accept="image/jpeg,image/png" class="form-control" />
+        <div class="firma-toolbar-field">
+            <label class="form-label small mb-1">Cargo</label>
+            <input name="Cargo" class="form-control form-control-sm" value="@Model.Cargo" placeholder="Ej. Secretaria de Salud Departamento del Cesar" required />
         </div>
-        <button type="submit" class="btn auth-submit-btn">Guardar</button>
+        <div class="firma-toolbar-field firma-toolbar-field--firma">
+            <label class="form-label small mb-1">Firma</label>
+            <div data-firma-input>
+                <div class="firma-input-tabs">
+                    <button type="button" class="firma-input-tab active" data-firma-tab="subir">Subir imagen</button>
+                    <button type="button" class="firma-input-tab" data-firma-tab="dibujar">Dibujar firma</button>
+                </div>
+                <div data-firma-panel="subir" class="d-flex align-items-center gap-2">
+                    @if (!string.IsNullOrEmpty(Model.FirmaUrl))
+                    {
+                        <img src="@Model.FirmaUrl" alt="Firma actual" class="firma-thumb firma-thumb--sm" />
+                    }
+                    else
+                    {
+                        <span class="text-muted small">Sin firma</span>
+                    }
+                    <input name="Firma" type="file" accept="image/jpeg,image/png" class="form-control form-control-sm" />
+                </div>
+                <div data-firma-panel="dibujar" class="d-none">
+                    <canvas data-firma-canvas width="260" height="90" class="firma-input-canvas"></canvas>
+                    <div class="firma-input-canvas-actions">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" data-firma-clear>Limpiar</button>
+                    </div>
+                    <p class="firma-input-error d-none" data-firma-error>Dibuja una firma antes de continuar.</p>
+                </div>
+                <input type="hidden" name="FirmaDibujada" data-firma-hidden />
+            </div>
+        </div>
+        <div class="firma-toolbar-action">
+            <button type="submit" class="btn btn-sm auth-submit-btn">Guardar</button>
+        </div>
     </form>
 </div>
 
-<div class="app-panel mt-3">
-    <h2 class="profile-card-name" style="font-size:1.1rem">Firmantes por etapa</h2>
-    <p class="text-muted small">Nombre, cargo y firma de los funcionarios que aparecen en el bloque de firmas de cada documento generado.</p>
+<div class="app-panel app-panel--compacta flex-fill">
+    <h2 class="config-panel-title">Firmantes por etapa</h2>
+    <p class="text-muted small mb-2">Nombre, cargo y firma de los funcionarios que aparecen en el bloque de firmas de cada documento generado.</p>
 
-    <div class="table-responsive">
+    <div class="table-responsive tabla-scroll">
         <table class="table align-middle">
             <thead>
                 <tr>
@@ -67,17 +87,17 @@
                         <td>
                             @if (!string.IsNullOrEmpty(funcionario.FirmaUrl))
                             {
-                                <img src="@funcionario.FirmaUrl" alt="Firma de @funcionario.Nombre" style="max-height:32px" />
+                                <img src="@funcionario.FirmaUrl" alt="Firma de @funcionario.Nombre" class="firma-thumb firma-thumb--sm" />
                             }
                             else
                             {
-                                <span class="text-muted small">Sin firma</span>
+                                <span class="app-badge app-badge-warning">Sin firma</span>
                             }
                         </td>
                         <td>@funcionario.Nombre</td>
-                        <td>@EtiquetaRol(funcionario.Rol)</td>
-                        <td>@(string.IsNullOrEmpty(funcionario.Cargo) ? "—" : funcionario.Cargo)</td>
-                        <td>@funcionario.Email</td>
+                        <td><span class="app-badge app-badge-muted">@EtiquetaRol(funcionario.Rol)</span></td>
+                        <td class="cargo-cell" title="@funcionario.Cargo">@(string.IsNullOrEmpty(funcionario.Cargo) ? "—" : funcionario.Cargo)</td>
+                        <td><a href="mailto:@funcionario.Email">@funcionario.Email</a></td>
                         <td class="text-end">
                             <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editarFirmante-@funcionario.Id">Editar</button>
                         </td>
@@ -92,6 +112,7 @@
             </tbody>
         </table>
     </div>
+</div>
 </div>
 
 @foreach (var funcionario in Model.Funcionarios)
@@ -118,12 +139,28 @@
                             <textarea name="Cargo" class="form-control" rows="2" placeholder="Ej. Asesor Jurídico secretaria de salud Departamental">@funcionario.Cargo</textarea>
                         </div>
                         <div class="mb-3">
-                            @if (!string.IsNullOrEmpty(funcionario.FirmaUrl))
-                            {
-                                <img src="@funcionario.FirmaUrl" alt="Firma actual" style="max-height:45px;border:1px solid var(--rethus-border);border-radius:0.4rem;padding:4px" class="mb-2 d-block" />
-                            }
-                            <label class="form-label">Imagen de firma (JPG o PNG)</label>
-                            <input name="Firma" type="file" accept="image/jpeg,image/png" class="form-control" />
+                            <label class="form-label">Imagen de firma</label>
+                            <div data-firma-input>
+                                <div class="firma-input-tabs">
+                                    <button type="button" class="firma-input-tab active" data-firma-tab="subir">Subir imagen</button>
+                                    <button type="button" class="firma-input-tab" data-firma-tab="dibujar">Dibujar firma</button>
+                                </div>
+                                <div data-firma-panel="subir">
+                                    @if (!string.IsNullOrEmpty(funcionario.FirmaUrl))
+                                    {
+                                        <img src="@funcionario.FirmaUrl" alt="Firma actual" class="firma-thumb mb-2" />
+                                    }
+                                    <input name="Firma" type="file" accept="image/jpeg,image/png" class="form-control" />
+                                </div>
+                                <div data-firma-panel="dibujar" class="d-none">
+                                    <canvas data-firma-canvas width="320" height="120" class="firma-input-canvas" style="max-width:320px;height:120px;"></canvas>
+                                    <div class="firma-input-canvas-actions">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" data-firma-clear>Limpiar</button>
+                                    </div>
+                                    <p class="firma-input-error d-none" data-firma-error>Dibuja una firma antes de continuar.</p>
+                                </div>
+                                <input type="hidden" name="FirmaDibujada" data-firma-hidden />
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">

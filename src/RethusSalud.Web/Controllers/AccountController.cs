@@ -282,7 +282,18 @@ public class AccountController : Controller
 
         user.Cargo = model.Cargo;
 
-        if (model.Firma is not null && model.Firma.Length > 0)
+        if (!string.IsNullOrEmpty(model.FirmaDibujada))
+        {
+            var error = ImagenHelper.ValidarFirmaDibujada(model.FirmaDibujada);
+            if (error is not null)
+            {
+                TempData["Error"] = error;
+                return Redirect(volverA);
+            }
+
+            user.FirmaUrl = await ImagenHelper.GuardarFirmaDibujadaAsync(_environment, "firmas", user.Id, model.FirmaDibujada);
+        }
+        else if (model.Firma is not null && model.Firma.Length > 0)
         {
             var error = ImagenHelper.Validar(model.Firma);
             if (error is not null)

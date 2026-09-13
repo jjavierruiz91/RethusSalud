@@ -252,7 +252,18 @@ public class AdminController : Controller
             usuario.FotoUrl = await GuardarFotoAsync(usuario.Id, model.Foto);
         }
 
-        if (model.Firma is not null && model.Firma.Length > 0)
+        if (!string.IsNullOrEmpty(model.FirmaDibujada))
+        {
+            var error = ImagenHelper.ValidarFirmaDibujada(model.FirmaDibujada);
+            if (error is not null)
+            {
+                TempData["Error"] = error;
+                return VolverAOrigen();
+            }
+
+            usuario.FirmaUrl = await ImagenHelper.GuardarFirmaDibujadaAsync(_environment, "firmas", usuario.Id, model.FirmaDibujada);
+        }
+        else if (model.Firma is not null && model.Firma.Length > 0)
         {
             var error = ImagenHelper.Validar(model.Firma);
             if (error is not null)
@@ -392,7 +403,18 @@ public class AdminController : Controller
         }
 
         string? firmaUrl = null;
-        if (model.Firma is not null && model.Firma.Length > 0)
+        if (!string.IsNullOrEmpty(model.FirmaDibujada))
+        {
+            var error = ImagenHelper.ValidarFirmaDibujada(model.FirmaDibujada);
+            if (error is not null)
+            {
+                TempData["Error"] = error;
+                return RedirectToAction(nameof(ConfiguracionInstitucional));
+            }
+
+            firmaUrl = await ImagenHelper.GuardarFirmaDibujadaAsync(_environment, "firmas", "jefe-institucional", model.FirmaDibujada);
+        }
+        else if (model.Firma is not null && model.Firma.Length > 0)
         {
             var error = ImagenHelper.Validar(model.Firma);
             if (error is not null)

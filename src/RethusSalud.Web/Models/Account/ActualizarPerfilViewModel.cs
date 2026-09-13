@@ -6,4 +6,5 @@ public class ActualizarPerfilViewModel
 {
     public string? Cargo { get; set; }
     public IFormFile? Firma { get; set; }
+    public string? FirmaDibujada { get; set; }
 }
