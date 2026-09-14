@@ -45,13 +45,13 @@ public class DocumentoServiceTests
         var contenidoFalso = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("esto no es un pdf"));
 
         await Assert.ThrowsAsync<AppValidationException>(() =>
-            servicio.CargarDocumentoAsync(1, TipoDocumentoAdjunto.CedulaAmpliada, "cedula.pdf", "application/pdf", contenidoFalso.Length, contenidoFalso));
+            servicio.CargarDocumentoAsync(1, "usuario-1", TipoDocumentoAdjunto.CedulaAmpliada, "cedula.pdf", "application/pdf", contenidoFalso.Length, contenidoFalso));
     }
 
     [Fact]
     public async Task RadicarAsync_lanza_excepcion_si_faltan_documentos_requeridos()
     {
-        var solicitante = new Solicitante { Id = 1, Nombres = "Franco", Apellidos = "Ovalle", CorreoElectronico = "franco@example.com" };
+        var solicitante = new Solicitante { Id = 1, ApplicationUserId = "usuario-1", Nombres = "Franco", Apellidos = "Ovalle", CorreoElectronico = "franco@example.com" };
         var profesion = CrearProfesion("Psicologia");
         var solicitud = Solicitud.IniciarBorrador(solicitante, profesion);
         solicitud.DatosAcademicos = new DatosAcademicos { NombreInstitucion = "Universidad de prueba" };

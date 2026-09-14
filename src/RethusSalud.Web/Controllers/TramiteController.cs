@@ -300,7 +300,7 @@ public class TramiteController : Controller
 
         try
         {
-            await _solicitudes.GuardarDatosAcademicosAsync(vm.SolicitudId, dto);
+            await _solicitudes.GuardarDatosAcademicosAsync(vm.SolicitudId, UserId, dto);
         }
         catch (AppValidationException ex)
         {
@@ -345,7 +345,7 @@ public class TramiteController : Controller
         try
         {
             await using var stream = archivo.OpenReadStream();
-            await _documentos.CargarDocumentoAsync(solicitudId, tipoDocumento, archivo.FileName, archivo.ContentType, archivo.Length, stream);
+            await _documentos.CargarDocumentoAsync(solicitudId, UserId, tipoDocumento, archivo.FileName, archivo.ContentType, archivo.Length, stream);
         }
         catch (AppValidationException ex)
         {

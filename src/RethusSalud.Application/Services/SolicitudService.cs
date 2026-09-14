@@ -125,6 +125,11 @@ public class SolicitudService
         var solicitud = await _solicitudes.GetByIdAsync(solicitudId)
             ?? throw new InvalidOperationException("Solicitud no encontrada.");
 
+        if (solicitud.Solicitante.ApplicationUserId != usuarioId)
+        {
+            throw new InvalidOperationException("Solicitud no encontrada.");
+        }
+
         try
         {
             solicitud.Corregir(usuarioId);
@@ -241,7 +246,7 @@ public class SolicitudService
         await _solicitudes.SaveChangesAsync();
     }
 
-    public async Task GuardarDatosAcademicosAsync(int solicitudId, DatosAcademicosDto dto)
+    public async Task GuardarDatosAcademicosAsync(int solicitudId, string usuarioId, DatosAcademicosDto dto)
     {
         var validacion = await _datosAcademicosValidator.ValidateAsync(dto);
         if (!validacion.IsValid)
@@ -251,6 +256,11 @@ public class SolicitudService
 
         var solicitud = await _solicitudes.GetByIdAsync(solicitudId)
             ?? throw new InvalidOperationException("Solicitud no encontrada.");
+
+        if (solicitud.Solicitante.ApplicationUserId != usuarioId)
+        {
+            throw new InvalidOperationException("Solicitud no encontrada.");
+        }
 
         solicitud.DatosAcademicos = new DatosAcademicos
         {

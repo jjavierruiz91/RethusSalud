@@ -50,6 +50,7 @@ public class DocumentoService
 
     public async Task CargarDocumentoAsync(
         int solicitudId,
+        string usuarioId,
         TipoDocumentoAdjunto tipo,
         string nombreArchivo,
         string contentType,
@@ -85,6 +86,11 @@ public class DocumentoService
         var solicitud = await _solicitudes.GetByIdAsync(solicitudId)
             ?? throw new InvalidOperationException("Solicitud no encontrada.");
 
+        if (solicitud.Solicitante.ApplicationUserId != usuarioId)
+        {
+            throw new InvalidOperationException("Solicitud no encontrada.");
+        }
+
         var rutaAlmacenamiento = await _storage.GuardarArchivoAsync(solicitudId, tipo, nombreArchivo, contenido);
 
         var existente = solicitud.Archivos.FirstOrDefault(a => a.TipoDocumento == tipo);
@@ -119,6 +125,11 @@ public class DocumentoService
     {
         var solicitud = await _solicitudes.GetByIdAsync(solicitudId)
             ?? throw new InvalidOperationException("Solicitud no encontrada.");
+
+        if (solicitud.Solicitante.ApplicationUserId != usuarioId)
+        {
+            throw new InvalidOperationException("Solicitud no encontrada.");
+        }
 
         var requeridos = DocumentosRequeridos(solicitud);
         var faltantes = requeridos.Where(r => solicitud.Archivos.All(a => a.TipoDocumento != r)).ToList();
