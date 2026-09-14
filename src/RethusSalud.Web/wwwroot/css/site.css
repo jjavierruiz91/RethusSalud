@@ -1526,10 +1526,12 @@ body {
 
   .auth-aside {
     padding: 2.5rem 2rem;
+    order: 2;
   }
 
   .auth-form-panel {
     padding: 2.5rem 2rem;
+    order: 1;
   }
 }
 
@@ -2056,6 +2058,33 @@ body {
   max-height: none;
 }
 
+@media (max-width: 767.98px) {
+  /* En pantallas angostas los filtros y las tarjetas de resumen se apilan y ocupan
+     toda la altura disponible; abandonamos el scroll interno de la tabla y dejamos
+     que la pagina completa haga scroll, o la tabla queda colapsada en 0px. */
+  .app-panel--compacta {
+    flex: none;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .app-panel--compacta form#formLote {
+    flex: none;
+    min-height: 0;
+  }
+
+  .app-panel--compacta .tabla-scroll {
+    flex: none;
+    min-height: 0;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .tabla-scroll thead th {
+    position: static;
+  }
+}
+
 .app-content .table thead th {
   border-bottom: 2px solid var(--rethus-border);
   color: var(--rethus-muted);
@@ -2422,8 +2451,11 @@ body {
 }
 
 @media (max-width: 575.98px) {
+  .wizard-steps { gap: 0; flex-wrap: nowrap; }
+  .wizard-step { min-width: 0; }
   .wizard-step-label { display: none; }
-  .wizard-step-connector { width: 20px; }
+  .wizard-step-number { width: 30px; height: 30px; font-size: 0.8rem; }
+  .wizard-step-connector { width: 14px; margin-bottom: 0; flex: 0 0 auto; }
 }
 
 .wizard-subheading {

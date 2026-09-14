@@ -120,7 +120,12 @@ try
 
     app.UseSerilogRequestLogging();
 
-    app.UseHttpsRedirection();
+    // Deja apagar la redireccion a HTTPS en despliegues sin certificado aun (ej. pruebas internas por HTTP).
+    if (builder.Configuration.GetValue("UseHttpsRedirection", true))
+    {
+        app.UseHttpsRedirection();
+    }
+
     app.UseStaticFiles();
 
     app.UseStatusCodePagesWithReExecute("/Error/{0}");

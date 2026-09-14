@@ -81,8 +81,9 @@ for i in range(50):
         documentos.append((4, "Tarjeta profesional.pdf"))
 
     for tipo_doc, nombre_archivo in documentos:
+        ruta = f"Documentos/{cedula}/{nombre_archivo}"
         lines.append(f"""INSERT INTO ArchivosAdjuntos (SolicitudId, TipoDocumento, NombreArchivo, RutaAlmacenamiento, ContentType, TamanoBytes, FechaCarga)
-    VALUES (@solid, {tipo_doc}, '{nombre_archivo}', 'seed/{{0}}/{tipo_doc}.pdf', 'application/pdf', 1024, DATEADD(day, -{dias_atras}, SYSUTCDATETIME()));""".replace("{0}", str(i+1)))
+    VALUES (@solid, {tipo_doc}, '{nombre_archivo}', '{ruta}', 'application/pdf', 1024, DATEADD(day, -{dias_atras}, SYSUTCDATETIME()));""")
 
     lines.append("")
 

@@ -230,8 +230,15 @@ public class RevisionController : Controller
     [HttpGet]
     public async Task<IActionResult> DescargarArchivo(int archivoId)
     {
-        var (archivo, contenido) = await _documentos.AbrirArchivoAsync(archivoId);
-        return File(contenido, archivo.ContentType, archivo.NombreArchivo);
+        try
+        {
+            var (archivo, contenido) = await _documentos.AbrirArchivoAsync(archivoId);
+            return File(contenido, archivo.ContentType, archivo.NombreArchivo);
+        }
+        catch (FileNotFoundException)
+        {
+            return NotFound();
+        }
     }
 
     [HttpPost]
