@@ -64,7 +64,7 @@
         <label class="form-label small text-muted mb-1">Nombre o identificación</label>
         <input type="text" name="NumeroIdentificacion" class="form-control" placeholder="Nombre o identificación" value="@Model.Filtro.NumeroIdentificacion" />
     </div>
-    <div class="col-6 col-sm-4 col-lg-2">
+    <div class="col-12 col-sm-4 col-lg-2">
         <label class="form-label small text-muted mb-1">Tipo de trámite</label>
         <select name="TipoTramite" class="form-select" onchange="this.form.submit()">
             <option value="">Todos</option>
@@ -81,7 +81,7 @@
             }
         </select>
     </div>
-    <div class="col-6 col-sm-4 col-lg-2">
+    <div class="col-12 col-sm-4 col-lg-2">
         <label class="form-label small text-muted mb-1">Etapa</label>
         <select name="Etapa" class="form-select" onchange="this.form.submit()">
             <option value="">Todas</option>
@@ -98,7 +98,7 @@
             }
         </select>
     </div>
-    <div class="col-6 col-sm-4 col-lg-2">
+    <div class="col-12 col-sm-4 col-lg-2">
         <label class="form-label small text-muted mb-1">Estado</label>
         <select name="Estado" class="form-select" onchange="this.form.submit()">
             <option value="">Todos</option>
@@ -115,15 +115,15 @@
             }
         </select>
     </div>
-    <div class="col-6 col-sm-6 col-lg-2">
+    <div class="col-12 col-sm-6 col-lg-2">
         <label class="form-label small text-muted mb-1">Desde</label>
         <input type="date" name="Desde" class="form-control" value="@Model.Filtro.Desde?.ToString("yyyy-MM-dd")" />
     </div>
-    <div class="col-6 col-sm-6 col-lg-2">
+    <div class="col-12 col-sm-6 col-lg-2">
         <label class="form-label small text-muted mb-1">Hasta</label>
         <input type="date" name="Hasta" class="form-control" value="@Model.Filtro.Hasta?.ToString("yyyy-MM-dd")" />
     </div>
-    <div class="col-12 d-flex flex-wrap gap-2">
+    <div class="col-12 d-flex flex-wrap gap-2 filtro-bar-actions">
         <button type="submit" class="btn btn-outline-primary">Buscar</button>
         <a asp-action="SeguimientoBandeja" class="btn btn-outline-secondary">Limpiar</a>
         <a asp-action="ExportarSeguimientoExcel"
@@ -137,7 +137,7 @@
     </div>
 </form>
 
-<div class="table-responsive tabla-scroll">
+<div class="table-responsive tabla-scroll d-none d-md-block">
     <table class="table">
         <thead>
             <tr>
@@ -190,6 +190,42 @@
             }
         </tbody>
     </table>
+</div>
+
+<div class="mobile-card-list d-md-none">
+    @foreach (var solicitud in Model.Pagina.Items)
+    {
+        var badgeClassMobile = solicitud.Estado switch
+        {
+            EstadoSolicitud.Aprobado => "app-badge-success",
+            EstadoSolicitud.Rechazado => "app-badge-danger",
+            EstadoSolicitud.EnProceso => "app-badge-warning",
+            _ => "app-badge-muted"
+        };
+        <div class="mobile-record-card">
+            <div class="mobile-record-card-header">
+                <span class="mobile-record-card-title">@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</span>
+                <span class="app-badge @badgeClassMobile">@EstadoDisplay.Texto(solicitud.Estado)</span>
+            </div>
+            <div class="mobile-record-card-meta">CC @solicitud.Solicitante.NumeroIdentificacion &middot; @solicitud.TipoTramite</div>
+            <div class="mobile-record-card-meta">Etapa @(solicitud.EtapaActual?.ToString() ?? "-") &middot; @TiempoDisplay.Transcurrido(solicitud.FechaCreacion)</div>
+            <div class="mobile-record-card-meta mobile-record-card-meta--muted">
+                Consecutivo: @(solicitud.Consecutivo is not null ? solicitud.Consecutivo.Numero : "No asignado")
+                &middot; Actualizada @solicitud.FechaActualizacion.ToLocalTime().ToString("dd MMM yy, HH:mm")
+            </div>
+            <div class="mobile-record-card-actions mobile-record-card-actions--split">
+                <a class="btn btn-sm btn-outline-primary" asp-action="SeguimientoDetalle" asp-route-id="@solicitud.Id">Ver seguimiento</a>
+                @if (solicitud.Estado == EstadoSolicitud.Aprobado)
+                {
+                    <a class="btn btn-sm btn-primary" asp-controller="Revision" asp-action="DescargarCertificado" asp-route-id="@solicitud.Id">Descargar</a>
+                }
+            </div>
+        </div>
+    }
+    @if (!Model.Pagina.Items.Any())
+    {
+        <p class="text-center text-muted mb-0">Sin resultados. No hay informacion disponible que coincida con tu busqueda.</p>
+    }
 </div>
 
 <partial name="_Pagination" model="paginacion" />

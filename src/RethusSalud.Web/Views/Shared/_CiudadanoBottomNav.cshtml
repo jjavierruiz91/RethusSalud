@@ -1,0 +1,24 @@
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+<nav class="app-bottom-nav" aria-label="Navegación principal">
+    <a class="app-bottom-nav-item @(currentController == "Home" && currentAction == "Index" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">
+        <span class="app-bottom-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 11.5 12 4l8 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v9h12v-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span>Inicio</span>
+    </a>
+    <a class="app-bottom-nav-item @(currentController == "Tramite" ? "active" : "")" asp-area="" asp-controller="Tramite" asp-action="Dashboard">
+        <span class="app-bottom-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M7 3h7l4 4v14H7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v4h4" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </span>
+        <span>Mi trámite</span>
+    </a>
+    <button type="button" class="app-bottom-nav-item" data-bs-toggle="modal" data-bs-target="#miPerfilModal">
+        <span class="app-bottom-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M4 20c0-3.9 3.6-7 8-7s8 3.1 8 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </span>
+        <span>Perfil</span>
+    </button>
+</nav>

@@ -68,7 +68,7 @@
     <h2 class="config-panel-title">Firmantes por etapa</h2>
     <p class="text-muted small mb-2">Nombre, cargo y firma de los funcionarios que aparecen en el bloque de firmas de cada documento generado.</p>
 
-    <div class="table-responsive tabla-scroll">
+    <div class="table-responsive tabla-scroll d-none d-md-block">
         <table class="table align-middle">
             <thead>
                 <tr>
@@ -111,6 +111,35 @@
                 }
             </tbody>
         </table>
+    </div>
+
+    <div class="mobile-card-list d-md-none">
+        @foreach (var funcionario in Model.Funcionarios)
+        {
+            <div class="mobile-record-card">
+                <div class="mobile-record-card-header">
+                    @if (!string.IsNullOrEmpty(funcionario.FirmaUrl))
+                    {
+                        <img src="@funcionario.FirmaUrl" alt="Firma de @funcionario.Nombre" class="firma-thumb firma-thumb--sm" />
+                    }
+                    <span class="mobile-record-card-title">@funcionario.Nombre</span>
+                    <span class="app-badge app-badge-muted">@EtiquetaRol(funcionario.Rol)</span>
+                </div>
+                @if (string.IsNullOrEmpty(funcionario.FirmaUrl))
+                {
+                    <div class="mobile-record-card-meta"><span class="app-badge app-badge-warning">Sin firma</span></div>
+                }
+                <div class="mobile-record-card-meta">@(string.IsNullOrEmpty(funcionario.Cargo) ? "Sin cargo asignado" : funcionario.Cargo)</div>
+                <div class="mobile-record-card-meta mobile-record-card-meta--muted"><a href="mailto:@funcionario.Email">@funcionario.Email</a></div>
+                <div class="mobile-record-card-actions">
+                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editarFirmante-@funcionario.Id">Editar</button>
+                </div>
+            </div>
+        }
+        @if (!Model.Funcionarios.Any())
+        {
+            <p class="text-center text-muted mb-0">No hay funcionarios asignados a etapas todavía.</p>
+        }
     </div>
 </div>
 </div>

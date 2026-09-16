@@ -5,7 +5,10 @@
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=overlays-content" />
+    <meta name="theme-color" content="#0b3c66" />
+    <link rel="manifest" href="~/manifest.json" />
+    <link rel="apple-touch-icon" href="~/img/icons/apple-touch-icon.png" />
     <title>@ViewData["Title"] - Rethus</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -124,7 +127,7 @@
         <div class="app-main">
             <header class="app-topbar">
                 <div class="app-topbar-left">
-                    <button type="button" class="app-sidebar-toggle" id="appSidebarToggle" aria-label="Abrir menu">
+                    <button type="button" class="app-sidebar-toggle js-sidebar-toggle" id="appSidebarToggle" aria-label="Abrir menu">
                         <svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                     </button>
                     <span class="app-topbar-title">@ViewData["Title"]</span>
@@ -208,6 +211,21 @@
                 }
                 @RenderBody()
             </main>
+
+            @if (isCiudadano)
+            {
+                @await Html.PartialAsync("_CiudadanoBottomNav")
+            }
+            else if (isSuperAdmin)
+            {
+                @await Html.PartialAsync("_SuperAdminBottomNav")
+            }
+            else if (isFuncionario)
+            {
+                @await Html.PartialAsync("_FuncionarioBottomNav")
+            }
+
+            @await Html.PartialAsync("_InstallAppBanner")
         </div>
     </div>
 
@@ -283,79 +301,7 @@
         </div>
     </div>
 
-    <div class="modal fade app-account-modal" id="miPerfilModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <form asp-controller="Account" asp-action="ActualizarMiPerfil" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-                    <div class="modal-header">
-                        <span class="app-account-modal-icon">
-                            @if (!string.IsNullOrEmpty(miFotoUrl))
-                            {
-                                <img src="@miFotoUrl" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:0.9rem" />
-                            }
-                            else
-                            {
-                                @userInitial
-                            }
-                        </span>
-                        <div class="app-account-modal-heading">
-                            <h5 class="modal-title">Mi perfil</h5>
-                            <p class="app-account-modal-subtitle">Tu información personal usada en todo el sistema.</p>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        @if (isFuncionario || isSuperAdmin)
-                        {
-                            <div class="auth-field">
-                                <label class="auth-label">Foto de perfil</label>
-                                <div class="app-signature-upload">
-                                    <div class="app-signature-preview app-photo-preview" id="fotoPreviewBox">
-                                        @if (!string.IsNullOrEmpty(miFotoUrl))
-                                        {
-                                            <img src="@miFotoUrl" alt="Foto actual" />
-                                        }
-                                        else
-                                        {
-                                            <span class="app-signature-preview-empty">
-                                                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 20c0-3.9 3.6-7 8-7s8 3.1 8 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-                                            </span>
-                                        }
-                                    </div>
-                                    <div class="app-signature-upload-body">
-                                        <input name="Foto" type="file" accept="image/jpeg,image/png" data-signature-preview="fotoPreviewBox" />
-                                        <div class="app-signature-upload-hint">JPG o PNG, máx. 5 MB</div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                        <div class="auth-field">
-                            <label class="auth-label">Nombre completo</label>
-                            <input name="NombreCompleto" class="form-control auth-input" value="@currentAppUser?.NombreCompleto" required />
-                        </div>
-                        <div class="auth-field">
-                            <label class="auth-label">Número de identificación</label>
-                            <input name="NumeroIdentificacion" class="form-control auth-input" value="@currentAppUser?.NumeroIdentificacion" placeholder="Ej. 1065xxxxxx" />
-                        </div>
-                        <div class="auth-field">
-                            <label class="auth-label">Correo electrónico</label>
-                            <input name="Email" type="email" class="form-control auth-input" value="@currentAppUser?.Email" required />
-                            <div class="app-signature-upload-hint mt-1">El correo es también tu usuario para iniciar sesión.</div>
-                        </div>
-                        <div class="auth-field mb-0">
-                            <label class="auth-label">Teléfono</label>
-                            <input name="Telefono" type="tel" class="form-control auth-input" value="@currentAppUser?.Telefono" placeholder="Ej. 3001234567" />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn auth-submit-btn">Guardar cambios</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    @await Html.PartialAsync("_MiPerfilModal")
 
     @if (isFuncionario)
     {

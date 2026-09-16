@@ -69,7 +69,7 @@
         <label class="form-label small text-muted mb-1">Nombre o identificación</label>
         <input type="text" name="NumeroIdentificacion" class="form-control" placeholder="Nombre o identificación" value="@Model.Filtro.NumeroIdentificacion" />
     </div>
-    <div class="col-6 col-sm-4 col-lg-2">
+    <div class="col-12 col-sm-4 col-lg-2">
         <label class="form-label small text-muted mb-1">Tipo de trámite</label>
         <select name="TipoTramite" class="form-select" onchange="this.form.submit()">
             <option value="">Todos</option>
@@ -86,7 +86,7 @@
             }
         </select>
     </div>
-    <div class="col-6 col-sm-4 col-lg-2">
+    <div class="col-12 col-sm-4 col-lg-2">
         <label class="form-label small text-muted mb-1">Etapa</label>
         <select name="Etapa" class="form-select" onchange="this.form.submit()">
             <option value="">Todas</option>
@@ -103,7 +103,7 @@
             }
         </select>
     </div>
-    <div class="col-6 col-sm-4 col-lg-2">
+    <div class="col-12 col-sm-4 col-lg-2">
         <label class="form-label small text-muted mb-1">Estado</label>
         <select name="Estado" class="form-select" onchange="this.form.submit()">
             <option value="">Todos</option>
@@ -120,13 +120,13 @@
             }
         </select>
     </div>
-    <div class="col-6 col-sm-6 col-lg-3">
-        <label class="form-label small text-muted mb-1">&nbsp;</label>
+    <div class="col-12 col-sm-6 col-lg-3">
+        <label class="form-label small text-muted mb-1 d-none d-sm-block">&nbsp;</label>
         <button type="submit" class="btn btn-outline-primary w-100">Buscar</button>
     </div>
 </form>
 
-<div class="table-responsive tabla-scroll">
+<div class="table-responsive tabla-scroll d-none d-md-block">
     <table class="table align-middle">
         <thead>
             <tr>
@@ -166,6 +166,31 @@
             }
         </tbody>
     </table>
+</div>
+
+<div class="mobile-card-list d-md-none">
+    @foreach (var solicitud in Model.Pagina.Items)
+    {
+        <div class="mobile-record-card">
+            <div class="mobile-record-card-header">
+                <span class="mobile-record-card-title">@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</span>
+                <span class="app-badge @BadgeEstado(solicitud.Estado)">@EstadoDisplay.Texto(solicitud.Estado)</span>
+            </div>
+            <div class="mobile-record-card-meta">CC @solicitud.Solicitante.NumeroIdentificacion &middot; @solicitud.TipoTramite</div>
+            <div class="mobile-record-card-meta">Etapa @(solicitud.EtapaActual?.ToString() ?? "-") &middot; @TiempoDisplay.Transcurrido(solicitud.FechaCreacion)</div>
+            <div class="mobile-record-card-meta mobile-record-card-meta--muted">
+                Consecutivo: @(solicitud.Consecutivo is not null ? solicitud.Consecutivo.Numero : "No asignado")
+                &middot; Actualizada @solicitud.FechaActualizacion.ToLocalTime().ToString("dd MMM yy, HH:mm")
+            </div>
+            <div class="mobile-record-card-actions">
+                <a class="btn btn-sm btn-primary" asp-action="Detalle" asp-route-id="@solicitud.Id">Ver seguimiento</a>
+            </div>
+        </div>
+    }
+    @if (!Model.Pagina.Items.Any())
+    {
+        <p class="text-center text-muted mb-0">Sin resultados. No hay solicitudes que coincidan con tu busqueda.</p>
+    }
 </div>
 
 <partial name="_Pagination" model="paginacion" />

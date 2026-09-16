@@ -113,12 +113,12 @@
         </div>
         <div class="col-md-4 mb-3">
             <label asp-for="TelefonoFijo" class="form-label"></label>
-            <input asp-for="TelefonoFijo" class="form-control" />
+            <input asp-for="TelefonoFijo" class="form-control" type="tel" inputmode="tel" autocomplete="tel" />
             <span asp-validation-for="TelefonoFijo" class="text-danger"></span>
         </div>
         <div class="col-md-4 mb-3">
             <label asp-for="Celular" class="form-label"></label>
-            <input asp-for="Celular" class="form-control" />
+            <input asp-for="Celular" class="form-control" type="tel" inputmode="tel" autocomplete="tel" />
             <span asp-validation-for="Celular" class="text-danger"></span>
         </div>
     </div>
@@ -126,7 +126,7 @@
     <div class="row">
         <div class="col-md-6 mb-3">
             <label asp-for="CorreoElectronico" class="form-label"></label>
-            <input asp-for="CorreoElectronico" class="form-control" />
+            <input asp-for="CorreoElectronico" class="form-control" type="email" inputmode="email" autocomplete="email" />
             <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
         </div>
         <div class="col-md-6 mb-3">
@@ -136,7 +136,9 @@
         </div>
     </div>
 
-    <button type="submit" class="btn auth-submit-btn">Siguiente</button>
+    <div class="wizard-mobile-actions">
+        <button type="submit" class="btn auth-submit-btn">Siguiente</button>
+    </div>
 </form>
 </div>
 

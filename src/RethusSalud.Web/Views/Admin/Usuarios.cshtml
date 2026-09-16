@@ -32,12 +32,14 @@
 </div>
 
 <div class="app-panel">
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-        <form method="get" class="row g-2" data-autosubmit>
-            <div class="col-auto">
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-3">
+        <form method="get" class="row g-2 flex-grow-1 filtro-bar" data-autosubmit>
+            <div class="col-12 col-sm-6 col-lg-4">
+                <label class="form-label small text-muted mb-1 d-md-none">Nombre</label>
                 <input type="text" name="nombre" class="form-control" placeholder="Digite el nombre" value="@ViewBag.Nombre" />
             </div>
-            <div class="col-auto">
+            <div class="col-12 col-sm-6 col-lg-3">
+                <label class="form-label small text-muted mb-1 d-md-none">Rol</label>
                 <select name="rol" class="form-select filter-role-select" onchange="this.form.submit()">
                     <option value="">Roles</option>
                     @foreach (var r in roles)
@@ -53,15 +55,15 @@
                     }
                 </select>
             </div>
-            <div class="col-auto">
+            <div class="col-12 col-sm-auto d-flex flex-wrap gap-2 filtro-bar-actions">
                 <button type="submit" class="btn btn-outline-primary">Buscar</button>
                 <a asp-action="Usuarios" class="btn btn-outline-secondary">Limpiar</a>
             </div>
         </form>
-        <button type="button" class="btn auth-submit-btn" data-bs-toggle="modal" data-bs-target="#createUserModal">+ Crear usuario</button>
+        <button type="button" class="btn auth-submit-btn usuarios-crear-btn" data-bs-toggle="modal" data-bs-target="#createUserModal">+ Crear usuario</button>
     </div>
 
-    <div class="table-responsive">
+    <div class="table-responsive d-none d-md-block">
         <table class="table">
             <thead>
                 <tr>
@@ -126,6 +128,55 @@
                 }
             </tbody>
         </table>
+    </div>
+
+    <div class="mobile-card-list d-md-none">
+        @foreach (var usuario in Model)
+        {
+            <div class="mobile-record-card">
+                <div class="mobile-record-card-header">
+                    @if (!string.IsNullOrEmpty(usuario.FotoUrl))
+                    {
+                        <img src="@usuario.FotoUrl" alt="Foto de @usuario.Nombre" class="app-avatar app-avatar-img" style="width:36px;height:36px" />
+                    }
+                    else
+                    {
+                        <span class="app-avatar" style="width:36px;height:36px;font-size:0.85rem">@(usuario.Nombre.Length > 0 ? usuario.Nombre[0].ToString().ToUpperInvariant() : "?")</span>
+                    }
+                    <span class="mobile-record-card-title">@usuario.Nombre</span>
+                    <span class="app-badge @(usuario.Activo ? "app-badge-success" : "app-badge-muted")">@(usuario.Activo ? "Activo" : "Inactivo")</span>
+                </div>
+                <div class="mobile-record-card-meta">@usuario.Email</div>
+                <div class="mobile-record-card-meta mobile-record-card-meta--muted">Rol: @usuario.Rol</div>
+                <div class="mobile-record-card-actions mobile-record-card-actions--split">
+                    <button type="button" class="icon-btn icon-btn-primary" data-bs-toggle="modal" data-bs-target="#editModal-@usuario.Id" title="Editar usuario">
+                        @Html.Raw(RowIcon("edit"))
+                    </button>
+                    <button type="button" class="icon-btn icon-btn-secondary" data-bs-toggle="modal" data-bs-target="#passwordModal-@usuario.Id" title="Cambiar contraseña">
+                        @Html.Raw(RowIcon("key"))
+                    </button>
+                    @if (usuario.Activo)
+                    {
+                        <button type="button" class="icon-btn icon-btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeactivate-@usuario.Id" title="Desactivar usuario">
+                            @Html.Raw(RowIcon("power"))
+                        </button>
+                    }
+                    else
+                    {
+                        <form asp-action="ToggleActivo" method="post" class="m-0">
+                            <input type="hidden" name="id" value="@usuario.Id" />
+                            <button type="submit" class="icon-btn icon-btn-success" title="Activar usuario">
+                                @Html.Raw(RowIcon("power"))
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        }
+        @if (!Model.Any())
+        {
+            <p class="text-center text-muted mb-0">Sin resultados.</p>
+        }
     </div>
 </div>
 

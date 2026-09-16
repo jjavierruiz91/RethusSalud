@@ -28,7 +28,7 @@
         <label class="form-label small text-muted mb-1">Nombre o identificación</label>
         <input type="text" name="NumeroIdentificacion" class="form-control" placeholder="Nombre o identificación" value="@Model.Filtro.NumeroIdentificacion" />
     </div>
-    <div class="col-6 col-sm-4 col-lg-2">
+    <div class="col-12 col-sm-4 col-lg-2">
         <label class="form-label small text-muted mb-1">Tipo de trámite</label>
         <select name="TipoTramite" class="form-select" onchange="this.form.submit()">
             <option value="">Todos</option>
@@ -45,15 +45,15 @@
             }
         </select>
     </div>
-    <div class="col-6 col-sm-6 col-lg-2">
+    <div class="col-12 col-sm-6 col-lg-2">
         <label class="form-label small text-muted mb-1">Desde</label>
         <input type="date" name="Desde" class="form-control" value="@Model.Filtro.Desde?.ToString("yyyy-MM-dd")" />
     </div>
-    <div class="col-6 col-sm-6 col-lg-2">
+    <div class="col-12 col-sm-6 col-lg-2">
         <label class="form-label small text-muted mb-1">Hasta</label>
         <input type="date" name="Hasta" class="form-control" value="@Model.Filtro.Hasta?.ToString("yyyy-MM-dd")" />
     </div>
-    <div class="col-12 d-flex flex-wrap gap-2">
+    <div class="col-12 d-flex flex-wrap gap-2 filtro-bar-actions">
         <button type="submit" class="btn btn-outline-primary">Buscar</button>
         <a asp-action="Index" class="btn btn-outline-secondary">Limpiar</a>
     </div>
@@ -69,7 +69,7 @@
         </div>
     </div>
 
-    <div class="table-responsive tabla-scroll">
+    <div class="table-responsive tabla-scroll d-none d-md-block">
         <table class="table align-middle">
             <thead>
                 <tr>
@@ -109,6 +109,39 @@
             </tbody>
         </table>
     </div>
+
+    <div class="mobile-card-list d-md-none">
+        @if (Model.Pagina.Items.Any())
+        {
+            <div class="form-check mb-1">
+                <input type="checkbox" class="form-check-input" id="seleccionarTodoMobile" />
+                <label class="form-check-label small text-muted" for="seleccionarTodoMobile">Seleccionar todo</label>
+            </div>
+        }
+        @foreach (var solicitud in Model.Pagina.Items)
+        {
+            <div class="mobile-record-card">
+                <div class="mobile-record-card-header">
+                    <input type="checkbox" class="form-check-input seleccion-item" name="ids" value="@solicitud.Id" />
+                    <span class="mobile-record-card-title">@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</span>
+                    <span class="app-badge app-badge-success">Aprobado</span>
+                </div>
+                <div class="mobile-record-card-meta">CC @solicitud.Solicitante.NumeroIdentificacion &middot; @solicitud.TipoTramite</div>
+                <div class="mobile-record-card-meta mobile-record-card-meta--muted">
+                    Folio: @(solicitud.Consecutivo is not null ? solicitud.Consecutivo.Numero : "No asignado")
+                    &middot; Aprobada @solicitud.FechaActualizacion.ToLocalTime().ToString("dd MMM yy, HH:mm")
+                </div>
+                <div class="mobile-record-card-actions mobile-record-card-actions--split">
+                    <a class="btn btn-sm btn-outline-primary" asp-controller="Revision" asp-action="Detalle" asp-route-id="@solicitud.Id">Ver detalle</a>
+                    <a class="btn btn-sm btn-primary" asp-controller="Revision" asp-action="DescargarCertificado" asp-route-id="@solicitud.Id">Descargar</a>
+                </div>
+            </div>
+        }
+        @if (!Model.Pagina.Items.Any())
+        {
+            <p class="text-center text-muted mb-0">Sin resultados. No hay certificados aprobados que coincidan con tu búsqueda.</p>
+        }
+    </div>
 </form>
 
 <partial name="_Pagination" model="paginacion" />
@@ -117,7 +150,7 @@
 <script>
     (function () {
         var checkboxes = document.querySelectorAll('.seleccion-item');
-        var seleccionarTodo = document.getElementById('seleccionarTodo');
+        var seleccionarTodoBotones = [document.getElementById('seleccionarTodo'), document.getElementById('seleccionarTodoMobile')].filter(Boolean);
         var barra = document.getElementById('barraLote');
         var contador = document.getElementById('contadorSeleccion');
 
@@ -129,11 +162,12 @@
 
         checkboxes.forEach(function (cb) { cb.addEventListener('change', actualizar); });
 
-        if (seleccionarTodo) {
+        seleccionarTodoBotones.forEach(function (seleccionarTodo) {
             seleccionarTodo.addEventListener('change', function () {
                 checkboxes.forEach(function (cb) { cb.checked = seleccionarTodo.checked; });
+                seleccionarTodoBotones.forEach(function (otro) { otro.checked = seleccionarTodo.checked; });
                 actualizar();
             });
-        }
+        });
     })();
 </script>

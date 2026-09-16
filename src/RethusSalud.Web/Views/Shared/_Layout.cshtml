@@ -2,7 +2,10 @@
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b3c66" />
+    <link rel="manifest" href="~/manifest.json" />
+    <link rel="apple-touch-icon" href="~/img/icons/apple-touch-icon.png" />
     <title>@ViewData["Title"] - Rethus</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -108,7 +111,7 @@
         </main>
     </div>
 
-    <footer class="site-footer">
+    <footer class="site-footer @(currentController == "Tramite" || currentController == "Consulta" ? "site-footer--tramite" : "")">
         <div class="container">
             <div class="row g-4 site-footer-top">
                 <div class="col-lg-4">
@@ -157,6 +160,28 @@
             </div>
         </div>
     </footer>
+
+    @if (User.Identity?.IsAuthenticated == true && User.IsInRole(RethusSalud.Domain.Constants.Roles.Ciudadano) && currentController != "Tramite")
+    {
+        @await Html.PartialAsync("_CiudadanoBottomNav")
+        @await Html.PartialAsync("_MiPerfilModal")
+    }
+    else if (User.IsInRole(RethusSalud.Domain.Constants.Roles.SuperAdmin))
+    {
+        @await Html.PartialAsync("_SuperAdminBottomNav")
+    }
+    else if (User.IsInRole(RethusSalud.Domain.Constants.Roles.FuncionarioEtapa1)
+        || User.IsInRole(RethusSalud.Domain.Constants.Roles.FuncionarioEtapa2)
+        || User.IsInRole(RethusSalud.Domain.Constants.Roles.FuncionarioEtapa3)
+        || User.IsInRole(RethusSalud.Domain.Constants.Roles.Inventario))
+    {
+        @await Html.PartialAsync("_FuncionarioBottomNav")
+    }
+    else if (User.Identity?.IsAuthenticated != true)
+    {
+        @await Html.PartialAsync("_VisitanteBottomNav")
+    }
+
     <div class="site-loading-overlay" id="siteLoadingOverlay" aria-hidden="true">
         <div class="site-loading-badge">
             <span class="site-loading-ring"></span>

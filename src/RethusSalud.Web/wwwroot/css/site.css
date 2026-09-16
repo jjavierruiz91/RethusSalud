@@ -727,6 +727,18 @@ body {
   margin: 1.5rem 0 0.25rem;
 }
 
+@media (max-width: 767.98px) {
+  .consulta-panel {
+    margin: 1rem auto;
+  }
+
+  .consulta-panel-logo {
+    width: 76px;
+    height: 76px;
+    margin: 0 auto 0.5rem;
+  }
+}
+
 /* ---- Loading overlay (branded) ---- */
 
 .site-loading-overlay {
@@ -794,6 +806,12 @@ body {
   top: 56px;
   z-index: 20;
   background: #fff;
+}
+
+@media (max-width: 767.98px) {
+  .home-subnav {
+    position: static;
+  }
 }
 
 .home-subnav a.active {
@@ -955,6 +973,26 @@ body {
   color: rgba(255, 255, 255, 0.7);
   border-top: 4px solid transparent;
   border-image: linear-gradient(90deg, var(--rethus-blue), var(--rethus-teal-light)) 1;
+}
+
+@media (max-width: 767.98px) {
+  .site-footer--tramite {
+    display: none;
+  }
+}
+
+@media (max-width: 991.98px) {
+  body:has(> .app-bottom-nav) .site-footer-bottom {
+    padding-bottom: calc(0.9rem + 60px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Cuando el pie de página va oculto (Tramite/Consulta) no queda ese
+     colchón de espacio, así que el propio contenido necesita el padding
+     para no quedar tapado por la barra inferior fija. Bootstrap define
+     .pb-3 con !important, así que hay que igualarlo aquí. */
+  body:has(> .app-bottom-nav):has(> .site-footer--tramite) > .container > main.pb-3 {
+    padding-bottom: calc(1.25rem + 60px + env(safe-area-inset-bottom, 0px)) !important;
+  }
 }
 
 .site-footer-top {
@@ -1414,20 +1452,24 @@ body {
 
 .auth-password-toggle {
   position: absolute;
-  right: 0.7rem;
+  right: 0.15rem;
   top: 50%;
   transform: translateY(-50%);
-  width: 22px;
-  height: 22px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 0;
   border: none;
   background: none;
   color: var(--rethus-muted);
+  touch-action: manipulation;
 }
 
 .auth-password-toggle svg {
-  width: 100%;
-  height: 100%;
+  width: 20px;
+  height: 20px;
 }
 
 .auth-password-toggle:hover,
@@ -1535,18 +1577,46 @@ body {
   }
 }
 
+@media (max-width: 767.98px) {
+  .auth-body {
+    padding: 1rem 1rem;
+  }
+
+  /* Registro: recortar elementos decorativos para que el formulario
+     y el botón "Registrarse" quepan sin necesidad de bajar tanto scroll. */
+  .auth-card-wrapper--compact .auth-aside,
+  .auth-eyebrow--compact,
+  .auth-form-footer--compact {
+    display: none;
+  }
+
+  .auth-form-logo--compact {
+    width: 84px;
+    height: 84px;
+    margin: 0 auto 0.4rem;
+  }
+
+  .auth-form-panel:has(.auth-form-logo--compact) {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
 /* ---- App shell (sidebar + topbar for internal/authenticated pages) ---- */
 
 .app-body {
   margin: 0;
   background: var(--rethus-bg-soft);
   height: 100vh;
+  height: 100svh;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 .app-shell {
   display: flex;
   height: 100vh;
+  height: 100svh;
 }
 
 .app-sidebar {
@@ -1557,6 +1627,7 @@ body {
   background: #fff;
   border-right: 1px solid var(--rethus-border);
   height: 100vh;
+  height: 100svh;
   overflow-y: auto;
 }
 
@@ -1687,6 +1758,7 @@ body {
   flex-direction: column;
   min-width: 0;
   height: 100vh;
+  height: 100svh;
   overflow: hidden;
 }
 
@@ -1945,6 +2017,8 @@ body {
   flex-direction: column;
   padding: 1.25rem 1.5rem;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .app-sidebar-backdrop {
@@ -1991,6 +2065,207 @@ body {
   .app-topbar-user-info {
     display: none;
   }
+}
+
+/* ---- Bottom tab bar (mobile app-like nav, ciudadano role) ---- */
+
+.app-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 991.98px) {
+  .app-main:has(.app-bottom-nav) .app-content {
+    padding-bottom: calc(1.25rem + 60px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .app-bottom-nav {
+    display: flex;
+    align-items: stretch;
+    flex: none;
+    position: fixed;
+    left: 0;
+    right: 0;
+    /* Algunos navegadores móviles calculan bottom:0 contra un viewport más
+       alto que el que realmente se ve (la barra de direcciones sigue
+       visible), dejando la barra a medio cortar hasta el primer scroll.
+       --app-viewport-gap lo mide en JS (site.js) y corrige el offset. */
+    bottom: var(--app-viewport-gap, 0px);
+    z-index: 25;
+    height: calc(60px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: #fff;
+    border-top: 1px solid var(--rethus-border);
+    box-shadow: 0 -6px 20px rgba(11, 60, 102, 0.08);
+  }
+
+  .app-bottom-nav-item {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    border: none;
+    background: none;
+    padding: 0.4rem 0.25rem;
+    color: var(--rethus-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-decoration: none;
+    font-family: inherit;
+    touch-action: manipulation;
+  }
+
+  .app-bottom-nav-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .app-bottom-nav-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .app-bottom-nav-item.active {
+    color: var(--rethus-blue);
+  }
+}
+
+/* ---- Install app banner (PWA) ---- */
+
+.install-app-banner {
+  display: none;
+}
+
+@media (max-width: 767.98px) {
+  .install-app-banner[data-visible="true"] {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: fixed;
+    left: 0.6rem;
+    right: 0.6rem;
+    bottom: calc(0.6rem + var(--app-viewport-gap, 0px));
+    z-index: 40;
+    padding: 0.75rem 0.85rem;
+    background: #fff;
+    border: 1px solid var(--rethus-border);
+    border-radius: 1rem;
+    box-shadow: 0 12px 30px rgba(11, 60, 102, 0.2);
+  }
+
+  body:has(.app-bottom-nav) .install-app-banner[data-visible="true"] {
+    bottom: calc(60px + 0.6rem + env(safe-area-inset-bottom, 0px) + var(--app-viewport-gap, 0px));
+  }
+
+  .install-app-banner-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 0.6rem;
+    flex: none;
+  }
+
+  .install-app-banner-body {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .install-app-banner-title {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--rethus-ink);
+  }
+
+  .install-app-banner-text {
+    margin: 0.1rem 0 0;
+    font-size: 0.75rem;
+    color: var(--rethus-muted);
+  }
+
+  .install-app-banner-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex: none;
+  }
+
+  .install-app-banner-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--rethus-muted);
+  }
+
+  .install-app-banner-close svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* ---- Mobile card list (table replacement on small screens) ---- */
+
+.mobile-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mobile-record-card {
+  background: #fff;
+  border: 1px solid var(--rethus-border);
+  border-radius: 0.85rem;
+  padding: 0.85rem 1rem;
+  box-shadow: 0 2px 10px rgba(11, 60, 102, 0.05);
+}
+
+.mobile-record-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.mobile-record-card-title {
+  flex: 1 1 auto;
+  font-weight: 700;
+  color: var(--rethus-ink);
+  font-size: 0.95rem;
+}
+
+.mobile-record-card-meta {
+  font-size: 0.82rem;
+  color: var(--rethus-muted);
+  margin-bottom: 0.2rem;
+}
+
+.mobile-record-card-meta--muted {
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+.mobile-record-card-actions {
+  margin-top: 0.6rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mobile-record-card-actions .btn {
+  width: 100%;
+  text-align: center;
+}
+
+.mobile-record-card-actions--split {
+  gap: 0.5rem;
+}
+
+.mobile-record-card-actions--split .btn {
+  flex: 1 1 0;
+  width: auto;
 }
 
 /* ---- Polished cards / tables inside the app shell ---- */
@@ -2450,12 +2725,50 @@ body {
   background: var(--rethus-teal-light);
 }
 
+.wizard-step-caption {
+  display: none;
+}
+
 @media (max-width: 575.98px) {
   .wizard-steps { gap: 0; flex-wrap: nowrap; }
   .wizard-step { min-width: 0; }
   .wizard-step-label { display: none; }
   .wizard-step-number { width: 30px; height: 30px; font-size: 0.8rem; }
   .wizard-step-connector { width: 14px; margin-bottom: 0; flex: 0 0 auto; }
+
+  .wizard-step-caption {
+    display: block;
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--rethus-muted);
+    margin: 0.5rem 0 1rem;
+  }
+}
+
+/* ---- Wizard mobile sticky action bar ---- */
+
+.wizard-mobile-actions {
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 767.98px) {
+  .wizard-mobile-actions {
+    position: sticky;
+    bottom: 0;
+    margin: 1.5rem 0 -1px;
+    padding: 0.75rem 0 calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    background: #fff;
+    border-top: 1px solid var(--rethus-border);
+    box-shadow: 0 -6px 16px rgba(11, 60, 102, 0.08);
+    z-index: 10;
+  }
+
+  .wizard-mobile-actions .btn {
+    display: block;
+    width: 100%;
+  }
+
 }
 
 .wizard-subheading {
@@ -3960,4 +4273,65 @@ body {
 .analitica-filtro-fecha {
   min-width: 0;
   width: 100%;
+}
+
+/* ==========================================================================
+   Mobile hardening - stop the browser from zooming the page while typing
+   and make tap targets behave like a native app
+   ========================================================================== */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (max-width: 767.98px) {
+  /* iOS/Android auto-zoom triggers on any focused field under 16px;
+     the 14px mobile root font-size (see top of file) put every rem-sized
+     input below that line, causing the page to zoom in/out on focus. */
+  input.form-control,
+  select.form-select,
+  textarea.form-control,
+  .auth-input,
+  .filtro-bar .form-control,
+  .filtro-bar .form-select {
+    font-size: 16px !important;
+  }
+
+  .filtro-bar .form-control,
+  .filtro-bar .form-select {
+    padding: 0.55rem 0.7rem;
+  }
+
+  .filtro-bar .btn {
+    padding: 0.55rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .filtro-bar-actions {
+    flex-wrap: nowrap;
+  }
+
+  .filtro-bar-actions .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .usuarios-crear-btn {
+    width: 100%;
+  }
+
+  .app-nav-link,
+  .app-user-dropdown-item,
+  .icon-btn,
+  .btn {
+    touch-action: manipulation;
+  }
+
+  .icon-btn {
+    width: 38px;
+    height: 38px;
+  }
 }

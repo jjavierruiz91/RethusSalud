@@ -356,9 +356,9 @@ function initCascadaUbicacion(options) {
 
 (function initAppSidebarToggle() {
     var shell = document.getElementById('appShell');
-    var toggle = document.getElementById('appSidebarToggle');
+    var toggles = document.querySelectorAll('.js-sidebar-toggle');
     var backdrop = document.getElementById('appSidebarBackdrop');
-    if (!shell || !toggle) {
+    if (!shell || !toggles.length) {
         return;
     }
 
@@ -366,8 +366,10 @@ function initCascadaUbicacion(options) {
         shell.classList.remove('app-sidebar-open');
     }
 
-    toggle.addEventListener('click', function () {
-        shell.classList.toggle('app-sidebar-open');
+    toggles.forEach(function (toggle) {
+        toggle.addEventListener('click', function () {
+            shell.classList.toggle('app-sidebar-open');
+        });
     });
 
     if (backdrop) {
@@ -519,5 +521,105 @@ function initCascadaUbicacion(options) {
     targets.forEach(function (el) {
         el.classList.add('reveal-on-scroll');
         observer.observe(el);
+    });
+})();
+
+(function syncViewportGap() {
+    // En algunos navegadores móviles, position:fixed se mide contra un
+    // viewport más alto que el visible (mientras la barra de direcciones
+    // del navegador sigue mostrándose), dejando el contenido fijo del fondo
+    // a medio cortar hasta el primer scroll. Medimos esa diferencia real y
+    // la exponemos como variable CSS para que los elementos fijos la usen.
+    function actualizar() {
+        var visible = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        var gap = Math.max(window.innerHeight - visible, 0);
+        document.documentElement.style.setProperty('--app-viewport-gap', gap + 'px');
+    }
+
+    actualizar();
+    window.addEventListener('resize', actualizar);
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', actualizar);
+    }
+})();
+
+(function initInstallAppBanner() {
+    var banner = document.getElementById('installAppBanner');
+    if (!banner) {
+        return;
+    }
+
+    // Ya instalada (abierta como app) -> nunca mostrar el aviso.
+    var yaInstalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (yaInstalada) {
+        return;
+    }
+
+    // Se oculta solo para esta sesión de navegador (sessionStorage): si el
+    // usuario la ignora hoy, mañana (nueva sesión) se le vuelve a mostrar.
+    var CLAVE_SESION = 'rethusInstallBannerOcultoSesion';
+    if (window.sessionStorage && sessionStorage.getItem(CLAVE_SESION) === '1') {
+        return;
+    }
+
+    var textoEl = document.getElementById('installAppBannerText');
+    var btnAceptar = document.getElementById('installAppBannerAccept');
+    var btnCerrar = document.getElementById('installAppBannerDismiss');
+    var deferredPrompt = null;
+
+    var esIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+
+    function mostrar() {
+        banner.hidden = false;
+        banner.setAttribute('data-visible', 'true');
+    }
+
+    function ocultarPorEstaSesion() {
+        banner.removeAttribute('data-visible');
+        banner.hidden = true;
+        if (window.sessionStorage) {
+            sessionStorage.setItem(CLAVE_SESION, '1');
+        }
+    }
+
+    if (esIOS) {
+        // iOS no dispara beforeinstallprompt; solo se puede instalar a mano.
+        textoEl.textContent = 'Toca Compartir y luego "Agregar a inicio" para instalarla.';
+        btnAceptar.textContent = 'Entendido';
+        btnAceptar.addEventListener('click', ocultarPorEstaSesion);
+        mostrar();
+    } else {
+        window.addEventListener('beforeinstallprompt', function (evento) {
+            evento.preventDefault();
+            deferredPrompt = evento;
+            mostrar();
+        });
+
+        btnAceptar.addEventListener('click', function () {
+            if (!deferredPrompt) {
+                ocultarPorEstaSesion();
+                return;
+            }
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.finally(function () {
+                deferredPrompt = null;
+                ocultarPorEstaSesion();
+            });
+        });
+    }
+
+    btnCerrar.addEventListener('click', ocultarPorEstaSesion);
+
+    window.addEventListener('appinstalled', ocultarPorEstaSesion);
+})();
+
+(function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) {
+        return;
+    }
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function () {
+            // Instalación como app es opcional; si falla el registro no afecta el resto del sitio.
+        });
     });
 })();

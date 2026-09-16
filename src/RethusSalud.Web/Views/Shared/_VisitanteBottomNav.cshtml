@@ -1,0 +1,29 @@
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+<nav class="app-bottom-nav" aria-label="Navegación principal">
+    <a class="app-bottom-nav-item @(currentController == "Home" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">
+        <span class="app-bottom-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 11.5 12 4l8 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v9h12v-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span>Inicio</span>
+    </a>
+    <a class="app-bottom-nav-item @(currentController == "Consulta" ? "active" : "")" asp-area="" asp-controller="Consulta" asp-action="Index">
+        <span class="app-bottom-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8"/><path d="m20 20-4.3-4.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </span>
+        <span>Consultar</span>
+    </a>
+    <a class="app-bottom-nav-item @(currentController == "Account" && ViewContext.RouteData.Values["action"]?.ToString() == "Login" ? "active" : "")" asp-area="" asp-controller="Account" asp-action="Login">
+        <span class="app-bottom-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="15" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M11 12l9-9M17 6l3 3M14 9l2.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span>Iniciar sesión</span>
+    </a>
+    <a class="app-bottom-nav-item @(currentController == "Account" && ViewContext.RouteData.Values["action"]?.ToString() == "Register" ? "active" : "")" asp-area="" asp-controller="Account" asp-action="Register">
+        <span class="app-bottom-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18 8v6M15 11h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </span>
+        <span>Crear cuenta</span>
+    </a>
+</nav>

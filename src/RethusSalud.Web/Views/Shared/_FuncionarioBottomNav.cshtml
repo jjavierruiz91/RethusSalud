@@ -1,0 +1,30 @@
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+<nav class="app-bottom-nav" aria-label="Navegación principal">
+    <a class="app-bottom-nav-item @(currentController == "Dashboard" ? "active" : "")" asp-area="" asp-controller="Dashboard" asp-action="Index">
+        <span class="app-bottom-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 20V4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 20h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="7" y="12" width="3" height="6" rx="0.5" stroke="currentColor" stroke-width="1.8"/><rect x="12.5" y="8" width="3" height="10" rx="0.5" stroke="currentColor" stroke-width="1.8"/><rect x="18" y="5" width="3" height="13" rx="0.5" stroke="currentColor" stroke-width="1.8"/></svg>
+        </span>
+        <span>Dashboard</span>
+    </a>
+    <a class="app-bottom-nav-item @(currentController == "Revision" && currentAction == "Bandeja" ? "active" : "")" asp-area="" asp-controller="Revision" asp-action="Bandeja">
+        <span class="app-bottom-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h4l2 3h4l2-3h4" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 12 5.5 5h13L20 12v7H4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </span>
+        <span>Bandeja</span>
+    </a>
+    <a class="app-bottom-nav-item @(currentController == "Revision" && currentAction == "Buscar" ? "active" : "")" asp-area="" asp-controller="Revision" asp-action="Buscar">
+        <span class="app-bottom-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8"/><path d="m20 20-4.3-4.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </span>
+        <span>Buscar</span>
+    </a>
+    <button type="button" class="app-bottom-nav-item js-sidebar-toggle" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+        <span class="app-bottom-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg>
+        </span>
+        <span>Más</span>
+    </button>
+</nav>

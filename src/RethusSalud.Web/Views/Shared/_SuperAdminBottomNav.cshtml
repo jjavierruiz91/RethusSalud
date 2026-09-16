@@ -1,0 +1,30 @@
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+<nav class="app-bottom-nav" aria-label="Navegación principal">
+    <a class="app-bottom-nav-item @(currentController == "Dashboard" ? "active" : "")" asp-area="" asp-controller="Dashboard" asp-action="Index">
+        <span class="app-bottom-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 20V4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 20h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="7" y="12" width="3" height="6" rx="0.5" stroke="currentColor" stroke-width="1.8"/><rect x="12.5" y="8" width="3" height="10" rx="0.5" stroke="currentColor" stroke-width="1.8"/><rect x="18" y="5" width="3" height="13" rx="0.5" stroke="currentColor" stroke-width="1.8"/></svg>
+        </span>
+        <span>Dashboard</span>
+    </a>
+    <a class="app-bottom-nav-item @(currentController == "Admin" && currentAction == "Usuarios" ? "active" : "")" asp-area="" asp-controller="Admin" asp-action="Usuarios">
+        <span class="app-bottom-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M15 8.2c1.2.4 2 1.5 2 2.8s-.8 2.4-2 2.8M17.5 20c0-2.4-1.4-4.5-3.5-5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </span>
+        <span>Usuarios</span>
+    </a>
+    <a class="app-bottom-nav-item @(currentController == "Admin" && (currentAction == "SeguimientoBandeja" || currentAction == "SeguimientoDetalle" || currentAction == "ExportarSeguimientoExcel" || currentAction == "DescargarArchivoSeguimiento") ? "active" : "")" asp-area="" asp-controller="Admin" asp-action="SeguimientoBandeja">
+        <span class="app-bottom-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h4l2 3h4l2-3h4" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 12 5.5 5h13L20 12v7H4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </span>
+        <span>Seguimiento</span>
+    </a>
+    <button type="button" class="app-bottom-nav-item js-sidebar-toggle" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+        <span class="app-bottom-nav-icon">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg>
+        </span>
+        <span>Más</span>
+    </button>
+</nav>

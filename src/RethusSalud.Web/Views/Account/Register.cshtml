@@ -5,13 +5,13 @@
 }
 
 <div class="auth-shell">
-    <div class="auth-card-wrapper">
+    <div class="auth-card-wrapper auth-card-wrapper--compact">
         @await Html.PartialAsync("_AuthAside")
 
         <div class="auth-form-panel">
             <div class="auth-form-inner">
-                <span class="hero-eyebrow auth-eyebrow-dark">Nuevo registro</span>
-                <div class="auth-form-logo">
+                <span class="hero-eyebrow auth-eyebrow-dark auth-eyebrow--compact">Nuevo registro</span>
+                <div class="auth-form-logo auth-form-logo--compact">
                     <img src="~/img/institucional/escudo_cesar_2024.png" alt="Escudo de la Gobernación del Cesar" />
                 </div>
                 <h2 class="auth-form-title">Crea tu cuenta</h2>
@@ -84,7 +84,7 @@
                 </p>
             </div>
 
-            <div class="auth-form-footer">
+            <div class="auth-form-footer auth-form-footer--compact">
                 &copy; 2026 Secretaría de Salud Departamental del Cesar &mdash; Rethus.
                 <a asp-controller="Home" asp-action="Privacy">Política de privacidad</a>
                 <div class="auth-footer-credito">

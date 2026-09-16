@@ -74,6 +74,8 @@
 
     <form asp-action="Enviar" method="post" class="mt-4">
         <input type="hidden" name="solicitudId" value="@Model.Id" />
-        <button type="submit" class="btn auth-submit-btn w-100">Enviar solicitud</button>
+        <div class="wizard-mobile-actions">
+            <button type="submit" class="btn auth-submit-btn w-100">Enviar solicitud</button>
+        </div>
     </form>
 </div>

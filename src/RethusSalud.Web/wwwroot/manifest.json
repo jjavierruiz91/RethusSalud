@@ -1,0 +1,32 @@
+{
+  "name": "Rethus - Gobernación del Cesar",
+  "short_name": "Rethus",
+  "description": "Registro Único Nacional del Talento Humano en Salud - Secretaría de Salud Departamental del Cesar",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f4f8fb",
+  "theme_color": "#0b3c66",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/img/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
