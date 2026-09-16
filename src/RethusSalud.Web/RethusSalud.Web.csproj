@@ -21,4 +21,10 @@
     <UserSecretsId>770c560c-e585-40fa-981d-8d4e083051b6</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <!-- El SDK excluye "index.html" del publish por defecto; se incluye explicitamente
+         para que la pagina de mantenimiento viaje siempre con el sitio. -->
+    <Content Include="Mantenimiento\index.html" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
