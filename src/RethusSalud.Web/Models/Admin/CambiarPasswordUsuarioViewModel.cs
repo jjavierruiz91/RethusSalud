@@ -16,4 +16,6 @@ public class CambiarPasswordUsuarioViewModel
     [DataType(DataType.Password)]
     [Compare(nameof(NuevaPassword), ErrorMessage = "Las contrasenas no coinciden")]
     public string ConfirmarPassword { get; set; } = string.Empty;
+
+    public string? Origen { get; set; }
 }

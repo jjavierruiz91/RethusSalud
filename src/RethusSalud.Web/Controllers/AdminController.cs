@@ -145,6 +145,49 @@ public class AdminController : Controller
     }
 
     [Authorize(Roles = $"{Roles.SuperAdmin},{Roles.FuncionarioEtapa1}")]
+    [HttpGet]
+    public async Task<IActionResult> Ciudadanos(string? nombre, int pagina = 1)
+    {
+        var ciudadanos = await _userManager.GetUsersInRoleAsync(Roles.Ciudadano);
+
+        var filtrados = ciudadanos.AsEnumerable();
+        if (!string.IsNullOrWhiteSpace(nombre))
+        {
+            filtrados = filtrados.Where(u =>
+                u.NombreCompleto.Contains(nombre, StringComparison.OrdinalIgnoreCase) ||
+                (u.NumeroIdentificacion ?? string.Empty).Contains(nombre, StringComparison.OrdinalIgnoreCase));
+        }
+
+        var ordenados = filtrados.OrderBy(u => u.NombreCompleto).ToList();
+
+        var paginaActual = Math.Max(pagina, 1);
+        var totalPaginas = Math.Max(1, (int)Math.Ceiling(ordenados.Count / (double)TamanoPagina));
+        paginaActual = Math.Min(paginaActual, totalPaginas);
+
+        var resultado = ordenados
+            .Skip((paginaActual - 1) * TamanoPagina)
+            .Take(TamanoPagina)
+            .Select(u => new CiudadanoViewModel
+            {
+                Id = u.Id,
+                Nombre = u.NombreCompleto,
+                Email = u.Email ?? string.Empty,
+                NumeroIdentificacion = u.NumeroIdentificacion,
+                Activo = u.Activo
+            })
+            .ToList();
+
+        ViewBag.Nombre = nombre;
+        ViewBag.PaginaActual = paginaActual;
+        ViewBag.TotalPaginas = totalPaginas;
+        ViewBag.TotalRegistros = ordenados.Count;
+        ViewBag.TotalActivos = ciudadanos.Count(u => u.Activo);
+        ViewBag.TotalInactivos = ciudadanos.Count(u => !u.Activo);
+
+        return View(resultado);
+    }
+
+    [Authorize(Roles = $"{Roles.SuperAdmin},{Roles.FuncionarioEtapa1}")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Crear(CrearUsuarioInternoViewModel model)
@@ -291,10 +334,14 @@ public class AdminController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CambiarPassword(CambiarPasswordUsuarioViewModel model)
     {
+        IActionResult VolverAOrigen() => model.Origen == nameof(Ciudadanos)
+            ? RedirectToAction(nameof(Ciudadanos))
+            : RedirectToAction(nameof(Usuarios));
+
         if (!ModelState.IsValid)
         {
             TempData["Error"] = "Revisa la contrasena e intenta nuevamente.";
-            return RedirectToAction(nameof(Usuarios));
+            return VolverAOrigen();
         }
 
         var usuario = await _userManager.FindByIdAsync(model.Id);
@@ -306,7 +353,7 @@ public class AdminController : Controller
         if (!User.IsInRole(Roles.SuperAdmin) && await _userManager.IsInRoleAsync(usuario, Roles.SuperAdmin))
         {
             TempData["Error"] = "No tienes permisos para gestionar cuentas SuperAdmin.";
-            return RedirectToAction(nameof(Usuarios));
+            return VolverAOrigen();
         }
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(usuario);
@@ -314,18 +361,22 @@ public class AdminController : Controller
         if (!resultado.Succeeded)
         {
             TempData["Error"] = string.Join(" ", resultado.Errors.Select(e => e.Description));
-            return RedirectToAction(nameof(Usuarios));
+            return VolverAOrigen();
         }
 
         TempData["Mensaje"] = "Contrasena actualizada correctamente.";
-        return RedirectToAction(nameof(Usuarios));
+        return VolverAOrigen();
     }
 
     [Authorize(Roles = $"{Roles.SuperAdmin},{Roles.FuncionarioEtapa1}")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ToggleActivo(string id)
+    public async Task<IActionResult> ToggleActivo(string id, string? origen)
     {
+        IActionResult VolverAOrigen() => origen == nameof(Ciudadanos)
+            ? RedirectToAction(nameof(Ciudadanos))
+            : RedirectToAction(nameof(Usuarios));
+
         var usuario = await _userManager.FindByIdAsync(id);
         if (usuario is null)
         {
@@ -335,7 +386,7 @@ public class AdminController : Controller
         if (!User.IsInRole(Roles.SuperAdmin) && await _userManager.IsInRoleAsync(usuario, Roles.SuperAdmin))
         {
             TempData["Error"] = "No tienes permisos para gestionar cuentas SuperAdmin.";
-            return RedirectToAction(nameof(Usuarios));
+            return VolverAOrigen();
         }
 
         usuario.Activo = !usuario.Activo;
@@ -351,7 +402,7 @@ public class AdminController : Controller
         }
 
         await _userManager.UpdateAsync(usuario);
-        return RedirectToAction(nameof(Usuarios));
+        return VolverAOrigen();
     }
 
     private static readonly string[] RolesFirmantes =

@@ -1,0 +1,231 @@
+@model List<RethusSalud.Web.Models.Admin.CiudadanoViewModel>
+@using RethusSalud.Web.Models.Shared
+@{
+    ViewData["Title"] = "Gestión de ciudadanos";
+    Layout = "_AppLayout";
+
+    var paginacion = new PaginacionViewModel
+    {
+        PaginaActual = (int)ViewBag.PaginaActual,
+        TotalPaginas = (int)ViewBag.TotalPaginas,
+        TotalRegistros = (int)ViewBag.TotalRegistros,
+        Accion = "Ciudadanos",
+        RouteValues = new Dictionary<string, string?>
+        {
+            ["nombre"] = (string?)ViewBag.Nombre
+        }
+    };
+}
+
+<div class="app-stat-row">
+    <div class="app-stat-card app-stat-card--brand">
+        <span class="app-stat-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 20c0-3.9 3.6-7 8-7s8 3.1 8 7" /></svg>
+        </span>
+        <span class="app-stat-card-value">@ViewBag.TotalRegistros</span>
+        <span class="app-stat-card-label">Total ciudadanos</span>
+    </div>
+    <div class="app-stat-card app-stat-card--success">
+        <span class="app-stat-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /><path d="m17 11 2 2 4-4" /></svg>
+        </span>
+        <span class="app-stat-card-value">@ViewBag.TotalActivos</span>
+        <span class="app-stat-card-label">Activos</span>
+    </div>
+    <div class="app-stat-card app-stat-card--muted">
+        <span class="app-stat-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /><path d="m17 8 5 5" /><path d="m22 8-5 5" /></svg>
+        </span>
+        <span class="app-stat-card-value">@ViewBag.TotalInactivos</span>
+        <span class="app-stat-card-label">Inactivos</span>
+    </div>
+</div>
+
+<div class="app-panel">
+    <form method="get" class="row g-2 mb-3 filtro-bar" data-autosubmit>
+        <div class="col-12 col-sm-8 col-lg-4">
+            <label class="form-label small text-muted mb-1 d-md-none">Nombre o identificación</label>
+            <input type="text" name="nombre" class="form-control" placeholder="Nombre o número de identificación" value="@ViewBag.Nombre" />
+        </div>
+        <div class="col-12 col-sm-auto d-flex flex-wrap gap-2 filtro-bar-actions">
+            <button type="submit" class="btn btn-outline-primary">Buscar</button>
+            <a asp-action="Ciudadanos" class="btn btn-outline-secondary">Limpiar</a>
+        </div>
+    </form>
+
+    <div class="table-responsive d-none d-md-block">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Nombre</th>
+                    <th>Identificación</th>
+                    <th>Correo</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ciudadano in Model)
+                {
+                    <tr class="@(ciudadano.Activo ? "fila-verde" : "fila-inactiva")">
+                        <td><span class="app-avatar app-avatar-lg">@(ciudadano.Nombre.Length > 0 ? ciudadano.Nombre[0].ToString().ToUpperInvariant() : "?")</span></td>
+                        <td>@ciudadano.Nombre</td>
+                        <td>@ciudadano.NumeroIdentificacion</td>
+                        <td>@ciudadano.Email</td>
+                        <td>@(ciudadano.Activo ? "Activo" : "Inactivo")</td>
+                        <td class="text-end">
+                            <div class="d-inline-flex gap-1">
+                                <button type="button" class="icon-btn icon-btn-secondary" data-bs-toggle="modal" data-bs-target="#passwordModal-@ciudadano.Id" title="Cambiar contraseña">
+                                    @Html.Raw(RowIcon("key"))
+                                </button>
+                                @if (ciudadano.Activo)
+                                {
+                                    <button type="button" class="icon-btn icon-btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeactivate-@ciudadano.Id" title="Desactivar ciudadano">
+                                        @Html.Raw(RowIcon("power"))
+                                    </button>
+                                }
+                                else
+                                {
+                                    <form asp-action="ToggleActivo" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@ciudadano.Id" />
+                                        <input type="hidden" name="origen" value="Ciudadanos" />
+                                        <button type="submit" class="icon-btn icon-btn-success" title="Activar ciudadano">
+                                            @Html.Raw(RowIcon("power"))
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Sin resultados.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mobile-card-list d-md-none">
+        @foreach (var ciudadano in Model)
+        {
+            <div class="mobile-record-card">
+                <div class="mobile-record-card-header">
+                    <span class="app-avatar" style="width:36px;height:36px;font-size:0.85rem">@(ciudadano.Nombre.Length > 0 ? ciudadano.Nombre[0].ToString().ToUpperInvariant() : "?")</span>
+                    <span class="mobile-record-card-title">@ciudadano.Nombre</span>
+                    <span class="app-badge @(ciudadano.Activo ? "app-badge-success" : "app-badge-muted")">@(ciudadano.Activo ? "Activo" : "Inactivo")</span>
+                </div>
+                <div class="mobile-record-card-meta">C.C. @ciudadano.NumeroIdentificacion</div>
+                <div class="mobile-record-card-meta mobile-record-card-meta--muted">@ciudadano.Email</div>
+                <div class="mobile-record-card-actions mobile-record-card-actions--split">
+                    <button type="button" class="icon-btn icon-btn-secondary" data-bs-toggle="modal" data-bs-target="#passwordModal-@ciudadano.Id" title="Cambiar contraseña">
+                        @Html.Raw(RowIcon("key"))
+                    </button>
+                    @if (ciudadano.Activo)
+                    {
+                        <button type="button" class="icon-btn icon-btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeactivate-@ciudadano.Id" title="Desactivar ciudadano">
+                            @Html.Raw(RowIcon("power"))
+                        </button>
+                    }
+                    else
+                    {
+                        <form asp-action="ToggleActivo" method="post" class="m-0">
+                            <input type="hidden" name="id" value="@ciudadano.Id" />
+                            <input type="hidden" name="origen" value="Ciudadanos" />
+                            <button type="submit" class="icon-btn icon-btn-success" title="Activar ciudadano">
+                                @Html.Raw(RowIcon("power"))
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        }
+        @if (!Model.Any())
+        {
+            <p class="text-center text-muted mb-0">Sin resultados.</p>
+        }
+    </div>
+
+    <partial name="_Pagination" model="paginacion" />
+</div>
+
+@foreach (var ciudadano in Model)
+{
+    <div class="modal fade" id="passwordModal-@ciudadano.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form asp-action="CambiarPassword" method="post">
+                    <input type="hidden" name="Id" value="@ciudadano.Id" />
+                    <input type="hidden" name="Origen" value="Ciudadanos" />
+                    <div class="modal-header">
+                        <h5 class="modal-title">Cambiar contraseña &mdash; @ciudadano.Nombre</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Nueva contraseña</label>
+                            <div class="auth-password-wrapper">
+                                <input name="NuevaPassword" type="password" id="nuevaPassCiu-@ciudadano.Id" class="form-control auth-input" minlength="4" required />
+                                <button type="button" class="auth-password-toggle" data-toggle-password="nuevaPassCiu-@ciudadano.Id" aria-label="Mostrar contraseña">
+                                    @Html.Raw(EyeIcon())
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Confirmar contraseña</label>
+                            <div class="auth-password-wrapper">
+                                <input name="ConfirmarPassword" type="password" id="confirmarPassCiu-@ciudadano.Id" class="form-control auth-input" minlength="4" required data-match-password="nuevaPassCiu-@ciudadano.Id" />
+                                <button type="button" class="auth-password-toggle" data-toggle-password="confirmarPassCiu-@ciudadano.Id" aria-label="Mostrar contraseña">
+                                    @Html.Raw(EyeIcon())
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn auth-submit-btn">Actualizar contraseña</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmDeactivate-@ciudadano.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center pt-4">
+                    <div class="confirm-modal-icon confirm-modal-icon-danger">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M10.3 3.9 2.5 17.5A1.5 1.5 0 0 0 3.8 20h16.4a1.5 1.5 0 0 0 1.3-2.5L13.7 3.9a1.5 1.5 0 0 0-2.4 0z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                    </div>
+                    <h5 class="modal-title mb-2">¿Desactivar a @ciudadano.Nombre?</h5>
+                    <p class="text-muted mb-0">Esta persona no podrá iniciar sesión hasta que la actives de nuevo.</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form asp-action="ToggleActivo" method="post" class="m-0">
+                        <input type="hidden" name="id" value="@ciudadano.Id" />
+                        <input type="hidden" name="origen" value="Ciudadanos" />
+                        <button type="submit" class="btn btn-danger">Sí, desactivar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@functions {
+    string EyeIcon() =>
+        "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z\" stroke=\"currentColor\" stroke-width=\"1.6\"/><circle cx=\"12\" cy=\"12\" r=\"3\" stroke=\"currentColor\" stroke-width=\"1.6\"/></svg>";
+
+    string RowIcon(string name) => name switch
+    {
+        "key" =>
+            "<svg viewBox=\"0 0 24 24\" fill=\"none\"><circle cx=\"8\" cy=\"15\" r=\"4\" stroke=\"currentColor\" stroke-width=\"1.8\"/><path d=\"M11 12l9-9M17 6l3 3M14 9l2.5 2.5\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>",
+        "power" =>
+            "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M12 3v8\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><path d=\"M6.5 6.5a8 8 0 1 0 11 0\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"/></svg>",
+        _ => ""
+    };
+}
