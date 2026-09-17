@@ -27,4 +27,8 @@
     <Content Include="Mantenimiento\index.html" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Despliegue\" />
+  </ItemGroup>
+
 </Project>
