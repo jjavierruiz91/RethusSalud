@@ -26,27 +26,19 @@
             }
             else if (Model.Estado == EstadoSolicitud.EnProceso)
             {
-                <span>En proceso - Etapa actual: @Model.EtapaActual</span>
+                var fueRechazadaAntes = Model.Historial.Any(h => h.EstadoResultante == EstadoSolicitud.Rechazado);
+                @if (fueRechazadaAntes)
+                {
+                    <span>Reenviado (corregido tras rechazo) - Etapa actual: @Model.EtapaActual</span>
+                }
+                else
+                {
+                    <span>En proceso - Etapa actual: @Model.EtapaActual</span>
+                }
             }
             else if (Model.Estado == EstadoSolicitud.Rechazado)
             {
                 <span>Rechazada</span>
-                var motivoRechazo = Model.Historial
-                    .Where(h => h.EstadoResultante == EstadoSolicitud.Rechazado)
-                    .OrderByDescending(h => h.Fecha)
-                    .FirstOrDefault()?.Motivo;
-                @if (!string.IsNullOrWhiteSpace(motivoRechazo))
-                {
-                    <div class="app-alert app-alert-danger mt-2 mb-0" role="alert">
-                        <span class="app-alert-icon">
-                            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                        </span>
-                        <div class="app-alert-body">
-                            <strong class="app-alert-title">Motivo del rechazo</strong>
-                            <p class="app-alert-message mb-0">@motivoRechazo</p>
-                        </div>
-                    </div>
-                }
             }
             else
             {
@@ -79,3 +71,33 @@
         }
     </div>
 </div>
+
+@{
+    var rechazos = Model?.Historial
+        .Where(h => h.EstadoResultante == EstadoSolicitud.Rechazado)
+        .OrderByDescending(h => h.Fecha)
+        .ToList() ?? new List<HistorialEstado>();
+}
+@if (rechazos.Any())
+{
+    <div class="card mt-3">
+        <div class="card-body">
+            <h2 class="h5 mb-3">Historial de rechazos</h2>
+            @foreach (var rechazo in rechazos)
+            {
+                <div class="app-alert app-alert-danger mb-2" role="alert">
+                    <span class="app-alert-icon">
+                        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    </span>
+                    <div class="app-alert-body">
+                        <strong class="app-alert-title">
+                            @(rechazo.EtapaResultante.HasValue ? EtapaDisplay.Texto(rechazo.EtapaResultante.Value) : "Revision")
+                            &middot; @rechazo.Fecha.ToLocalTime().ToString("dd MMM yyyy · hh:mm tt")
+                        </strong>
+                        <p class="app-alert-message mb-0">@rechazo.Motivo</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

@@ -12,4 +12,5 @@ public class BandejaViewModel
     public int TotalEnProceso { get; set; }
     public int TotalAprobadas { get; set; }
     public int TotalEsperandoLargo { get; set; }
+    public int TotalRechazadas { get; set; }
 }

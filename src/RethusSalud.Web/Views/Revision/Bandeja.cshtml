@@ -63,6 +63,20 @@
         <span class="app-stat-card-value">@totalAprobadas</span>
         <span class="app-stat-card-label">Aprobadas</span>
     </div>
+    <a class="app-stat-card app-stat-card--danger app-stat-card--link"
+       asp-action="Bandeja"
+       asp-route-Estado="@EstadoSolicitud.Rechazado"
+       asp-route-NumeroIdentificacion="@Model.Filtro.NumeroIdentificacion"
+       asp-route-TipoTramite="@Model.Filtro.TipoTramite"
+       asp-route-Desde="@Model.Filtro.Desde?.ToString("yyyy-MM-dd")"
+       asp-route-Hasta="@Model.Filtro.Hasta?.ToString("yyyy-MM-dd")"
+       title="Ver las solicitudes rechazadas en tu etapa">
+        <span class="app-stat-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="m15 9-6 6M9 9l6 6" /></svg>
+        </span>
+        <span class="app-stat-card-value">@Model.TotalRechazadas</span>
+        <span class="app-stat-card-label">Rechazadas</span>
+    </a>
 </div>
 
 <div class="app-panel app-panel--compacta">
@@ -94,7 +108,7 @@
             <option value="">Todos</option>
             @foreach (var estado in EstadoDisplay.FiltrablesPorFuncionario)
             {
-                @if (Model.Filtro.Estado == estado)
+                @if (Model.Filtro.Estado == estado.ToString())
                 {
                     <option value="@estado" selected>@EstadoDisplay.Texto(estado)</option>
                 }
@@ -102,6 +116,14 @@
                 {
                     <option value="@estado">@EstadoDisplay.Texto(estado)</option>
                 }
+            }
+            @if (Model.Filtro.Estado == "Reenviado")
+            {
+                <option value="Reenviado" selected>Reenviado</option>
+            }
+            else
+            {
+                <option value="Reenviado">Reenviado</option>
             }
         </select>
     </div>
@@ -175,6 +197,7 @@
                 @foreach (var solicitud in Model.Pagina.Items)
                 {
                     var puedeSeleccionar = Model.Etapa == EtapaSolicitud.Inventario && solicitud.Estado == EstadoSolicitud.EnProceso && solicitud.Consecutivo is null;
+                    var fueRechazadaAntes = solicitud.Estado != EstadoSolicitud.Rechazado && solicitud.Historial.Any(h => h.EstadoResultante == EstadoSolicitud.Rechazado);
                     <tr>
                         @if (Model.Etapa == EtapaSolicitud.Inventario)
                         {
@@ -188,7 +211,16 @@
                         <td>@solicitud.Solicitante.NumeroIdentificacion</td>
                         <td>@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</td>
                         <td>@solicitud.TipoTramite</td>
-                        <td><span class="app-badge @BadgeEstado(solicitud.Estado)">@EstadoDisplay.Texto(solicitud.Estado)</span></td>
+                        <td>
+                            @if (fueRechazadaAntes)
+                            {
+                                <span class="app-badge app-badge-info" title="Esta solicitud fue rechazada antes y fue corregida y reenviada">Reenviado</span>
+                            }
+                            else
+                            {
+                                <span class="app-badge @BadgeEstado(solicitud.Estado)">@EstadoDisplay.Texto(solicitud.Estado)</span>
+                            }
+                        </td>
                         <td>@(solicitud.EtapaActual?.ToString() ?? "-")</td>
                         <td>@TiempoDisplay.Transcurrido(solicitud.FechaCreacion)</td>
                         <td>@(solicitud.Consecutivo is not null ? solicitud.Consecutivo.Numero : "No asignado")</td>
@@ -211,6 +243,7 @@
         @foreach (var solicitud in Model.Pagina.Items)
         {
             var puedeSeleccionar = Model.Etapa == EtapaSolicitud.Inventario && solicitud.Estado == EstadoSolicitud.EnProceso && solicitud.Consecutivo is null;
+            var fueRechazadaAntesMovil = solicitud.Estado != EstadoSolicitud.Rechazado && solicitud.Historial.Any(h => h.EstadoResultante == EstadoSolicitud.Rechazado);
             <div class="mobile-record-card">
                 <div class="mobile-record-card-header">
                     @if (Model.Etapa == EtapaSolicitud.Inventario && puedeSeleccionar)
@@ -218,7 +251,14 @@
                         <input type="checkbox" class="form-check-input seleccion-item" name="ids" value="@solicitud.Id" />
                     }
                     <span class="mobile-record-card-title">@solicitud.Solicitante.Nombres @solicitud.Solicitante.Apellidos</span>
-                    <span class="app-badge @BadgeEstado(solicitud.Estado)">@EstadoDisplay.Texto(solicitud.Estado)</span>
+                    @if (fueRechazadaAntesMovil)
+                    {
+                        <span class="app-badge app-badge-info" title="Esta solicitud fue rechazada antes y fue corregida y reenviada">Reenviado</span>
+                    }
+                    else
+                    {
+                        <span class="app-badge @BadgeEstado(solicitud.Estado)">@EstadoDisplay.Texto(solicitud.Estado)</span>
+                    }
                 </div>
                 <div class="mobile-record-card-meta">CC @solicitud.Solicitante.NumeroIdentificacion &middot; @solicitud.TipoTramite</div>
                 <div class="mobile-record-card-meta">Etapa @(solicitud.EtapaActual?.ToString() ?? "-") &middot; @TiempoDisplay.Transcurrido(solicitud.FechaCreacion)</div>

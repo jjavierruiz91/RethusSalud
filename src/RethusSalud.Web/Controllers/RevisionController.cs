@@ -81,7 +81,7 @@ public class RevisionController : Controller
             return Forbid();
         }
 
-        var filtroDto = new BandejaFiltroDto(filtro.NumeroIdentificacion, filtro.TipoTramite, filtro.Estado, filtro.Desde, filtro.Hasta);
+        var filtroDto = ConstruirFiltroDto(filtro);
         var pagina = Math.Max(filtro.Pagina, 1);
         var resultado = await _solicitudes.ObtenerBandejaPaginadaAsync(etapa.Value, filtroDto, pagina, TamanoPaginaBandeja);
 
@@ -92,7 +92,8 @@ public class RevisionController : Controller
             Pagina = resultado.Pagina,
             TotalEnProceso = resultado.TotalEnProceso,
             TotalAprobadas = resultado.TotalAprobadas,
-            TotalEsperandoLargo = resultado.TotalEsperandoLargo
+            TotalEsperandoLargo = resultado.TotalEsperandoLargo,
+            TotalRechazadas = resultado.TotalRechazadas
         });
     }
 
@@ -105,11 +106,23 @@ public class RevisionController : Controller
             return Forbid();
         }
 
-        var filtroDto = new BandejaFiltroDto(filtro.NumeroIdentificacion, filtro.TipoTramite, filtro.Estado, filtro.Desde, filtro.Hasta);
+        var filtroDto = ConstruirFiltroDto(filtro);
         var solicitudes = await _solicitudes.ObtenerBandejaAsync(etapa.Value, filtroDto);
 
         var excel = _reportes.GenerarReporteBandeja(solicitudes);
         return File(excel, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"bandeja-{etapa}.xlsx");
+    }
+
+    // "Reenviado" no es un EstadoSolicitud real: es En proceso + con un rechazo previo en el historial.
+    // Se traduce aqui a Estado=EnProceso + SoloReenviadas=true para que el repositorio lo filtre.
+    private static BandejaFiltroDto ConstruirFiltroDto(BandejaFiltroViewModel filtro)
+    {
+        var esReenviado = string.Equals(filtro.Estado, "Reenviado", StringComparison.OrdinalIgnoreCase);
+        EstadoSolicitud? estado = esReenviado
+            ? EstadoSolicitud.EnProceso
+            : Enum.TryParse<EstadoSolicitud>(filtro.Estado, out var parsed) ? parsed : null;
+
+        return new BandejaFiltroDto(filtro.NumeroIdentificacion, filtro.TipoTramite, estado, filtro.Desde, filtro.Hasta, SoloReenviadas: esReenviado);
     }
 
     [HttpGet]
@@ -145,8 +158,26 @@ public class RevisionController : Controller
 
         var etapaUsuario = await ObtenerEtapaDelUsuarioAsync();
         ViewBag.PuedeGestionar = solicitud.Estado == EstadoSolicitud.EnProceso && solicitud.EtapaActual == etapaUsuario;
+        ViewBag.AutoresRechazo = await ObtenerAutoresRechazoAsync(solicitud);
 
         return View(solicitud);
+    }
+
+    private async Task<Dictionary<string, string>> ObtenerAutoresRechazoAsync(RethusSalud.Domain.Entities.Solicitud solicitud)
+    {
+        var usuarioIds = solicitud.Historial
+            .Where(h => h.EstadoResultante == EstadoSolicitud.Rechazado)
+            .Select(h => h.UsuarioId)
+            .Distinct();
+
+        var autores = new Dictionary<string, string>();
+        foreach (var usuarioId in usuarioIds)
+        {
+            var usuario = await _userManager.FindByIdAsync(usuarioId);
+            autores[usuarioId] = string.IsNullOrWhiteSpace(usuario?.NombreCompleto) ? "Funcionario" : usuario.NombreCompleto;
+        }
+
+        return autores;
     }
 
     private IActionResult RedirigirAPaso(string? volverA, int id)

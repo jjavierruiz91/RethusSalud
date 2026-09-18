@@ -2565,6 +2565,11 @@ body {
   box-shadow: 0 10px 20px rgba(11, 60, 102, 0.12);
 }
 
+.app-stat-card--link {
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .app-stat-card-icon {
   display: flex;
   align-items: center;
@@ -2626,6 +2631,7 @@ body {
 .app-badge-warning { background: #fef4e0; color: #b9770e; }
 .app-badge-danger { background: #fdecea; color: #c0392b; }
 .app-badge-muted { background: var(--rethus-bg-soft); color: var(--rethus-muted); }
+.app-badge-info { background: #e6f1fb; color: var(--rethus-blue-deep); }
 
 .app-content .table tr.fila-verde > td { background-color: #e3f7ea; }
 .app-content .table tr.fila-inactiva > td { background-color: var(--rethus-bg-soft); }
@@ -3581,6 +3587,12 @@ body {
 .revision-historial-avatar-2 { background: var(--rethus-teal); }
 .revision-historial-avatar-3 { background: #b8730f; }
 .revision-historial-avatar-4 { background: #5b3f9e; }
+.revision-historial-avatar-rechazo { background: #c0392b; }
+
+.revision-historial-card-rechazo {
+  border-color: #f1c2ba;
+  background: #fdf3f1;
+}
 
 .revision-historial-card {
   flex: 1;
@@ -3616,6 +3628,7 @@ body {
 .revision-etapa-badge-2 { background: #e1f5ee; color: var(--rethus-teal); }
 .revision-etapa-badge-3 { background: #fdf1de; color: #93590d; }
 .revision-etapa-badge-4 { background: #efe9fb; color: #5b3f9e; }
+.revision-etapa-badge-rechazo { background: #fbe4e0; color: #c0392b; }
 
 .revision-historial-meta {
   font-size: 0.78rem;
