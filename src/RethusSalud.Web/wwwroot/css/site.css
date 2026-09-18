@@ -1208,18 +1208,25 @@ body {
 }
 
 .site-footer-credito .credito-icon {
-  width: 22px;
-  height: 22px;
+  width: 32px;
+  height: 32px;
 }
 
 .auth-footer-credito .credito-icon {
-  width: 20px;
-  height: 20px;
+  width: 32px;
+  height: 32px;
 }
 
 .app-sidebar-credito .credito-icon {
-  width: 16px;
-  height: 16px;
+  width: 26px;
+  height: 26px;
+}
+
+@media (max-width: 767.98px) {
+  .site-footer-credito .credito-icon {
+    width: 26px;
+    height: 26px;
+  }
 }
 
 /* ---- Site navbar ---- */

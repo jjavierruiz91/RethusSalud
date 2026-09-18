@@ -51,20 +51,11 @@
   }
 
   .brand-mark {
-    display: inline-flex;
     flex: none;
-    align-items: center;
-    justify-content: center;
-    width: 46px;
-    height: 46px;
-    padding: 10px;
-    color: #fff;
-    background: linear-gradient(135deg, var(--rethus-blue-deep), var(--rethus-teal));
-    border-radius: 0.85rem;
-    box-shadow: 0 10px 24px rgba(11, 60, 102, 0.25);
+    width: 64px;
+    height: auto;
+    filter: drop-shadow(0 4px 10px rgba(11, 60, 102, 0.18));
   }
-
-  .brand-mark svg { width: 100%; height: 100%; }
 
   .brand-name {
     font-size: 0.98rem;
@@ -358,8 +349,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 22px;
-    height: 22px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     transition: transform .15s ease, box-shadow .15s ease, background .15s ease, color .15s ease;
   }
@@ -390,51 +381,51 @@
   }
 
   @media (max-width: 600px) {
-    body { padding: 1.25rem 1.1rem; }
+    body { padding: 0.75rem 1rem; }
 
-    .brand { gap: 0.6rem; margin-bottom: 1.25rem; }
-    .brand-mark { width: 38px; height: 38px; padding: 8px; border-radius: 0.65rem; }
-    .brand-name { font-size: 0.78rem; line-height: 1.3; }
-    .brand-sub { font-size: 0.7rem; line-height: 1.3; }
+    .brand { gap: 0.5rem; margin-bottom: 0.65rem; }
+    .brand-mark { width: 42px; height: auto; }
+    .brand-name { font-size: 0.68rem; line-height: 1.25; }
+    .brand-sub { font-size: 0.6rem; line-height: 1.25; }
 
-    .layout { gap: 1.5rem; }
+    .layout { gap: 0.85rem; }
 
-    .eyebrow { margin-bottom: 0.85rem; padding: 0.3rem 0.75rem; }
+    .eyebrow { margin-bottom: 0.45rem; padding: 0.22rem 0.6rem; font-size: 0.62rem; }
 
-    h1 { font-size: 1.5rem; margin-bottom: 0.6rem; max-width: none; }
+    h1 { font-size: 1.15rem; line-height: 1.2; margin-bottom: 0.3rem; max-width: none; }
 
-    p.lead { font-size: 0.88rem; line-height: 1.55; margin-bottom: 1.25rem; }
+    p.lead { font-size: 0.74rem; line-height: 1.35; margin-bottom: 0.6rem; }
 
-    .stepper { margin-bottom: 1.25rem; }
-    .step-label { font-size: 0.66rem; }
+    .stepper { margin-bottom: 0.6rem; }
+    .step-dot { width: 11px; height: 11px; }
+    .step-label { font-size: 0.55rem; }
 
-    .countdown { gap: 1rem; }
-    .countdown-value { font-size: 1.5rem; }
-    .countdown-label { margin-top: 0.25rem; font-size: 0.6rem; }
+    .countdown { gap: 0.7rem; }
+    .countdown-value { font-size: 1.15rem; }
+    .countdown-label { margin-top: 0.15rem; font-size: 0.54rem; }
 
-    .status-card-wrap { padding-top: 0.85rem; }
-    .status-card { padding: 1.1rem 1.1rem 1.25rem; border-radius: 1rem; }
-    .status-eyebrow { margin-bottom: 0.6rem; }
-    .status-title { font-size: 1.05rem; }
-    .status-subtitle { margin-bottom: 0.75rem; }
-    .status-desc { padding-top: 0.75rem; font-size: 0.8rem; line-height: 1.5; }
-    .status-badge { width: 40px; height: 40px; right: 1.1rem; }
-    .status-badge svg { width: 19px; height: 19px; }
+    .status-card-wrap { padding-top: 0.35rem; }
+    .status-card { padding: 0.7rem 0.8rem 0.8rem; border-radius: 0.8rem; }
+    .status-eyebrow { margin-bottom: 0.3rem; font-size: 0.58rem; }
+    .status-title { font-size: 0.9rem; }
+    .status-subtitle { margin-bottom: 0.3rem; font-size: 0.74rem; }
+    .status-desc { padding-top: 0.45rem; font-size: 0.7rem; line-height: 1.3; }
+    .status-badge { width: 30px; height: 30px; right: 0.8rem; }
+    .status-badge svg { width: 15px; height: 15px; }
 
-    hr.sep { margin: 1.5rem 0 1rem; }
+    hr.sep { margin: 0.6rem 0 0.45rem; }
 
-    .footer { font-size: 0.76rem; }
+    .footer { font-size: 0.64rem; gap: 0.25rem; }
 
-    .credito { margin-top: 1rem; }
+    .credito { margin-top: 0.4rem; gap: 0.3rem; font-size: 0.68rem; }
+    .credito-icon { width: 26px; height: 26px; }
   }
 </style>
 </head>
 <body>
   <div class="page">
     <div class="brand">
-      <span class="brand-mark">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m8.5 12 2.3 2.3L15.5 9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
+      <img class="brand-mark" src="escudo_cesar_2024.png" alt="Escudo de la Gobernaci&oacute;n del Cesar" />
       <div>
         <p class="brand-name">SECRETAR&Iacute;A DE SALUD DEPARTAMENTAL DEL CESAR</p>
         <p class="brand-sub">Rethus &mdash; Registro &Uacute;nico Nacional del Talento Humano en Salud</p>

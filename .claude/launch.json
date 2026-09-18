@@ -6,6 +6,12 @@
       "runtimeExecutable": "dotnet",
       "runtimeArgs": ["run", "--project", "src/RethusSalud.Web", "--launch-profile", "http"],
       "port": 5121
+    },
+    {
+      "name": "mantenimiento-preview",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8134", "--directory", "src/RethusSalud.Web/Mantenimiento"],
+      "port": 8134
     }
   ]
 }
