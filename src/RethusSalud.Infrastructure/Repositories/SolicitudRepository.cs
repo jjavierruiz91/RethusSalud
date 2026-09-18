@@ -168,17 +168,19 @@ public class SolicitudRepository : ISolicitudRepository
 
     public async Task<BandejaPagedResult> GetPorEtapaPagedAsync(EtapaSolicitud etapa, BandejaFiltroDto filtro, int pageNumber, int pageSize)
     {
-        var query = ParaListado().Where(s => s.EtapaActual == etapa);
-        query = filtro.Estado.HasValue
-            ? query.Where(s => s.Estado == filtro.Estado.Value)
-            : query.Where(s => s.Estado == EstadoSolicitud.EnProceso);
-        query = AplicarFiltrosComunes(query, filtro);
+        var queryBase = AplicarFiltrosComunes(ParaListado().Where(s => s.EtapaActual == etapa), filtro);
+        var query = filtro.Estado.HasValue
+            ? queryBase.Where(s => s.Estado == filtro.Estado.Value)
+            : queryBase.Where(s => s.Estado == EstadoSolicitud.EnProceso);
 
         var totalCount = await query.CountAsync();
         var totalEnProceso = await query.CountAsync(s => s.Estado == EstadoSolicitud.EnProceso);
         var totalAprobadas = await query.CountAsync(s => s.Estado == EstadoSolicitud.Aprobado);
         var limiteEspera = DateTime.UtcNow.AddDays(-2);
         var totalEsperandoLargo = await query.CountAsync(s => s.Estado == EstadoSolicitud.EnProceso && s.FechaCreacion <= limiteEspera);
+        // Se cuenta sobre queryBase (sin el filtro de Estado) para que el contador de rechazadas
+        // sea visible aunque la bandeja este mostrando "En proceso" por defecto.
+        var totalRechazadas = await queryBase.CountAsync(s => s.Estado == EstadoSolicitud.Rechazado);
 
         var items = await query
             .OrderBy(s => s.FechaCreacion)
@@ -190,6 +192,7 @@ public class SolicitudRepository : ISolicitudRepository
         {
             Pagina = new PagedResult { Items = items, PageNumber = pageNumber, PageSize = pageSize, TotalCount = totalCount },
             TotalEnProceso = totalEnProceso,
+            TotalRechazadas = totalRechazadas,
             TotalAprobadas = totalAprobadas,
             TotalEsperandoLargo = totalEsperandoLargo
         };

@@ -92,7 +92,8 @@ public class RevisionController : Controller
             Pagina = resultado.Pagina,
             TotalEnProceso = resultado.TotalEnProceso,
             TotalAprobadas = resultado.TotalAprobadas,
-            TotalEsperandoLargo = resultado.TotalEsperandoLargo
+            TotalEsperandoLargo = resultado.TotalEsperandoLargo,
+            TotalRechazadas = resultado.TotalRechazadas
         });
     }
 
@@ -145,8 +146,26 @@ public class RevisionController : Controller
 
         var etapaUsuario = await ObtenerEtapaDelUsuarioAsync();
         ViewBag.PuedeGestionar = solicitud.Estado == EstadoSolicitud.EnProceso && solicitud.EtapaActual == etapaUsuario;
+        ViewBag.AutoresRechazo = await ObtenerAutoresRechazoAsync(solicitud);
 
         return View(solicitud);
+    }
+
+    private async Task<Dictionary<string, string>> ObtenerAutoresRechazoAsync(RethusSalud.Domain.Entities.Solicitud solicitud)
+    {
+        var usuarioIds = solicitud.Historial
+            .Where(h => h.EstadoResultante == EstadoSolicitud.Rechazado)
+            .Select(h => h.UsuarioId)
+            .Distinct();
+
+        var autores = new Dictionary<string, string>();
+        foreach (var usuarioId in usuarioIds)
+        {
+            var usuario = await _userManager.FindByIdAsync(usuarioId);
+            autores[usuarioId] = string.IsNullOrWhiteSpace(usuario?.NombreCompleto) ? "Funcionario" : usuario.NombreCompleto;
+        }
+
+        return autores;
     }
 
     private IActionResult RedirigirAPaso(string? volverA, int id)

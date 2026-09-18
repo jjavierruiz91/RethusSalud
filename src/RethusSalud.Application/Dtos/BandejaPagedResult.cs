@@ -9,4 +9,5 @@ public class BandejaPagedResult
     public int TotalEnProceso { get; init; }
     public int TotalAprobadas { get; init; }
     public int TotalEsperandoLargo { get; init; }
+    public int TotalRechazadas { get; init; }
 }

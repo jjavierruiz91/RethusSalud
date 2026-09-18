@@ -1,6 +1,36 @@
 @model RethusSalud.Domain.Entities.Solicitud
 @using RethusSalud.Domain.Enums
 @using RethusSalud.Web.Helpers
+@{
+    var autoresRechazo = ViewBag.AutoresRechazo as Dictionary<string, string> ?? new Dictionary<string, string>();
+
+    var itemsRechazo = Model.Historial
+        .Where(h => h.EstadoResultante == EstadoSolicitud.Rechazado)
+        .Select(h => new
+        {
+            Fecha = h.Fecha,
+            AutorNombre = autoresRechazo.TryGetValue(h.UsuarioId, out var nombre) ? nombre : "Funcionario",
+            AutorFotoUrl = (string?)null,
+            EtapaNumero = h.EtapaResultante.HasValue ? EtapaDisplay.Numero(h.EtapaResultante.Value) : 0,
+            EtapaEtiqueta = h.EtapaResultante.HasValue ? EtapaDisplay.Texto(h.EtapaResultante.Value) : null,
+            Texto = h.Motivo ?? string.Empty,
+            EsRechazo = true
+        });
+
+    var itemsComentario = Model.Comentarios
+        .Select(c => new
+        {
+            Fecha = c.FechaCreacion,
+            AutorNombre = string.IsNullOrWhiteSpace(c.AutorNombre) ? "Funcionario" : c.AutorNombre,
+            AutorFotoUrl = c.AutorFotoUrl,
+            EtapaNumero = c.Etapa.HasValue ? EtapaDisplay.Numero(c.Etapa.Value) : 0,
+            EtapaEtiqueta = c.Etapa.HasValue ? EtapaDisplay.Texto(c.Etapa.Value) : null,
+            Texto = c.Texto,
+            EsRechazo = false
+        });
+
+    var timeline = itemsRechazo.Concat(itemsComentario).OrderByDescending(i => i.Fecha).ToList();
+}
 
 <div class="revision-card">
     <div class="revision-card-title mb-2">
@@ -9,37 +39,38 @@
     </div>
 
     <div class="revision-historial-timeline">
-        @foreach (var comentario in Model.Comentarios.OrderByDescending(c => c.FechaCreacion))
+        @foreach (var item in timeline)
         {
-            var etapaNumero = comentario.Etapa.HasValue ? EtapaDisplay.Numero(comentario.Etapa.Value) : 0;
-            var etapaEtiqueta = comentario.Etapa.HasValue ? EtapaDisplay.Texto(comentario.Etapa.Value) : null;
-
             <div class="revision-historial-item">
                 <div class="revision-historial-avatar-col">
-                    @if (!string.IsNullOrEmpty(comentario.AutorFotoUrl))
+                    @if (!string.IsNullOrEmpty(item.AutorFotoUrl))
                     {
-                        <img src="@comentario.AutorFotoUrl" alt="" class="revision-historial-avatar revision-historial-avatar-img" />
+                        <img src="@item.AutorFotoUrl" alt="" class="revision-historial-avatar revision-historial-avatar-img" />
                     }
                     else
                     {
-                        <span class="revision-historial-avatar revision-historial-avatar-@etapaNumero">@(comentario.AutorNombre.Length > 0 ? comentario.AutorNombre[0].ToString().ToUpper() : "F")</span>
+                        <span class="revision-historial-avatar @(item.EsRechazo ? "revision-historial-avatar-rechazo" : $"revision-historial-avatar-{item.EtapaNumero}")">@(item.AutorNombre.Length > 0 ? item.AutorNombre[0].ToString().ToUpper() : "F")</span>
                     }
                 </div>
-                <div class="revision-historial-card">
+                <div class="revision-historial-card @(item.EsRechazo ? "revision-historial-card-rechazo" : "")">
                     <div class="revision-historial-card-header">
-                        <span class="revision-historial-nombre">@(string.IsNullOrWhiteSpace(comentario.AutorNombre) ? "Funcionario" : comentario.AutorNombre)</span>
-                        @if (etapaEtiqueta is not null)
+                        <span class="revision-historial-nombre">@item.AutorNombre</span>
+                        @if (item.EsRechazo)
                         {
-                            <span class="revision-etapa-badge revision-etapa-badge-@etapaNumero">@etapaEtiqueta</span>
+                            <span class="revision-etapa-badge revision-etapa-badge-rechazo">Rechazo@(item.EtapaEtiqueta is not null ? $" · {item.EtapaEtiqueta}" : "")</span>
+                        }
+                        else if (item.EtapaEtiqueta is not null)
+                        {
+                            <span class="revision-etapa-badge revision-etapa-badge-@item.EtapaNumero">@item.EtapaEtiqueta</span>
                         }
                     </div>
-                    <div class="revision-historial-meta">@comentario.FechaCreacion.ToLocalTime().ToString("dd MMM yyyy · hh:mm tt")</div>
-                    <p class="revision-historial-text">@comentario.Texto</p>
+                    <div class="revision-historial-meta">@item.Fecha.ToLocalTime().ToString("dd MMM yyyy · hh:mm tt")</div>
+                    <p class="revision-historial-text">@item.Texto</p>
                 </div>
             </div>
         }
     </div>
-    @if (!Model.Comentarios.Any())
+    @if (!timeline.Any())
     {
         <p class="text-muted mb-0">Aun no hay comentarios registrados.</p>
     }
