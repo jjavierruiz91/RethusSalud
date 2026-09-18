@@ -26,7 +26,15 @@
             }
             else if (Model.Estado == EstadoSolicitud.EnProceso)
             {
-                <span>En proceso - Etapa actual: @Model.EtapaActual</span>
+                var fueRechazadaAntes = Model.Historial.Any(h => h.EstadoResultante == EstadoSolicitud.Rechazado);
+                @if (fueRechazadaAntes)
+                {
+                    <span>Reenviado (corregido tras rechazo) - Etapa actual: @Model.EtapaActual</span>
+                }
+                else
+                {
+                    <span>En proceso - Etapa actual: @Model.EtapaActual</span>
+                }
             }
             else if (Model.Estado == EstadoSolicitud.Rechazado)
             {
