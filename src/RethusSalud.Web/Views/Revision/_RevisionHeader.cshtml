@@ -34,6 +34,13 @@
         Model.Solicitante.MunicipioResidencia?.Nombre,
         Model.Solicitante.DepartamentoResidencia?.Nombre
     }.Where(s => !string.IsNullOrWhiteSpace(s)));
+
+    var ultimoRechazo = Model.Estado != EstadoSolicitud.Rechazado
+        ? Model.Historial
+            .Where(h => h.EstadoResultante == EstadoSolicitud.Rechazado)
+            .OrderByDescending(h => h.Fecha)
+            .FirstOrDefault()
+        : null;
 }
 
 <nav class="revision-breadcrumb">
@@ -73,5 +80,20 @@
         </span>
     </div>
 </div>
+
+@if (ultimoRechazo is not null)
+{
+    <div class="app-alert app-alert-danger mb-3" role="alert">
+        <span class="app-alert-icon">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+        <div class="app-alert-body">
+            <strong class="app-alert-title">
+                Esta solicitud ya fue rechazada antes@(ultimoRechazo.EtapaResultante.HasValue ? $" en {EtapaDisplay.Texto(ultimoRechazo.EtapaResultante.Value)}" : "") y fue corregida y reenviada
+            </strong>
+            <p class="app-alert-message mb-0">Último motivo: @ultimoRechazo.Motivo</p>
+        </div>
+    </div>
+}
 
 @await Html.PartialAsync("_RevisionSteps", new RethusSalud.Web.Models.Revision.RevisionStepsViewModel { PasoActual = pasoActual, SolicitudId = Model.Id })

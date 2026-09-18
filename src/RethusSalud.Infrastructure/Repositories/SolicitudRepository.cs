@@ -66,6 +66,11 @@ public class SolicitudRepository : ISolicitudRepository
             ? query.Where(s => s.Estado == filtro.Estado.Value)
             : query.Where(s => s.Estado == EstadoSolicitud.EnProceso);
 
+        if (filtro.SoloReenviadas)
+        {
+            query = query.Where(s => s.Historial.Any(h => h.EstadoResultante == EstadoSolicitud.Rechazado));
+        }
+
         query = AplicarFiltroTexto(query, filtro.NumeroIdentificacion);
 
         if (filtro.TipoTramite.HasValue)
@@ -173,6 +178,11 @@ public class SolicitudRepository : ISolicitudRepository
             ? queryBase.Where(s => s.Estado == filtro.Estado.Value)
             : queryBase.Where(s => s.Estado == EstadoSolicitud.EnProceso);
 
+        if (filtro.SoloReenviadas)
+        {
+            query = query.Where(s => s.Historial.Any(h => h.EstadoResultante == EstadoSolicitud.Rechazado));
+        }
+
         var totalCount = await query.CountAsync();
         var totalEnProceso = await query.CountAsync(s => s.Estado == EstadoSolicitud.EnProceso);
         var totalAprobadas = await query.CountAsync(s => s.Estado == EstadoSolicitud.Aprobado);
@@ -186,6 +196,7 @@ public class SolicitudRepository : ISolicitudRepository
             .OrderBy(s => s.FechaCreacion)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
+            .Include(s => s.Historial)
             .ToListAsync();
 
         return new BandejaPagedResult

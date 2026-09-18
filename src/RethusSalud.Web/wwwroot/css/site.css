@@ -2518,6 +2518,7 @@ body {
 .app-badge-warning { background: #fef4e0; color: #b9770e; }
 .app-badge-danger { background: #fdecea; color: #c0392b; }
 .app-badge-muted { background: var(--rethus-bg-soft); color: var(--rethus-muted); }
+.app-badge-info { background: #e6f1fb; color: var(--rethus-blue-deep); }
 
 .app-content .table tr.fila-verde > td { background-color: #e3f7ea; }
 .app-content .table tr.fila-inactiva > td { background-color: var(--rethus-bg-soft); }

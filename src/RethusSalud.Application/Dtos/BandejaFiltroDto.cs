@@ -8,4 +8,5 @@ public record BandejaFiltroDto(
     EstadoSolicitud? Estado = null,
     DateTime? Desde = null,
     DateTime? Hasta = null,
-    EtapaSolicitud? Etapa = null);
+    EtapaSolicitud? Etapa = null,
+    bool SoloReenviadas = false);

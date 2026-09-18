@@ -81,7 +81,7 @@ public class RevisionController : Controller
             return Forbid();
         }
 
-        var filtroDto = new BandejaFiltroDto(filtro.NumeroIdentificacion, filtro.TipoTramite, filtro.Estado, filtro.Desde, filtro.Hasta);
+        var filtroDto = ConstruirFiltroDto(filtro);
         var pagina = Math.Max(filtro.Pagina, 1);
         var resultado = await _solicitudes.ObtenerBandejaPaginadaAsync(etapa.Value, filtroDto, pagina, TamanoPaginaBandeja);
 
@@ -106,11 +106,23 @@ public class RevisionController : Controller
             return Forbid();
         }
 
-        var filtroDto = new BandejaFiltroDto(filtro.NumeroIdentificacion, filtro.TipoTramite, filtro.Estado, filtro.Desde, filtro.Hasta);
+        var filtroDto = ConstruirFiltroDto(filtro);
         var solicitudes = await _solicitudes.ObtenerBandejaAsync(etapa.Value, filtroDto);
 
         var excel = _reportes.GenerarReporteBandeja(solicitudes);
         return File(excel, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"bandeja-{etapa}.xlsx");
+    }
+
+    // "Reenviado" no es un EstadoSolicitud real: es En proceso + con un rechazo previo en el historial.
+    // Se traduce aqui a Estado=EnProceso + SoloReenviadas=true para que el repositorio lo filtre.
+    private static BandejaFiltroDto ConstruirFiltroDto(BandejaFiltroViewModel filtro)
+    {
+        var esReenviado = string.Equals(filtro.Estado, "Reenviado", StringComparison.OrdinalIgnoreCase);
+        EstadoSolicitud? estado = esReenviado
+            ? EstadoSolicitud.EnProceso
+            : Enum.TryParse<EstadoSolicitud>(filtro.Estado, out var parsed) ? parsed : null;
+
+        return new BandejaFiltroDto(filtro.NumeroIdentificacion, filtro.TipoTramite, estado, filtro.Desde, filtro.Hasta, SoloReenviadas: esReenviado);
     }
 
     [HttpGet]
