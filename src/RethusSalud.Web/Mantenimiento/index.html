@@ -6,7 +6,7 @@
 <title>Rethus &mdash; En mantenimiento</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --rethus-blue-deep: #0b3c66;
@@ -23,53 +23,283 @@
   * { box-sizing: border-box; }
 
   html, body {
-    height: 100%;
     margin: 0;
+    min-height: 100%;
   }
 
   body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
     font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: var(--rethus-ink);
-    background: linear-gradient(150deg, var(--rethus-blue-deep) 0%, var(--rethus-blue) 55%, var(--rethus-teal) 100%);
+    background:
+      radial-gradient(circle, rgba(15, 95, 166, 0.14) 1px, transparent 1px),
+      linear-gradient(135deg, #eef5fb 0%, #f6faf8 45%, #eef8f4 100%);
+    background-size: 22px 22px, 100% 100%;
     background-attachment: fixed;
+    padding: 3rem 1.5rem;
   }
 
-  .card {
-    width: 100%;
-    max-width: 520px;
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .brand-mark {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    padding: 10px;
+    color: #fff;
+    background: linear-gradient(135deg, var(--rethus-blue-deep), var(--rethus-teal));
+    border-radius: 0.85rem;
+    box-shadow: 0 10px 24px rgba(11, 60, 102, 0.25);
+  }
+
+  .brand-mark svg { width: 100%; height: 100%; }
+
+  .brand-name {
+    font-size: 0.98rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: var(--rethus-ink);
+    margin: 0;
+  }
+
+  .brand-sub {
+    font-size: 0.82rem;
+    color: var(--rethus-muted);
+    margin: 0.1rem 0 0;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; gap: 2.5rem; }
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rethus-teal);
+    background: rgba(15, 125, 104, 0.1);
+    padding: 0.4rem 0.9rem;
+    border-radius: 50rem;
+    margin-bottom: 1.3rem;
+  }
+
+  .eyebrow-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--rethus-teal-light);
+    box-shadow: 0 0 0 3px rgba(23, 165, 137, 0.25);
+  }
+
+  h1 {
+    font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--rethus-blue-deep);
+    margin: 0 0 1rem;
+    text-wrap: balance;
+    max-width: 20ch;
+  }
+
+  p.lead {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--rethus-muted);
+    margin: 0 0 2.25rem;
+    max-width: 46ch;
+  }
+
+  .stepper {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 2.25rem;
+    max-width: 460px;
+  }
+
+  .stepper::before {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    right: 7px;
+    height: 2px;
+    background: var(--rethus-border);
+    z-index: 0;
+  }
+
+  .step {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.55rem;
+    flex: 1;
+  }
+
+  .step-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
     background: #fff;
-    border-radius: 1.5rem;
-    padding: 3rem 2.5rem 2.5rem;
-    box-shadow: 0 30px 70px rgba(11, 60, 102, 0.35);
+    border: 2px solid var(--rethus-border);
+  }
+
+  .step.done .step-dot {
+    background: var(--rethus-teal);
+    border-color: var(--rethus-teal);
+  }
+
+  .step.current .step-dot {
+    background: var(--rethus-blue);
+    border-color: var(--rethus-blue);
+    box-shadow: 0 0 0 4px rgba(15, 95, 166, 0.2);
+    animation: pulso 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulso {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(15, 95, 166, 0.2); }
+    50% { box-shadow: 0 0 0 7px rgba(15, 95, 166, 0.12); }
+  }
+
+  .step-label {
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: var(--rethus-muted);
     text-align: center;
   }
 
-  .gear-badge {
-    width: 76px;
-    height: 76px;
-    margin: 0 auto 1.5rem;
+  .step.done .step-label,
+  .step.current .step-label {
+    color: var(--rethus-ink);
+  }
+
+  .countdown {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .countdown-item { text-align: left; }
+
+  .countdown-value {
+    font-family: "JetBrains Mono", "Courier New", monospace;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--rethus-teal);
+    line-height: 1;
+  }
+
+  .countdown-label {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--rethus-muted);
+  }
+
+  .status-card-wrap {
+    position: relative;
+    padding-top: 1.5rem;
+  }
+
+  .status-card {
+    background: #fff;
+    border: 1.5px dashed var(--rethus-teal-light);
+    border-radius: 1.25rem;
+    padding: 1.75rem 1.75rem 2rem;
+    box-shadow: 0 24px 50px rgba(11, 60, 102, 0.1);
+  }
+
+  .status-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rethus-muted);
+    margin-bottom: 0.9rem;
+  }
+
+  .status-eyebrow .eyebrow-dot {
+    background: var(--rethus-blue);
+    box-shadow: 0 0 0 3px rgba(15, 95, 166, 0.2);
+  }
+
+  .status-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--rethus-blue-deep);
+    margin: 0;
+  }
+
+  .status-subtitle {
+    font-size: 0.85rem;
+    color: var(--rethus-muted);
+    margin: 0.2rem 0 1.1rem;
+  }
+
+  .status-desc {
+    font-size: 0.86rem;
+    line-height: 1.6;
+    color: var(--rethus-muted);
+    margin: 0;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--rethus-border);
+  }
+
+  .status-badge {
+    position: absolute;
+    top: 0;
+    right: 1.5rem;
+    width: 52px;
+    height: 52px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: var(--rethus-bg-soft);
-    border: 1px solid var(--rethus-border);
+    background: linear-gradient(135deg, var(--rethus-blue), var(--rethus-teal-light));
+    color: #fff;
+    box-shadow: 0 12px 24px rgba(15, 95, 166, 0.35);
   }
 
-  .gear-badge svg {
-    width: 40px;
-    height: 40px;
-    color: var(--rethus-blue);
+  .status-badge svg {
+    width: 24px;
+    height: 24px;
     animation: girar 8s linear infinite;
-    transform-origin: 50% 50%;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .gear-badge svg { animation: none; }
+    .status-badge svg { animation: none; }
+    .step.current .step-dot { animation: none; }
   }
 
   @keyframes girar {
@@ -77,132 +307,258 @@
     to { transform: rotate(360deg); }
   }
 
-  .eyebrow {
-    display: inline-block;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--rethus-teal);
-    background: rgba(15, 125, 104, 0.1);
-    padding: 0.35rem 0.9rem;
-    border-radius: 50rem;
-    margin-bottom: 1.1rem;
-  }
-
-  h1 {
-    font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
-    font-size: 1.7rem;
-    font-weight: 700;
-    line-height: 1.3;
-    color: var(--rethus-blue-deep);
-    margin: 0 0 0.85rem;
-    text-wrap: balance;
-  }
-
-  p.lead {
-    font-size: 0.98rem;
-    line-height: 1.65;
-    color: var(--rethus-muted);
-    margin: 0 0 1.75rem;
-  }
-
-  .eta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--rethus-blue-deep);
-    background: var(--rethus-bg-soft);
-    border: 1px solid var(--rethus-border);
-    padding: 0.6rem 1.1rem;
-    border-radius: 0.7rem;
-    margin-bottom: 2rem;
-  }
-
-  .eta svg { width: 16px; height: 16px; flex: none; }
-
-  hr {
+  hr.sep {
     border: none;
     border-top: 1px solid var(--rethus-border);
-    margin: 0 0 1.5rem;
-  }
-
-  .contacto {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    text-align: left;
-    font-size: 0.88rem;
-    color: var(--rethus-muted);
-  }
-
-  .contacto a {
-    color: var(--rethus-ink);
-    text-decoration: none;
-    font-weight: 600;
-  }
-
-  .contacto a:hover { text-decoration: underline; }
-
-  .contacto-item {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-  }
-
-  .contacto-item svg {
-    width: 18px;
-    height: 18px;
-    flex: none;
-    color: var(--rethus-teal);
+    margin: 3rem 0 1.5rem;
   }
 
   .footer {
-    margin-top: 2rem;
-    font-size: 0.72rem;
-    color: rgba(255, 255, 255, 0.85);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: var(--rethus-muted);
     text-align: center;
+  }
+
+  .footer a {
+    color: var(--rethus-ink);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .footer a:hover { text-decoration: underline; }
+
+  .credito {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    font-size: 0.76rem;
+    color: var(--rethus-muted);
+    text-align: center;
+  }
+
+  .credito-nombre {
+    font-weight: 700;
+    color: var(--rethus-blue);
+  }
+
+  .credito-icons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .credito-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease, color .15s ease;
+  }
+
+  .credito-icon svg { width: 55%; height: 55%; }
+
+  .credito-icon:hover { transform: translateY(-2px) scale(1.08); }
+
+  .credito-icon.li { background: #eaf2fb; color: var(--rethus-blue); }
+  .credito-icon.li:hover {
+    background: var(--rethus-blue);
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(15, 95, 166, .18), 0 4px 10px rgba(15, 95, 166, .35);
+  }
+
+  .credito-icon.wa { background: #e4f8ec; color: #25D366; }
+  .credito-icon.wa:hover {
+    background: #25D366;
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(37, 211, 102, .18), 0 4px 10px rgba(37, 211, 102, .35);
+  }
+
+  .credito-icon.gh { background: #eceef1; color: #24292f; }
+  .credito-icon.gh:hover {
+    background: #24292f;
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(36, 41, 47, .18), 0 4px 10px rgba(36, 41, 47, .35);
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 1.25rem 1.1rem; }
+
+    .brand { gap: 0.6rem; margin-bottom: 1.25rem; }
+    .brand-mark { width: 38px; height: 38px; padding: 8px; border-radius: 0.65rem; }
+    .brand-name { font-size: 0.78rem; line-height: 1.3; }
+    .brand-sub { font-size: 0.7rem; line-height: 1.3; }
+
+    .layout { gap: 1.5rem; }
+
+    .eyebrow { margin-bottom: 0.85rem; padding: 0.3rem 0.75rem; }
+
+    h1 { font-size: 1.5rem; margin-bottom: 0.6rem; max-width: none; }
+
+    p.lead { font-size: 0.88rem; line-height: 1.55; margin-bottom: 1.25rem; }
+
+    .stepper { margin-bottom: 1.25rem; }
+    .step-label { font-size: 0.66rem; }
+
+    .countdown { gap: 1rem; }
+    .countdown-value { font-size: 1.5rem; }
+    .countdown-label { margin-top: 0.25rem; font-size: 0.6rem; }
+
+    .status-card-wrap { padding-top: 0.85rem; }
+    .status-card { padding: 1.1rem 1.1rem 1.25rem; border-radius: 1rem; }
+    .status-eyebrow { margin-bottom: 0.6rem; }
+    .status-title { font-size: 1.05rem; }
+    .status-subtitle { margin-bottom: 0.75rem; }
+    .status-desc { padding-top: 0.75rem; font-size: 0.8rem; line-height: 1.5; }
+    .status-badge { width: 40px; height: 40px; right: 1.1rem; }
+    .status-badge svg { width: 19px; height: 19px; }
+
+    hr.sep { margin: 1.5rem 0 1rem; }
+
+    .footer { font-size: 0.76rem; }
+
+    .credito { margin-top: 1rem; }
   }
 </style>
 </head>
 <body>
-  <div>
-    <div class="card">
-      <div class="gear-badge">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" />
-          <circle cx="12" cy="12" r="4.5" />
-        </svg>
+  <div class="page">
+    <div class="brand">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m8.5 12 2.3 2.3L15.5 9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <div>
+        <p class="brand-name">SECRETAR&Iacute;A DE SALUD DEPARTAMENTAL DEL CESAR</p>
+        <p class="brand-sub">Rethus &mdash; Registro &Uacute;nico Nacional del Talento Humano en Salud</p>
+      </div>
+    </div>
+
+    <div class="layout">
+      <div>
+        <span class="eyebrow"><span class="eyebrow-dot"></span>Mantenimiento programado</span>
+        <h1>Tu tr&aacute;mite Rethus est&aacute; en pausa.</h1>
+        <p class="lead">
+          Estamos actualizando Rethus para mejorar el registro y la consulta de tu certificado.
+          Tu informaci&oacute;n y tus tr&aacute;mites en curso no se pierden.
+        </p>
+
+        <div class="stepper">
+          <div class="step done">
+            <span class="step-dot"></span>
+            <span class="step-label">Copia de seguridad</span>
+          </div>
+          <div class="step current">
+            <span class="step-dot"></span>
+            <span class="step-label">Actualizaci&oacute;n</span>
+          </div>
+          <div class="step">
+            <span class="step-dot"></span>
+            <span class="step-label">Verificaci&oacute;n</span>
+          </div>
+          <div class="step">
+            <span class="step-dot"></span>
+            <span class="step-label">Publicaci&oacute;n</span>
+          </div>
+        </div>
+
+        <div class="countdown" id="countdown">
+          <div class="countdown-item"><span class="countdown-value" data-unit="dias">00</span><span class="countdown-label">D&iacute;as</span></div>
+          <div class="countdown-item"><span class="countdown-value" data-unit="horas">00</span><span class="countdown-label">Horas</span></div>
+          <div class="countdown-item"><span class="countdown-value" data-unit="min">00</span><span class="countdown-label">Min</span></div>
+          <div class="countdown-item"><span class="countdown-value" data-unit="seg">00</span><span class="countdown-label">Seg</span></div>
+        </div>
       </div>
 
-      <span class="eyebrow">Mantenimiento programado</span>
-      <h1>Estamos actualizando la plataforma Rethus</h1>
-      <p class="lead">
-        Estamos aplicando mejoras al sistema de Registro Único Nacional del Talento Humano en
-        Salud. Tu información y tus trámites en curso no se ven afectados.
-      </p>
-
-      <span class="eta">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></svg>
-        Vuelve a intentarlo en unos minutos
-      </span>
-
-      <hr />
-
-      <div class="contacto">
-        <div class="contacto-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          <span>Secretar&iacute;a de Salud Departamental del Cesar &middot; <a href="tel:+576055885602">605 5885602</a></span>
+      <div class="status-card-wrap">
+        <div class="status-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" />
+            <circle cx="12" cy="12" r="4.5" />
+          </svg>
         </div>
-        <div class="contacto-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg>
-          <a href="mailto:contactenos@cesar.gov.co">contactenos@cesar.gov.co</a>
+        <div class="status-card">
+          <span class="status-eyebrow"><span class="eyebrow-dot"></span>Estado del sistema</span>
+          <h2 class="status-title">En mantenimiento</h2>
+          <p class="status-subtitle">Vuelve pronto</p>
+          <p class="status-desc">
+            Tu historial de tr&aacute;mites y certificados no se pierde &mdash; solo est&aacute; en pausa
+            mientras actualizamos.
+          </p>
         </div>
       </div>
     </div>
-    <p class="footer">&copy; 2026 Secretar&iacute;a de Salud Departamental del Cesar &mdash; Rethus</p>
+
+    <hr class="sep" />
+
+    <p class="footer">
+      Secretar&iacute;a de Salud Departamental del Cesar &mdash;
+      <a href="tel:+576055885602">605 5885602</a> &middot;
+      <a href="mailto:contactenos@cesar.gov.co">contactenos@cesar.gov.co</a>
+    </p>
+
+    <div class="credito">
+      <span>Desarrollado por <span class="credito-nombre">Ing. Javier Ruiz Mendoza</span></span>
+      <div class="credito-icons">
+        <a href="https://www.linkedin.com/in/javier-ruiz-mendoza-648129195/" target="_blank" rel="noopener" class="credito-icon li" aria-label="LinkedIn" title="Ver perfil de LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.446-2.136 2.94v5.666H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.114 20.452H3.558V9h3.556v11.452z"/></svg>
+        </a>
+        <a href="https://wa.me/573162937720?text=Hola%20Ing.%20Javier%20Ruiz%2C%20vi%20tu%20perfil%20en%20Rethus%20y%20me%20gustar%C3%ADa%20contactarte%20para%20un%20proyecto." target="_blank" rel="noopener" class="credito-icon wa" aria-label="WhatsApp" title="Escr&iacute;beme por WhatsApp">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.1-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.336-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/></svg>
+        </a>
+        <a href="https://github.com/jjavierruiz91" target="_blank" rel="noopener" class="credito-icon gh" aria-label="GitHub" title="Ver perfil de GitHub">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        </a>
+      </div>
+    </div>
   </div>
+
+  <script src="config.js"></script>
+  <script>
+    // La fecha se define en config.js — ese es el único archivo que
+    // debes editar antes de activar esta página.
+    (function () {
+      var fin = new Date(MANTENIMIENTO_FIN).getTime();
+      var els = {
+        dias: document.querySelector('[data-unit="dias"]'),
+        horas: document.querySelector('[data-unit="horas"]'),
+        min: document.querySelector('[data-unit="min"]'),
+        seg: document.querySelector('[data-unit="seg"]')
+      };
+
+      function pad(n) { return String(n).padStart(2, "0"); }
+
+      function tick() {
+        var restante = fin - Date.now();
+        if (restante <= 0) {
+          els.dias.textContent = els.horas.textContent = els.min.textContent = els.seg.textContent = "00";
+          location.reload();
+          return;
+        }
+        var seg = Math.floor(restante / 1000);
+        var dias = Math.floor(seg / 86400);
+        var horas = Math.floor((seg % 86400) / 3600);
+        var min = Math.floor((seg % 3600) / 60);
+        var segRest = seg % 60;
+
+        els.dias.textContent = pad(dias);
+        els.horas.textContent = pad(horas);
+        els.min.textContent = pad(min);
+        els.seg.textContent = pad(segRest);
+      }
+
+      tick();
+      setInterval(tick, 1000);
+      // Revisa cada minuto si el sitio ya volvió a estar disponible.
+      setInterval(function () { location.reload(); }, 60000);
+    })();
+  </script>
 </body>
 </html>
