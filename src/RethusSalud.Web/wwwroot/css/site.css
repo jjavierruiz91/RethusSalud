@@ -1110,6 +1110,118 @@ body {
   text-decoration: underline;
 }
 
+/* ---- Créditos: iconos de contacto (footer, auth, sidebar) ---- */
+
+.site-footer-credito,
+.auth-footer-credito,
+.app-sidebar-credito {
+  flex-direction: column;
+}
+
+.site-footer-credito-text,
+.auth-footer-credito-text,
+.app-sidebar-credito-text {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.app-sidebar-credito-text {
+  display: block;
+  line-height: 1.5;
+}
+
+.app-sidebar-credito-text svg {
+  display: inline-block;
+  vertical-align: -1px;
+  margin-right: 3px;
+}
+
+.credito-nombre {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.site-footer-credito-text .credito-nombre {
+  color: #7fb8ee;
+}
+
+.auth-footer-credito-text .credito-nombre,
+.app-sidebar-credito-text .credito-nombre {
+  color: var(--rethus-blue);
+}
+
+.credito-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.credito-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease, color .15s ease;
+}
+
+.credito-icon svg {
+  width: 55%;
+  height: 55%;
+}
+
+.credito-icon:hover {
+  transform: translateY(-2px) scale(1.08);
+}
+
+.credito-icon.li {
+  background: #eaf2fb;
+  color: var(--rethus-blue);
+}
+
+.credito-icon.li:hover {
+  background: var(--rethus-blue);
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(15, 95, 166, .18), 0 4px 10px rgba(15, 95, 166, .35);
+}
+
+.credito-icon.wa {
+  background: #e4f8ec;
+  color: #25D366;
+}
+
+.credito-icon.wa:hover {
+  background: #25D366;
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(37, 211, 102, .18), 0 4px 10px rgba(37, 211, 102, .35);
+}
+
+.credito-icon.gh {
+  background: #eceef1;
+  color: #24292f;
+}
+
+.credito-icon.gh:hover {
+  background: #24292f;
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(36, 41, 47, .18), 0 4px 10px rgba(36, 41, 47, .35);
+}
+
+.site-footer-credito .credito-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.auth-footer-credito .credito-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.app-sidebar-credito .credito-icon {
+  width: 16px;
+  height: 16px;
+}
+
 /* ---- Site navbar ---- */
 
 .site-navbar {
@@ -1724,9 +1836,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.3rem;
-  margin-top: 0.5rem;
-  font-size: 0.68rem;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+  padding: 0 0.5rem;
+  font-size: 0.72rem;
   color: var(--rethus-muted);
   text-align: center;
 }
